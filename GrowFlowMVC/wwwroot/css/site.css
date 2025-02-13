@@ -1,0 +1,56 @@
+:root {
+    --grn-lt: #579585;
+    --grn-md: #1b6552;
+    --grn-dk: #195C4B;
+    --tan-dk: #8F8073;
+    --tan-md: #9D9085;
+    --tan-lt: #C7C0B9;
+}
+
+.bg-dark {
+    background-color: #030726 !important;
+}
+
+.text-tan {
+    color: var(--tan-dk);
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+
+html, body {
+    height: 100% !important;
+    width: 100% !important;
+    /*background-color: #4C6986;*/
+    /*background-color: #91A5C7;*/
+    background-color: #334A6E;
+    /*background-color: #C1CDE0;*/
+    font-family: 'Roboto' !important;
+}
+
+html {
+    font-size: 14px;
+    background-color: #1C516E;
+}
+
+.content {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+main {
+    flex: 1 1 auto;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.box-shadow {
+    box-shadow: 2px .25rem .75rem rgba(0, 0, 0, .4);
+}
