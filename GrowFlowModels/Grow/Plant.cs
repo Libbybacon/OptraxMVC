@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GrowFlow.Models.Inventory;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GrowFlow.Models.Grow
+namespace GrowFlow.Models.Crops
 
 {
     [Table("Plants", Schema = "Grow")]
@@ -12,21 +13,17 @@ namespace GrowFlow.Models.Grow
             Transfers = [];
         }
 
-        public required int PlantID { get; set; }
-        
-        public required int StrainID { get; set; }
-        public required virtual Strain Strain { get; set; }
-
+        public int PlantID { get; set; }
+        public int StrainID { get; set; }
         public string? GrowthPhase { get; set; }
-
         public int? RoomID { get; set; }
-        public virtual Room? CurrentRoom { get; set; }
-
         public int? LightID { get; set; }
-        public virtual Light? CurrentLight { get; set; }
-
         public int? ContainerID { get; set; }
-        public virtual Container? CurrentContainer { get; set; }
+
+        public required virtual Strain Strain { get; set; }
+        public virtual Room? CurrentRoom { get; set; }
+        public virtual Light? CurrentLight { get; set; }
+        public virtual ContainerType? CurrentContainer { get; set; }
 
         public virtual ICollection<PlantTransfer> Transfers { get; set; }
     }

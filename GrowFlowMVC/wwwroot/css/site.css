@@ -54,3 +54,56 @@ main {
 .box-shadow {
     box-shadow: 2px .25rem .75rem rgba(0, 0, 0, .4);
 }
+
+/* Dash */
+
+.dash{
+
+}
+
+.filterOuter{
+    height: auto;
+}
+
+.widgTitle {
+    text-align: center;
+    font-size: var(--xlF);
+    color: var(--grn-md);
+    font-weight: bold;
+}
+
+.widgInfo {
+    text-align: center;
+    font-size: var(--xxxlF);
+    color: var(--blue-dk);
+}
+
+.chart {
+    border: 1px solid lightgray;
+    margin: 5px;
+    box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    background-color: var(--tan-lt);
+    min-width: 300px !important;
+    width: 100%;
+}
+
+.chartTitle {
+    text-align: center;
+    font-size: var(--xxlF);
+    color: var(--grn-md);
+    font-weight: bold;
+    padding-top: 5px;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.chartheader {
+    font-size: var(--smF);
+    font-weight: bold;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.chartWidget {
+    padding: 1%;
+    height: 350px;
+}

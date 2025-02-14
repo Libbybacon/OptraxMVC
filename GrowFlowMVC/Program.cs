@@ -9,7 +9,16 @@ builder.Services.AddDbContext<GrowFlowContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("GrowFlowConnection"));
 });
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+                .AddRazorOptions(options =>
+                {
+                    options.AreaViewLocationFormats.Clear();
+                    options.AreaViewLocationFormats.Add("/Areas/{2}/Views/{1}/{0}.cshtml");  // Look in Area first
+                    options.AreaViewLocationFormats.Add("/Areas/{2}/Views/Shared/{0}.cshtml"); // Shared in Area
+                    options.AreaViewLocationFormats.Add("/Views/{1}/{0}.cshtml");  // Look in global Views folder
+                    options.AreaViewLocationFormats.Add("/Views/Shared/{0}.cshtml");  // Global Shared views
+                })
+                .AddRazorRuntimeCompilation();
 
 var app = builder.Build();
 
@@ -39,6 +48,10 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "Grow",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

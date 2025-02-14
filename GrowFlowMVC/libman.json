@@ -1,0 +1,18 @@
+{
+  "version": "3.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "jqueryui@1.14.1",
+      "destination": "wwwroot/lib/jqueryui/",
+      "files": [
+        "themes/base/theme.min.css",
+        "themes/base/theme.css",
+        "themes/base/jquery-ui.min.css",
+        "themes/base/jquery-ui.css",
+        "jquery-ui.js",
+        "jquery-ui.min.js"
+      ]
+    }
+  ]
+}

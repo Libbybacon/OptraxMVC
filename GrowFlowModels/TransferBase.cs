@@ -1,4 +1,5 @@
-﻿
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
 namespace GrowFlow.Models
 {
     public abstract class TransferBase 
@@ -14,6 +15,5 @@ namespace GrowFlow.Models
         public required int UserID { get; set; }
 
         public string? Notes { get; set; }
-
     }
 }

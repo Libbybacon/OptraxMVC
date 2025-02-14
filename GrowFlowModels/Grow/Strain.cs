@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GrowFlow.Models.Crops;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GrowFlow.Models.Grow
+namespace GrowFlow.Models
 {
     [Table("Strains", Schema = "Grow")]
     public class Strain
@@ -11,7 +11,7 @@ namespace GrowFlow.Models.Grow
             Plants = [];
         }
         
-        public required int ID { get; set; }
+        public int ID { get; set; }
        
         public required string Name { get; set; }
 
@@ -22,5 +22,18 @@ namespace GrowFlow.Models.Grow
         public virtual ICollection<Plant> Plants { get; set; }
         public virtual ICollection<StrainRelationship>? Parents { get; set; }
         public virtual ICollection<StrainRelationship>? Children { get; set; }
+    }
+
+
+    [Table("StrainRelationships", Schema = "Grow")]
+    public class StrainRelationship
+    {
+        public StrainRelationship() { }
+
+        public int ParentID { get; set; }
+        public int ChildID { get; set; }
+
+        public Strain ParentStrain { get; set; } = null!;
+        public Strain ChildStrain { get; set; } = null!;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using GrowFlow.Models.Grow;
 
-namespace GrowFlow.Models
+namespace GrowFlow.Models.Admin
 {
     public class Location
     {

@@ -1,0 +1,127 @@
+﻿:root {
+    --xxsF: .8rem;
+    --xsF: .9rem;
+    --smF: 1rem;
+    --mdF: 1.1rem;
+    --lgF: 1.2rem;
+    --xlF: 1.3rem;
+    --xxlF: 1.4rem;
+}
+
+@media only screen and (max-width: 600px) {
+    html {
+        font-size: 12px;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    html {
+        font-size: 12px !important;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+}
+
+@media only screen and (min-width: 992px) {
+    html {
+        font-size: 13px !important;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    html {
+        font-size: 14px !important;
+    }
+}
+
+@media only screen and (min-width: 2400px) {
+    html {
+        font-size: 15px !important;
+    }
+}
+
+.ui-widget,
+.ui-widget select {
+    font-family: 'Inter' !important;
+}
+
+.xxsF {
+    font-size: var(--xxsF) !important;
+}
+
+.xsF {
+    font-size: var(--xsF) !important;
+}
+
+.smF {
+    font-size: var(--smF) !important;
+}
+
+.mdF {
+    font-size: var(--mdF) !important;
+}
+
+.lgF {
+    font-size: var(--lgF) !important;
+}
+
+.xlF {
+    font-size: var(--xlF) !important;
+}
+
+.xxlF {
+    font-size: var(--xxlF) !important;
+}
+
+
+
+.filtBtn, .closeBtn {
+    font-weight: 500 !important;
+}
+
+.redF {
+    color: var(--red4) !important;
+}
+
+.blue3F {
+    color: var(--blue3) !important;
+}
+
+.blue5F {
+    color: var(--blue5) !important;
+}
+
+.greenF {
+    color: var(--grn4) !important;
+}
+
+.grn4F {
+    color: var(--grn4) !important;
+}
+
+.grn5F {
+    color: var(--grn5) !important;
+}
+
+
+
+.gry4F {
+    color: var(--gry4) !important;
+}
+
+.gry5F {
+    color: var(--gry5) !important;
+}
+
+.gry6F {
+    color: var(--gry6) !important;
+}
+
+#mainTable_info,
+#mainTable_filter,
+#mainTable_length,
+#mainTable_length .form-select,
+#mainTable_paginate .paginate_button .page-link {
+    font-size: .9rem !important;
+}

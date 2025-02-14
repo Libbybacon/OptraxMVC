@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Page"] = "Grow";
+}
+
+<div class="pageContainer pt-3">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="room-tab" data-bs-toggle="tab" data-bs-target="#room" type="button" role="tab" aria-controls="room" aria-selected="true">Rooms</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="plant-tab" data-bs-toggle="tab" data-bs-target="#plant" type="button" role="tab" aria-controls="plant" aria-selected="false">Plants</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab" aria-controls="activity" aria-selected="false">Activity</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="room" role="tabpanel" aria-labelledby="room-tab">
+            <partial name=".~Areas/Grow/Rooms/_Rooms.cshtml" model="@ViewBag.Rooms" />
+        </div>
+        <div class="tab-pane fade" id="plant" role="tabpanel" aria-labelledby="plant-tab">...</div>
+        <div class="tab-pane fade" id="activity" role="tabpanel" aria-labelledby="activity-tab">...</div>
+    </div>
+
+</div>

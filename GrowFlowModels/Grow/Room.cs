@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GrowFlow.Models.Admin;
+using GrowFlow.Models.Crops;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GrowFlow.Models.Grow
+namespace GrowFlow.Models
 {
     [Table("Rooms", Schema = "Grow")]
     public class Room
@@ -14,7 +16,7 @@ namespace GrowFlow.Models.Grow
             TransfersOut = [];
         }
 
-        public required int ID { get; set; }
+        public int ID { get; set; }
 
         [MaxLength(50)]
         public required string Name { get; set; }        
@@ -23,7 +25,7 @@ namespace GrowFlow.Models.Grow
         public string? Description { get; set; }
         
         public int? LocationID { get; set; }
-        public required bool Active { get; set; }
+        public bool Active { get; set; }
 
         public virtual Location? Location { get; set; }
 

@@ -1,5 +1,7 @@
 ﻿using GrowFlow.Models;
-using GrowFlow.Models.Grow;
+using GrowFlow.Models.Admin;
+using GrowFlow.Models.Crops;
+using GrowFlow.Models.Inventory;
 using Microsoft.EntityFrameworkCore;
 
 namespace GrowFlowMVC
@@ -8,7 +10,7 @@ namespace GrowFlowMVC
     {
         public GrowFlowContext(DbContextOptions<GrowFlowContext> options) : base(options) { }
 
-        public DbSet<Container> Containers { get; set; }
+        public DbSet<ContainerType> Containers { get; set; }
         public DbSet<ContainerTransfer> ContainerTransfers { get; set; }
         public DbSet<Light> Lights { get; set; }       
         public DbSet<Location> Locations { get; set; }
@@ -22,7 +24,7 @@ namespace GrowFlowMVC
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Container>().Property(x => x.Capacity).HasPrecision(8, 2);
+            modelBuilder.Entity<ContainerType>().Property(x => x.Capacity).HasPrecision(8, 2);
 
             modelBuilder.Entity<Light>().Property(x => x.CoverageAreaSF).HasPrecision(6, 2);
             modelBuilder.Entity<Light>().Property(x => x.PPF).HasPrecision(6, 2);
