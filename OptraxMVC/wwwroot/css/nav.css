@@ -1,4 +1,8 @@
-﻿.sideNav {
+﻿
+@media (min-width: 768px) {
+
+}
+.sideNav {
     display: flex;
     flex-flow: column;
     flex: 0 1;
@@ -14,19 +18,15 @@
     justify-content: center;
     padding: 0;
     width: 100%;
-    height: 80px;
+    height: 55px;
 }
 
 .navbar {
     border: none;
 }
 
-.nav-link span {
-    text-shadow: 0px -1px 0px rgba(199, 192, 185, .6);
-}
-
 .nav-link{
-    padding: .25rem 1rem;
+    padding: .25rem .5rem .25rem .5rem;
 }
 .nav-link i {
     font-size: 1.6rem;
@@ -39,15 +39,16 @@
 .nav-pills li,
 .nav-link,
 .nav-link i {
-    color: var(--tan-md);
-    text-shadow: 2px 2px 2px rgba(123, 0, 0, .4);
+    color: var(--tan-lt);
+    /*text-shadow: 1px 1px 1px rgba(123, 0, 0, .4);*/
 }
 
 
     .nav-pills li:hover i,
     .nav-pills li:hover .nav-link {
         color: var(--tan-lt);
-        text-shadow: .25rem .25rem .75rem rgba(0, 0, 0, .4);
+        color: var(--purp-lt) !important;
+        /*text-shadow: .25rem .25rem .75rem rgba(0, 0, 0, .4);*/
     }
 
 
@@ -62,3 +63,7 @@
     .nav-pills .nav-link.active i {
         background: transparent;
     }
+
+.bot-nav a:hover {
+    color: var(--purp-lt) !important;
+}

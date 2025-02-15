@@ -11,9 +11,9 @@ namespace OptraxMVC.Areas.Grow.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            //var rooms = db.Rooms.ToList();
+            var rooms = db.Rooms.ToList();
 
-            //ViewBag.Rooms = rooms;
+            ViewBag.Rooms = rooms;
 
             return View();
         }

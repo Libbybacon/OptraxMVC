@@ -3,10 +3,11 @@
     flex-flow: column;
     flex: 1 0 auto;
     color: var(--tan-lt);
-    background-image: url('content/bg-waves.png');
+    background-color: var(--tan-lt);
+    /*background-image: url('content/bg-waves.png');*/
     background-repeat: no-repeat;
     background-size: cover;
-    font-size: var(--xlF);
+    font-size: var(--smF);
 }
 
     .loginBG hr {
@@ -18,30 +19,53 @@ a{
     color: var(--tan-lt);
     text-decoration: none;
 }
+a:hover{
+    color: var(--purp-md);
+}
 
 .btn {
     background-image: linear-gradient(var(--grn-lt), var(--grn-dk)) !important;
     border-bottom: 1px solid var(--grn-dk);
-    color: white;
+    color: var(--tan-lt);
     text-shadow: 1px 1px 2px rgba(0,0,0,.2);
     font-size: var(--xlF);
 }
 
+    .btn:hover {
+        background-image: linear-gradient(var(--grn-lt), var(--grn-md)) !important;
+        color: white;
+    }
+
 .loginCard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
     min-width: 50vw;
     max-width: 60vw;
-    box-shadow: 2px 2px 3px rgba(0,0,0,.4);
+    border-top: 3px outset var(--grn-md);
+    border-left: 3px outset var(--grn-md);
+    border-bottom: 3px ridge var(--grn-lt);
+    border-right: 3px ridge var(--grn-lt);
+    box-shadow: 3px 3px 12px rgba(0,0,0,.4);
     background-color: #040D32;
-    padding-right: 10%;
-    padding-left: 10%;
-    padding-top: 2%;
-    padding-bottom: 4%;
+
 }
 
+.innerCard {
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--purp-md);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 10%;
+    padding-left: 10%;
+    padding-top: 4%;
+    padding-bottom: 6%;
+}
 .loginCard section{
-    min-width: 75%;
-    max-width: 500px;
+    width: 500px;
 }
 
 .logo{
@@ -52,4 +76,8 @@ a{
     margin-left: auto;
     margin-right: auto;
     
+}
+
+.form-label{
+    color: var(--blue-dk);
 }

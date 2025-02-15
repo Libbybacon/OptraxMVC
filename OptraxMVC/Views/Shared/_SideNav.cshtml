@@ -1,29 +1,41 @@
-﻿
-@{
+﻿@{
     string page = ViewData["Page"]?.ToString() ?? "";
+
+    Dictionary<string, string> menuItems = new Dictionary<string, string>() {
+        { "Home", "grid-3x3" },
+        { "Grow", "flower2" },
+        { "Harvest", "scissors" },
+        { "Inventory", "basket3" },
+        { "Reports", "file-bar-graph" },
+    };
 }
-<div class="sideNav bg-dark box-shadow p-3">
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 text-decoration-none">
-        <div class="logo">
-            <img src="~/content/logo-bright3.png" alt="Logo" />
-        </div>
-    </a>
-    <hr class="text-tan">
-    <ul class="nav nav-pills flex-column mb-auto">
+
+<div class="sideNav flex-sm-column flex-row justify-content-between bg-dark box-shadow p-2">
+    <div>
+        <a href="/" class="d-sm-flex d-none align-items-center mb-3 mb-md-0 text-decoration-none">
+            <div class="logo pt-1">
+                <img src="~/content/logo-purp.png" alt="Logo" />
+            </div>
+        </a>
+        <hr class="d-sm-block d-none text-tan">
+        <ul class="nav nav-pills flex-sm-column flex-row mb-auto">
+            @foreach (var item in menuItems)
+            {
+                <li class="nav-item">
+                    <a asp-area="@(item.Key)" asp-controller="@(item.Key)" class="nav-link d-flex @(page == $"{item.Key}" ? "active" : "")">
+                        <i class="bi text-tan bi-@(item.Value) me-sm-3 me-0"></i>
+                        <span class="d-sm-block d-none pt-2">@item.Key</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+    <ul class="bot-nav mb-0">
         <li class="nav-item">
-            <a asp-area="" asp-controller="Home" class="nav-link d-flex @(page == "Home" ? "active" : "")"><i class="bi text-tan bi-grid-3x3-gap me-3"></i><span>Dashboard</span></a>
-        </li>
-        <li class="nav-item ">
-            <a asp-area="Grow" asp-controller="Grow" class="nav-link d-flex @(page == "Grow" ? "active" : "")"><i class="bi bi-flower2 text-tan  me-3"></i><span>Grow</span></a>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link d-flex @(page == "Harvest" ? "active" : "")"><i class="bi bi-scissors text-tan me-3"></i><span>Harvest</span></a>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link d-flex @(page == "Inventory" ? "active" : "")"><i class="bi bi-basket3 text-tan me-3"></i><span>Inventory</span></a>
-         </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link d-flex @(page == "Reports" ? "active" : "")"><i class="bi bi-file-bar-graph text-tan me-3"></i><span>Reports</span></a>
+            <a asp-area="Identity" asp-page="/Account/Logout" class="nav-link">
+                @* <i class="bi text-tan bi-x me-sm-3 me-0"></i> *@
+                <span>Logout</span>
+            </a>
         </li>
     </ul>
 </div>
