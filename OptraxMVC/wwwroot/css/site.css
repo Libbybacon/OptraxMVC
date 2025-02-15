@@ -1,0 +1,115 @@
+:root {
+    --blue-lt: #1F5A76;
+    --blue-md: #1C516E;
+    --blue-dk: #030726;
+    --grn-lt: #579585;
+    --grn-md: #1b6552;
+    --grn-dk: #195C4B;
+    --tan-dk: #8F8073;
+    --tan-md: #9D9085;
+    --tan-lt: #C7C0B9;
+}
+
+.bg-dark {
+    background-color: var(--blue-dk) !important;
+}
+
+.text-tan {
+    color: var(--tan-dk);
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+
+html, body {
+    height: 100% !important;
+    width: 100% !important;
+    /*background-color: #4C6986;*/
+    /*background-color: #91A5C7;*/
+    background-color: #334A6E;
+    /*background-color: #C1CDE0;*/
+    font-family: 'Roboto' !important;
+}
+
+html {
+    font-size: 14px;
+    background-color: #1C516E;
+}
+
+.content {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+main {
+    flex: 1 1 auto;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.box-shadow {
+    box-shadow: 2px .25rem .75rem rgba(0, 0, 0, .4);
+}
+
+
+.form-check-input:checked{
+    background-color: var(--grn-md);
+    border-color: var(--grn-dk);
+}
+/* Dash */
+.dash {
+}
+
+.filterOuter{
+    height: auto;
+}
+
+.widgTitle {
+    text-align: center;
+    font-size: var(--xlF);
+    color: var(--grn-md);
+    font-weight: bold;
+}
+
+.widgInfo {
+    text-align: center;
+    font-size: var(--xxxlF);
+    color: var(--blue-dk);
+}
+
+.chart {
+    border: 1px solid lightgray;
+    margin: 5px;
+    box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    background-color: var(--tan-lt);
+    min-width: 300px !important;
+    width: 100%;
+}
+
+.chartTitle {
+    text-align: center;
+    font-size: var(--xxlF);
+    color: var(--grn-md);
+    font-weight: bold;
+    padding-top: 5px;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.chartheader {
+    font-size: var(--smF);
+    font-weight: bold;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.chartWidget {
+    padding: 1%;
+    height: 350px;
+}

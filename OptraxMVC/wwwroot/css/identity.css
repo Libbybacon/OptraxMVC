@@ -1,0 +1,55 @@
+﻿.loginBG {
+    display: flex;
+    flex-flow: column;
+    flex: 1 0 auto;
+    color: var(--tan-lt);
+    background-image: url('content/bg-waves.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-size: var(--xlF);
+}
+
+    .loginBG hr {
+        border-width: 2px !important;
+        opacity: .8;
+    }
+
+a{
+    color: var(--tan-lt);
+    text-decoration: none;
+}
+
+.btn {
+    background-image: linear-gradient(var(--grn-lt), var(--grn-dk)) !important;
+    border-bottom: 1px solid var(--grn-dk);
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,.2);
+    font-size: var(--xlF);
+}
+
+.loginCard {
+    position: relative;
+    min-width: 50vw;
+    max-width: 60vw;
+    box-shadow: 2px 2px 3px rgba(0,0,0,.4);
+    background-color: #040D32;
+    padding-right: 10%;
+    padding-left: 10%;
+    padding-top: 2%;
+    padding-bottom: 4%;
+}
+
+.loginCard section{
+    min-width: 75%;
+    max-width: 500px;
+}
+
+.logo{
+    width: 100%;
+    display: flex
+}
+.logo img{
+    margin-left: auto;
+    margin-right: auto;
+    
+}
