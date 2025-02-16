@@ -10,6 +10,7 @@ namespace OptraxDAL.Models.Grow
         public int StrainID { get; set; }
         public int? BatchID { get; set; }
         public string? Name { get; set; }
+        public int? RoomID { get; set; }
 
         public DateTimeOffset? StartDate { get; set; }
         public DateTimeOffset? EndDate { get; set; }
@@ -31,6 +32,7 @@ namespace OptraxDAL.Models.Grow
 
         public required virtual Strain Strain { get; set; }
         public virtual ICollection<Plant> Plants { get; set; } = [];
+        public virtual Room? Room { get; set; }
         public virtual ICollection<ProductItem> ProductItems { get; set; } = [];
     }
 }

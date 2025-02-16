@@ -21,7 +21,7 @@
 
 <body>
     <div class="bodyContainer d-flex flex-sm-row flex-column w-100 h-100">
-        <partial name="_SideNav" />
+        <partial name="_side-nav" />
         <div class="content">
             <main role="main" class="">
                 @RenderBody()
@@ -32,6 +32,8 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/jqueryui/dist/jquery-ui.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/lib/datatables/datatables.js"></script>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)

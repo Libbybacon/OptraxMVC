@@ -1,0 +1,47 @@
+﻿@model OptraxMVC.Models.TabsVM
+
+@{
+    ViewData["Page"] = Model.Area;
+    string area = Model.Area.ToLower();    
+}
+
+<div class="top-tabs box-shadow">
+    <ul class="nav nav-tabs justify-content-center" id="@area-tabs" role="tablist">
+        @for (int i = 0; i < Model.Tabs.Count; i++)
+        {
+            var tab = Model.Tabs[i];
+            bool active = i == 0;
+            string divider = i < Model.Tabs.Count - 1 ? "divider" : "";
+
+            <li class="nav-item px-2 @(divider)" role="presentation">
+                <button type="button" role="tab" id="@(tab.ShortName)-tab" class="nav-link px-5 @(active ? "active" : "")"
+                        data-bs-toggle="tab" data-tab-key="@tab.ShortName"
+                        data-bs-target="#@(tab.ShortName)"
+                        aria-controls="@(tab.ShortName)"
+                        aria-selected="@active">
+                    @(tab.Name)
+                </button>
+            </li>
+        }
+    </ul>
+</div>
+
+<div class="tab-content p-0" id="@area-content">
+    @for (int i = 0; i < Model.Tabs.Count; i++)
+    {
+        var tab = Model.Tabs[i];
+        bool active = i == 0;
+
+        <div id="@tab.ShortName" class="tab-pane fade @(active ? "show active" : "")" role="tabpanel" aria-labelledby="@tab.ShortName-tab">
+            <div class="inner-tab cust-scroll row d-flex col-12 m-0" data-tab-key="@tab.Name">
+
+                <!-- Content loads here-->
+
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="/js/tabs.js"></script>
+}

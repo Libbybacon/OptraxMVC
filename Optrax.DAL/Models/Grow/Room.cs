@@ -10,6 +10,7 @@ namespace OptraxDAL.Models.Grow
         {
             Active = true;
             Plants = [];
+            Crops = [];
             TransfersIn = [];
             TransfersOut = [];
         }
@@ -25,14 +26,16 @@ namespace OptraxDAL.Models.Grow
         public int? LocationID { get; set; }
         public bool Active { get; set; }
 
-        public virtual InventoryLocation? Location { get; set; }
+        
+        public virtual RoomLocation? Location { get; set; }
 
-        public virtual ICollection<Plant> Plants { get; set; }
+        public virtual ICollection<Crop> Crops { get; set; } = [];
+        public virtual ICollection<Plant> Plants { get; set; } = [];
 
         [InverseProperty(nameof(RoomTransfer.ToRoom))]
-        public virtual ICollection<RoomTransfer> TransfersIn { get; set; }
+        public virtual ICollection<RoomTransfer> TransfersIn { get; set; } = [];
 
         [InverseProperty(nameof(RoomTransfer.FromRoom))]
-        public virtual ICollection<RoomTransfer> TransfersOut { get; set; }
+        public virtual ICollection<RoomTransfer> TransfersOut { get; set; } = [];
     }
 }

@@ -2,13 +2,13 @@
 @media (min-width: 768px) {
 
 }
-.sideNav {
+.side-nav {
     display: flex;
     flex-flow: column;
     flex: 0 1;
 }
 
-.sideNav hr{
+.side-nav hr{
     border-width:2px !important;
     opacity: .8;
 }

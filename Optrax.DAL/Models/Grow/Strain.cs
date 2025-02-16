@@ -13,6 +13,10 @@ namespace OptraxDAL.Models.Grow
        
         public required string Name { get; set; }
 
+        public int? OriginCompanyID { get; set; }
+
+        public string? GeneticOrigin { get; set; }
+
         public string? Description { get; set; }
        
         public required string StrainType { get; set; }
@@ -40,5 +44,11 @@ namespace OptraxDAL.Models.Grow
         Indica,
         Sativa,
         Hybrid
+    }
+
+    public enum OriginTypes
+    {
+        InHouse,
+        External
     }
 }

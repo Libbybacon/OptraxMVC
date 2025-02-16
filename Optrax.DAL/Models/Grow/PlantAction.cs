@@ -18,7 +18,7 @@ namespace OptraxDAL.Models.Grow
 
         public string? ActionSubType { get; set; }
 
-        public required virtual Plant Plant { get; set; }
+        public required virtual Plant Plant { get; set; } = new Plant();
     }
 
     [Table("PlantActions")]

@@ -1,4 +1,7 @@
-﻿namespace OptraxDAL.Models.Inventory
+﻿using OptraxDAL.Models.Grow;
+using System.Runtime.InteropServices.Marshalling;
+
+namespace OptraxDAL.Models.Inventory
 {
     public class InventoryItem
     {
@@ -14,8 +17,6 @@
 
         public int CategoryID { get; set; }
 
-        public int? SubCategoryID { get; set; }
-
         public string? SKU { get; set; }
 
         public string? DefaultUOM { get; set; }
@@ -26,5 +27,12 @@
 
         public bool Active { get; set; } = true;
 
+        public virtual Light? Light { get; set; }
+
+        public virtual Plant? Plant { get; set; }
+
+        public required virtual InventoryCategory Category { get; set; }
+
+        public virtual ICollection<InventoryStockItem> StockItems { get; set; } = [];
     }
 }

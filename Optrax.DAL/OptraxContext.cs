@@ -5,6 +5,8 @@ using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
 using OptraxDAL.Models.Products;
+using OptraxDAL.Models;
+using Microsoft.Identity.Client;
 
 
 namespace OptraxDAL
@@ -13,8 +15,12 @@ namespace OptraxDAL
     {
         #region Admin
         public DbSet<AppUser> AppUsers { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Building> Buildings { get; set; }
+        public DbSet<Company> Companies { get; set; }
 
         #endregion
+
 
         #region Grow
         public DbSet<ContainerType> ContainerTypes { get; set; }
@@ -38,10 +44,16 @@ namespace OptraxDAL
         #endregion
 
         #region Inventory
-        public DbSet<InventoryCategory> InventoryCategories { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
-        public DbSet<InventoryLocation> InventoryLocations { get; set; }
         public DbSet<InventoryStockItem> InventoryStockItems { get; set; }
+        public DbSet<InventoryCategory> InventoryCategories { get; set; }
+
+        public DbSet<InventoryLocation> InventoryLocations { get; set; }
+        public DbSet<ContainerLocation> ContainerLocations { get; set; }
+        public DbSet<RoomLocation> RoomLocations { get; set; }
+        public DbSet<BuildingLocation> BuildingLocations { get; set; }
+        public DbSet<OffsiteLocation> OffsiteLocations { get; set; }
+
         #endregion
 
         #region Products
@@ -84,6 +96,31 @@ namespace OptraxDAL
 
             builder.Entity<TreatmentAction>().Property(x => x.QuantityApplied).HasPrecision(8, 2);
 
+            builder.Entity<InventoryLocation>().HasDiscriminator<string>("LocationType")
+                                               .HasValue<ContainerLocation>("Container")
+                                               .HasValue<RoomLocation>("Room")
+                                               .HasValue<BuildingLocation>("Building")
+                                               .HasValue<OffsiteLocation>("Offsite");
+
+            builder.Entity<RoomLocation>().HasOne(rl => rl.Room)
+                                          .WithOne(r => r.Location)
+                                          .HasForeignKey<RoomLocation>(rl => rl.RoomID)
+                                          .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<BuildingLocation>().HasOne(bl => bl.Building)
+                                              .WithOne(a => a.Location)
+                                              .HasForeignKey<BuildingLocation>(bl => bl.BuildingID)
+                                              .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Building>().HasOne(b => b.Address)
+                                      .WithOne(a => a.Building)
+                                      .HasForeignKey<Building>(b => b.AddressID)
+                                      .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Company>().HasOne(b => b.Address)
+                                     .WithOne(a => a.Company)
+                                     .HasForeignKey<Company>(b => b.AddressID)
+                                     .OnDelete(DeleteBehavior.Restrict);
 
             #region Handle Plant Actions TPH
             builder.Entity<PlantAction>().HasDiscriminator<string>("TransferType")

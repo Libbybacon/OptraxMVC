@@ -16,6 +16,15 @@
 /*background-color: #91A5C7;*/
 /*background-color: #C1CDE0;*/
 
+@media only screen and (max-width: 600px) {
+    .side-nave{
+        height: 50px !important;
+    }
+    .inner-tab {
+        max-height: calc(100vh - 100px) !important;
+    }
+}
+
 .bg-dark {
     background-color: var(--blue-dk) !important;
 }
@@ -32,14 +41,6 @@
     box-shadow: 2px .25rem .75rem rgba(0, 0, 0, .4);
 }
 
-.topTabs {
-    height: 150px;
-}
-
-.growCards {
-    height: calc(100vh - 40px);
-    overflow-y: auto;
-}
 
 /* Content */
 html {
@@ -89,48 +90,38 @@ input[type=checkbox]:hover, input[type=radio]:hover {
 
 /* Scroll */
 
-.custScroll::-webkit-scrollbar {
+/*.cust-scroll::-webkit-scrollbar {
     width: 6px !important;
     height: 8px !important;
 }
 
-.custScroll::-webkit-scrollbar-track {
+.cust-scroll::-webkit-scrollbar-track {
     background: #f1f1f1 !important;
 }
 
-.custScroll::-webkit-scrollbar-thumb {
+.cust-scroll::-webkit-scrollbar-thumb {
     background: var(--gry5) !important;
 }
 
-.custScroll::-webkit-scrollbar-track {
+.cust-scroll::-webkit-scrollbar-track {
     background: var(--gry2) !important;
 }
-
+*/
 
 /* Dash */
-
-.cardsDiv {
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-
-    .cardsDiv .card {
-        min-height: 200px;
-    }
 
 .filterOuter {
     height: auto;
 }
 
-.widgTitle {
+.widget-title {
     text-align: center;
     font-size: var(--xlF);
     color: var(--grn-md);
     font-weight: bold;
 }
 
-.widgInfo {
+.widget-info {
     text-align: center;
     font-size: var(--xxxlF);
     color: var(--blue-dk);
@@ -146,7 +137,7 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     width: 100%;
 }
 
-.chartTitle {
+.chart-title {
     text-align: center;
     font-size: var(--xxlF);
     color: var(--grn-md);
@@ -155,13 +146,86 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
-.chartheader {
+.chart-head {
     font-size: var(--smF);
     font-weight: bold;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
-.chartWidget {
+.chart-widget {
     padding: 1%;
     height: 350px;
 }
+
+.nav-tabs {
+    border-bottom: none;
+    background: var(--blue-dk);
+}
+
+    .nav-tabs .nav-link {
+        margin-bottom: 0;
+        border: none;
+        font-size: var(--lgF);
+    }
+
+        .nav-tabs .nav-link.active {
+            border: none;
+        }
+
+        .nav-tabs .nav-link:hover {
+            background: var(--blue-dk);
+            border: none;
+            color: var(--tan-lt);
+        }
+
+        .nav-tabs .nav-link.active,
+        .nav-tabs .nav-link.active:hover,
+        .nav-tabs .nav-item.show .nav-link,
+        .nav-tabs .nav-item.show .nav-link:hover {
+            background-color: var(--blue-md);
+            color: white;
+        }
+
+.divider {
+    border-right: 2px ridge var(--tan-lt) !important;
+}
+
+/* Room */
+
+.top-tabs {
+    background: var(--blue-dk);
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inner-tab {
+}
+
+.inner-tab {
+    max-height: calc(100vh - 50px);
+    overflow-y: auto;
+    margin: 0;
+}
+
+.cards-div {
+    /*height: 100%;*/
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+    .cards-div .card {
+        min-height: 200px;
+    }
+
+.room-card {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
+    background-color: var(--grn-md);
+    color: var(--tan-lt);
+}
+
+    .room-card:hover {
+        cursor: pointer;
+        background-color: var(--grn-lt);
+    }

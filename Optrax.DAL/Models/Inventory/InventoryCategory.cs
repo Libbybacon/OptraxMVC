@@ -1,12 +1,23 @@
-﻿namespace OptraxDAL.Models.Inventory
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace OptraxDAL.Models.Inventory
 {
     public class InventoryCategory
     {
-        public InventoryCategory() { }
-        public required int ID { get; set; }
+        public InventoryCategory()
+        {
+            Active = true;
+        }
+
+        public int ID { get; set; }
         public int? ParentID { get; set; }
         public required string Name { get; set; }
         public string? Description { get; set; }
-        public required bool Active { get; set; } = true;
+        public bool Active { get; set; }
+
+        [ForeignKey("ParentID")]
+        public virtual InventoryCategory? Parent { get; set; } = null;
+
+        public virtual List<InventoryCategory> Children { get; set; } = [];
     }
 }

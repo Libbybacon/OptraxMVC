@@ -1,0 +1,11 @@
+﻿@using OptraxDAL.Models.Inventory
+
+@model List<InventoryCategory>
+
+<button id="add-root-cat">Add Root Category</button>
+<div id="cat-tree">
+    @foreach (InventoryCategory category in ViewBag.Categories)
+    {
+        @await Html.PartialAsync("../Shared/_CategoryTree", category)
+    }
+</div>

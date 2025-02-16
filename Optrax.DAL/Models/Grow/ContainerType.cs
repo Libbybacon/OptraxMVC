@@ -12,7 +12,7 @@ namespace OptraxDAL.Models.Grow
             TransfersOut = [];
         }
 
-        public int ID { get; set; }
+        public int ContainerTypeID { get; set; }
 
         public required int InventoryItemID { get; set; }
 

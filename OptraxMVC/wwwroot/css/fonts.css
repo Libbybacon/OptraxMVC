@@ -10,7 +10,7 @@
 
 @media only screen and (max-width: 600px) {
     html {
-        font-size: 12px;
+        font-size: 12px !important;
     }
 }
 
@@ -44,7 +44,7 @@
 
 .ui-widget,
 .ui-widget select {
-    font-family: 'Inter' !important;
+    font-family: 'Roboto' !important;
 }
 
 .xxsF {
@@ -73,56 +73,4 @@
 
 .xxlF {
     font-size: var(--xxlF) !important;
-}
-
-
-
-.filtBtn, .closeBtn {
-    font-weight: 500 !important;
-}
-
-.redF {
-    color: var(--red4) !important;
-}
-
-.blue3F {
-    color: var(--blue3) !important;
-}
-
-.blue5F {
-    color: var(--blue5) !important;
-}
-
-.greenF {
-    color: var(--grn4) !important;
-}
-
-.grn4F {
-    color: var(--grn4) !important;
-}
-
-.grn5F {
-    color: var(--grn5) !important;
-}
-
-
-
-.gry4F {
-    color: var(--gry4) !important;
-}
-
-.gry5F {
-    color: var(--gry5) !important;
-}
-
-.gry6F {
-    color: var(--gry6) !important;
-}
-
-#mainTable_info,
-#mainTable_filter,
-#mainTable_length,
-#mainTable_length .form-select,
-#mainTable_paginate .paginate_button .page-link {
-    font-size: .9rem !important;
 }
