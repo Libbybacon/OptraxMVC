@@ -1,25 +1,84 @@
 ﻿@using OptraxDAL.Models.Inventory
 @model InventoryCategory
 
-<li id="cat-@Model.ID">
-@*     <button class="toggle-btn">[+]</button>
-    @Model.Name
-    <button class="add-cat-btn" data-parent-id="@Model.ID">Add</button> *@
+@{
+    var isTop = Model.Parent == null;
+}
 
-    <span class="node-name">@Model.Name</span>
-    <button class="edit-node">✏️ Edit</button>
-    <button class="delete-node">🗑️ Delete</button>
+<tr id="cat-@Model.ID" class="cat-row @(isTop ? "top-row" : "")">
+    <td>
+        <div class="d-flex align-items-center">
+            @if (Model.Children.Any())
+            {
+                <button class="toggle-btn toggle" data-toggle-id="child-@Model.ID">
+                    <span class="show-i"><i class="bi bi-chevron-expand"></i></span>
+                    <span class="hide-i d-none"><i class="bi bi-chevron-contract"></i></span>
+                </button>
+            }
+            <div class="cat-name">@Model.Name</div>
+        </div>
+    </td>
+    <td colspan="2">@Model.Description</td>
+    <td>
+        <div class="d-flex justify-content-end pe-2">
+            <button class="add-cat toggle me-2 text-success" data-id="@Model.ID">+</button>
+            @* <button class="edit-cat toggle me-2" data-id="@Model.ID">Edit</button> *@
+            @* <button class="remove-cat toggle text-danger" data-id="@Model.ID">X</button> *@
+        </div>
+    </td>
+</tr>
 
-    <div class="edit-form" style="display: none;">
-        <input type="text" class="edit-input" value="@Model.Name" />
-        <button class="save-edit">💾 Save</button>
-        <button class="cancel-edit">❌ Cancel</button>
-    </div>
+@if (Model.Items != null && Model.Items.Any())
+{
+    <tr id="item-list-@Model.ID" class="item-list-row w-100">
+        <td colspan="4">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><button class="add-cat otx-btn" data-id="@Model.ID">Add New Item</button></th>
+                        <th>Item Name</th>
+                        <th>Description</th>
+                        <th>Manufacturer</th>
+                        <th>SKU</th>
+                        <th>Default UOM</th>
+                        <th>CurrentCount</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr class="">
+                            <td>@item.Name</td>
+                            <td>@item.Description</td>
+                            <td>@item.Manufacturer</td>
+                            <td>@item.SKU</td>
+                            <td>@item.DefaultUOM</td>
+                            <td>@item.StockItems.Count</td>
+                            <td>
+                                <button class="edit-item otx-btn" data-id="@item.ID">Edit</button>
+                                <button class="remove-item otx-btn btn-red" data-id="@item.ID">Remove</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </td>
+    </tr>
+}
 
-    <ul class="nested">
-        @foreach (var child in Model.Children)
-        {
-            @await Html.PartialAsync("_CategoryTree", child)
-        }
-    </ul>
-</li>
+@if (Model.Children.Any())
+{
+    <tr id="child-@Model.ID" class="child-row" style="display:none;">
+        <td colspan="4">
+            <table class="table">
+                @foreach (var child in Model.Children)
+                {
+                    @await Html.PartialAsync("~/Areas/Inventory/Views/Categories/_Category.cshtml", child)
+                }
+            </table>
+        </td>
+    </tr>
+}
+
+

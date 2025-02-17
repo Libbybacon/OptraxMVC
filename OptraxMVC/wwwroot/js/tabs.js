@@ -64,8 +64,6 @@ function loadTab(tab) {
     let name = $(tab).attr("data-name");
 
     let tabVM = { Area: area, Tabs: [{ Name: name, TabKey: tabKey }] } 
-    console.log(tabVM)
-    var url = '@Url.Action("LoadTabContentAsync", "Tabs")';
     $.ajax({
         url: '/Tabs/LoadTabContent/',
         type: "GET",

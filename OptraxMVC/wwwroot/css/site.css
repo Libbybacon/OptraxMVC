@@ -1,4 +1,8 @@
 :root {
+    --red-lt: #E72C2C;
+    --red-md: #E11818;
+    --red-dk: #B11E1E;
+    /*--red-dk: #C32121;*/
     --blue-lt: #1F5A76;
     --blue-md: #1C516E;
     --blue-dk: #030726;
@@ -18,23 +22,36 @@
 
 @media only screen and (max-width: 600px) {
     .side-nav {
-        height: 50px !important;
+        height: 40px !important;
+        border-bottom: 1px solid var(--tan-lt);
+    }
+
+        .side-nav .nav-link i {
+            font-size: 1.2rem !important;
+        }
+
+    .top-tabs {
+        height: 30px !important;
     }
 
     .inner-tab {
-        max-height: calc(100vh - 100px) !important;
+        max-height: calc(100vh - 70px) !important;
     }
 
-    .inner-tree {
-        min-height: calc(100vh - 185px) !important; /* 100 - nav, 15 - top margin, 40 - header  extra 40 to make it even ??*/
-        max-height: calc(100vh - 185px) !important;
+    .tab-inner {
+        width: 100% !important;
+    }
+
+    .cat-body {
+        min-height: calc(100vh - 190px) !important; /* 100 - nav, 15 - top margin, 40 - header  extra 40 to make it even ??*/
+        max-height: calc(100vh - 190px) !important;
     }
 }
 
-@media only screen and (min-width: 768px){
-    .inner-tree {
-        min-height: calc(100vh - 135px); /* 50 - nav, 15 - top margin, 40 - header, extra 40 to leave margin at bottom (just adding another 15 doesn't create space below - why ??)*/
-        max-height: calc(100vh - 135px);
+@media only screen and (min-width: 768px) {
+    .cat-body {
+        min-height: calc(100vh - 1350x) !important; /* 50 - nav, 15 - top margin, 40 - header, extra 40 to leave margin at bottom (just adding another 15 doesn't create space below - why ??)*/
+        max-height: calc(100vh - 130px) !important;
     }
 }
 
@@ -45,9 +62,6 @@
 .text-tan {
     color: var(--tan-dk);
 }
-
-
-
 
 .box-shadow {
     box-shadow: 2px .25rem .75rem rgba(0, 0, 0, .4);
@@ -76,7 +90,6 @@ body {
     height: 100vh;
     display: flex;
     flex: 1 1 auto;
-    /*max-height: 100vh;*/
 }
 
 main {
@@ -101,12 +114,6 @@ main {
 input[type=checkbox]:hover, input[type=radio]:hover {
     cursor: pointer;
 }
-
-/*.form-control:focus,
-.form-select:focus {
-    border-color: var(--grn-lt);
-    outline-color: var(--grn-lt);
-}*/
 
 
 /* Tabs */
@@ -154,27 +161,74 @@ input[type=checkbox]:hover, input[type=radio]:hover {
 
 .inner-tab {
     margin: 0;
-    /*    display: flex;
+    /*    position: relative;
+        display: flex;
     overflow-y: auto;
     max-height: calc(100vh - 50px);*/
+    /*position: relative;*/
+    /*max-height: calc(100vh - 50px);*/
 }
 
-/* Tree Lists */
-
-.tree-div {
+.tab-div {
     height: 100%;
     padding-top: 15px;
 }
 
-.tree {
+.tab-inner {
     margin-left: auto;
     margin-right: auto;
-
-    width: 95%;
+    width: 99%;
     background-color: white;
+    box-shadow: 2px .25rem .75rem rgba(0, 0, 0, .4);
+    padding: 0;
+    padding-top: 1rem;
+    min-height: calc(100vh - 80px) !important;
 }
 
-.tree-head {
+table td {
+    vertical-align: middle;
+}
+
+.cat-table thead,
+.cat-table tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.top-head tr th{
+    padding-bottom: .5rem;
+    border-bottom: 1.5px ridge var(--blue-dk); 
+}
+.cat-body {
+    display: block;
+    overflow-y: auto;
+}
+
+.top-row{
+    background-color: lightgrey;
+    border-bottom: 1px solid darkgrey;
+}
+
+.top-row .cat-name{
+    font-weight: bold;
+}
+.child-row > td {
+    padding: 0; /* Remove extra padding from the parent <td> */
+}
+
+table td,
+.child-row table td {
+    padding: .15rem; /* Keep padding inside the child table */
+}
+.child-row table tr:last-child td {
+    border: none;
+}
+.child-row table {
+    margin-bottom: 0;
+    border-collapse: collapse;
+}
+.tab-head {
     height: 40px;
 }
 
@@ -184,86 +238,57 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     padding-left: 0;
 }
 
-.tree ul {
-    list-style: none;
-    padding-left: 20px;
-    position: relative;
-}
-    .tree ul::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 10px;
-        width: 2px;
-        height: 100%;
-        background-color: #ccc; /* Vertical line */
-    }
-
-.node {
-    /*    width: 100%;
-    border-bottom: 1px solid var(--purp-lt);
-    padding-top: 3px;
-    padding-bottom: 1px;*/
-    position: relative;
-    padding-left: 20px;
-    border-bottom: 1px solid var(--purp-lt);
-}
-
-
-.node::before {
-    content: "";
-    position: absolute;
-    top: 12px;
-    left: 0px;
-    width: 10px;
-    height: 2px;
-    background-color: #ccc; /* Horizontal connector */
-}
-.node-name {
-    font-weight: bold;
-    font-size: var(--mdF);
-}
-.tree-item {
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-
-.node-btn {
-    font-size: var(--smF);
-    margin-right: 1rem;
-}
-
+/* Buttons */
+.toggle,
 .toggle-btn {
     cursor: pointer;
     margin-right: 5px;
-    font-weight: bold;
-    display: inline-block;
-    width: 15px;
-    text-align: center;
+    border: none;
+    background: none;
 }
 
 
 
-.ox-btn {
-    background: linear-gradient(var(--grn-lt), var(--grn-dk));
-    /*background-color: var(--grn-lt);*/
-    color: white !important;
-    border: none !important;
-    border-bottom: 1px solid var(--grn-dk);
+.otx-btn {
     border-radius: 4px;
     padding-top: .15rem;
     padding: .1rem .5rem;
+    color: white !important;
+    border: none !important;
+    border-bottom: 1px solid var(--grn-dk);
+    background: linear-gradient(var(--grn-lt), var(--grn-dk));
 }
+
+    .otx-btn:hover {
+        cursor: pointer;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+        background: linear-gradient(var(--grn-lt), var(--grn-md));
+    }
+
 .btn-red {
-    background: linear-gradient(lightred, darkred);
+    background: linear-gradient(var(--red-lt), var(--red-md)) !important;
 }
+
+    .btn-red:hover {
+        background: linear-gradient(var(--red-lt), var(--red-md));
+    }
+
 .btn-gray {
-    background: linear-gradient(lightgray, darkgray);
+    border: none;
     border-radius: 4px;
     margin-right: .5rem;
-    border: none;
+    background: linear-gradient(lightgray, darkgray);
 }
+
+    .btn-gray:hover {
+    }
+
+
+
+
+
+
+
 /* Rooms */
 .cards-div {
     /*height: 100%;*/
