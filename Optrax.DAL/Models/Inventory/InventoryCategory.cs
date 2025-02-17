@@ -19,5 +19,7 @@ namespace OptraxDAL.Models.Inventory
         public virtual InventoryCategory? Parent { get; set; } = null;
 
         public virtual List<InventoryCategory> Children { get; set; } = [];
+
+        public virtual List<InventoryItem> Items { get; set; } = [];
     }
 }
