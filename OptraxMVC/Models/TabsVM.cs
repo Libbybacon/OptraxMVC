@@ -10,7 +10,7 @@ namespace OptraxMVC.Models
 
         public void SetTabViewPath(Tab tab)
         {
-            tab.ViewPath = $"~/Areas/{Area}/Views/{tab.Name}/_{tab.Name}";
+            tab.ViewPath = $"~/Areas/{Area}/Views/{tab.Name}/_{tab.Name}.cshtml";
         }
     }
 
@@ -21,6 +21,11 @@ namespace OptraxMVC.Models
         public required string TabKey { get; set; }
 
         public string? ViewPath { get; set; }
+
+        public string GetTabKey()
+        {
+            return Name[..3].ToLower() + "-" + Name.ToLower();
+        }
 
     }
 }

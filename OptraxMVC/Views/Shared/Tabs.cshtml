@@ -2,11 +2,10 @@
 
 @{
     ViewData["Page"] = Model.Area;
-    string area = Model.Area.ToLower();
 }
 
 <div class="top-tabs box-shadow">
-    <ul class="nav nav-tabs justify-content-center" id="@area-tabs" role="tablist">
+    <ul class="nav nav-tabs justify-content-center" role="tablist">
         @for (int i = 0; i < Model.Tabs.Count; i++)
         {
             var tab = Model.Tabs[i];
@@ -14,15 +13,15 @@
             string key = tab.TabKey;
             string divider = i < Model.Tabs.Count - 1 ? "divider" : "";
 
-            <li class="nav-item px-2 @(divider)" role="presentation">
+            <li class="nav-item px-lg-2 px-1 @(divider)" role="presentation">
                 <button type="button"
                         role="tab"
                         id="@key-tab"
-                        class="nav-link px-5 @(active ? "active" : "")"
+                        class="nav-link px-xl-5 px-md-3 px-1 @(active ? "active" : "")"
                         data-key="@key"
                         data-name="@tab.Name"
-                        data-area="@area"
-                        data-bs-toggle="tab" 
+                        data-area="@Model.Area"
+                        data-bs-toggle="tab"
                         data-bs-target="#@key"
                         aria-controls="@key"
                         aria-selected="@active">
@@ -33,7 +32,7 @@
     </ul>
 </div>
 
-<div class="tab-content p-0" id="@area-content">
+<div class="tab-content p-0">
     @for (int i = 0; i < Model.Tabs.Count; i++)
     {
         var tab = Model.Tabs[i];

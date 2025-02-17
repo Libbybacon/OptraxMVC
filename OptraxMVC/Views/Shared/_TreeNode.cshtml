@@ -1,25 +1,35 @@
 ﻿@using OptraxDAL.Models.Inventory
 @model InventoryCategory
 
-<li id="cat-@Model.ID">
-    @*     <button class="toggle-btn">[+]</button>
-    @Model.Name
-    <button class="add-cat-btn" data-parent-id="@Model.ID">Add</button> *@
+@{
+    var depth = ViewData.ContainsKey("Depth") ? (int)ViewData["Depth"] + 1 : 0;
+}
 
-    <span class="node-name">@Model.Name</span>
-    <button class="edit-node">✏️ Edit</button>
-    <button class="delete-node">🗑️ Delete</button>
-
-    <div class="edit-form" style="display: none;">
-        <input type="text" class="edit-input" value="@Model.Name" />
-        <button class="save-edit">💾 Save</button>
-        <button class="cancel-edit">❌ Cancel</button>
+<li id="cat-@Model.ID" class="tree-li node depth-@depth">
+    <div class="tree-item justify-content-between">
+        @if (Model.Children.Count > 0)
+        {
+            <button class="toggle-btn collapse-btn btn-gray">[-]</button>
+        }
+        <span class="node-name">@Model.Name</span>
+        <div class="d-flex">
+            <button class="add-cat-btn ox-btn node-btn" data-parent-id="@Model.ID">Add</button>
+            <button class="edit-node ox-btn node-btn"> Edit</button>
+            <button class="delete-node ox-btn btn-red node-btn">Delete</button>
+        </div>
+        <div class="edit-form" style="display: none;">
+            <input type="text" class="edit-input" value="@Model.Name" />
+            <button class="save-edit ox-btn node-btn">Save</button>
+            <button class="cancel-edit ox-btn node-btn"> Cancel</button>
+        </div>
     </div>
 
-    <ul class="nested">
+    <ul class="nested" style="margin-left: @(depth * 30)px;">
         @foreach (var child in Model.Children)
         {
-            @await Html.PartialAsync("_TreeNode", child)
+            var childViewData = new ViewDataDictionary(ViewData) { ["Depth"] = depth };
+
+            @await Html.PartialAsync("_TreeNode", child, childViewData)
         }
     </ul>
 </li>

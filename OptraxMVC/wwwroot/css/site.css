@@ -17,12 +17,24 @@
 /*background-color: #C1CDE0;*/
 
 @media only screen and (max-width: 600px) {
-    .side-nave {
+    .side-nav {
         height: 50px !important;
     }
 
     .inner-tab {
         max-height: calc(100vh - 100px) !important;
+    }
+
+    .inner-tree {
+        min-height: calc(100vh - 185px) !important; /* 100 - nav, 15 - top margin, 40 - header  extra 40 to make it even ??*/
+        max-height: calc(100vh - 185px) !important;
+    }
+}
+
+@media only screen and (min-width: 768px){
+    .inner-tree {
+        min-height: calc(100vh - 135px); /* 50 - nav, 15 - top margin, 40 - header, extra 40 to leave margin at bottom (just adding another 15 doesn't create space below - why ??)*/
+        max-height: calc(100vh - 135px);
     }
 }
 
@@ -33,6 +45,8 @@
 .text-tan {
     color: var(--tan-dk);
 }
+
+
 
 
 .box-shadow {
@@ -140,12 +154,116 @@ input[type=checkbox]:hover, input[type=radio]:hover {
 
 .inner-tab {
     margin: 0;
-    display: flex;
+    /*    display: flex;
     overflow-y: auto;
-    max-height: calc(100vh - 50px);
+    max-height: calc(100vh - 50px);*/
+}
+
+/* Tree Lists */
+
+.tree-div {
+    height: 100%;
+    padding-top: 15px;
+}
+
+.tree {
+    margin-left: auto;
+    margin-right: auto;
+
+    width: 95%;
+    background-color: white;
+}
+
+.tree-head {
+    height: 40px;
+}
+
+.inner-tree {
+    overflow-y: auto;
+    position: relative;
+    padding-left: 0;
+}
+
+.tree ul {
+    list-style: none;
+    padding-left: 20px;
+    position: relative;
+}
+    .tree ul::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10px;
+        width: 2px;
+        height: 100%;
+        background-color: #ccc; /* Vertical line */
+    }
+
+.node {
+    /*    width: 100%;
+    border-bottom: 1px solid var(--purp-lt);
+    padding-top: 3px;
+    padding-bottom: 1px;*/
+    position: relative;
+    padding-left: 20px;
+    border-bottom: 1px solid var(--purp-lt);
 }
 
 
+.node::before {
+    content: "";
+    position: absolute;
+    top: 12px;
+    left: 0px;
+    width: 10px;
+    height: 2px;
+    background-color: #ccc; /* Horizontal connector */
+}
+.node-name {
+    font-weight: bold;
+    font-size: var(--mdF);
+}
+.tree-item {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.node-btn {
+    font-size: var(--smF);
+    margin-right: 1rem;
+}
+
+.toggle-btn {
+    cursor: pointer;
+    margin-right: 5px;
+    font-weight: bold;
+    display: inline-block;
+    width: 15px;
+    text-align: center;
+}
+
+
+
+.ox-btn {
+    background: linear-gradient(var(--grn-lt), var(--grn-dk));
+    /*background-color: var(--grn-lt);*/
+    color: white !important;
+    border: none !important;
+    border-bottom: 1px solid var(--grn-dk);
+    border-radius: 4px;
+    padding-top: .15rem;
+    padding: .1rem .5rem;
+}
+.btn-red {
+    background: linear-gradient(lightred, darkred);
+}
+.btn-gray {
+    background: linear-gradient(lightgray, darkgray);
+    border-radius: 4px;
+    margin-right: .5rem;
+    border: none;
+}
 /* Rooms */
 .cards-div {
     /*height: 100%;*/

@@ -1,13 +1,23 @@
 ﻿@using OptraxDAL.Models.Inventory
 @model List<InventoryCategory>
 
-<h2>Inventory Categories</h2>
+<div class="tree-div">
 
-<button id="add-root-cat">Add Root Category</button>
-<ul class="tree">
-    @foreach (var category in Model)
-    {
-        @await Html.PartialAsync("_TreeNode", category)
-    }
-</ul>
+    <div class="tree box-shadow  p-2">
+        <div class="tree-head">
+            <button id="add-root-cat" class="btn ox-btn node-btn">Add New Top Level Category</button>
+        </div>
+        <div class="inner-tree">
+            <ul class="tree-ul">
+                @foreach (var category in Model)
+                {
+                    @await Html.PartialAsync("_TreeNode", category)
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="/js/inventory.js"></script>
+
 

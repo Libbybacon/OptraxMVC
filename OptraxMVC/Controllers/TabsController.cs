@@ -27,12 +27,14 @@ namespace OptraxMVC.Controllers
                 new Tab() { Name = t, TabKey = $"{t[..3].ToLower()}-{t.ToLower()}" })]
             };
 
-            return PartialView("_Tabs", tabsVM);
+            return View("Tabs", tabsVM);
         }
 
-        public async Task<IActionResult> LoadTabContentAsync(TabsVM tabVM)
+        [HttpGet]
+        public async Task<IActionResult> LoadTabContent(string area, string name)
         {
-            var tab = tabVM.Tabs.First();
+            var tabVM = new TabsVM() { Area = area, Tabs = [new Tab() { Name = name, TabKey = ""}] };
+            var tab = tabVM.Tabs[0];
 
             object? model = tabVM.Area switch
             {
