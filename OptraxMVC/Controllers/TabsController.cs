@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Extensions;
 using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
 using OptraxMVC.Models;
@@ -8,21 +9,25 @@ namespace OptraxMVC.Controllers
 {
     public class TabsController(OptraxContext context) : BaseController(context)
     {
-        [Authorize]
-        public IActionResult Index()
+
+        // TODO: Move to db table, allow users to customize display orders by rearraging tabs in view 
+        private readonly Dictionary<string, List<string>> TabViews = new()
         {
-            TabsVM tabs = new()
+            ["Grow"] = ["Rooms", "Crops", "Plants", "Strains"],
+            ["Inventory"] = ["Plants", "Products", "Stock", "Items", "Locations", "Categories"]
+        };
+
+        [Authorize]
+        public IActionResult LoadTabs(string navarea)
+        {
+            TabsVM tabsVM = new()
             {
-                Area = "Grow",
-                Tabs =
-                [
-                    new Tab() { Name = "Rooms", ShortName = "room" },
-                    new Tab() { Name = "Crops", ShortName = "crop" },
-                    new Tab() { Name = "Plants", ShortName = "plant" },
-                    new Tab() { Name = "Strains", ShortName = "strain" },
-                ]
+                Area = navarea,
+                Tabs = [.. TabViews[navarea].Select(t =>
+                new Tab() { Name = t, TabKey = $"{t[..3].ToLower()}-{t.ToLower()}" })]
             };
-            return View("Tabs", tabs);
+
+            return PartialView("_Tabs", tabsVM);
         }
 
         public async Task<IActionResult> LoadTabContentAsync(TabsVM tabVM)
@@ -31,31 +36,31 @@ namespace OptraxMVC.Controllers
 
             object? model = tabVM.Area switch
             {
-                "Grow" => tab.ShortName switch
+                "Grow" => tab.Name switch
                 {
-                    "room" => await db.Rooms.ToListAsync(),
-                    "crop" => await db.Crops.ToListAsync(),
-                    "plant" => await db.Plants.ToListAsync(),
-                    "strain" => await db.Strains.ToListAsync(),
+                    "Rooms" => await db.Rooms.ToListAsync(),
+                    "Crops" => await db.Crops.ToListAsync(),
+                    "Plants" => await db.Plants.ToListAsync(),
+                    "Strains" => await db.Strains.ToListAsync(),
                     _ => null
                 },
 
-                "Inventory" => tab.ShortName switch
+                "Inventory" => tab.Name switch
                 {
-                    "plant" => await db.Plants.ToListAsync(),
-                    "product" => await db.Products.ToListAsync(),
-                    "stock" => await db.InventoryStockItems.ToListAsync(),
-                    "item" => await db.InventoryItems.Include(i => i.StockItems).ToListAsync(),
+                    "Plants" => await db.Plants.ToListAsync(),
+                    "Products" => await db.Products.ToListAsync(),
+                    "Stock" => await db.InventoryStockItems.ToListAsync(),
+                    "Items" => await db.InventoryItems.Include(i => i.StockItems).ToListAsync(),
 
-                    "loc" => await db.InventoryLocations.Where(c => c.ParentID == null)
+                    "Locations" => await db.InventoryLocations.Where(c => c.ParentID == null)
                                                         .Include(c => c.Children)
                                                         .ThenInclude(c => c.Children)
                                                         .ToListAsync(),
 
-                    "category" => await db.InventoryCategories.Where(c => c.ParentID == null)
-                                                              .Include(c => c.Children)
-                                                              .ThenInclude(c => c.Children)
-                                                              .ToListAsync(),
+                    "Categories" => await db.InventoryCategories.Where(c => c.ParentID == null)
+                                                                .Include(c => c.Children)
+                                                                .ThenInclude(c => c.Children)
+                                                                .ToListAsync(),
                     _ => null
                 },
                 _ => null
@@ -68,8 +73,7 @@ namespace OptraxMVC.Controllers
 
             tabVM.SetTabViewPath(tab);
 
-
-            return PartialView(tab.ViewPath, model); // Dynamically load the correct partial view
+            return PartialView(tab.ViewPath, model);
         }
     }
 }

@@ -17,9 +17,10 @@
 /*background-color: #C1CDE0;*/
 
 @media only screen and (max-width: 600px) {
-    .side-nave{
+    .side-nave {
         height: 50px !important;
     }
+
     .inner-tab {
         max-height: calc(100vh - 100px) !important;
     }
@@ -33,16 +34,13 @@
     color: var(--tan-dk);
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
 
 .box-shadow {
     box-shadow: 2px .25rem .75rem rgba(0, 0, 0, .4);
 }
 
 
-/* Content */
+/* Site Layout */
 html {
     height: 100vh;
     font-size: 14px;
@@ -54,17 +52,17 @@ body {
     width: 100% !important;
     height: 100% !important;
     font-family: 'Roboto' !important;
-    /*background-color: #334A6E;*/
     background-color: #1C516E !important;
     background-color: var(--tan-lt) !important;
+    /*background-color: #334A6E;*/
 }
 
 .content {
+    width: 100%;
     height: 100vh;
     display: flex;
-    max-height: 100vh;
-    width: 100%;
     flex: 1 1 auto;
+    /*max-height: 100vh;*/
 }
 
 main {
@@ -73,20 +71,102 @@ main {
 
 /* Inputs */
 
+.btn:focus,
+.btn:active:focus,
+.form-control:focus,
+.form-check-input:focus,
+.btn-link.nav-link:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem var(--grn-lt);
+}
+
+.form-check-input:checked {
+    border-color: var(--grn-dk);
+    background-color: var(--grn-md);
+}
+
 input[type=checkbox]:hover, input[type=radio]:hover {
     cursor: pointer;
 }
 
-.form-control:focus,
+/*.form-control:focus,
 .form-select:focus {
-    outline-color: var(--grn-lt);
     border-color: var(--grn-lt);
+    outline-color: var(--grn-lt);
+}*/
+
+
+/* Tabs */
+
+.top-tabs {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--blue-dk);
 }
 
-.form-check-input:checked {
-    background-color: var(--grn-md);
-    border-color: var(--grn-dk);
+.nav-tabs {
+    border-bottom: none;
+    background: var(--blue-dk);
 }
+
+    .nav-tabs .nav-link {
+        border: none;
+        margin-bottom: 0;
+        font-size: var(--lgF);
+    }
+
+        .nav-tabs .nav-link.active {
+            border: none;
+        }
+
+        .nav-tabs .nav-link:hover {
+            border: none;
+            color: var(--tan-lt);
+            background: var(--blue-dk);
+        }
+
+        .nav-tabs .nav-link.active,
+        .nav-tabs .nav-link.active:hover,
+        .nav-tabs .nav-item.show .nav-link,
+        .nav-tabs .nav-item.show .nav-link:hover {
+            background-color: var(--blue-md);
+            color: white;
+        }
+
+.divider {
+    border-right: 2px ridge var(--tan-lt) !important;
+}
+
+.inner-tab {
+    margin: 0;
+    display: flex;
+    overflow-y: auto;
+    max-height: calc(100vh - 50px);
+}
+
+
+/* Rooms */
+.cards-div {
+    /*height: 100%;*/
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+    .cards-div .card {
+        min-height: 200px;
+    }
+
+.room-card {
+    color: var(--tan-lt);
+    background-color: var(--grn-md);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
+}
+
+    .room-card:hover {
+        cursor: pointer;
+        background-color: var(--grn-lt);
+    }
 
 /* Scroll */
 
@@ -115,40 +195,40 @@ input[type=checkbox]:hover, input[type=radio]:hover {
 }
 
 .widget-title {
-    text-align: center;
-    font-size: var(--xlF);
-    color: var(--grn-md);
     font-weight: bold;
+    text-align: center;
+    color: var(--grn-md);
+    font-size: var(--xlF);
 }
 
 .widget-info {
     text-align: center;
-    font-size: var(--xxxlF);
     color: var(--blue-dk);
+    font-size: var(--xxxlF);
 }
 
 .chart {
-    border: 1px solid lightgray;
-    margin: 5px;
-    box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-    background-color: var(--tan-lt);
-    /*  min-width: 300px !important;*/
     width: 100%;
+    margin: 5px;
+    border-radius: 5px;
+    border: 1px solid lightgray;
+    background-color: var(--tan-lt);
+    box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.2);
+    /*  min-width: 300px !important;*/
 }
 
 .chart-title {
-    text-align: center;
-    font-size: var(--xxlF);
-    color: var(--grn-md);
-    font-weight: bold;
     padding-top: 5px;
+    font-weight: bold;
+    text-align: center;
+    color: var(--grn-md);
+    font-size: var(--xxlF);
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .chart-head {
-    font-size: var(--smF);
     font-weight: bold;
+    font-size: var(--smF);
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
@@ -156,76 +236,3 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     padding: 1%;
     height: 350px;
 }
-
-.nav-tabs {
-    border-bottom: none;
-    background: var(--blue-dk);
-}
-
-    .nav-tabs .nav-link {
-        margin-bottom: 0;
-        border: none;
-        font-size: var(--lgF);
-    }
-
-        .nav-tabs .nav-link.active {
-            border: none;
-        }
-
-        .nav-tabs .nav-link:hover {
-            background: var(--blue-dk);
-            border: none;
-            color: var(--tan-lt);
-        }
-
-        .nav-tabs .nav-link.active,
-        .nav-tabs .nav-link.active:hover,
-        .nav-tabs .nav-item.show .nav-link,
-        .nav-tabs .nav-item.show .nav-link:hover {
-            background-color: var(--blue-md);
-            color: white;
-        }
-
-.divider {
-    border-right: 2px ridge var(--tan-lt) !important;
-}
-
-/* Room */
-
-.top-tabs {
-    background: var(--blue-dk);
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.inner-tab {
-}
-
-.inner-tab {
-    max-height: calc(100vh - 50px);
-    overflow-y: auto;
-    margin: 0;
-}
-
-.cards-div {
-    /*height: 100%;*/
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-
-    .cards-div .card {
-        min-height: 200px;
-    }
-
-.room-card {
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
-    background-color: var(--grn-md);
-    color: var(--tan-lt);
-}
-
-    .room-card:hover {
-        cursor: pointer;
-        background-color: var(--grn-lt);
-    }

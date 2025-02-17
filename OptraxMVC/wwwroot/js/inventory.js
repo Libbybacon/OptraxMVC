@@ -1,12 +1,5 @@
 ﻿$(document).ready(function () {
 
-    $('#invItemsTable').dataTable({
-        "paging": true,
-        "ordering": true,
-        "info": true,
-        "searching": true
-    });
-
     // Toggle categories
     $(document).on("click", ".toggle-btn", function () {
         var nestedList = $(this).siblings("ul.nested");
@@ -22,12 +15,12 @@
     });
 
     // Add root category
-    $("#add-root-cat").click(function () {
+    $("#add-root-node").click(function () {
         var catName = prompt("Enter new root category name:");
 
         if (catName) {
             $.ajax({
-                url: "/InventoryCategory/AddCategoryAsync",
+                url: "/Inventory/Categories/AddAsync",
                 type: "POST",
                 data: { name: catName, parentID: null },
                 success: function (response) {
@@ -47,7 +40,7 @@
 
         if (catName) {
             $.ajax({
-                url: "/InventoryCategory/Add",
+                url: "/Inventory/Categories/AddAsync",
                 type: "POST",
                 data: { name: catName, parentID: parentID },
                 success: function (response) {

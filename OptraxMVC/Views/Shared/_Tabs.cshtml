@@ -2,7 +2,7 @@
 
 @{
     ViewData["Page"] = Model.Area;
-    string area = Model.Area.ToLower();    
+    string area = Model.Area.ToLower();
 }
 
 <div class="top-tabs box-shadow">
@@ -11,13 +11,20 @@
         {
             var tab = Model.Tabs[i];
             bool active = i == 0;
+            string key = tab.TabKey;
             string divider = i < Model.Tabs.Count - 1 ? "divider" : "";
 
             <li class="nav-item px-2 @(divider)" role="presentation">
-                <button type="button" role="tab" id="@(tab.ShortName)-tab" class="nav-link px-5 @(active ? "active" : "")"
-                        data-bs-toggle="tab" data-tab-key="@tab.ShortName"
-                        data-bs-target="#@(tab.ShortName)"
-                        aria-controls="@(tab.ShortName)"
+                <button type="button"
+                        role="tab"
+                        id="@key-tab"
+                        class="nav-link px-5 @(active ? "active" : "")"
+                        data-key="@key"
+                        data-name="@tab.Name"
+                        data-area="@area"
+                        data-bs-toggle="tab" 
+                        data-bs-target="#@key"
+                        aria-controls="@key"
                         aria-selected="@active">
                     @(tab.Name)
                 </button>
@@ -31,9 +38,10 @@
     {
         var tab = Model.Tabs[i];
         bool active = i == 0;
+        string key = tab.TabKey;
 
-        <div id="@tab.ShortName" class="tab-pane fade @(active ? "show active" : "")" role="tabpanel" aria-labelledby="@tab.ShortName-tab">
-            <div class="inner-tab cust-scroll row d-flex col-12 m-0" data-tab-key="@tab.Name">
+        <div id="@key" class="tab-pane fade @(active ? "show active" : "")" role="tabpanel" aria-labelledby="@key-tab">
+            <div class="inner-tab cust-scroll row col-12 m-0" data-key="@key">
 
                 <!-- Content loads here-->
 

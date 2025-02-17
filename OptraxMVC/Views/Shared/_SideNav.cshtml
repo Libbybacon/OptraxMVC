@@ -22,10 +22,15 @@
             @foreach (var item in menuItems)
             {
                 <li class="nav-item">
-                    <a asp-area="@(item.Key)" asp-controller="@(item.Key)" class="nav-link d-flex @(page == $"{item.Key}" ? "active" : "")">
+                    <a asp-controller="Tabs" asp-action="LoadTabs" asp-route-navarea="@item.Key"
+                       class="nav-link d-flex @(page == item.Key ? "active" : "")">
                         <i class="bi text-tan bi-@(item.Value) me-sm-3 me-0"></i>
                         <span class="d-sm-block d-none pt-2">@item.Key</span>
                     </a>
+@*                     <a asp-area="@(item.Key)" asp-controller="@(item.Key)" class="nav-link d-flex @(page == $"{item.Key}" ? "active" : "")">
+                        <i class="bi text-tan bi-@(item.Value) me-sm-3 me-0"></i>
+                        <span class="d-sm-block d-none pt-2">@item.Key</span>
+                    </a> *@
                 </li>
             }
         </ul>
@@ -33,7 +38,6 @@
     <ul class="bot-nav mb-0">
         <li class="nav-item">
             <a asp-area="Identity" asp-page="/Account/Logout" class="nav-link">
-                @* <i class="bi text-tan bi-x me-sm-3 me-0"></i> *@
                 <span>Logout</span>
             </a>
         </li>

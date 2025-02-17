@@ -16,16 +16,11 @@ namespace OptraxMVC.Models
 
     public class Tab
     {
-        public Tab()
-        {
-            ViewPath = $"_{Name}";
-        }
-
         public required string Name { get; set; }
 
-        public required string ShortName { get; set; }
+        public required string TabKey { get; set; }
 
-        public string ViewPath { get; set; }
+        public string? ViewPath { get; set; }
 
     }
 }

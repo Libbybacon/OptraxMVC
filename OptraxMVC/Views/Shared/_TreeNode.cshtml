@@ -1,0 +1,45 @@
+﻿@using OptraxDAL.Models.Inventory
+@model InventoryCategory
+
+<li id="cat-@Model.ID">
+    @*     <button class="toggle-btn">[+]</button>
+    @Model.Name
+    <button class="add-cat-btn" data-parent-id="@Model.ID">Add</button> *@
+
+    <span class="node-name">@Model.Name</span>
+    <button class="edit-node">✏️ Edit</button>
+    <button class="delete-node">🗑️ Delete</button>
+
+    <div class="edit-form" style="display: none;">
+        <input type="text" class="edit-input" value="@Model.Name" />
+        <button class="save-edit">💾 Save</button>
+        <button class="cancel-edit">❌ Cancel</button>
+    </div>
+
+    <ul class="nested">
+        @foreach (var child in Model.Children)
+        {
+            @await Html.PartialAsync("_TreeNode", child)
+        }
+    </ul>
+</li>
+
+@* @model dynamic
+
+<ul class="tree">
+    @foreach (var item in Model)
+    {
+        <li data-id="@item.ID">
+            <span class="toggle-btn">[+]</span>
+            <span class="item-name">@item.Name</span>
+
+            <button class="edit-btn" data-id="@item.ID">Edit</button>
+            <button class="delete-btn" data-id="@item.ID">Delete</button>
+
+            @if (item.Children != null && item.Children.Any())
+            {
+                <partial name="_TreeView" model="item.Children" />
+            }
+        </li>
+    }
+</ul> *@
