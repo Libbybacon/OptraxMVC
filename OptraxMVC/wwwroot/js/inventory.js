@@ -1,20 +1,6 @@
-﻿var isExpanded = false;
+﻿var showAll = false;
+
 $(document).ready(function () {
-
-    $(document).on('click', '.editable-field', function () {
-        var $cell = $(this);
-
-        if (!$cell.attr('contenteditable')) {
-            $cell.attr('contenteditable', 'true').addClass('editing').focus();
-        }
-    });
-
-    $(document).off('blur').on('blur', '.attr', function () {
-
-        var $cell = $(this);
-
-    });
-
 
     $(".toggle-btn").off('click').on('click', function () {
         var toggleId = $(this).data("toggle-id");
@@ -25,19 +11,29 @@ $(document).ready(function () {
     });
 
     $(".toggle-all").off('click').on('click', function () {
-        if (isExpanded) {
-            $(".items-row").hide();
-            $(".toggle .show-i").removeClass('d-none');
-            $(".toggle .hide-i").addClass('d-none');
-        }
-        else {
-            $(".items-row").show();
-            $(".toggle .hide-i").removeClass('d-none');
-            $(".toggle .show-i").addClass('d-none');
-        }
 
-        isExpanded = !isExpanded;
+        showAll ? $(".items-row").hide() : $(".items-row").show();
+
+        $(`.toggle .${(showAll ? 'show' : 'hide')}-i`).removeClass('d-none');
+        $(`.toggle .${(showAll ? 'hide' : 'show')}-i`).addClass('d-none');
+
+        showAll = !showAll;
     });
+
+    $(document).on('click', '.attr', function () {
+        var $cell = $(this);
+
+        if (!$cell.attr('contenteditable')) {
+            $cell.attr('contenteditable', 'true').addClass('editing').focus();
+        }
+    });
+
+    $(document).off('blur').on('blur', '.attr', function () {
+
+        editAttribute($(this));
+    });
+
+
 
     // Add Category
     $(".add-cat").off('click').on('click', function () {
@@ -52,27 +48,6 @@ $(document).ready(function () {
                 },
                 error: function () {
                     alert("Error adding category.");
-                }
-            });
-        }
-    });
-
-    // Edit Category
-    $(".edit-cat").off('click').on('click', function () {
-        const categoryId = $(this).data("id");
-        const newCategoryName = prompt("Enter new category name");
-
-        if (newCategoryName) {
-            $.ajax({
-                url: '/Inventory/InventoryCategories/Edit',
-                type: 'POST',
-                data: { id: categoryId, name: newCategoryName },
-                success: function () {
-                    // Update the category name on the page
-                    $(`#category-${categoryId} .category-name`).text(newCategoryName);
-                },
-                error: function () {
-                    alert("Error editing category.");
                 }
             });
         }
@@ -120,28 +95,6 @@ $(document).ready(function () {
         }
     });
 
-    // Edit Item
-    $(".edit-item").off('click').on('click', function () {
-        const itemId = $(this).data("id");
-        const newItemName = prompt("Enter new item name");
-        const newItemQuantity = prompt("Enter new item quantity");
-
-        if (newItemName && newItemQuantity) {
-            $.ajax({
-                url: '/Inventory/InventoryItems/Edit',
-                type: 'POST',
-                data: { id: itemId, name: newItemName, quantity: newItemQuantity },
-                success: function () {
-                    $(`#item-${itemId} .item-name`).text(newItemName);
-                    $(`#item-${itemId} .item-quantity`).text(newItemQuantity);
-                },
-                error: function () {
-                    alert("Error editing item.");
-                }
-            });
-        }
-    });
-
     // Remove Item
     $(".remove-item").off('click').on('click', function () {
         const itemId = $(this).data("id");
@@ -162,7 +115,7 @@ $(document).ready(function () {
     });
 });
 
-function editAttribute($cell, modelType) {
+function editAttribute($cell) {
 
     $cell.removeAttr('contenteditable').removeClass('editing');  // Remove the contenteditable state and editing class
 
@@ -176,12 +129,11 @@ function editAttribute($cell, modelType) {
     var $row = $cell.closest('tr')
 
     var data = new FormData();
-    data.append('ClassType', $row.data('class'));
+    data.append('Value', newVal);
     data.append('ID', $row.data('id'));
-    data.append('ParentID', $row.data('parent-id'));
     data.append('Field', $cell.data('field'));
-
-    data[field] = newValue;
+    data.append('ParentID', $row.data('parent-id'));
+    data.append('ClassType', $row.data('class-type'));
 
     $.ajax({
         url: '/Inventory/Inventory/UpdateAttribute',
@@ -189,6 +141,9 @@ function editAttribute($cell, modelType) {
         data: data,
         success: function (response) {
             if (response.success) {
+
+                $cell.data('val', newVal);
+                $cell.attr('data-val', newVal); // update val data
 
                 $cell.addClass('update-success');
 
