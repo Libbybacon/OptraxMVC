@@ -1,4 +1,5 @@
 ﻿using OptraxDAL.Models.Grow;
+using System.ComponentModel.DataAnnotations;
 
 namespace OptraxDAL.Models.Inventory
 {
@@ -7,10 +8,13 @@ namespace OptraxDAL.Models.Inventory
         public ContainerType() { }
 
         public int ContainerTypeID { get; set; }
+        [MaxLength(100)]
         public required string Name { get; set; }
+        [MaxLength(100)]
         public string? Description { get; set; }
         public required decimal Capacity { get; set; }
-        public required string CapacityUnit { get; set; }
+        [MaxLength(20)]
+        public required string CapacityUOM { get; set; }
         public bool Active { get; set; } = true;
 
         public virtual ICollection<InventoryItem> InventoryItems { get; set; } = [];

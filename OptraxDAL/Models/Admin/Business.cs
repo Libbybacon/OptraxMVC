@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Admin
 {
@@ -7,7 +8,9 @@ namespace OptraxDAL.Models.Admin
     {
         public Business() { }
         public int ID { get; set; }
+        [MaxLength(100)]
         public required string Name { get; set; }
+        [MaxLength(250)]
         public string? Description { get; set; }
         public virtual required List<Address> Addresses { get; set; } = [];
         //public virtual required BusinessAddress Address { get; set; }

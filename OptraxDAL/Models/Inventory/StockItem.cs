@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
@@ -7,14 +8,15 @@ namespace OptraxDAL.Models.Inventory
     {
         public StockItem() { }
 
-        public required int ID { get; set; }
-        public required int InventoryItemID { get; set; }
+        public int ID { get; set; }
+        public int InventoryItemID { get; set; }
 
         public DateTimeOffset? PurchaseDate { get; set; }
         public DateTimeOffset? ExpirationDate { get; set; }
 
+        [MaxLength(50)]
         public string? LotNumber { get; set; }
-
+        [MaxLength(50)]
         public string? Status { get; set; }
         public bool NeedsTransferApproval { get; set; } = false;
         public decimal? PurchasePrice { get; set; }

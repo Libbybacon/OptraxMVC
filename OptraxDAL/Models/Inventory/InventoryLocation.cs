@@ -30,6 +30,7 @@ namespace OptraxDAL.Models.Inventory
         public virtual ICollection<InventoryTransfer> TransfersIn { get; set; } = [];
     }
 
+    //TODO: Move location types to own class files, add functions
     [Table("InventoryLocation")]
     public class ContainerLocation : InventoryLocation
     {

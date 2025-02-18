@@ -1,31 +1,28 @@
 ﻿@model IEnumerable<OptraxDAL.Models.Inventory.RoomLocation>
 
-<style>
+<div class="inner-tab cards-div room-cards cust-scroll row m-0 d-flex col-12">
+    @for (int i = 1; i < 12; i++)
+    {
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="w-100 p-3">
+                <div class="card room-card">
+                    <div class="card-body">
+                        <h4>Room @i</h4>
+                        <p class="d-flex"><span>Crop 1</span></p>
+                        <p class="d-flex ms-4"><span>Strain: </span>Blue Dream</p>
+                        <p class="d-flex ms-4"><span>Plant Count: </span>24</p>
+                        <p class="d-flex ms-4"><span>Phase: </span>Veg - Day 8 of 27</p>
+                        <p class="d-flex ms-4"><span>Last Activitiy: </span>Water - 2/13/2025</p>
+                        <hr />
+                        <p class="d-flex"><span>Crop 2</span></p>
+                        <p class="d-flex ms-4"><span>Strain: </span>Purple Haze</p>
+                        <p class="d-flex ms-4"><span>Plant Count: </span>24</p>
+                        <p class="d-flex ms-4"><span>Phase: </span>Flower - Day 19 of 21</p>
+                        <p class="d-flex ms-4"><span>Last Activitiy: </span>Flush - 2/13/2025</p>
+                    </div>
 
-
-</style>
-
-@for (int i = 1; i < 12; i++)
-{
-    <div class="col-lg-4 col-md-6 col-12">
-        <div class="w-100 p-3">
-            <div class="card room-card">
-                <div class="card-body">
-                    <h4>Room @i</h4>
-                    <p class="d-flex"><span>Crop 1</span></p>
-                    <p class="d-flex ms-4"><span>Strain: </span>Blue Dream</p>
-                    <p class="d-flex ms-4"><span>Plant Count: </span>24</p>
-                    <p class="d-flex ms-4"><span>Phase: </span>Veg - Day 8 of 27</p>
-                    <p class="d-flex ms-4"><span>Last Activitiy: </span>Water - 2/13/2025</p>
-                    <hr />
-                    <p class="d-flex"><span>Crop 2</span></p>
-                    <p class="d-flex ms-4"><span>Strain: </span>Purple Haze</p>
-                    <p class="d-flex ms-4"><span>Plant Count: </span>24</p>
-                    <p class="d-flex ms-4"><span>Phase: </span>Flower - Day 19 of 21</p>
-                    <p class="d-flex ms-4"><span>Last Activitiy: </span>Flush - 2/13/2025</p>
                 </div>
-
             </div>
         </div>
-    </div>
-}
+    }
+</div>

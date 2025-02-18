@@ -5,11 +5,11 @@ VisualStudioVersion = 17.13.35806.99
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptraxDAL", "Optrax.DAL\OptraxDAL.csproj", "{BECFA9D0-7107-1E8D-804F-46CE19E10B22}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptraxMVC", "OptraxMVC\OptraxMVC.csproj", "{C08ED72C-D631-D66B-BF63-65239584A208}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailSender", "EmailSender\EmailSender.csproj", "{7FCD4766-46B6-49FC-9387-6EB8C21388E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptraxDAL", "OptraxDAL\OptraxDAL.csproj", "{37641DA3-27E9-3C81-5167-617DC477ACB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BECFA9D0-7107-1E8D-804F-46CE19E10B22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BECFA9D0-7107-1E8D-804F-46CE19E10B22}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BECFA9D0-7107-1E8D-804F-46CE19E10B22}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BECFA9D0-7107-1E8D-804F-46CE19E10B22}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C08ED72C-D631-D66B-BF63-65239584A208}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C08ED72C-D631-D66B-BF63-65239584A208}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C08ED72C-D631-D66B-BF63-65239584A208}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -29,6 +25,10 @@ Global
 		{7FCD4766-46B6-49FC-9387-6EB8C21388E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FCD4766-46B6-49FC-9387-6EB8C21388E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FCD4766-46B6-49FC-9387-6EB8C21388E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37641DA3-27E9-3C81-5167-617DC477ACB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37641DA3-27E9-3C81-5167-617DC477ACB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37641DA3-27E9-3C81-5167-617DC477ACB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37641DA3-27E9-3C81-5167-617DC477ACB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

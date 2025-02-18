@@ -48,14 +48,15 @@ $(document).ready(function () {
     });
 
 
-    $(".toggle-btn").click(function () {
+    $(".toggle-btn").off('click').on('click', function () {
         var toggleId = $(this).data("toggle-id");
-        $(this).find("span .show-i").toggleClass('d-none');
-        $(this).find("span .hide-i").toggleClass('d-none');
+
+        $(`#${toggleId}-btn span`).toggleClass('d-none');
+
         $("#" + toggleId).toggle();
     });
 
-    $(".toggle-all").click(function () {
+    $(".toggle-all").off('click').on('click', function () {
         if (isExpanded) {
             $(".items-row").hide();
             $(".toggle .show-i").removeClass('d-none');
@@ -71,7 +72,7 @@ $(document).ready(function () {
     });
 
     // Add Category
-    $(".add-cat").click(function () {
+    $(".add-cat").off('click').on('click', function () {
         const categoryName = prompt("Enter new category name");
         if (categoryName) {
             $.ajax({
@@ -89,7 +90,7 @@ $(document).ready(function () {
     });
 
     // Edit Category
-    $(".edit-cat").click(function () {
+    $(".edit-cat").off('click').on('click', function () {
         const categoryId = $(this).data("id");
         const newCategoryName = prompt("Enter new category name");
 
@@ -110,7 +111,7 @@ $(document).ready(function () {
     });
 
     // Remove Category
-    $(".remove-cat").click(function () {
+    $(".remove-cat").off('click').on('click', function () {
         const categoryId = $(this).data("id");
 
         if (confirm("Are you sure you want to delete this category?")) {
@@ -130,7 +131,7 @@ $(document).ready(function () {
     });
 
     // Add Item
-    $(".add-item").click(function () {
+    $(".add-item").off('click').on('click', function () {
         const categoryId = $(this).data("parent-id");
         const itemName = prompt("Enter new item name");
         const itemQuantity = prompt("Enter item quantity");
@@ -152,7 +153,7 @@ $(document).ready(function () {
     });
 
     // Edit Item
-    $(".edit-item").click(function () {
+    $(".edit-item").off('click').on('click', function () {
         const itemId = $(this).data("id");
         const newItemName = prompt("Enter new item name");
         const newItemQuantity = prompt("Enter new item quantity");
@@ -174,7 +175,7 @@ $(document).ready(function () {
     });
 
     // Remove Item
-    $(".remove-item").click(function () {
+    $(".remove-item").off('click').on('click', function () {
         const itemId = $(this).data("id");
 
         if (confirm("Are you sure you want to delete this item?")) {
@@ -193,52 +194,3 @@ $(document).ready(function () {
     });
 });
 
-$('.saveBtn').off('click').on('click', function () {
-    $('#editForm').submit()
-});
-
-$("#editForm").off('submit').on('submit', function (event) {
-    event.preventDefault();
-    var form = document.querySelector('#editForm');
-
-    if (!this.checkValidity()) {
-        event.stopPropagation();
-        form.reportValidity();
-    }
-    else {
-        saveChanges($(this));
-    }
-});
-
-function saveChanges(form) {
-
-    var job = formToObject($(form).serializeArray());
-
-    $.ajax({
-        url: '/Jobs/Job/SaveChanges',
-        type: 'POST',
-        data: { job: job },
-        success: function (response) {
-
-            if (response.Success == true) {
-                closeModal('edit');
-                $('#jobSuccess').empty().append('Job added successfully').show().delay(3000).fadeOut();
-                Table.ajax.reload();
-            }
-            else {
-                $('.modalError').empty().append(response.Message).show().delay(5000).fadeOut();
-            }
-        }
-    });
-}
-
-//Operator = formToObject($('#opForm').find('.itemAttr').serializeArray()); formToObject($(form).serializeArray());
-function formToObject(formArray) {
-    var modelObj = {};
-
-    for (var i = 0; i < formArray.length; i++) {
-
-        modelObj[formArray[i]['name']] = formArray[i]['value'];
-    }
-    return modelObj;
-}

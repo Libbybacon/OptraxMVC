@@ -7,6 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Inventory\Data\**" />
+    <Content Remove="Areas\Inventory\Data\**" />
+    <EmbeddedResource Remove="Areas\Inventory\Data\**" />
+    <None Remove="Areas\Inventory\Data\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Areas\Inventory\Views\Items\_Categories.cshtml" />
+    <Content Remove="Views\Shared\_TreeNode.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.13" />
@@ -22,17 +34,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Optrax.DAL\OptraxDAL.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Areas\Grow\Data\" />
     <Folder Include="Areas\Grow\Models\" />
-    <Folder Include="Areas\Inventory\Data\" />
     <Folder Include="Areas\Inventory\Models\" />
     <Folder Include="Areas\Inventory\Views\Shared\" />
     <Folder Include="Views\Account\" />
     <Folder Include="wwwroot\css\site\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OptraxDAL\OptraxDAL.csproj" />
   </ItemGroup>
 
 </Project>

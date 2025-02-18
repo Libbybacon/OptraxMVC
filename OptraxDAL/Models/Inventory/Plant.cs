@@ -1,4 +1,5 @@
 ﻿using OptraxDAL.Models.Grow;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
@@ -8,10 +9,12 @@ namespace OptraxDAL.Models.Inventory
     {
         public Plant() { }
 
+        [MaxLength(50)]
         public required string TrackingID { get; set; }
         public int StrainID { get; set; }
         public int? ParentID { get; set; }
         public bool IsMother { get; set; } = false;
+        [MaxLength(10)]
         public required string StartPhase { get; set; }
         public int? CropID { get; set; }
 

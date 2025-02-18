@@ -1,15 +1,21 @@
-﻿namespace OptraxDAL.Models.Grow
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OptraxDAL.Models.Grow
 {
     public class Strain
     {
         public Strain() { }
 
         public int ID { get; set; }
+        [MaxLength(100)]
         public required string Name { get; set; }
+        [MaxLength(250)]
         public string? Description { get; set; }
+        [MaxLength(10)]
         public required string StrainType { get; set; }
         public int? Generation { get; set; }
         public int? OriginID { get; set; }
+        [MaxLength(50)]
         public string? OriginType { get; set; }
         public required bool Active { get; set; } = true;
 

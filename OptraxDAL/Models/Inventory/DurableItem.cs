@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
@@ -8,7 +9,8 @@ namespace OptraxDAL.Models.Inventory
         public DurableItem() { }
 
         public int? MaintenanceInterval { get; set; }
-        public string? MaintenanceInvervalUnit { get; set; }
+        [MaxLength(20)]
+        public string? MaintenanceInvervalUOM { get; set; }
 
         public DateTimeOffset? LastMaintenanceCheck { get; set; }
     }

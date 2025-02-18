@@ -34,7 +34,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("StockItemsID");
 
-                    b.ToTable("InventoryLocationStockItem");
+                    b.ToTable("InventoryLocationStockItem", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -216,7 +216,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("BusinessID");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Admin.AppUser", b =>
@@ -309,7 +309,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Businesses");
+                    b.ToTable("Businesses", (string)null);
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.Crop", b =>
@@ -376,7 +376,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("StrainID");
 
-                    b.ToTable("Crops");
+                    b.ToTable("Crops", (string)null);
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.PlantEvent", b =>
@@ -417,7 +417,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("PlantID");
 
-                    b.ToTable("PlantEvents");
+                    b.ToTable("PlantEvents", (string)null);
 
                     b.HasDiscriminator<string>("EventType").HasValue("PlantEvent");
 
@@ -457,7 +457,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Strains");
+                    b.ToTable("Strains", (string)null);
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.StrainRelationship", b =>
@@ -472,7 +472,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("ChildID");
 
-                    b.ToTable("StrainRelationships");
+                    b.ToTable("StrainRelationships", (string)null);
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Inventory.ContainerType", b =>
@@ -505,7 +505,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasKey("ContainerTypeID");
 
-                    b.ToTable("ContainerTypes");
+                    b.ToTable("ContainerTypes", (string)null);
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Inventory.InventoryCategory", b =>
@@ -535,7 +535,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("ParentID");
 
-                    b.ToTable("InventoryCategories");
+                    b.ToTable("InventoryCategories", (string)null);
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Inventory.InventoryItem", b =>
@@ -605,7 +605,7 @@ namespace OptraxDAL.Migrations
                         .IsUnique()
                         .HasFilter("[SKU] IS NOT NULL");
 
-                    b.ToTable("InventoryItems");
+                    b.ToTable("InventoryItems", (string)null);
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Inventory.InventoryLocation", b =>
@@ -642,7 +642,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("ParentID");
 
-                    b.ToTable("InventoryLocation");
+                    b.ToTable("InventoryLocation", (string)null);
 
                     b.HasDiscriminator<string>("LocationType").HasValue("InventoryLocation");
 
@@ -696,7 +696,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("StockItemID");
 
-                    b.ToTable("InventoryTransfers");
+                    b.ToTable("InventoryTransfers", (string)null);
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Inventory.LightType", b =>
@@ -734,7 +734,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("LightTypes");
+                    b.ToTable("LightTypes", (string)null);
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Inventory.StockItem", b =>
@@ -771,7 +771,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("InventoryItemID");
 
-                    b.ToTable("StockItems");
+                    b.ToTable("StockItems", (string)null);
 
                     b.UseTptMappingStrategy();
                 });
@@ -800,7 +800,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Products.ProductBatch", b =>
@@ -824,7 +824,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("ProductBatches");
+                    b.ToTable("ProductBatches", (string)null);
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Products.ProductItem", b =>
@@ -867,7 +867,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("ProductItems");
+                    b.ToTable("ProductItems", (string)null);
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.GrowthEvent", b =>
@@ -878,7 +878,7 @@ namespace OptraxDAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("PlantEvents");
+                    b.ToTable("PlantEvents", (string)null);
 
                     b.HasDiscriminator().HasValue("Growth");
                 });
@@ -892,7 +892,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("NewLightID");
 
-                    b.ToTable("PlantEvents");
+                    b.ToTable("PlantEvents", (string)null);
 
                     b.HasDiscriminator().HasValue("Light");
                 });
@@ -912,7 +912,7 @@ namespace OptraxDAL.Migrations
                     b.Property<string>("WasteQuantityUOM")
                         .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("PlantEvents");
+                    b.ToTable("PlantEvents", (string)null);
 
                     b.HasDiscriminator().HasValue("Prune");
                 });
@@ -928,7 +928,7 @@ namespace OptraxDAL.Migrations
                         .IsUnique()
                         .HasFilter("[TransferID] IS NOT NULL");
 
-                    b.ToTable("PlantEvents");
+                    b.ToTable("PlantEvents", (string)null);
 
                     b.HasDiscriminator().HasValue("Transfer");
                 });
@@ -942,7 +942,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("NewContainerID");
 
-                    b.ToTable("PlantEvents");
+                    b.ToTable("PlantEvents", (string)null);
 
                     b.HasDiscriminator().HasValue("Transplant");
                 });
@@ -967,7 +967,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("PlantEvents");
+                    b.ToTable("PlantEvents", (string)null);
 
                     b.HasDiscriminator().HasValue("Treatment");
                 });
@@ -983,7 +983,7 @@ namespace OptraxDAL.Migrations
                         .IsUnique()
                         .HasFilter("[AddressID] IS NOT NULL");
 
-                    b.ToTable("InventoryLocation");
+                    b.ToTable("InventoryLocation", (string)null);
 
                     b.HasDiscriminator().HasValue("Building");
                 });
@@ -997,7 +997,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("ContainerTypeID");
 
-                    b.ToTable("InventoryLocation");
+                    b.ToTable("InventoryLocation", (string)null);
 
                     b.HasDiscriminator().HasValue("Container");
                 });
@@ -1006,7 +1006,7 @@ namespace OptraxDAL.Migrations
                 {
                     b.HasBaseType("OptraxDAL.Models.Inventory.InventoryLocation");
 
-                    b.ToTable("InventoryLocation");
+                    b.ToTable("InventoryLocation", (string)null);
 
                     b.HasDiscriminator().HasValue("Offsite");
                 });
@@ -1015,7 +1015,7 @@ namespace OptraxDAL.Migrations
                 {
                     b.HasBaseType("OptraxDAL.Models.Inventory.InventoryLocation");
 
-                    b.ToTable("InventoryLocation");
+                    b.ToTable("InventoryLocation", (string)null);
 
                     b.HasDiscriminator().HasValue("Room");
                 });

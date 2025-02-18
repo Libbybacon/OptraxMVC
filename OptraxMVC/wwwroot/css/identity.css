@@ -15,13 +15,14 @@
         opacity: .8;
     }
 
-a{
+a {
     color: var(--tan-lt);
     text-decoration: none;
 }
-a:hover{
-    color: var(--purp-md);
-}
+
+    a:hover {
+        color: var(--purp-md);
+    }
 
 .btn {
     background-image: linear-gradient(var(--grn-lt), var(--grn-dk)) !important;
@@ -49,8 +50,11 @@ a:hover{
     border-right: 3px ridge var(--grn-lt);
     box-shadow: 3px 3px 12px rgba(0,0,0,.4);
     background-color: #040D32;
-
 }
+
+    .login-card section {
+        width: 500px;
+    }
 
 .inner-card {
     width: 100%;
@@ -64,20 +68,17 @@ a:hover{
     padding-top: 4%;
     padding-bottom: 6%;
 }
-.login-card section{
-    width: 500px;
-}
 
-.logo{
+.logo {
     width: 100%;
     display: flex
 }
-.logo img{
-    margin-left: auto;
-    margin-right: auto;
-    
-}
 
-.form-label{
+    .logo img {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+.form-label {
     color: var(--blue-dk);
 }

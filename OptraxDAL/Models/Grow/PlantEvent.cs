@@ -1,5 +1,6 @@
 ﻿using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Inventory;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Grow
@@ -11,23 +12,29 @@ namespace OptraxDAL.Models.Grow
         public int ID { get; set; }
         public int PlantID { get; set; }
         public DateTimeOffset Date { get; set; }
+        [MaxLength(25)]
         public required string EventType { get; set; }
+        [MaxLength(25)]
         public string? EventSubType { get; set; }
         public int UserID { get; set; }
+        [MaxLength(250)]
         public string? Notes { get; set; }
 
         public virtual required Plant Plant { get; set; }
         public virtual required AppUser Employee { get; set; }
     }
 
+    //TODO: Move event types to own class files, add functions
     [Table("PlantEvents")]
     public class TreatmentEvent : PlantEvent
     {
         public TreatmentEvent() { }
 
+        [MaxLength(25)]
         public required string TreatmentType { get; set; }
         public int? ProductID { get; set; }
         public decimal? QuantityApplied { get; set; }
+        [MaxLength(20)]
         public string? QuantityUOM { get; set; }
         public virtual ConsumableItem? Product { get; set; }
     }

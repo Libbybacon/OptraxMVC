@@ -35,6 +35,7 @@ namespace OptraxMVC.Controllers
             var tabVM = new TabsVM() { Area = area, Tabs = [new Tab() { Name = name, TabKey = "" }] };
             var tab = tabVM.Tabs[0];
 
+
             object? model = tabVM.Area switch
             {
                 "Grow" => tab.Name switch
@@ -56,15 +57,23 @@ namespace OptraxMVC.Controllers
                                                               .ThenInclude(c => c.Children)
                                                               .ToListAsync(),
 
-                    "Items" => await db.InventoryCategories.Where(c => c.ParentID == null)  // Top level
-                                                           .Include(c => c.Items)           // Top level items
-                                                           .Include(c => c.Children)        // Child cats
-                                                           .ThenInclude(child => child.Items)  // Child cat items
+                    "Items" => await db.InventoryCategories.Where(c => c.ParentID == null)
+                                                           .Include(c => c.Children)
+                                                           .ThenInclude(c => c.Children)
                                                            .ToListAsync(),
                     _ => null
                 },
                 _ => null
             };
+
+            switch (tabVM.Area)
+            {
+                case "Items":
+                    ViewBag.Items = await db.InventoryItems.OrderBy(c => c.CategoryID).ToListAsync();
+                    break;
+                default:
+                    break;
+            }
 
             if (model == null)
             {

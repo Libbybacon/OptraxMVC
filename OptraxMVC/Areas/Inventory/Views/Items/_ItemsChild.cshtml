@@ -11,7 +11,7 @@
     <td style="@indent">
         <div class="d-flex align-items-center">
 
-            <button class="toggle-btn toggle" data-toggle-id="items-@Model.ID">
+            <button id="items-@Model.ID-btn" class="toggle-btn toggle" data-toggle-id="items-@Model.ID">
                 <span class="show-i"><i class="bi bi-chevron-compact-down"></i></span>
                 <span class="hide-i d-none"><i class="bi bi-chevron-compact-up"></i></span>
             </button>
@@ -62,8 +62,8 @@
                             <td class="editable-field" data-field="DefaultUOM">@item.DefaultUOM</td>
                             <td>@item.StockItems.Count</td>
 @*                             <td>
-                                <button class="edit-item otx-btn" data-id="@item.ID">Edit</button>
-                                <button class="remove-item otx-btn btn-red" data-id="@item.ID">Remove</button>
+                                <button class="edit-item btn-clear" data-id="@item.ID">Edit</button>
+                                <button class="remove-item otx-btn btn-clear text-danger" data-id="@item.ID">Remove</button>
                             </td> *@
                         </tr>
                     }

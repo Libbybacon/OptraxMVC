@@ -1,5 +1,6 @@
 ﻿using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
@@ -18,6 +19,8 @@ namespace OptraxDAL.Models.Inventory
         public int OriginID { get; set; }
         public int DestinationID { get; set; }
         public decimal UnitCount { get; set; }
+
+        [MaxLength(20)]
         public required string UnitUOM { get; set; }
         public bool IsPartial { get; set; } = false;
 
