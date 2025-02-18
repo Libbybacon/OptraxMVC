@@ -5,6 +5,11 @@
     int level = ViewData["Level"] as int? ?? 0;
     var indent = $"padding-left: {level * 20}px;";
     var rowClass = Model.Parent == null ? "top-row" : "cat-row";
+
+    List<InventoryItem> items = ViewData["Items"] as List<InventoryItem> ?? [];
+    List<InventoryItem> catItems = items.Where(i => i.CategoryID == Model.ID).ToList();
+
+    items.RemoveAll(i => catItems.Contains(i));
 }
 
 <tr id="cat-@Model.ID" class="@rowClass">
@@ -21,9 +26,8 @@
     <td colspan="2">@Model.Description</td>
     <td>
         <div class="d-flex justify-content-end pe-2">
-            <button class="add-cat toggle me-2 text-success" data-id="@Model.ID">+</button>
-            @* <button class="edit-cat toggle me-2" data-id="@Model.ID">Edit</button> *@
-            @* <button class="remove-cat toggle text-danger" data-id="@Model.ID">X</button> *@
+            <button class="add-cat toggle me-2 text-success" data-id="@Model.ID" data-parent-id="@(Model.ParentID ?? 0)">+</button>
+            @* <button class="remove-cat toggle btn-clear text-danger" data-id="@Model.ID">X</button> *@
         </div>
     </td>
 </tr>
@@ -49,19 +53,21 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model.Items.Count > 0)
+                @if (catItems.Count > 0)
                 {
-                    @foreach (var item in Model.Items.OrderBy(i => i.Name).ToList())
+                    @foreach (var item in catItems.OrderBy(i => i.Name).ToList())
                     {
                         <tr class="xsF">
                             <td></td>
-                            <td class="editable-field" contenteditable="true" data-field="Name">@item.Name</td>
+                            <td class="attr" data-val="@item.Name" data-field="Name">
+                                @item.Name
+                            </td>
                             <td class="editable-field" data-field="Description">@item.Description</td>
                             <td class="editable-field" data-field="Manufacturer">@item.Manufacturer</td>
                             <td>@item.SKU</td>
                             <td class="editable-field" data-field="DefaultUOM">@item.DefaultUOM</td>
                             <td>@item.StockItems.Count</td>
-@*                             <td>
+                            @*                             <td>
                                 <button class="edit-item btn-clear" data-id="@item.ID">Edit</button>
                                 <button class="remove-item otx-btn btn-clear text-danger" data-id="@item.ID">Remove</button>
                             </td> *@
@@ -80,7 +86,7 @@
             <table class="table">
                 @foreach (var child in Model.Children.OrderBy(c => c.Name).ToList())
                 {
-                    var childVD = new ViewDataDictionary(ViewData) { ["Level"] = level + 1 };
+                    var childVD = new ViewDataDictionary(ViewData) { ["Level"] = level + 1, ["Items"] = items };
 
                     @await Html.PartialAsync("~/Areas/Inventory/Views/Items/_ItemsChild.cshtml", child, childVD)
                 }

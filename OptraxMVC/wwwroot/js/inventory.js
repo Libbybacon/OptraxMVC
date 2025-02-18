@@ -9,42 +9,10 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on('blur', '.editable-field', function () {
+    $(document).off('blur').on('blur', '.attr', function () {
+
         var $cell = $(this);
 
-        $cell.removeAttr('contenteditable').removeClass('editing');  // Remove the contenteditable state and editing class
-
-        var newValue = $cell.text().trim();
-        var field = $cell.data('field');
-        var rowId = $cell.closest('tr').data('id');
-
-        // Optionally, you can check here if the value actually changed before sending an update
-
-        var data = {
-            ID: rowId
-        };
-        data[field] = newValue;
-
-        $.ajax({
-            url: 'Inventory/Inventory/UpdateItem',
-            type: 'POST',
-            data: data,
-            success: function (response) {
-                if (response.success) {
-
-                    $cell.addClass('update-success');
-
-                    setTimeout(function () { $cell.removeClass('update-success'); }, 1000);
-                }
-                else {
-                    alert('Update failed: ' + response.message);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('Error updating field:', error);
-                alert('An error occurred while saving the changes.');
-            }
-        });
     });
 
 
@@ -193,4 +161,47 @@ $(document).ready(function () {
         }
     });
 });
+
+function editAttribute($cell, modelType) {
+
+    $cell.removeAttr('contenteditable').removeClass('editing');  // Remove the contenteditable state and editing class
+
+    var newVal = $cell.text().trim();
+    var oldVal = $cell.data('val').trim();
+
+    if (newVal === oldVal) {
+        return;
+    }
+
+    var $row = $cell.closest('tr')
+
+    var data = new FormData();
+    data.append('ClassType', $row.data('class'));
+    data.append('ID', $row.data('id'));
+    data.append('ParentID', $row.data('parent-id'));
+    data.append('Field', $cell.data('field'));
+
+    data[field] = newValue;
+
+    $.ajax({
+        url: '/Inventory/Inventory/UpdateAttribute',
+        type: 'POST',
+        data: data,
+        success: function (response) {
+            if (response.success) {
+
+                $cell.addClass('update-success');
+
+                setTimeout(function () { $cell.removeClass('update-success'); }, 1000);
+            }
+            else {
+                alert('Update failed: ' + response.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error updating field:', error);
+            alert('An error occurred while saving the changes.');
+        }
+    });
+}
 

@@ -66,10 +66,10 @@ namespace OptraxMVC.Controllers
                 _ => null
             };
 
-            switch (tabVM.Area)
+            switch (tab.Name)
             {
                 case "Items":
-                    ViewBag.Items = await db.InventoryItems.OrderBy(c => c.CategoryID).ToListAsync();
+                    ViewBag.Items = await db.InventoryItems.OrderBy(c => c.CategoryID).ToListAsync() ?? [];
                     break;
                 default:
                     break;
