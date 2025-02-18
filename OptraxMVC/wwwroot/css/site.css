@@ -15,6 +15,10 @@
     --purp-lt: #C399F5;
     --purp-md: #AB71F2;
     --purp-dk: #8C52D2;
+    --gray-xlt: #F8F8F8;
+    --gray-lt: #F0F0F0;
+    --gray-md: #E0E0E0;
+    --gray-dk: #DADADA;
 }
 /*background-color: #4C6986;*/
 /*background-color: #91A5C7;*/
@@ -59,6 +63,10 @@
     background-color: var(--blue-dk) !important;
 }
 
+.text-grn-dk{
+    color: var(--grn-dk);
+
+}
 .text-tan {
     color: var(--tan-dk);
 }
@@ -185,12 +193,15 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     min-height: calc(100vh - 80px) !important;
 }
 
+
 table td {
     vertical-align: middle;
 }
 
 .cat-table thead,
-.cat-table tr {
+.cat-table tr,
+.items-table,
+.items-table tr{
     display: table;
     width: 100%;
     table-layout: fixed;
@@ -206,13 +217,24 @@ table td {
 }
 
 .top-row{
-    background-color: lightgrey;
+    background-color: var(--gray-md);
     border-bottom: 1px solid darkgrey;
 }
-
-.top-row .cat-name{
-    font-weight: bold;
+    .top-row .cat-name {
+        font-weight: bold;
+    }
+.cat-row {
+    background-color: var(--gray-lt);
 }
+
+.items-row {
+    background-color: var(--gray-xlt);
+}
+
+.items-head  th{
+    padding: 0;
+}
+.items-row > td,
 .child-row > td {
     padding: 0; /* Remove extra padding from the parent <td> */
 }
@@ -221,9 +243,14 @@ table td,
 .child-row table td {
     padding: .15rem; /* Keep padding inside the child table */
 }
+
+.table > :not(:last-child) > :last-child > *{
+    border-color: var(--gray-md);
+}
 .child-row table tr:last-child td {
     border: none;
 }
+
 .child-row table {
     margin-bottom: 0;
     border-collapse: collapse;
@@ -246,8 +273,11 @@ table td,
     border: none;
     background: none;
 }
-
-
+.btn-clear{
+    border:none;
+    background: none;
+    cursor: pointer;
+}
 
 .otx-btn {
     border-radius: 4px;

@@ -90,10 +90,10 @@
             Soil,
             Nutrient,
             PestControl,
-            
+
             Light,
             Container,
-            PruningOrMaintainance,
+            PruningOrMaintenance,
             HVAC,
         }
 
@@ -103,7 +103,7 @@
             Case,
             Milligram,
             Gram,
-            Kilogram, 
+            Kilogram,
             Ounce,
             Pound,
             Cup,
@@ -115,13 +115,7 @@
             Other
         }
 
-        public enum InventoryType
-        {
-            Consumable,
-            Durable,
-            Perishable,
-            Other
-        }
+
 
     }
 }

@@ -1,9 +1,10 @@
 ﻿@using OptraxDAL.Models.Grow
+@using OptraxDAL.Models.Inventory
 
 @{
     ViewData["Page"] = "Grow";
 
-    List<Room> rooms = ViewBag.Rooms;
+    List<RoomLocation> rooms = ViewBag.Rooms;
     var tabs = new Dictionary<string, string>{
         {"room", "Rooms"},
         {"crop", "Crops"},

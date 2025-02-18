@@ -1,0 +1,57 @@
+﻿table td {
+    vertical-align: middle;
+}
+
+.cat-table thead,
+.cat-table tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.top-head tr th {
+    padding-bottom: .5rem;
+    border-bottom: 1.5px ridge var(--blue-dk);
+}
+
+.cat-body {
+    display: block;
+    overflow-y: auto;
+}
+
+.top-row {
+    background-color: lightgrey;
+    border-bottom: 1px solid darkgrey;
+}
+
+    .top-row .cat-name {
+        font-weight: bold;
+    }
+
+.child-row > td {
+    padding: 0; /* Remove extra padding from the parent <td> */
+}
+
+table td,
+.child-row table td {
+    padding: .15rem; /* Keep padding inside the child table */
+}
+
+.child-row table tr:last-child td {
+    border: none;
+}
+
+.child-row table {
+    margin-bottom: 0;
+    border-collapse: collapse;
+}
+
+.tab-head {
+    height: 40px;
+}
+
+.inner-tree {
+    overflow-y: auto;
+    position: relative;
+    padding-left: 0;
+}

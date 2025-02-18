@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using OptraxDAL.Models.Grow;
+using OptraxDAL.Models.Inventory;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Admin
@@ -11,6 +13,9 @@ namespace OptraxDAL.Models.Admin
         public required string FirstName { get; set; }
 
         public required string LastName { get; set; }
+
+        public virtual ICollection<PlantEvent> PlantEvents { get; set; } = [];
+        public virtual ICollection<InventoryTransfer> InventoryTransfers { get; set; } = [];
 
 
         public string FullName => $"{FirstName} {LastName}";

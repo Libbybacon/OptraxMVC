@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OptraxDAL;
 
@@ -11,9 +12,11 @@ using OptraxDAL;
 namespace OptraxDAL.Migrations
 {
     [DbContext(typeof(OptraxContext))]
-    partial class OptraxContextModelSnapshot : ModelSnapshot
+    [Migration("20250218074001_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -520,13 +523,11 @@ namespace OptraxDAL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ParentID")
                         .HasColumnType("int");
@@ -588,7 +589,7 @@ namespace OptraxDAL.Migrations
                     b.Property<int?>("SellerID")
                         .HasColumnType("int");
 
-                    b.Property<string>("StockType")
+                    b.Property<string>("StockItemType")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");

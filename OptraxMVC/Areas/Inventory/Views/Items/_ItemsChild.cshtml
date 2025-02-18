@@ -1,0 +1,92 @@
+﻿@using OptraxDAL.Models.Inventory
+@model InventoryCategory
+
+@{
+    int level = ViewData["Level"] as int? ?? 0;
+    var indent = $"padding-left: {level * 20}px;";
+    var rowClass = Model.Parent == null ? "top-row" : "cat-row";
+}
+
+<tr id="cat-@Model.ID" class="@rowClass">
+    <td style="@indent">
+        <div class="d-flex align-items-center">
+
+            <button class="toggle-btn toggle" data-toggle-id="items-@Model.ID">
+                <span class="show-i"><i class="bi bi-chevron-compact-down"></i></span>
+                <span class="hide-i d-none"><i class="bi bi-chevron-compact-up"></i></span>
+            </button>
+            <div class="cat-name">@Model.Name</div>
+        </div>
+    </td>
+    <td colspan="2">@Model.Description</td>
+    <td>
+        <div class="d-flex justify-content-end pe-2">
+            <button class="add-cat toggle me-2 text-success" data-id="@Model.ID">+</button>
+            @* <button class="edit-cat toggle me-2" data-id="@Model.ID">Edit</button> *@
+            @* <button class="remove-cat toggle text-danger" data-id="@Model.ID">X</button> *@
+        </div>
+    </td>
+</tr>
+
+
+<tr id="items-@Model.ID" class="items-row child-row w-100" style="display: none">
+    <td colspan="4" style="@indent">
+        <table class="table items-table smF">
+            <thead class="items-head p-0">
+                <tr class="smF">
+                    <th>
+                        <div class="d-flex">
+                            <button class="add-item btn-clear smF ms-auto me-4" data-id="@Model.ID"><span class="add-new-item mdF text-grn-dk pe-2">+</span>New Item</button>
+                        </div>
+                    </th>
+                    <th>Item Name</th>
+                    <th>Description</th>
+                    <th>Manufacturer</th>
+                    <th>SKU</th>
+                    <th>Default UOM</th>
+                    <th>CurrentCount</th>
+                    @* <th></th> *@
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Items.Count > 0)
+                {
+                    @foreach (var item in Model.Items.OrderBy(i => i.Name).ToList())
+                    {
+                        <tr class="xsF">
+                            <td></td>
+                            <td class="editable-field" contenteditable="true" data-field="Name">@item.Name</td>
+                            <td class="editable-field" data-field="Description">@item.Description</td>
+                            <td class="editable-field" data-field="Manufacturer">@item.Manufacturer</td>
+                            <td>@item.SKU</td>
+                            <td class="editable-field" data-field="DefaultUOM">@item.DefaultUOM</td>
+                            <td>@item.StockItems.Count</td>
+@*                             <td>
+                                <button class="edit-item otx-btn" data-id="@item.ID">Edit</button>
+                                <button class="remove-item otx-btn btn-red" data-id="@item.ID">Remove</button>
+                            </td> *@
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </td>
+</tr>
+
+@if (Model.Children.Any())
+{
+    <tr id="child-@Model.ID" class="child-row">
+        <td colspan="4">
+            <table class="table">
+                @foreach (var child in Model.Children.OrderBy(c => c.Name).ToList())
+                {
+                    var childVD = new ViewDataDictionary(ViewData) { ["Level"] = level + 1 };
+
+                    @await Html.PartialAsync("~/Areas/Inventory/Views/Items/_ItemsChild.cshtml", child, childVD)
+                }
+            </table>
+        </td>
+    </tr>
+}
+
+

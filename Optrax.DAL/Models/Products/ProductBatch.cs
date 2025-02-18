@@ -12,7 +12,7 @@
 
         public int UnitQuantity { get; set; } = 0;
 
-        public required virtual Product Product { get; set; }
+        public virtual required Product Product { get; set; }
 
         public virtual ICollection<ProductItem> Units { get; set; } = [];
     }

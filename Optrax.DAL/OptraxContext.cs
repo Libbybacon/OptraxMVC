@@ -1,12 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
 using OptraxDAL.Models.Products;
-using OptraxDAL.Models;
-using Microsoft.Identity.Client;
 
 
 namespace OptraxDAL
@@ -16,56 +14,56 @@ namespace OptraxDAL
         #region Admin
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Address> Addresses { get; set; }
-        public DbSet<Building> Buildings { get; set; }
-        public DbSet<Company> Companies { get; set; }
-
-        #endregion
-
-
-        #region Grow
-        public DbSet<ContainerType> ContainerTypes { get; set; }
-        public DbSet<Crop> Crops { get; set; }
-        public DbSet<Light> Lights { get; set;}
-        public DbSet<Plant> Plants { get; set; }
-        public DbSet<Room> Rooms { get; set; }
-
-        public DbSet<Strain> Strains { get; set; }
-        public DbSet<StrainRelationship> StrainRelationships { get; set; }
-
-        public DbSet<PlantAction> PlantActions { get; set; }
-        public DbSet<PruneAction> PruneActions { get; set; }
-        public DbSet<TransferAction> TransferActions { get; set; }
-        public DbSet<TreatmentAction> TreatmentActions { get; set; }
-
-        public DbSet<PlantTransfer> PlantTransfers { get; set; }
-        public DbSet<ContainerTransfer> ContainerTransfers { get; set; }
-        public DbSet<LightTransfer> LightTransfers { get; set; }
-        public DbSet<RoomTransfer> RoomTransfers { get; set; }
+        public DbSet<Business> Businesses { get; set; }
         #endregion
 
         #region Inventory
-        public DbSet<InventoryItem> InventoryItems { get; set; }
-        public DbSet<InventoryStockItem> InventoryStockItems { get; set; }
         public DbSet<InventoryCategory> InventoryCategories { get; set; }
+        public DbSet<InventoryItem> InventoryItems { get; set; }
+
+        public DbSet<StockItem> StockItems { get; set; }
+        public DbSet<Plant> Plants { get; set; }
+        public DbSet<Light> Lights { get; set; }
+        public DbSet<DurableItem> DurableItems { get; set; }
+        public DbSet<ConsumableItem> ConsumableItems { get; set; }
+
+        public DbSet<LightType> LightTypes { get; set; }
+        public DbSet<ContainerType> ContainerTypes { get; set; }
 
         public DbSet<InventoryLocation> InventoryLocations { get; set; }
         public DbSet<ContainerLocation> ContainerLocations { get; set; }
         public DbSet<RoomLocation> RoomLocations { get; set; }
         public DbSet<BuildingLocation> BuildingLocations { get; set; }
         public DbSet<OffsiteLocation> OffsiteLocations { get; set; }
-
+        public DbSet<InventoryTransfer> InventoryTransfers { get; set; }
         #endregion
 
-        #region Products
+        #region Grow
+        public DbSet<Strain> Strains { get; set; }
+        public DbSet<StrainRelationship> StrainRelationships { get; set; }
+
+        public DbSet<Crop> Crops { get; set; }
+
+        public DbSet<PlantEvent> PlantEvents { get; set; }
+        public DbSet<PruneEvent> PruneEvents { get; set; }
+        public DbSet<LightEvent> LightEvents { get; set; }
+        public DbSet<GrowthEvent> GrowthEvents { get; set; }
+        public DbSet<TransferEvent> TransferEvents { get; set; }
+        public DbSet<TreatmentEvent> TreatmentEvents { get; set; }
+        public DbSet<TransplantEvent> TransplantEvents { get; set; }
+        #endregion
+
+        #region Product
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductBatch> ProductBatches { get; set; }
         public DbSet<ProductItem> ProductItems { get; set; }
+        public DbSet<ProductBatch> ProductBatches { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
+            #region Admin
             builder.Entity<AppUser>().ToTable("AspNetUsers", "Identity");
             builder.Entity<IdentityRole>().ToTable("AspNetRoles", "Identity");
             builder.Entity<IdentityUserRole<string>>().ToTable("AspNetUserRoles", "Identity");
@@ -74,27 +72,45 @@ namespace OptraxDAL
             builder.Entity<IdentityUserLogin<string>>().ToTable("AspNetUserLogins", "Identity");
             builder.Entity<IdentityUserToken<string>>().ToTable("AspNetUserTokens", "Identity");
 
+            #endregion
+
+
+            #region Inventory
+            builder.Entity<InventoryItem>().HasIndex(x => x.SKU).IsUnique();
+            builder.Entity<InventoryItem>().Property(x => x.Active).HasDefaultValue(true);
+
+            builder.Entity<InventoryItem>().HasOne(i => i.ContainerType)
+                                           .WithMany(ct => ct.InventoryItems)
+                                           .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<InventoryItem>().HasOne(i => i.LightType)
+                                           .WithMany(lt => lt.InventoryItems)
+                                           .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<LightType>().Property(x => x.PPF).HasPrecision(6, 2);
+            builder.Entity<LightType>().Property(x => x.PPFD).HasPrecision(6, 2);
+            builder.Entity<LightType>().Property(x => x.ColorSpectrum).HasMaxLength(50);
+            builder.Entity<LightType>().Property(x => x.CoverageAreaSF).HasPrecision(6, 2);
+
             builder.Entity<ContainerType>().Property(x => x.Capacity).HasPrecision(8, 2);
             builder.Entity<ContainerType>().Property(x => x.Active).HasDefaultValue(true);
 
-            builder.Entity<Crop>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
-            builder.Entity<Crop>().Property(x => x.ProductQuantity).HasPrecision(10, 2);
+            // Stock Items TPT
+            builder.Entity<Plant>().ToTable("Plants");
+            builder.Entity<Light>().ToTable("Lights");
+            builder.Entity<DurableItem>().ToTable("DurableItems");
+            builder.Entity<ConsumableItem>().ToTable("Consumables");
 
-            builder.Entity<Light>().Property(x => x.PPF).HasPrecision(6, 2);
-            builder.Entity<Light>().Property(x => x.PPFD).HasPrecision(6, 2);
-            builder.Entity<Light>().Property(x => x.Active).HasDefaultValue(true);
-            builder.Entity<Light>().Property(x => x.ColorSpectrum).HasMaxLength(50);
-            builder.Entity<Light>().Property(x => x.CoverageAreaSF).HasPrecision(6, 2);
+            builder.Entity<Plant>().HasBaseType<StockItem>();
+            builder.Entity<Light>().HasBaseType<StockItem>();
+            builder.Entity<ConsumableItem>().HasBaseType<StockItem>();
+            builder.Entity<DurableItem>().HasBaseType<StockItem>();
 
-            builder.Entity<InventoryItem>().Property(x => x.Active).HasDefaultValue(true);
-            builder.Entity<InventoryItem>().Property(x => x.StockCount).HasPrecision(10, 2);
+            builder.Entity<StockItem>().Property(x => x.PurchasePrice).HasPrecision(8, 2);
+            builder.Entity<ConsumableItem>().Property(x => x.UnitCount).HasPrecision(8, 2);
+
+            #region Locations TPH
             builder.Entity<InventoryLocation>().Property(x => x.Active).HasDefaultValue(true);
-
-            builder.Entity<ProductItem>().HasIndex(p => p.Barcode).IsUnique();
-
-            builder.Entity<Room>().Property(x => x.Active).HasDefaultValue(true);
-
-            builder.Entity<TreatmentAction>().Property(x => x.QuantityApplied).HasPrecision(8, 2);
 
             builder.Entity<InventoryLocation>().HasDiscriminator<string>("LocationType")
                                                .HasValue<ContainerLocation>("Container")
@@ -102,91 +118,45 @@ namespace OptraxDAL
                                                .HasValue<BuildingLocation>("Building")
                                                .HasValue<OffsiteLocation>("Offsite");
 
-            builder.Entity<RoomLocation>().HasOne(rl => rl.Room)
-                                          .WithOne(r => r.Location)
-                                          .HasForeignKey<RoomLocation>(rl => rl.RoomID)
-                                          .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<BuildingLocation>().HasOne(bl => bl.Building)
-                                              .WithOne(a => a.Location)
-                                              .HasForeignKey<BuildingLocation>(bl => bl.BuildingID)
+            builder.Entity<BuildingLocation>().HasOne(bl => bl.Address)
+                                              .WithOne(a => a.Building)
+                                              .HasForeignKey<BuildingLocation>(bl => bl.AddressID)
                                               .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<Building>().HasOne(b => b.Address)
-                                      .WithOne(a => a.Building)
-                                      .HasForeignKey<Building>(b => b.AddressID)
-                                      .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<Company>().HasOne(b => b.Address)
-                                     .WithOne(a => a.Company)
-                                     .HasForeignKey<Company>(b => b.AddressID)
-                                     .OnDelete(DeleteBehavior.Restrict);
-
-            #region Handle Plant Actions TPH
-            builder.Entity<PlantAction>().HasDiscriminator<string>("TransferType")
-                                         .HasValue<PruneAction>("Prune")
-                                         .HasValue<TransferAction>("Transfer")
-                                         .HasValue<TreatmentAction>("Treatment");
-
-            builder.Entity<TransferAction>().HasOne(ta => ta.Transfer)
-                                            .WithOne(pt => pt.PlantAction)
-                                            .HasForeignKey<TransferAction>(ta => ta.TransferID)
-                                            .OnDelete(DeleteBehavior.Restrict); 
-            #endregion
-
-            #region Handle Transfers TPH
-            builder.Entity<PlantTransfer>().HasOne(pt => pt.Plant)
-                                           .WithMany(p => p.Transfers)
-                                           .HasForeignKey(pt => pt.PlantID)
-                                           .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<PlantTransfer>().HasDiscriminator<string>("TransferType")
-                                           .HasValue<RoomTransfer>("Room")
-                                           .HasValue<LightTransfer>("Light")
-                                           .HasValue<ContainerTransfer>("Container");
-
-
-            builder.Entity<ContainerTransfer>().HasOne(ct => ct.FromContainer)
-                                               .WithMany(c => c.TransfersOut)
-                                               .HasForeignKey(ct => ct.OriginID)
+            builder.Entity<ContainerLocation>().HasOne(cl => cl.ContainerType)
+                                               .WithMany(ct => ct.ContainerLocations)
+                                               .HasForeignKey(cl => cl.ContainerTypeID)
                                                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<ContainerTransfer>().HasOne(ct => ct.ToContainer)
-                                               .WithMany(c => c.TransfersIn)
-                                               .HasForeignKey(ct => ct.DestinationID)
+
+            builder.Entity<InventoryTransfer>().Property(x => x.UnitCount).HasPrecision(8, 2);
+            builder.Entity<InventoryTransfer>().HasOne(it => it.Origin)
+                                               .WithMany(o => o.TransfersOut)
+                                               .HasForeignKey(it => it.OriginID)
                                                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<ContainerTransfer>().Property(ct => ct.OriginID).HasColumnName("OriginID");
-            builder.Entity<ContainerTransfer>().Property(ct => ct.DestinationID).HasColumnName("DestinationID");
-
-            builder.Entity<RoomTransfer>().HasOne(rt => rt.FromRoom)
-                                          .WithMany(r => r.TransfersOut)
-                                          .HasForeignKey(rt => rt.OriginID)
-                                          .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<RoomTransfer>().HasOne(rt => rt.ToRoom)
-                                          .WithMany(r => r.TransfersIn)
-                                          .HasForeignKey(rt => rt.DestinationID)
-                                          .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<RoomTransfer>().Property(rt => rt.OriginID).HasColumnName("OriginID");
-            builder.Entity<RoomTransfer>().Property(rt => rt.DestinationID).HasColumnName("DestinationID");
-
-            builder.Entity<LightTransfer>().HasOne(rt => rt.FromLight)
-                                           .WithMany(r => r.TransfersOut)
-                                           .HasForeignKey(rt => rt.OriginID)
-                                           .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<LightTransfer>().HasOne(rt => rt.ToLight)
-                                           .WithMany(r => r.TransfersIn)
-                                           .HasForeignKey(rt => rt.DestinationID)
-                                           .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<LightTransfer>().Property(rt => rt.OriginID).HasColumnName("OriginID");
-            builder.Entity<LightTransfer>().Property(rt => rt.DestinationID).HasColumnName("DestinationID");
+            builder.Entity<InventoryTransfer>().HasOne(it => it.Destination)
+                                               .WithMany(o => o.TransfersIn)
+                                               .HasForeignKey(it => it.DestinationID)
+                                               .OnDelete(DeleteBehavior.Restrict);
+            #endregion
             #endregion
 
-            #region Genetics Relationships
+
+            #region Grow
+            builder.Entity<Crop>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
+
+            builder.Entity<Crop>().HasOne(c => c.Location)
+                                  .WithMany(r => r.Crops)
+                                  .HasForeignKey(c => c.LocationID)
+                                  .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Crop>().HasOne(c => c.Strain)
+                                  .WithMany(s => s.Crops)
+                                  .HasForeignKey(c => c.StrainID)
+                                  .OnDelete(DeleteBehavior.Restrict);
+
+            // Genetics Relationships
             builder.Entity<StrainRelationship>().HasKey(x => new { x.ParentID, x.ChildID }); // Composite Key
 
             builder.Entity<StrainRelationship>().HasOne(x => x.ParentStrain)
@@ -198,6 +168,42 @@ namespace OptraxDAL
                                                 .WithMany(s => s.Parents)
                                                 .HasForeignKey(x => x.ChildID)
                                                 .OnDelete(DeleteBehavior.Restrict);
+
+            #region Plant Events 
+
+            builder.Entity<PruneEvent>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
+            builder.Entity<TreatmentEvent>().Property(x => x.QuantityApplied).HasPrecision(8, 2);
+
+            // TPH
+            builder.Entity<PlantEvent>().HasDiscriminator<string>("EventType")
+                                        .HasValue<PruneEvent>("Prune")
+                                        .HasValue<LightEvent>("Light")
+                                        .HasValue<GrowthEvent>("Growth")
+                                        .HasValue<TransferEvent>("Transfer")
+                                        .HasValue<TreatmentEvent>("Treatment")
+                                        .HasValue<TransplantEvent>("Transplant");
+
+            builder.Entity<PlantEvent>().HasOne(pe => pe.Plant)
+                                        .WithMany(p => p.PlantEvents)
+                                        .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<TransferEvent>().HasOne(ta => ta.Transfer)
+                                           .WithOne(pt => pt.PlantTransfer)
+                                           .HasForeignKey<TransferEvent>(ta => ta.TransferID)
+                                           .OnDelete(DeleteBehavior.Restrict);
+
+
+            builder.Entity<TreatmentEvent>().HasOne(te => te.Product)
+                                            .WithMany(p => p.PlantTreatments)
+                                            .HasForeignKey(te => te.ProductID)
+                                            .HasPrincipalKey(p => p.ID)
+                                            .OnDelete(DeleteBehavior.Restrict);
+            #endregion
+            #endregion
+
+
+            #region Product
+            builder.Entity<ProductItem>().HasIndex(x => x.Barcode).IsUnique();
             #endregion
         }
     }

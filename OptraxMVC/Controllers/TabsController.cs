@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Elfie.Extensions;
 using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
 using OptraxMVC.Models;
@@ -14,7 +13,7 @@ namespace OptraxMVC.Controllers
         private readonly Dictionary<string, List<string>> TabViews = new()
         {
             ["Grow"] = ["Rooms", "Crops", "Plants", "Strains"],
-            ["Inventory"] = ["Plants", "Products", "Stock", "Items", "Locations", "Categories"]
+            ["Inventory"] = ["Items", "Plants", "Products", "Locations"]
         };
 
         [Authorize]
@@ -33,14 +32,14 @@ namespace OptraxMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> LoadTabContent(string area, string name)
         {
-            var tabVM = new TabsVM() { Area = area, Tabs = [new Tab() { Name = name, TabKey = ""}] };
+            var tabVM = new TabsVM() { Area = area, Tabs = [new Tab() { Name = name, TabKey = "" }] };
             var tab = tabVM.Tabs[0];
 
             object? model = tabVM.Area switch
             {
                 "Grow" => tab.Name switch
                 {
-                    "Rooms" => await db.Rooms.ToListAsync(),
+                    "Rooms" => await db.RoomLocations.ToListAsync(),
                     "Crops" => await db.Crops.ToListAsync(),
                     "Plants" => await db.Plants.ToListAsync(),
                     "Strains" => await db.Strains.ToListAsync(),
@@ -51,18 +50,17 @@ namespace OptraxMVC.Controllers
                 {
                     "Plants" => await db.Plants.ToListAsync(),
                     "Products" => await db.Products.ToListAsync(),
-                    "Stock" => await db.InventoryStockItems.ToListAsync(),
-                    "Items" => await db.InventoryItems.Include(i => i.StockItems).ToListAsync(),
-
+                    "Stock" => await db.StockItems.ToListAsync(),
                     "Locations" => await db.InventoryLocations.Where(c => c.ParentID == null)
-                                                        .Include(c => c.Children)
-                                                        .ThenInclude(c => c.Children)
-                                                        .ToListAsync(),
+                                                              .Include(c => c.Children)
+                                                              .ThenInclude(c => c.Children)
+                                                              .ToListAsync(),
 
-                    "Categories" => await db.InventoryCategories.Where(c => c.ParentID == null)
-                                                                .Include(c => c.Children)
-                                                                .ThenInclude(c => c.Children)
-                                                                .ToListAsync(),
+                    "Items" => await db.InventoryCategories.Where(c => c.ParentID == null)  // Top level
+                                                           .Include(c => c.Items)           // Top level items
+                                                           .Include(c => c.Children)        // Child cats
+                                                           .ThenInclude(child => child.Items)  // Child cat items
+                                                           .ToListAsync(),
                     _ => null
                 },
                 _ => null

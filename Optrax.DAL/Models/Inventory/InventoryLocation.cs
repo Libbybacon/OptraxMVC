@@ -1,5 +1,6 @@
 ﻿using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
@@ -11,16 +12,22 @@ namespace OptraxDAL.Models.Inventory
 
         public int ID { get; set; }
         public int? ParentID { get; set; }
+        [MaxLength(50)]
         public required string Name { get; set; }
+        [MaxLength(250)]
         public string? Description { get; set; }
         public bool Active { get; set; } = true;
 
-        [ForeignKey("ParentID")]
         public virtual InventoryLocation? Parent { get; set; } = null;
+        public virtual ICollection<InventoryLocation> Children { get; set; } = [];
+        public virtual ICollection<StockItem> StockItems { get; set; } = [];
 
-        public virtual List<InventoryLocation> Children { get; set; } = [];
 
-        public virtual ICollection<InventoryStockItem> StockItems { get; set; } = [];
+        [InverseProperty(nameof(InventoryTransfer.Origin))]
+        public virtual ICollection<InventoryTransfer> TransfersOut { get; set; } = [];
+
+        [InverseProperty(nameof(InventoryTransfer.Destination))]
+        public virtual ICollection<InventoryTransfer> TransfersIn { get; set; } = [];
     }
 
     [Table("InventoryLocation")]
@@ -28,7 +35,10 @@ namespace OptraxDAL.Models.Inventory
     {
         public ContainerLocation() { }
 
+        public int ContainerTypeID { get; set; }
         public new required string Description { get; set; }
+
+        public required ContainerType ContainerType { get; set; }
     }
 
     [Table("InventoryLocation")]
@@ -36,8 +46,7 @@ namespace OptraxDAL.Models.Inventory
     {
         public RoomLocation() { }
 
-        public int RoomID { get; set; }
-        public required virtual Room Room { get; set; }
+        public virtual ICollection<Crop> Crops { get; set; } = [];
     }
 
     [Table("InventoryLocation")]
@@ -45,9 +54,9 @@ namespace OptraxDAL.Models.Inventory
     {
         public BuildingLocation() { }
 
-        public int BuildingID { get; set; }
-
-        public required virtual Building Building { get; set; }
+        public int AddressID { get; set; }
+        public virtual required Address Address { get; set; }
+        //public virtual required BuildingAddress Address { get; set; }
     }
 
     [Table("InventoryLocation")]

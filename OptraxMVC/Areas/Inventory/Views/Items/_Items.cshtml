@@ -10,8 +10,8 @@
                     <th>
                         <div class="d-flex">
                             <button class="toggle-all me-2 toggle" data-toggle-class="child-row">
-                                <span class="show-i"><i class="bi bi-chevron-expand"></i></span>
-                                <span class="hide-i d-none"><i class="bi bi-chevron-contract"></i></span>
+                                <span class="show-i"><i class="bi bi-chevron-compact-down"></i></span>
+                                <span class="hide-i d-none"><i class="bi bi-chevron-compact-up"></i></span>
                             </button>
                             <button class="otx-btn">Add New Top Level</button>
                         </div>
@@ -22,16 +22,14 @@
                 </tr>
             </thead>
             <tbody id="categoryTable" class="cat-body">
-                @foreach (var category in Model)
+                @foreach (var category in Model.OrderBy(m => m.Name).ToList())
                 {
-                    @await Html.PartialAsync("~/Areas/Inventory/Views/Categories/_Category.cshtml", category)
+                    @await Html.PartialAsync("~/Areas/Inventory/Views/Items/_ItemsChild.cshtml", category)
                 }
             </tbody>
         </table>
     </div>
 </div>
-
-
 
 <script src="/js/inventory.js"></script>
 
