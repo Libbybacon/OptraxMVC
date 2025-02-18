@@ -37,7 +37,6 @@
     <Folder Include="Areas\Grow\Data\" />
     <Folder Include="Areas\Grow\Models\" />
     <Folder Include="Areas\Inventory\Models\" />
-    <Folder Include="Areas\Inventory\Views\Shared\" />
     <Folder Include="Views\Account\" />
     <Folder Include="wwwroot\css\site\" />
   </ItemGroup>
