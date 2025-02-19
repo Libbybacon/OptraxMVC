@@ -20,15 +20,7 @@
 /*background-color: #91A5C7;*/
 /*background-color: #C1CDE0;*/
 
-.attr {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
 
-.editing {
-    white-space: normal;
-}
 
 /*.update-success{
     border: 2px solid var(--grn-md) !important;
@@ -206,28 +198,33 @@ input[type=checkbox]:hover, input[type=radio]:hover {
 }
 
 
-table td {
-    vertical-align: middle;
-}
+/* Nested Table */
 
-.cat-table thead,
-.cat-table tr,
-.items-table,
-.items-table tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
+.btn-cell{
+    width: 120px;
 }
-
 .top-head tr th {
     padding-bottom: .5rem;
-    border-bottom: 1.5px ridge var(--blue-dk);
 }
 
-.cat-body {
-    display: block;
-    overflow-y: auto;
+.cat-table {
+    margin-bottom: 0;
+    border-collapse: collapse;
 }
+
+    .cat-table td,
+    .cat-table th {
+        vertical-align: middle;
+        padding: 0;
+    }
+
+    .cat-table thead,
+    .cat-table tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
 
 .top-row {
     background-color: var(--gray-md);
@@ -238,40 +235,43 @@ table td {
         font-weight: bold;
     }
 
-.cat-row {
-    background-color: var(--gray-lt);
-}
-
-.items-row {
-    background-color: var(--gray-xlt);
-}
-
-.items-head th {
-    padding: 0;
-}
-
-.items-row > td,
-.child-row > td {
-    padding: 0; /* Remove extra padding from the parent <td> */
-}
-
-table td,
-.child-row table td {
-    padding: .15rem; /* Keep padding inside the child table */
-}
-
-.table > :not(:last-child) > :last-child > * {
-    border-color: var(--gray-md);
+.cat-body {
+    display: block;
+    overflow-y: auto;
 }
 
 .child-row table tr:last-child td {
     border: none;
 }
 
-.child-row table {
-    margin-bottom: 0;
-    border-collapse: collapse;
+.cat-row {
+    background-color: var(--gray-lt);
 }
+
+.items-head th{
+    border-bottom: 1px solid var(--gray-lt) !important; 
+    text-align: center;
+}
+.items-row {
+    background-color: var(--gray-xlt);
+    text-align: center;
+}
+
+.attr {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.attr :hover{
+    cursor: pointer;
+    border: 2px inset var(--grn-lt);
+}
+
+.editing {
+    white-space: normal;
+}
+/* END */
+
 
 .tab-head {
     height: 40px;

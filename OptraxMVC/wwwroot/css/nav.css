@@ -47,8 +47,8 @@
 
         .nav-pills li:hover i,
         .nav-pills li:hover .nav-link {
-            color: var(--tan-lt);
-            color: var(--purp-lt) !important;
+            color: white;
+            /*color: var(--purp-lt) !important;*/
         }
 
 .nav-pills .nav-link.active,

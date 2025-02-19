@@ -12,6 +12,9 @@
     items.RemoveAll(i => catItems.Contains(i));
 }
 
+<input type="hidden" id="itemsID" value="items-@level-@Model.ID" />
+<input type="hidden" id="childID" value="child-@Model.ID" />
+
 <tr id="cat-@Model.ID" class="@rowClass">
     <td style="@indent">
         <div class="d-flex align-items-center">
@@ -33,22 +36,23 @@
 </tr>
 
 
-<tr id="items-@Model.ID" class="items-row child-row w-100" style="display: none">
+<tr class="items-row child-row w-100" style="display: none">
     <td colspan="4" style="@indent">
-        <table class="table items-table smF">
+        <table id="items-@level-@Model.ID" class="table cat-table items-table smF">
             <thead class="items-head p-0">
-                <tr class="smF">
-                    <th>
-                        <div class="d-flex">
-                            <button class="add-item btn-clear smF ms-auto me-4" data-id="@Model.ID"><span class="add-new-item mdF text-grn-dk pe-2">+</span>New Item</button>
+                <tr class="xsF">
+                    <th class="btn-cell">
+                        <div class="d-flex align-items-center">
+                            <button class="add-item btn-clear xsF ms-auto me-4" data-id="@Model.ID"><span class="add-new-item mdF text-grn-dk pe-2">+</span>New Item</button>
                         </div>
                     </th>
-                    <th>Stock Type</th>
+
                     <th>Item Name</th>
-                    <th>Description</th>
+                    @* <th>Description</th> *@
                     <th>Manufacturer</th>
                     <th>SKU</th>
                     <th>Default UOM</th>
+                    <th>Stock Type</th>
                     @* <th></th> *@
                 </tr>
             </thead>
@@ -57,23 +61,26 @@
                 {
                     @foreach (var item in catItems.OrderBy(i => i.Name).ToList())
                     {
-                        <tr class="xsF" data-itemid="@item.ID" data-classtype="item">
-                            <td></td>
-                            <td class="attr" data-val="@item.StockType" data-field="StockType">
-                                @item.StockType
-                            </td>
+                        <tr class="smF" data-itemid="@item.ID" data-classtype="item">
+                            <td class="btn-cell"></td>
+
                             <td class="attr" data-val="@item.Name" data-field="Name">
-                                @item.Name
+                                <div class="py-1 px-2">@item.Name</div>
                             </td>
-                            <td class="attr" data-val="@item.Description" data-field="Description">
-                                @item.Description
-                            </td>
+                            @*                             <td class="attr" data-val="@item.Description" data-field="Description">
+                                <div class="py-1 px-2">@item.Description</div>
+                            </td> *@
                             <td class="attr" data-val="@item.Manufacturer" data-field="Manufacturer">
-                                @item.Manufacturer
+                                <div class="py-1 px-2">@item.Manufacturer</div>
                             </td>
-                            <td>@item.SKU</td>
+                            <td>
+                                <div class="py-1 px-2">@item.SKU</div>
+                            </td>
                             <td class="attr" data-val="@item.DefaultUOM" data-field="DefaultUOM">
-                                @item.DefaultUOM
+                                <div class="py-1 px-2">@item.DefaultUOM</div>
+                            </td>
+                            <td class="attr" data-val="@item.StockType" data-field="StockType">
+                                <div class="py-1 px-2">@item.StockType</div>
                             </td>
                             @*                             <td>
                                 <button class="edit-item btn-clear" data-id="@item.ID">Edit</button>
@@ -89,9 +96,9 @@
 
 @if (Model.Children.Any())
 {
-    <tr id="child-@Model.ID" class="child-row">
+    <tr class="child-row">
         <td colspan="4">
-            <table class="table">
+            <table id="child-@Model.ID" class="table cat-table">
                 @foreach (var child in Model.Children.OrderBy(c => c.Name).ToList())
                 {
                     var childVD = new ViewDataDictionary(ViewData) { ["Level"] = level + 1, ["Items"] = items };
@@ -104,3 +111,13 @@
 }
 
 
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var itemsID = $('#itemsID').val();
+            console.log('itemsID', itemsID)
+            
+            // $(`#${itemsID}`).dataTable({
+
+            // });
+        })
+    </script>
