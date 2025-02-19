@@ -20,6 +20,19 @@
 /*background-color: #91A5C7;*/
 /*background-color: #C1CDE0;*/
 
+.attr {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.editing {
+    white-space: normal;
+}
+
+/*.update-success{
+    border: 2px solid var(--grn-md) !important;
+}*/
 @media only screen and (max-width: 600px) {
     .side-nav {
         height: 40px !important;

@@ -43,12 +43,12 @@
                             <button class="add-item btn-clear smF ms-auto me-4" data-id="@Model.ID"><span class="add-new-item mdF text-grn-dk pe-2">+</span>New Item</button>
                         </div>
                     </th>
+                    <th>Stock Type</th>
                     <th>Item Name</th>
                     <th>Description</th>
                     <th>Manufacturer</th>
                     <th>SKU</th>
                     <th>Default UOM</th>
-                    <th>CurrentCount</th>
                     @* <th></th> *@
                 </tr>
             </thead>
@@ -57,16 +57,24 @@
                 {
                     @foreach (var item in catItems.OrderBy(i => i.Name).ToList())
                     {
-                        <tr class="xsF">
+                        <tr class="xsF" data-itemid="@item.ID" data-classtype="item">
                             <td></td>
+                            <td class="attr" data-val="@item.StockType" data-field="StockType">
+                                @item.StockType
+                            </td>
                             <td class="attr" data-val="@item.Name" data-field="Name">
                                 @item.Name
                             </td>
-                            <td class="editable-field" data-field="Description">@item.Description</td>
-                            <td class="editable-field" data-field="Manufacturer">@item.Manufacturer</td>
+                            <td class="attr" data-val="@item.Description" data-field="Description">
+                                @item.Description
+                            </td>
+                            <td class="attr" data-val="@item.Manufacturer" data-field="Manufacturer">
+                                @item.Manufacturer
+                            </td>
                             <td>@item.SKU</td>
-                            <td class="editable-field" data-field="DefaultUOM">@item.DefaultUOM</td>
-                            <td>@item.StockItems.Count</td>
+                            <td class="attr" data-val="@item.DefaultUOM" data-field="DefaultUOM">
+                                @item.DefaultUOM
+                            </td>
                             @*                             <td>
                                 <button class="edit-item btn-clear" data-id="@item.ID">Edit</button>
                                 <button class="remove-item otx-btn btn-clear text-danger" data-id="@item.ID">Remove</button>

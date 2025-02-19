@@ -116,7 +116,6 @@ $(document).ready(function () {
 });
 
 function editAttribute($cell) {
-
     $cell.removeAttr('contenteditable').removeClass('editing');  // Remove the contenteditable state and editing class
 
     var newVal = $cell.text().trim();
@@ -128,28 +127,28 @@ function editAttribute($cell) {
 
     var $row = $cell.closest('tr')
 
-    var data = new FormData();
-    data.append('Value', newVal);
-    data.append('ID', $row.data('id'));
-    data.append('Field', $cell.data('field'));
-    data.append('ParentID', $row.data('parent-id'));
-    data.append('ClassType', $row.data('class-type'));
+    var data2 = {
+        ID: $row.data('itemid'),
+        Field: $cell.data('field'),
+        Value: newVal,
+        ClassType: $row.data('classtype')
+    }
 
     $.ajax({
-        url: '/Inventory/Inventory/UpdateAttribute',
+        url: '/Inventory/Inventory/UpdateAttribute/',
         type: 'POST',
-        data: data,
+        data: data2,
         success: function (response) {
             if (response.success) {
 
                 $cell.data('val', newVal);
                 $cell.attr('data-val', newVal); // update val data
 
-                $cell.addClass('update-success');
-
-                setTimeout(function () { $cell.removeClass('update-success'); }, 1000);
+                showUpdateMessage($cell, true);
             }
             else {
+                $cell.text(oldVal);
+                showUpdateMessage($cell, false);
                 alert('Update failed: ' + response.message);
             }
         },
@@ -160,3 +159,36 @@ function editAttribute($cell) {
     });
 }
 
+
+function showUpdateMessage($cell, success) {
+
+    let text = success ? "Changes Saved!" : "Error Updating"
+    const $div = $('<div>')
+        .text(text)
+        .css({
+            display: 'none',      // start hidden
+            background: success ? '##579585' : 'E72C2C',
+            color: success ? '#195C4B' : 'B11E1E',
+            fontSize: '10px',
+            padding: '1px'
+        });
+
+    // 2. Append to the table cell
+    $cell.append($div);
+
+    // 3. Fade in over 0.5s (500ms)
+    $div.fadeIn(500, function () {
+
+        // 4. Wait 1s
+        setTimeout(function () {
+
+            // 5. Fade out over 0.5s (500ms)
+            $div.fadeOut(500, function () {
+
+                // 6. Remove from the DOM
+                $div.remove();
+
+            });
+        }, 1000); // 1000ms delay
+    });
+}
