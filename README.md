@@ -10,9 +10,8 @@ Microsoft.EntityFrameworkCore.Tools(8.0.13)
 
 **_**Update connection string in appsettings.json_**  
 
-## Code First Migrations  
-dotnet ef migrations add <migration name> --project OptraxDAL --startup-project OptraxMVC  
-*dotnet ef migrations remove --project OptraxDAL --startup-project OptraxMVC*  
+## Code First Migration  
+dotnet ef migrations add InitialCommit --project OptraxDAL --startup-project OptraxMVC   
 dotnet ef database update --project OptraxDAL --startup-project OptraxMVC  
 
 ## Populate Database   
