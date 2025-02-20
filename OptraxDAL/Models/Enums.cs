@@ -70,34 +70,7 @@
             Harvest
         }
 
-        public enum InventoryCategory
-        {
-            Plant,
-            PlantCare,
-            Equipment,
-
-            PPE,
-            OfficeSupplies,
-            ShippingAndPackaging,
-            Other
-        }
-
-        public enum InventorySubCategory
-        {
-            Seed,
-            Clone,
-
-            Soil,
-            Nutrient,
-            PestControl,
-
-            Light,
-            Container,
-            PruningOrMaintenance,
-            HVAC,
-        }
-
-        public enum InventoryUnit
+        public enum InventoryUOM
         {
             Each,
             Case,
@@ -115,7 +88,12 @@
             Other
         }
 
-
-
+        public enum StockType
+        {
+            Plant,
+            Light,
+            Durable,
+            Comsumable
+        }
     }
 }

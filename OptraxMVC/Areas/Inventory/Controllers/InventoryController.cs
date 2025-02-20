@@ -9,13 +9,55 @@ namespace OptraxMVC.Areas.Inventory.Controllers
     [Area("Inventory")]
     public class InventoryController(OptraxContext context) : BaseController(context)
     {
-        public async Task<IActionResult> Index()
+        public class InvUpdateVM
         {
-            ViewBag.Categories = await db.InventoryCategories.Where(c => c.ParentID == null)
-                                                             .Include(c => c.Children)
-                                                             .ThenInclude(c => c.Children)
-                                                             .ToListAsync() ?? [];
-            return View();
+            public int ID { get; set; } = 0;
+            public required string Field { get; set; }
+            public required string Value { get; set; }
+            public required string ClassType { get; set; }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateAttribute(InvUpdateVM model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (model.ClassType == "category")
+                    {
+                        InventoryCategory? cat = await db.InventoryCategories.FindAsync(model.ID);
+
+                        if (cat != null)
+                        {
+                            var property = typeof(InventoryCategory).GetProperty(model.Field);
+
+                            property?.SetValue(cat, model.Value);
+                        }
+                    }
+                    else if (model.ClassType == "item")
+                    {
+                        InventoryItem? item = await db.InventoryItems.FindAsync(model.ID);
+
+                        if (item != null)
+                        {
+                            var property = typeof(InventoryItem).GetProperty(model.Field);
+
+                            property?.SetValue(item, model.Value);
+                        }
+                    }
+
+                    await db.SaveChangesAsync();
+
+                    return Json(new { success = true });
+                }
+                return Json(new { success = false, message = "Invalid model" });
+            }
+            catch
+            {
+                return Json(new { success = false, message = $"Error updating {model.ClassType}" });
+
+            }
         }
 
 

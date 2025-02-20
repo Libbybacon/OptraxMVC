@@ -1,4 +1,5 @@
 ﻿@using OptraxDAL.Models.Inventory
+@using OptraxDAL.Models
 @model InventoryCategory
 
 @{
@@ -7,10 +8,16 @@
     var rowClass = Model.Parent == null ? "top-row" : "cat-row";
 
     List<InventoryItem> items = ViewData["Items"] as List<InventoryItem> ?? [];
-    List<InventoryItem> catItems = items.Where(i => i.CategoryID == Model.ID).ToList();
+    List<InventoryItem> catItems = items.Where(i => i.CategoryID == Model.ID).ToList() ?? [];
 
     items.RemoveAll(i => catItems.Contains(i));
+
+    var uoms = Enum.GetValues(typeof(Enums.InventoryUOM));
+    var stockTypes = Enum.GetValues(typeof(Enums.StockType));
 }
+
+<input type="hidden" id="itemsID" value="items-@level-@Model.ID" />
+<input type="hidden" id="childID" value="child-@Model.ID" />
 
 <tr id="cat-@Model.ID" class="@rowClass">
     <td style="@indent">
@@ -35,44 +42,73 @@
 
 <tr id="items-@Model.ID" class="items-row child-row w-100" style="display: none">
     <td colspan="4" style="@indent">
-        <table class="table items-table smF">
+        <table class="table table-striped cat-table items-table smF">
             <thead class="items-head p-0">
-                <tr class="smF">
-                    <th>
-                        <div class="d-flex">
-                            <button class="add-item btn-clear smF ms-auto me-4" data-id="@Model.ID"><span class="add-new-item mdF text-grn-dk pe-2">+</span>New Item</button>
+                <tr><td colspan="7" class="topr"></td></tr>
+                <tr class="xsF">
+                    <th class="btn-cell">
+                        <div class="d-flex align-items-center">
+                            <button class="add-item btn-clear xsF ms-auto me-4" data-id="@Model.ID"><span class="add-new-item mdF text-grn-dk pe-2">+</span>New Item</button>
                         </div>
                     </th>
+
                     <th>Item Name</th>
                     <th>Description</th>
                     <th>Manufacturer</th>
                     <th>SKU</th>
                     <th>Default UOM</th>
-                    <th>CurrentCount</th>
-                    @* <th></th> *@
+                    <th>Stock Type</th>
                 </tr>
             </thead>
             <tbody>
-                @if (catItems.Count > 0)
+                @foreach (var item in catItems.OrderBy(i => i.Name).ToList())
                 {
-                    @foreach (var item in catItems.OrderBy(i => i.Name).ToList())
-                    {
-                        <tr class="xsF">
-                            <td></td>
-                            <td class="attr" data-val="@item.Name" data-field="Name">
-                                @item.Name
-                            </td>
-                            <td class="editable-field" data-field="Description">@item.Description</td>
-                            <td class="editable-field" data-field="Manufacturer">@item.Manufacturer</td>
-                            <td>@item.SKU</td>
-                            <td class="editable-field" data-field="DefaultUOM">@item.DefaultUOM</td>
-                            <td>@item.StockItems.Count</td>
-                            @*                             <td>
-                                <button class="edit-item btn-clear" data-id="@item.ID">Edit</button>
-                                <button class="remove-item otx-btn btn-clear text-danger" data-id="@item.ID">Remove</button>
-                            </td> *@
-                        </tr>
-                    }
+                    int id = item.ID;
+
+                    <tr id="item-@id" class="item-row xsF" data-itemid="@id" data-classtype="item">
+                        <td class="btn-cell vtd"></td>
+                        <td class="vtd Name">
+                            <div class="attr-txt py-1 px-2">@item.Name</div>
+                            <input type="text" class="form-control attr-edit d-none" data-val="@item.Name" data-field="Name" value="@item.Name" />
+                        </td>
+                        <td class="vtd Description">
+                            <div class="attr-txt py-1 px-2">@item.Description</div>
+                            <textarea class="form-control attr-edit d-none" data-val="@item.Description" data-field="Description">@item.Description</textarea>
+                        </td>
+                        <td class="vtd Manufacturer">
+                            <div class="attr-txt py-1 px-2">@item.Manufacturer</div>
+                            <input type="text" class="form-control attr-edit d-none" data-field="Manufacturer" data-val="@item.Manufacturer" value="@item.Manufacturer" />
+                        </td>
+                        <td class="vtd SKU">
+                            <div class="attr-txt py-1 px-2">@item.SKU</div>
+                            <input type="text" class="form-control attr-edit d-none" data-field="SKU" data-val="@item.SKU" value="@item.SKU" />
+                        </td>
+                        <td class="vtd DefaultUOM">
+                            <div class="attr-txt py-1 px-2">@item.DefaultUOM</div>
+                            <select class="form-select attr-edit d-none" data-field="DefaultUOM" data-val="@item.DefaultUOM">
+                                @foreach (var uom in uoms)
+                                {
+                                    <option value="@uom" @(uom.ToString() == item.DefaultUOM ? "selected" : "")>@uom</option>
+                                }
+                            </select>
+                        </td>
+                        <td class="vtd StockType">
+                            <div class="attr-txt py-1 px-2">@item.StockType?.Substring(0, 1)</div>
+                            <select class="form-select attr-edit d-none" data-field="StockType" data-val="@item.StockType">
+                                @foreach (var type in stockTypes)
+                                {
+                                    <option value="@type" @(type.ToString().Substring(0, 1) == item.StockType?.Substring(0, 1) ? "selected" : "")>@type</option>
+                                }
+                            </select>
+                        </td>
+                        <td colspan="7" id="edit-td-@id" data-id="@id" class="edit-td d-none">
+                            <div id="" class="pop-div row d-flex  col-12">
+                                <div class="popout">
+                                    <div id="pop-row-@id" class="row d-flex pb-2 col-12 popout-row"></div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
@@ -83,7 +119,7 @@
 {
     <tr id="child-@Model.ID" class="child-row">
         <td colspan="4">
-            <table class="table">
+            <table class="table cat-table">
                 @foreach (var child in Model.Children.OrderBy(c => c.Name).ToList())
                 {
                     var childVD = new ViewDataDictionary(ViewData) { ["Level"] = level + 1, ["Items"] = items };
@@ -96,3 +132,13 @@
 }
 
 
+@* <script type="text/javascript">
+    $(document).ready(function(){
+        var itemsID = $('#itemsID').val();
+        console.log('itemsID', itemsID)
+
+        // $(`#${itemsID}`).dataTable({
+
+        // });
+    })
+</script> *@
