@@ -24,7 +24,7 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody id="categoryTable" class="cat-body">
+            <tbody id="categoryTable" class="cat-body d-block">
                 @foreach (var category in Model.OrderBy(m => m.Name).ToList())
                 {
                     List<int> childIDs = category.GetChildIDs();

@@ -20,11 +20,6 @@
 /*background-color: #91A5C7;*/
 /*background-color: #C1CDE0;*/
 
-
-
-/*.update-success{
-    border: 2px solid var(--grn-md) !important;
-}*/
 @media only screen and (max-width: 600px) {
     .side-nav {
         height: 40px !important;
@@ -48,16 +43,23 @@
     }
 
     .cat-body {
-        min-height: calc(100vh - 190px) !important; /* 100 - nav, 15 - top margin, 40 - header  extra 40 to make it even ??*/
-        max-height: calc(100vh - 190px) !important;
+        min-height: calc(100vh - 155px) !important;
+        max-height: calc(100vh - 155px) !important; /* 100 - nav, 15 - top margin, 40 - header  extra 40 to make it even ??*/
+    }
+    .popout {
+        transform: scale(1.05) !important;
     }
 }
 
 @media only screen and (min-width: 768px) {
     .cat-body {
-        min-height: calc(100vh - 130x) !important; /* 50 - nav, 15 - top margin, 40 - header, extra 40 to leave margin at bottom (just adding another 15 doesn't create space below - why ??)*/
+        min-height: calc(100vh - 130x) !important; /* 50 - nav, 15 - top margin, 40 - header, extra 25 to leave margin at bottom (just adding another 15 doesn't create space below - why ?? table padding?)*/
         max-height: calc(100vh - 130px) !important;
     }
+/*    .scale-up {
+        transform: scale(1.1) !important;
+    }*/
+    
 }
 
 .bg-dark {
@@ -200,9 +202,10 @@ input[type=checkbox]:hover, input[type=radio]:hover {
 
 /* Nested Table */
 
-.btn-cell{
+.btn-cell {
     width: 120px;
 }
+
 .top-head tr th {
     padding-bottom: .5rem;
 }
@@ -236,7 +239,6 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     }
 
 .cat-body {
-    display: block;
     overflow-y: auto;
 }
 
@@ -248,28 +250,50 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     background-color: var(--gray-lt);
 }
 
-.items-head th{
-    border-bottom: 1px solid var(--gray-lt) !important; 
-    text-align: center;
-}
-.items-row {
-    background-color: var(--gray-xlt);
+.items-head th {
+    border-bottom: 1px solid var(--gray-lt) !important;
     text-align: center;
 }
 
-.attr {
+.items-row {
+    background-color: var(--gray-xlt);
+    text-align: center;
+    cursor: pointer;
+}
+
+.attr-txt {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.attr :hover{
-    cursor: pointer;
-    border: 2px inset var(--grn-lt);
+
+    .attr-txt:hover {
+        cursor: pointer;
+    }
+
+
+.attr-edit {
+    display: none;
 }
 
-.editing {
-    white-space: normal;
+.name-div{
+    text-align: center;
+    font-weight: bold;
+    padding-top: .1rem;
 }
+
+.popout {
+    transform: scale(1.02);
+    background: #fff;
+    border-top: 2px solid #ddd;
+    border-left: 2px solid #bbb;
+    border-right: 2px solid #777;
+    border-bottom: 2px solid #666666;
+    box-shadow: -3px 4px 8px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+
 /* END */
 
 
