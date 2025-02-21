@@ -1,11 +1,11 @@
 ﻿:root {
-    --xxsF: .8rem;
-    --xsF: .9rem;
-    --smF: 1rem;
-    --mdF: 1.1rem;
-    --lgF: 1.2rem;
-    --xlF: 1.3rem;
-    --xxlF: 1.4rem;
+    --f-xxs: .8rem;
+    --f-xs: .9rem;
+    --f-sm: 1rem;
+    --f-md: 1.1rem;
+    --f-lg: 1.2rem;
+    --f-xl: 1.3rem;
+    --f-xxl: 1.4rem;
 }
 
 @media only screen and (max-width: 600px) {
@@ -47,30 +47,30 @@
     font-family: 'Roboto' !important;
 }
 
-.xxsF {
-    font-size: var(--xxsF) !important;
+.f-xxs {
+    font-size: var(--f-xxs) !important;
 }
 
-.xsF {
-    font-size: var(--xsF) !important;
+.f-xs {
+    font-size: var(--f-xs) !important;
 }
 
-.smF {
-    font-size: var(--smF) !important;
+.f-sm {
+    font-size: var(--f-sm) !important;
 }
 
-.mdF {
-    font-size: var(--mdF) !important;
+.f-md {
+    font-size: var(--f-md) !important;
 }
 
-.lgF {
-    font-size: var(--lgF) !important;
+.f-lg {
+    font-size: var(--f-lg) !important;
 }
 
-.xlF {
-    font-size: var(--xlF) !important;
+.f-xl {
+    font-size: var(--f-xl) !important;
 }
 
-.xxlF {
-    font-size: var(--xxlF) !important;
+.f-xxl {
+    font-size: var(--f-xxl) !important;
 }

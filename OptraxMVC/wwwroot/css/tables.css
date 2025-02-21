@@ -28,20 +28,15 @@
         font-weight: bold;
     }
 
-.child-row > td {
-    padding: 0; /* Remove extra padding from the parent <td> */
-}
-
-table td,
-.child-row table td {
+table td{
     padding: .15rem; /* Keep padding inside the child table */
 }
 
-.child-row table tr:last-child td {
+table tr:last-child td {
     border: none;
 }
 
-.child-row table {
+table {
     margin-bottom: 0;
     border-collapse: collapse;
 }

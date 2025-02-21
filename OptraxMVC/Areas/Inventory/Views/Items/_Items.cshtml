@@ -3,6 +3,7 @@
 
 @{
     List<InventoryItem> items = ViewBag.Items;
+    
 }
 
 <div class="tab-div">
@@ -12,9 +13,13 @@
                 <tr class="">
                     <th>
                         <div class="d-flex">
-                            <button class="toggle-all me-2 toggle" data-toggle-class="child-row">
-                                <span class="show-i"><i class="bi bi-chevron-compact-down"></i></span>
-                                <span class="hide-i d-none"><i class="bi bi-chevron-compact-up"></i></span>
+                            <button class="toggle-all all me-2 toggle" data-toggle-class="child-row">
+                                <span class="show-i"><i class="bi bi-chevron-double-down"></i></span> @* Expand all expandables *@
+                                <span class="hide-i d-none"><i class="bi bi-chevron-double-up"></i></span> @* Collapse all collapsables *@
+                            </button>
+                            <button class="toggle-all cats me-2 toggle" data-toggle-class="child-row">
+                                <span class="show-i"><i class="bi bi-chevron-down"></i></span> @* Expand all categories, hide items *@
+                                <span class="hide-i d-none"><i class="bi bi-chevron-up"></i></span> @* Collapse all child categories *@
                             </button>
                             <button class="btn-clear"><span class="me-2 text-grn-dk">+</span>Add New Top Level</button>
                         </div>
@@ -29,9 +34,9 @@
                 {
                     List<int> childIDs = category.GetChildIDs();
                     List<InventoryItem> catItems = items.Where(i => childIDs.Contains(i.ID)).ToList(); //where items belong to current cat or any of it's children
-                    items.RemoveAll(i => catItems.Contains(i));
+                    //items.RemoveAll(i => catItems.Contains(i));
 
-                    var childVD = new ViewDataDictionary(ViewData) { ["Items"] = catItems };
+                    var childVD = new ViewDataDictionary(ViewData) { ["Items"] = items };
 
                     @await Html.PartialAsync("~/Areas/Inventory/Views/Items/_ItemsChild.cshtml", category)
                 }

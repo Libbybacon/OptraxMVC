@@ -51,5 +51,33 @@ namespace OptraxDAL.Models.Inventory
             return childIDs;
         }
 
+        public string GetCategoryNamesString()
+        {
+            if (Parent != null)
+            {
+                List<string> names = [Name, Parent.Name];
+
+                if (Parent.Parent != null)
+                {
+                    names.AddRange(GetNamesRecursive(Parent));
+                }
+                List<string> orderedNames = [.. names.AsEnumerable().Reverse()];
+
+                return string.Join(" > ", orderedNames);
+            }
+            return Name;
+        }
+
+        private static List<string> GetNamesRecursive(InventoryCategory category)
+        {
+            List<string> names = [category.Name];
+
+            if (category.Parent != null)
+            {
+                names.AddRange(GetNamesRecursive(category.Parent));
+            }
+            return names;
+        }
+
     }
 }

@@ -3,12 +3,15 @@ var $popout;
 
 $(document).ready(function () {
 
-    $('.item-row').off('click').on('click', function (e) {
-        e.stopPropagation();
-        var $row = $(this).closest('tr');
-        loadPopout($row)
+    $(document).on('change', '.attr', function () {
+        editAttribute($(this));
     });
 
+    loadToggleHandlers();
+    setItemHandlers();
+});
+
+function loadToggleHandlers() {
 
     $(".toggle-btn").off('click').on('click', function () {
         var toggleId = $(this).data("toggle-id");
@@ -18,73 +21,238 @@ $(document).ready(function () {
         $("#" + toggleId).toggle();
     });
 
+    $('.toggle-cats').off('click').on('click', function () {
+        console.log('click')
+        let tr = $(this).parents('.top-row');
+
+        console.log($(this).parents('.top-row').nextAll('.child-row'))
+        $(this).parents('.top-row').nextAll('.child-row').addClass('d-none');
+    })
+
     $(".toggle-all").off('click').on('click', function () {
 
-        showAll ? $(".items-row").hide() : $(".items-row").show();
+        if ($(this).hasClass('all')) {
+            showAll ? $(".items-row").hide() : $(".items-row").show();
+            showAll ? $(".child-row").hide() : $(".child-row").show();
+        }
+        else {
+            $(".child-row").show();
+            showAll ? $(".items-row").hide() : $(".items-row").show();
+        }
 
         $(`.toggle .${(showAll ? 'show' : 'hide')}-i`).removeClass('d-none');
         $(`.toggle .${(showAll ? 'hide' : 'show')}-i`).addClass('d-none');
 
         showAll = !showAll;
     });
+}
 
-    $(document).on('change', '.attr', function () {
-        editAttribute($(this));
+function setItemHandlers() {
+
+    $(`.add-item`).off('click').on('click', function () {
+        addItemRow($(this))
     });
-});
+
+    $(`.item-row`).off('click').on('click', function (e) {
+        e.stopPropagation();
+        loadPopout($(this))
+    });
+
+    // each edit cell is form that can be validated then serialized before sending - for new items
+    $(`.item-form`).off('submit').on('submit', function (event) {
+        console.log('submit');
+        event.preventDefault();
+
+        let $row = $(this).closest('.item-row')
+        let rowID = $row.attr('id');
+        var form = document.querySelector(`${rowID} .item-form`);
+
+        if (!this.checkValidity()) {
+            event.stopPropagation();
+            form.reportValidity();
+        }
+        else {
+            saveNewItem($row, $(this));
+        }
+    });
+}
+
+function addItemRow($btn) {
+    let catID = $btn.data('catid');
+    let $table = $btn.parents('.items-table')
+    let $newRow = $table.find('.new-row');
+
+    if ($newRow.length > 0) {
+        loadPopout($newRow);
+    }
+    else {
+        let $cloneRow = $table.find('.item-row').first().clone().addClass('new-row');
+        $table.find('tbody').prepend($cloneRow)
+
+        let $newRow = $table.find('tbody .new-row').first();
+
+        $newRow.attr('id', `new-row-${catID}`)
+        $newRow.data('itemid', '')
+        $($newRow).unbind('click');
+        $.each($newRow.find('.attr-edit'), function () {
+            $(this).val('');
+            
+            $(this).attr('val', '')
+            $(this).attr('data-val', '')
+        })
+        setItemHandlers();
+        loadPopout($newRow);
+    }
+}
 
 function loadPopout($row) {
+    console.log('load')
+    $('.item-row').off('click');
 
     // Going through this whole rigamarole so that the inputs layout can be more responsive than in the single row
     // Also, some columns might be hidden or truncated in smaller views, this way everything fits nicely.
     // Also it's just kind of cool.
 
-    let id = $($row).data('itemid'); // get item id
+    let isNew = $row.hasClass('new-row');
+    let attrClass = isNew ? "new-attr" : "attr";
+    let rowID = '#' + $($row).attr('id');
 
-    $.each($(`#item-${id} .attr-edit`), function () {
-        $(this).addClass('attr').removeClass('attr-edit').removeClass('d-none');
+    let cats = $row.parents('.items-table').find('.cat-string').val();
+    let $catsDiv = $('<div>').text(`${cats}`).addClass('cats-div row col-12'); // show the categories, why not
 
-        let field = $(this).data('field');
-        let $fieldDiv = $('<div>').text(field).addClass('name-div'); // label
-        let $editDiv = $('<div>').addClass('pop-col col-xl-2 col-md-4 col-6'); // item div
+    $row.find('.pop-row').append($catsDiv);
 
-        $editDiv.append($fieldDiv).append($(this)); // label and input into item div
+    // move the hidden edit inputs to edit cell
+    // originally was cloning, but this way is faster and easier and removes the need for updating the orginal inputs with any new values.
+    $.each($row.find('.attr-edit'), function (i, input) {
 
-        $(`#pop-row-${id}`).append($editDiv); // item div into row
+        $(input).addClass(attrClass).removeClass('attr-edit').removeClass('d-none');
+
+        let field = $(input).attr('name');
+        let $fieldDiv = $('<div>').text(field).addClass('name-div');
+        let $attrDiv = $('<div>').addClass('pop-col col-xl-2 col-md-4 col-6');
+
+        $attrDiv.append($fieldDiv).append($(input));
+        $row.find('.pop-row').append($attrDiv);
     });
 
-    $('.cat-body').removeClass('d-block'); // allow row to overflow table borders
-    $(`#item-${id} td`).addClass('d-none');   // hide all row cells
-    $(`#edit-td-${id}`).removeClass('d-none');  // show edit cell  
+    if (isNew) {
+        $row.find('.save-row').removeClass('d-none');
+    }
 
-    $(document).off('click').on('click', function (event) {
-        if (!$(event.target).closest($(`#edit-td-${id}`)).length) {
-            hidePopout($(`#edit-td-${id}`))
+    $row.find('td').addClass('d-none');
+    $row.find('.edit-td').removeClass('d-none');
+
+    $('.body').addClass('show-y'); // make page scrollable so row doesn't get cut off
+    $('.cat-body').removeClass('d-block'); // allow row to overflow table borders
+
+    $(`${rowID}`).get(0).scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+    });
+
+    setTimeout(function () {
+        $(document).off('click').on('click', function (event) {
+            if (!$(event.target).closest($(rowID + ' .edit-td')).length) {
+                hidePopout($(rowID + ' .edit-td'));
+            }
+        });
+    }, 0);
+
+}
+
+function hidePopout($cell) {
+    let $row = $cell.parents('.item-row')
+    let rowID = '#' + $row.attr('id');
+    console.log('rowID on hide', rowID);
+
+    let isNew = $row.hasClass('new-row');
+    let attr = isNew ? 'new-attr' : 'attr'
+
+    // reverse everything from before.
+    $row.find('.vtd').removeClass('d-none');
+
+    $.each($(`${rowID} .${attr}`), function () {
+
+        let field = $(this).attr('name');
+        let val = $(this).data('val');
+
+        $row.find(`.${field} .attr-txt`).html(val); // update text value
+        $row.find(`.${field}`).append($(this)); // move input back to it's cell
+
+        $(this).removeClass(attr).addClass('attr-edit').addClass('d-none');
+    });
+
+    $row.find('.pop-row').html('');
+    $row.find('.edit-td').addClass('d-none');
+
+    $('.cat-body').addClass('d-block');
+    $('.body').removeClass('show-y');
+
+    $(document).off('click'); // remove doc click event
+
+    setItemHandlers();
+}
+
+function saveNewItem($row, $form) {
+    let itemModel = arrayToModel($($form).serializeArray());
+    let rowID = $row.attr('id');
+
+    $.ajax({
+        url: '/Inventory/Inventory/AddItem/',
+        type: 'POST',
+        data: { invItem: itemModel },
+        success: function (response) {
+            if (response.success) {
+
+                let itemID = response.itemID;
+                rowID = `item-${itemID}`;
+
+                // update row, cell and input IDs & classes
+                $row.attr('id', rowID);
+                $row.data('itemid', `${itemID}`);
+                $row.removeClass('new-row');
+
+                let $inputs = $row.find('.new-attr');
+
+                $.each($inputs, function () {
+                    $(this).data('val', $(this).val());
+                    $(this).attr('data-val', $(this).val());
+                    $(this).addClass('attr').removeClass('new-attr');
+                })
+
+                $row.find('.save-row').addClass('d-none');
+
+                showUpdateMessage($row.find('.popout'), true, 'f-md p-1')
+
+                let $cell = $row.find('.edit-td').first();
+
+                $(document).off('click').on('click', function (event) {
+                    if (!$(event.target).closest($cell).length) {
+                        hidePopout($cell);
+                    }
+                });
+            }
+            else {
+                showUpdateMessage($(`#${rowID} .popout`), false, 'f-md p-1');
+                alert('Update failed: ' + response.msg);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error updating field:', error);
+            alert('An error occurred while saving the changes.' + status);
         }
     });
 }
 
-function hidePopout($cell) {
-    let id = $cell.data('id');
-    
-    console.log('hide', id);
+function arrayToModel(arr) {
+    var model = {};
 
-    // reverse everything from before.
-    $(`#item-${id} .vtd`).removeClass('d-none');
+    for (var i = 0; i < arr.length; i++) {
 
-    $.each($(`#item-${id} .attr`), function () {
-        let field = $(this).data('field');
-        let val = $(this).data('val');
-
-        $(`#item-${id} .${field} .attr-txt`).html(val);
-        $(`#item-${id} .${field}`).append($(this));
-        $(this).removeClass('attr').addClass('attr-edit').addClass('d-none');
-    })
-    $(`#pop-row-${id}`).html('');
-    $(`#edit-td-${id}`).addClass('d-none');
-    $('.cat-body').addClass('d-block');
-
-    $(document).off('click'); // remove doc click event
+        model[arr[i]['name']] = arr[i]['value'];
+    }
+    return model;
 }
 
 function editAttribute($input) {
@@ -97,7 +265,7 @@ function editAttribute($input) {
 
     var $row = $input.closest('tr');
     var id = $row.data('itemid');
-    let field = $input.data('field')
+    let field = $input.attr('name')
 
     var data = {
         ID: id,
@@ -111,16 +279,17 @@ function editAttribute($input) {
         type: 'POST',
         data: data,
         success: function (response) {
+            $parentDiv = $input.parents('.pop-col');
             if (response.success) {
 
                 $input.data('val', newVal);
                 $input.attr('data-val', newVal); // store new val in data attr 
 
-                showUpdateMessage($input, true);
+                showUpdateMessage($parentDiv, true);
             }
             else {
                 $input.text(oldVal);
-                showUpdateMessage($input, false);
+                showUpdateMessage($parentDiv, false);
                 alert('Update failed: ' + response.message);
             }
         },
@@ -131,20 +300,13 @@ function editAttribute($input) {
     });
 }
 
-function showUpdateMessage($input, success) {
+function showUpdateMessage($parentDiv, success, classes) {
 
-    let text = success ? "Changes Saved!" : "Error Updating"
-    const $div = $('<div>')
-        .text(text)
-        .css({
-            display: 'none',      
-            background: success ? '##579585' : 'E72C2C',
-            color: success ? '#195C4B' : 'B11E1E',
-            fontSize: '10px',
-            padding: '1px'
-        });
+    let text = success ? "Changes Saved!" : "Error Updating";
+    let classnames = (success ? "success " : "error ") + classes;
+    const $div = $('<div>').text(text).addClass(classnames);
 
-    $input.parents('.pop-col').append($div);
+    $parentDiv.append($div);
 
     // make lil update message fade in then out
     $div.fadeIn(500, function () {
@@ -157,81 +319,3 @@ function showUpdateMessage($input, success) {
 }
 
 
-//// Add Category
-//$(".add-cat").off('click').on('click', function () {
-//    const categoryName = prompt("Enter new category name");
-//    if (categoryName) {
-//        $.ajax({
-//            url: '/Inventory/Inventory/AddCategory',
-//            type: 'POST',
-//            data: { name: categoryName },
-//            success: function (data) {
-//                $('#category-list').append(data);
-//            },
-//            error: function () {
-//                alert("Error adding category.");
-//            }
-//        });
-//    }
-//});
-
-//// Remove Category
-//$(".remove-cat").off('click').on('click', function () {
-//    const categoryId = $(this).data("id");
-
-//    if (confirm("Are you sure you want to delete this category?")) {
-//        $.ajax({
-//            url: '/Inventory/InventoryCategories/Delete',
-//            type: 'POST',
-//            data: { id: categoryId },
-//            success: function () {
-//                // Remove the category row from the table
-//                $(`#category-${categoryId}`).remove();
-//            },
-//            error: function () {
-//                alert("Error deleting category.");
-//            }
-//        });
-//    }
-//});
-
-//// Add Item
-//$(".add-item").off('click').on('click', function () {
-//    const categoryId = $(this).data("parent-id");
-//    const itemName = prompt("Enter new item name");
-//    const itemQuantity = prompt("Enter item quantity");
-
-//    if (itemName && itemQuantity) {
-//        $.ajax({
-//            url: '/Inventory/InventoryItems/Add',
-//            type: 'POST',
-//            data: { categoryId: categoryId, name: itemName, quantity: itemQuantity },
-//            success: function (data) {
-//                // On success, append the new item to the category
-//                $(`#item-list-${categoryId}`).append(data);
-//            },
-//            error: function () {
-//                alert("Error adding item.");
-//            }
-//        });
-//    }
-//});
-
-//// Remove Item
-//$(".remove-item").off('click').on('click', function () {
-//    const itemId = $(this).data("id");
-
-//    if (confirm("Are you sure you want to delete this item?")) {
-//        $.ajax({
-//            url: '/Inventory/InventoryItems/Delete',
-//            type: 'POST',
-//            data: { id: itemId },
-//            success: function () {
-//                $(`#item-${itemId}`).remove();
-//            },
-//            error: function () {
-//                alert("Error deleting item.");
-//            }
-//        });
-//    }
-//});
