@@ -3,11 +3,11 @@
     flex-flow: column;
     flex: 1 0 auto;
     color: var(--tan-lt);
+    font-size: var(--f-sm);
     background-color: var(--tan-lt);
     /*background-image: url('content/bg-waves.png');*/
-    background-repeat: no-repeat;
-    background-size: cover;
-    font-size: var(--f-sm);
+    /*background-repeat: no-repeat;*/
+    /*background-size: cover;*/
 }
 
     .login-bg hr {
@@ -15,7 +15,8 @@
         opacity: .8;
     }
 
-a {
+a,
+.checkbox span{
     color: var(--tan-lt);
     text-decoration: none;
 }
@@ -25,31 +26,32 @@ a {
     }
 
 .btn {
-    background-image: linear-gradient(var(--grn-lt), var(--grn-dk)) !important;
-    border-bottom: 1px solid var(--grn-dk);
     color: var(--tan-lt);
-    text-shadow: 1px 1px 2px rgba(0,0,0,.2);
     font-size: var(--f-xl);
+    border-bottom: 1px solid var(--grn-dk);
+    text-shadow: 1px 1px 2px rgba(0,0,0,.2);
+    background: linear-gradient(var(--grn-lt), var(--grn-dk)) !important;
 }
 
     .btn:hover {
-        background-image: linear-gradient(var(--grn-lt), var(--grn-md)) !important;
         color: white;
+        border-bottom: 1px solid var(--grn-dk);
+        background-image: linear-gradient(var(--grn-lt), var(--grn-md)) !important;
     }
 
 .login-card {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
     min-width: 50vw;
     max-width: 60vw;
-    border-top: 3px outset var(--grn-md);
-    border-left: 3px outset var(--grn-md);
-    border-bottom: 3px ridge var(--grn-lt);
-    border-right: 3px ridge var(--grn-lt);
-    box-shadow: 3px 3px 12px rgba(0,0,0,.4);
+    position: relative;
+    align-items: center;
+    justify-content: center;
     background-color: #040D32;
+    border-left: 3px outset var(--grn-md);
+    border-top: 3px outset var(--grn-md);
+    border-right: 3px ridge var(--grn-lt);
+    border-bottom: 3px ridge var(--grn-lt);
+    box-shadow: 3px 3px 12px rgba(0,0,0,.4);
 }
 
     .login-card section {
@@ -79,6 +81,7 @@ a {
         margin-right: auto;
     }
 
-.form-label {
-    color: var(--blue-dk);
+.form-floating > .form-control:not(:placeholder-shown) ~ label::after {
+    background: none;
+    background-color: none !important;
 }

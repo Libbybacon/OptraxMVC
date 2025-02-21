@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using OptraxDAL;
 using OptraxDAL.Models.Admin;
 
@@ -32,6 +30,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/Identity/Account/Login";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.LogoutPath = "/Identity/Account/Logout";
+    options.Cookie.SameSite = SameSiteMode.Lax; // Adjust as needed
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
 builder.Services.AddControllersWithViews()
