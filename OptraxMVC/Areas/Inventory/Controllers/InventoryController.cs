@@ -18,6 +18,31 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> AddItem(InventoryItem invItem)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    InventoryItem newItem = invItem;
+
+                    db.InventoryItems.Add(newItem);
+
+                    await db.SaveChangesAsync();
+
+                    return Json(new { success = true, itemID = newItem.ID });
+                }
+
+                return Json(new { success = false, msg = "Invalid Model" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, msg = ex.Message });
+            }
+        }
+
+
+        [HttpPost]
         public async Task<IActionResult> UpdateAttribute(InvUpdateVM model)
         {
             try

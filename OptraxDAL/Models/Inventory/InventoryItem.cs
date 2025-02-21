@@ -6,15 +6,21 @@ namespace OptraxDAL.Models.Inventory
     {
         public InventoryItem() { }
 
+        public InventoryItem(InventoryCategory category)
+        {
+            CategoryID = category.ID;
+            Category = category;
+        }
+
         public int ID { get; set; }
         public int CategoryID { get; set; }
 
         [MaxLength(50)]
-        public required string StockType { get; set; }
+        public string StockType { get; set; } = "";
         [MaxLength(100)]
-        public required string Name { get; set; }
+        public string Name { get; set; } = "";
         [MaxLength(250)]
-        public required string Description { get; set; }
+        public string Description { get; set; } = "";
         [MaxLength(100)]
         public string? Manufacturer { get; set; }
         [MaxLength(50)]
@@ -31,7 +37,7 @@ namespace OptraxDAL.Models.Inventory
 
         public virtual LightType? LightType { get; set; }
         public virtual ContainerType? ContainerType { get; set; }
-        public virtual required InventoryCategory Category { get; set; }
+        public virtual InventoryCategory? Category { get; set; }
         public virtual ICollection<StockItem> StockItems { get; set; } = [];
 
         public enum InventoryType
@@ -44,7 +50,7 @@ namespace OptraxDAL.Models.Inventory
 
         public List<string> GetCategoryNames()
         {
-            if (Category.Parent != null)
+            if (Category?.Parent != null)
             {
                 List<string> orderedNames = [.. GetCategoryNamesRecursive(Category).AsEnumerable().Reverse()];
 
@@ -52,7 +58,7 @@ namespace OptraxDAL.Models.Inventory
 
                 return orderedNames;
             }
-            return [Category.Name];
+            return [Category?.Name];
         }
 
         private static List<string> GetCategoryNamesRecursive(InventoryCategory category)

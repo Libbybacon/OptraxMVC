@@ -45,7 +45,9 @@
         display: flex;
         align-items: center;
     }
-
+    .nav-pills .nav-item{
+        margin-top: .6rem;
+    }
     .nav-link:focus,
     .nav-pills li,
     .nav-link,
@@ -55,8 +57,8 @@
 
         .nav-pills li:hover i,
         .nav-pills li:hover .nav-link {
-            color: white;
-            /*color: var(--purp-lt) !important;*/
+            color: var(--blue-dk);
+            background: var(--grn-xlt);
         }
 
 .nav-pills .nav-link.active,
