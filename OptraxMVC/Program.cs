@@ -19,7 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<OptraxContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("OptraxConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING"));
 });
 
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<OptraxContext>()
@@ -30,8 +30,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/Identity/Account/Login";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.LogoutPath = "/Identity/Account/Logout";
-    options.Cookie.SameSite = SameSiteMode.Lax; // Adjust as needed
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    //options.Cookie.SameSite = SameSiteMode.Lax; // Adjust as needed
+    //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
 builder.Services.AddControllersWithViews()
@@ -83,4 +83,5 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.Run();
+
 
