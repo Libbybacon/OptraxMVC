@@ -1,5 +1,8 @@
 ![logo-lt](https://github.com/user-attachments/assets/04da5b57-4199-4a50-ba70-7b44f896b77e)   
 <sup>***Seed to Sale Operations Tracking for Indoor Growers***</sup>
+
+[www.Optrax.dev
+](url)
 # Getting Started  
   
 **Required Packages**     
