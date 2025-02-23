@@ -1,93 +1,107 @@
 ﻿@{
-    ViewData["Page"] = "Home";
+    ViewData["Page"] = "Dashboard";
 }
-<div class="cards-div dash-cards d-flex flex-column">
-    <div class="row dash-top m-0 g-3 pe-3">
-        <div class="col-xxl-2 col-xl-4 col-6">
-            <div class="card dash-card mb-2">
-                <div class="card-title"></div>
-                <div class="card-info"></div>
+<div class="dash-container" style="">
+    <div class="cards-div dash-cards d-flex flex-column min-vh-100 pb-3">
+        <div class="row dash-top m-0 g-3 pe-3">
+            <div class="col-xxl-2 col-xl-4 col-6">
+                <div class="card dash-card mb-2">
+                    <div class="card-title">Current Crop Count</div>
+                    <div class="card-info">24</div>
+                </div>
+            </div>
+            <div class="col-xxl-2 col-xl-4 col-6">
+                <div class="card dash-card mb-2">
+                    <div class="card-title">Crops YTD</div>
+                    <div class="card-info">125</div>
+                </div>
+            </div>
+            <div class="col-xxl-2 col-xl-4 col-6">
+                <div class="card dash-card mb-2">
+                    <div class="card-title">Top Producers</div>
+                    <div class="card-info">
+                        <div class="card-list">
+                            <p>Wedding Cake</p>
+                            <p>Maui Wowie</p>
+                            <p>Grape Ape</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-2 col-xl-4 col-6">
+                <div class="card dash-card mb-2">
+                    <div class="card-title">Top Selling Strains</div>
+                    <div class="card-info">
+                        <div class="card-list">
+                            <p>Blue Dream</p>
+                            <p>Pineapple Express</p>
+                            <p>Strawberry Cough</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-2 col-xl-4 col-6">
+                <div class="card dash-card mb-2">
+                    <div class="card-title">Top Selling Products</div>
+                    <div class="card-info"></div>
+                </div>
+            </div>
+            <div class="col-xxl-2 col-xl-4 col-6">
+                <div class="card dash-card mb-2">
+                    <div class="card-title">Total Sales YTD</div>
+                    <div class="card-info">$123,456.00</div>
+                </div>
             </div>
         </div>
-        <div class="col-xxl-2 col-xl-4 col-6">
-            <div class="card dash-card mb-2">
-                <div class="card-title"></div>
-                <div class="card-info"></div>
-            </div>
-        </div>
-        <div class="col-xxl-2 col-xl-4 col-6">
-            <div class="card dash-card mb-2">
-                <div class="card-title"></div>
-                <div class="card-info"></div>
-            </div>
-        </div>
-        <div class="col-xxl-2 col-xl-4 col-6">
-            <div class="card dash-card mb-2">
-                <div class="card-title"></div>
-                <div class="card-info"></div>
-            </div>
-        </div>
-        <div class="col-xxl-2 col-xl-4 col-6">
-            <div class="card dash-card mb-2">
-                <div class="card-title"></div>
-                <div class="card-info"></div>
-            </div>
-        </div>
-        <div class="col-xxl-2 col-xl-4 col-6">
-            <div class="card dash-card mb-2">
-                <div class="card-title"></div>
-                <div class="card-info"></div>
-            </div>
-        </div>
-    </div>
 
-    <div class="row dash-bottom m-0 g-3 pe-3">
-        <div class="col-xxl-3 col-md-6 col-12">
-            <div class="card dash-card mb-2">
-                <div class="card-title"></div>
-                <div class="card-info"></div>
+        <div class="dash-bottom row g-3 flex-grow-1 m-0 pe-3">
+            <div class="col-xxl-4 col-md-6 col-12">
+                <div class="card dash-card chart-card h-100 mb-2">
+                    <div class="card-title">Average Yield by Strain</div>
+                    <div class="card-chart-div">
+                        <div class="card-chart"></div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-xxl-3 col-md-6 col-12">
-            <div class="card dash-card mb-2">
-                <div class="card-title"></div>
-                <div class="card-info"></div>
+            <div class="col-xxl-4 col-md-6 col-12">
+                <div class="card dash-card chart-card h-100 mb-2">
+                    <div class="card-title">Average Yield by Light</div>
+                    <div class="card-chart-div">
+                        <div class="card-chart"></div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-xxl-3 col-md-6 col-12">
-            <div class="card dash-card mb-2">
-                <div class="card-title"></div>
-                <div class="card-info"></div>
+            <div class="col-xxl-4 col-md-6 col-12">
+                <div class="card dash-card chart-card h-100 mb-2">
+                    <div class="card-title">YTD Sales by Strain</div>
+                    <div class="card-chart-div">
+                        <div class="card-chart"></div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-xxl-3 col-md-6 col-12">
-            <div class="card dash-card mb-2">
-                <div class="card-title"></div>
-                <div class="card-info"></div>
+            <div class="col-xxl-4 col-md-6 col-12">
+                <div class="card dash-card chart-card h-100 mb-2">
+                    <div class="card-title">Yield Percentages</div>
+                    <div class="card-chart-div">
+                        <div class="card-chart"></div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-xxl-3 col-md-6 col-12">
-            <div class="card dash-card mb-2">
-                <div class="card-title"></div>
-                <div class="card-info"></div>
+            <div class="col-xxl-4 col-md-6 col-12">
+                <div class="card dash-card chart-card h-100 mb-2">
+                    <div class="card-title">Product Sales</div>
+                    <div class="card-chart-div">
+                        <div class="card-chart"></div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-xxl-3 col-md-6 col-12">
-            <div class="card dash-card mb-2">
-                <div class="card-title"></div>
-                <div class="card-info"></div>
-            </div>
-        </div>
-        <div class="col-xxl-3 col-md-6 col-12">
-            <div class="card dash-card mb-2">
-                <div class="card-title"></div>
-                <div class="card-info"></div>
-            </div>
-        </div>
-        <div class="col-xxl-3 col-md-6 col-12">
-            <div class="card dash-card mb-2">
-                <div class="card-title"></div>
-                <div class="card-info"></div>
+            <div class="col-xxl-4 col-md-6 col-12">
+                <div class="card dash-card chart-card h-100 mb-2">
+                    <div class="card-title">Another Chart</div>
+                    <div class="card-chart-div">
+                        <div class="card-chart"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

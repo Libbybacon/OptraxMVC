@@ -22,10 +22,6 @@ function loadToggleHandlers() {
     });
 
     $('.toggle-cats').off('click').on('click', function () {
-        console.log('click')
-        let tr = $(this).parents('.top-row');
-
-        console.log($(this).parents('.top-row').nextAll('.child-row'))
         $(this).parents('.top-row').nextAll('.child-row').addClass('d-none');
     })
 
@@ -36,8 +32,8 @@ function loadToggleHandlers() {
             showAll ? $(".child-row").hide() : $(".child-row").show();
         }
         else {
-            $(".child-row").show();
-            showAll ? $(".items-row").hide() : $(".items-row").show();
+            $(".items-row").hide()
+            showAll ? $(".child-row").show() : $(".child-row").hide();
         }
 
         $(`.toggle .${(showAll ? 'show' : 'hide')}-i`).removeClass('d-none');
@@ -60,7 +56,6 @@ function setItemHandlers() {
 
     // each edit cell is form that can be validated then serialized before sending - for new items
     $(`.item-form`).off('submit').on('submit', function (event) {
-        console.log('submit');
         event.preventDefault();
 
         let $row = $(this).closest('.item-row')
@@ -73,6 +68,14 @@ function setItemHandlers() {
         }
         else {
             saveNewItem($row, $(this));
+        }
+    });
+}
+
+function setPopoutHandler($cell) {
+    $(document).off('click').on('click', function (event) {
+        if (!$(event.target).closest($cell).length) {
+            hidePopout($cell);
         }
     });
 }
@@ -93,10 +96,12 @@ function addItemRow($btn) {
 
         $newRow.attr('id', `new-row-${catID}`)
         $newRow.data('itemid', '')
+
         $($newRow).unbind('click');
+
         $.each($newRow.find('.attr-edit'), function () {
             $(this).val('');
-            
+
             $(this).attr('val', '')
             $(this).attr('data-val', '')
         })
@@ -106,7 +111,6 @@ function addItemRow($btn) {
 }
 
 function loadPopout($row) {
-    console.log('load')
     $('.item-row').off('click');
 
     // Going through this whole rigamarole so that the inputs layout can be more responsive than in the single row
@@ -118,7 +122,7 @@ function loadPopout($row) {
     let rowID = '#' + $($row).attr('id');
 
     let cats = $row.parents('.items-table').find('.cat-string').val();
-    let $catsDiv = $('<div>').text(`${cats}`).addClass('cats-div row col-12'); // show the categories, why not
+    let $catsDiv = $('<div>').text(`${cats}`).addClass('cats-div w-100'); // show the categories, why not
 
     $row.find('.pop-row').append($catsDiv);
 
@@ -152,11 +156,7 @@ function loadPopout($row) {
     });
 
     setTimeout(function () {
-        $(document).off('click').on('click', function (event) {
-            if (!$(event.target).closest($(rowID + ' .edit-td')).length) {
-                hidePopout($(rowID + ' .edit-td'));
-            }
-        });
+        setPopoutHandler($(rowID + ' .edit-td'))
     }, 0);
 
 }
@@ -164,7 +164,6 @@ function loadPopout($row) {
 function hidePopout($cell) {
     let $row = $cell.parents('.item-row')
     let rowID = '#' + $row.attr('id');
-    console.log('rowID on hide', rowID);
 
     let isNew = $row.hasClass('new-row');
     let attr = isNew ? 'new-attr' : 'attr'
@@ -224,14 +223,7 @@ function saveNewItem($row, $form) {
                 $row.find('.save-row').addClass('d-none');
 
                 showUpdateMessage($row.find('.popout'), true, 'f-md p-1')
-
-                let $cell = $row.find('.edit-td').first();
-
-                $(document).off('click').on('click', function (event) {
-                    if (!$(event.target).closest($cell).length) {
-                        hidePopout($cell);
-                    }
-                });
+                setPopoutHandler($row.find('.edit-td'));
             }
             else {
                 showUpdateMessage($(`#${rowID} .popout`), false, 'f-md p-1');

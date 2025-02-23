@@ -22,6 +22,24 @@ namespace OptraxDAL.Models.Grow
         public virtual ICollection<Crop> Crops { get; set; } = [];
         public virtual ICollection<StrainRelationship> Parents { get; set; } = [];
         public virtual ICollection<StrainRelationship> Children { get; set; } = [];
+
+        public string GetParentNames()
+        {
+            if (Parents.Count > 0)
+            {
+                return string.Join(", ", Parents.Select(p => p.ParentStrain.Name).ToList());
+            }
+            return string.Empty;
+        }
+
+        public List<Strain> GetAllChildren()
+        {
+            if (Children.Count > 0)
+            {
+                return [.. Children.Select(c => c.ChildStrain)];
+            }
+            return [];
+        }
     }
 
     public class StrainRelationship

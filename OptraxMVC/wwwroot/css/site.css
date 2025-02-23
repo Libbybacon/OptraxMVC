@@ -16,7 +16,7 @@
     --purp-md: #AB71F2;
     --purp-dk: #8C52D2;
     --gray-xlt: #F8F8F8;
-    --gray-lt: #F0F0F0;
+    --gray-lt: #F5F5F5;
     --gray-md: #E0E0E0;
     --gray-dk: #DADADA;
 }
@@ -24,18 +24,39 @@
 /*background-color: #91A5C7;*/
 /*background-color: #C1CDE0;*/
 
-@media only screen and (max-width: 600px) {
-    .side-nav {
-        height: 40px !important;
-        border-bottom: 1px solid var(--tan-lt);
+@media only screen and (max-width: 576px)  {
+    .dash-container {
+        max-height: calc(100vh - 40px) !important;
+    }
+    .top-tabs {
+        height: 35px !important;
+        padding-top: .4rem;
+        padding-bottom: .4rem;
     }
 
-        .side-nav .nav-link i {
-            font-size: 1.2rem !important;
-        }
+    .inner-tab {
+        max-height: calc(100vh - 70px) !important;
+    }
+
+    .tab-inner {
+        width: 100% !important;
+    }
+
+    .cat-body {
+        min-height: calc(100vh - 155px) !important;
+        max-height: calc(100vh - 155px) !important; /* 100 - nav, 15 - top margin, 40 - header  extra 40 to make it even ??*/
+    }
+
+    .popout {
+        transform: scale(1.05) !important;
+    }
+}
+@media only screen and (min-width: 576) and (max-width: 786) {
 
     .top-tabs {
-        height: 30px !important;
+        height: 35px !important;
+        padding-top: .4rem;
+        padding-bottom: .4rem;
     }
 
     .inner-tab {
@@ -67,12 +88,14 @@
     display: none;
     text-align: center;
     font-weight: bold;
+    margin-top: 4px;
     padding: 1px;
+    padding-top: 8px;
 }
 
 .success {
     color: var(--grn-dk);
-    background-color: var(--grn-lt);
+    /*background-color: var(--grn-lt);*/
 }
 
 .error {
@@ -132,7 +155,7 @@ main {
 /* Buttons */
 
 .save-btn {
-    width: 25%;
+    width: 20%;
     font-size: var(--f-md);
     color: var(--wht-grn);
     border-radius: 4px;
@@ -143,14 +166,17 @@ main {
     margin-bottom: 1rem !important;
     border-bottom: 1px solid var(--grn-dk);
     background: linear-gradient(var(--grn-lt), var(--grn-dk));
-    text-shadow: 1px 1px 2px var(--grn-dk);
+    /*text-shadow: 1px 1px 2px var(--grn-dk);*/
     box-shadow: 2px .25rem .75rem rgba(0, 0, 0, .4);
 }
 
     .save-btn:hover {
-        background: linear-gradient(var(--grn-lt), var(--grn-md));
+        color: white;
+        text-shadow: 1px 1px 2px var(--grn-dk);
         box-shadow: 3px .35rem .85rem rgba(0, 0, 0, .4);
+        background: linear-gradient(var(--grn-lt), var(--grn-md));
     }
+
 .toggle,
 .toggle-btn {
     cursor: pointer;
@@ -185,18 +211,18 @@ main {
 /* Inputs */
 
 .form-control,
-.form-select{
-    border: 1px solid var(--blue-dk)
+.form-select {
+    /*border: 1px solid var(--blue-dk)*/
 }
 
-.btn:focus,
-.btn:active:focus,
-.form-select:focus,
-.form-control:focus,
-.form-check-input:focus,
-.btn-link.nav-link:focus {
-    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem var(--grn-lt);
-}
+    .btn:focus,
+    .btn:active:focus,
+    .form-select:focus,
+    .form-control:focus,
+    .form-check-input:focus,
+    .btn-link.nav-link:focus {
+        box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem var(--grn-lt);
+    }
 
 .form-check-input:checked {
     border-color: var(--grn-dk);
@@ -207,6 +233,65 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     cursor: pointer;
 }
 
+/* Dash */
+
+.dash-container {
+    max-height: 100vh;
+    overflow-y: auto;
+}
+
+.dash-card {
+    height: 100%;
+    color: var(--grn-lt);
+    /*background-color: var(--blue-dk);*/
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
+}
+
+    .dash-card .card-title {
+        padding: 0;
+        margin: 0;
+        padding-top: 5px;
+        font-weight: bold;
+        text-align: center;
+        color: var(--blue-dk);
+        font-size: var(--f-xxl);
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    }
+
+    .dash-card .card-info {
+        display: flex;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+        font-size: var(--f-xxxl);
+    }
+
+        .dash-card .card-info .card-list p {
+            margin: 0;
+            font-size: var(--f-md);
+        }
+
+    .dash-cards .chart-card {
+        background-color: var(--wht-lt);
+    }
+
+    .dash-card .card-chart-div {
+        height: 100%;
+        width: 100%;
+        padding: .5rem;
+        min-height: 200px;
+    }
+
+        .dash-card .card-chart-div .card-chart {
+            height: 100%;
+            border-radius: 4px;
+            /*background-color: var(--tan-lt);*/
+            background-color: var(--wht-lt);
+        }
+
+.dash-bottom .card {
+    height: 300px;
+}
 
 /* Tabs */
 
@@ -227,7 +312,6 @@ input[type=checkbox]:hover, input[type=radio]:hover {
         border: none;
         margin-bottom: 0;
         font-size: var(--f-lg);
-        
     }
 
         .nav-tabs .nav-link.active {
@@ -344,9 +428,10 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     cursor: pointer;
 }
 
-.new-row .vtd{
-    padding: .6rem;
+.new-row .vtd {
+    padding: 0;
 }
+
 .attr-txt {
     white-space: nowrap;
     overflow: hidden;
@@ -357,32 +442,32 @@ input[type=checkbox]:hover, input[type=radio]:hover {
         cursor: pointer;
     }
 
-.edit-td{
+.edit-td {
     padding: .5rem;
 }
+
 .attr-edit {
     display: none;
 }
 
 .popout {
     padding: .5rem;
+    padding-bottom: 1.5rem;
+    border-radius: 4px;
     transform: scale(1.02);
     background-color: var(--wht-lt);
-    border-top: 2px outset var(--grn-lt);
-    border-left: 2px outset var(--grn-lt);
-    border-right: 2px inset var(--grn-dk);
-    border-bottom: 2px inset var(--grn-dk);
+    border-top: 1px outset var(--blue-lt);
+    border-left: 2px outset var(--blue-lt);
+    border-right: 1px solid var(--blue-dk);
+    border-bottom: 2px outset var(--blue-dk);
     box-shadow: -3px 4px 8px rgba(0,0,0,0.4);
     /*transition: transform 0.3s ease, opacity 0.3s ease;*/
 }
 
-.cats-div{
-    padding-left: 2rem;
-}
 .name-div {
     text-align: center;
     font-weight: bold;
-    font-size: var(--f-md);
+    font-size: var(--f-sm);
     color: var(--blue-dk);
 }
 
@@ -412,7 +497,7 @@ input[type=checkbox]:hover, input[type=radio]:hover {
 }
 
     .cards-div .card {
-        min-height: 200px;
+        /*min-height: 200px;*/
     }
 
 .room-card {
@@ -425,23 +510,3 @@ input[type=checkbox]:hover, input[type=radio]:hover {
         cursor: pointer;
         background-color: var(--grn-lt);
     }
-
-
-/* Dash */
-
-.dash-cards .card-title {
-    padding-top: 5px;
-    font-weight: bold;
-    text-align: center;
-    color: var(--grn-dk);
-    font-size: var(--f-xl);
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-}
-
-.dash-top .card {
-    height: 100px;
-}
-
-.dash-bottom .card {
-    height: 300px;
-}

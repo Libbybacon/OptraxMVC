@@ -2,7 +2,6 @@
     string page = ViewData["Page"]?.ToString() ?? "";
 
     Dictionary<string, string> menuItems = new Dictionary<string, string>() {
-        { "Home", "grid-3x3" },
         { "Grow", "flower2" },
         { "Inventory", "basket3" },
         { "Sales", "cash-stack" },
@@ -10,29 +9,34 @@
     };
 }
 
-<div class="side-nav  flex-sm-column flex-row justify-content-between bg-dark box-shadow p-2">
-    <a href="/" class=" align-items-center mb-3 mb-md-0 text-decoration-none">
-        <div class="d-md-flex d-none logo pt-1">
-            <img src="~/content/logo-dk.png" alt="Logo" />
-        </div>
-        <div class="d-md-none d-flex logo-sm">
-            <img src="~/content/logo-only-dk.png" alt="Logo" />
-        </div>
-    </a>
+<div class="side-nav d-flex flex-sm-column flex-row justify-content-between bg-dark box-shadow p-2">
+    <div class="logo-div pt-md-0 pt-md-3 pt-0">
+        <a href="/" class="text-decoration-none">
+                <img src="~/content/logo-dk.png" alt="Logo" class="logo d-md-block d-none" />
+                <img src="~/content/logo-only-dk.png" alt="Logo" class="logo-sm d-md-none d-flex" />
+        </a>
+    </div>
     <hr class="d-sm-block d-none text-tan">
     <ul class="nav nav-pills flex-sm-column flex-row mb-auto">
+        <li class="nav-item">
+            <a href="/"
+               class="nav-link d-flex @(page == "Dashboard" ? "active" : "")">
+                <i class="bi text-tan bi-grid-3x3 me-md-3 me-0"></i>
+                <span class="d-md-block d-none pt-2">Dashboard</span>
+            </a>
+        </li>
         @foreach (var item in menuItems)
         {
             <li class="nav-item">
                 <a asp-controller="Tabs" asp-action="LoadTabs" asp-route-navarea="@item.Key"
                    class="nav-link d-flex @(page == item.Key ? "active" : "")">
-                    <i class="bi text-tan bi-@(item.Value) me-lg-3 me-0"></i>
+                    <i class="bi text-tan bi-@(item.Value) me-md-3 me-0"></i>
                     <span class="d-md-block d-none pt-2">@item.Key</span>
                 </a>
             </li>
         }
     </ul>
-    <ul class="bot-nav mb-0 ">
+    <ul class="nav bot-nav mb-0 ">
         <li class="nav-item">
             <a asp-area="Identity" asp-page="/Account/Logout" class="nav-link">
                 <span>Logout</span>
