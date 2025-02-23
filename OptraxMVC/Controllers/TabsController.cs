@@ -45,7 +45,7 @@ namespace OptraxMVC.Controllers
                     "Rooms" => await db.RoomLocations.ToListAsync(),
                     "Crops" => await db.Crops.ToListAsync(),
                     "Plants" => await db.Plants.ToListAsync(),
-                    "Strains" => await db.Strains.ToListAsync(),
+                    "Genetics" => await db.Strains.OrderBy(s => s.Name).ToListAsync(),
                     _ => null
                 },
 

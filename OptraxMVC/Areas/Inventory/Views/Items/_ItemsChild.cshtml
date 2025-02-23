@@ -30,7 +30,8 @@
 
 <tr id="cat-@catID" data-name="@Model.Name" class="@(topRow ? "top-row" : "cat-row")">
     <td style="@indent">
-        <div class="d-flex align-items-center">
+        <div class="d-flex w-100">
+            <div class="d-flex">
             @if (topRow)
             {
                 <button id="cats-@catID-btn" class="toggle-btn btn-clear" data-toggle-id="child-@catID">
@@ -42,19 +43,18 @@
                 <span class="show-i"><i class="bi bi-chevron-compact-down"></i></span>
                 <span class="hide-i d-none"><i class="bi bi-chevron-compact-up"></i></span>
             </button>
-            <div class="cat-name">@Model.Name</div>
-        </div>
-    </td>
-    <td colspan="2">@Model.Description</td>
-    <td>
-        <div class="d-flex justify-content-end pe-2 py-1">
-            <button class="add-cat toggle me-2 text-success" data-id="@catID" data-parent-id="@(Model.ParentID ?? 0)">+</button>
+            </div>
+            <div class="cat-name pt-1">@Model.Name</div>
+            <div class="cat-name">@(!string.IsNullOrEmpty(Model.Description) ? " - " + Model.Description : "")</div>
+            <div class="ms-auto pe-2 py-1">
+                <button class="add-cat toggle me-2 text-success" data-id="@catID" data-parent-id="@(Model.ParentID ?? 0)">+</button>
+            </div>
         </div>
     </td>
 </tr>
 
 <tr id="items-@catID" class="items-row w-100" style="display: none">
-    <td colspan="4" style="@indent">
+    <td style="@indent">
         <table id="items-table-@catID" class="table cat-table items-table f-sm">
             <thead class="items-head p-0">
                 <tr class="f-xs">
@@ -140,7 +140,7 @@
 @if (Model.Children.Any())
 {
     <tr id="child-@Model.ID" class="child-row">
-        <td colspan="4">
+        <td>
             <table class="table cat-table">
                 @foreach (var child in Model.Children.OrderBy(c => c.Name).ToList())
                 {
