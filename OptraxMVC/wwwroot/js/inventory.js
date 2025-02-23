@@ -36,8 +36,8 @@ function loadToggleHandlers() {
             showAll ? $(".child-row").hide() : $(".child-row").show();
         }
         else {
-            $(".child-row").show();
-            showAll ? $(".items-row").hide() : $(".items-row").show();
+            $(".items-row").hide() 
+            showAll ? $(".child-row").show(): $(".child-row").hide();
         }
 
         $(`.toggle .${(showAll ? 'show' : 'hide')}-i`).removeClass('d-none');
