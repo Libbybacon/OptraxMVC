@@ -4,6 +4,7 @@ var cache = sessionStorage;
 
 $(document).ready(function () {
 
+    
     let storedTab = localStorage.getItem('activeTab');    
     let firstTab = $(".top-tabs .nav-link.active");
 
@@ -54,7 +55,8 @@ function loadTab(tab) {
             $innerTab.hasClass("loaded");
         },
         error: function () {
-            $innerTab.html("<p>Error loading content.</p>");
+            $innerTab.html('<div class="tab-div"><div class="tab-inner error-div">Coming Soon!</div></div>');
         }
     });
 }
+

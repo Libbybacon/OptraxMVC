@@ -47,30 +47,5 @@ namespace OptraxDAL.Models.Inventory
             Durable,
             Consumable,
         }
-
-        public List<string> GetCategoryNames()
-        {
-            if (Category?.Parent != null)
-            {
-                List<string> orderedNames = [.. GetCategoryNamesRecursive(Category).AsEnumerable().Reverse()];
-
-                orderedNames.Add(Category.Name);
-
-                return orderedNames;
-            }
-            return [Category?.Name];
-        }
-
-        private static List<string> GetCategoryNamesRecursive(InventoryCategory category)
-        {
-            List<string> names = [];
-
-            if (category.Parent != null)
-            {
-                names.AddRange(GetCategoryNamesRecursive(category.Parent));
-            }
-
-            return names;
-        }
     }
 }

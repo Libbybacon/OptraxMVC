@@ -28,6 +28,34 @@ namespace OptraxDAL.Models.Inventory
 
         [InverseProperty(nameof(InventoryTransfer.Destination))]
         public virtual ICollection<InventoryTransfer> TransfersIn { get; set; } = [];
+
+        public string GetParentNamesString()
+        {
+            if (Parent != null)
+            {
+                List<string> names = [Name, Parent.Name];
+
+                if (Parent.Parent != null)
+                {
+                    names.AddRange(GetNamesRecursive(Parent.Parent));
+                }
+                List<string> orderedNames = [.. names.AsEnumerable().Reverse()];
+
+                return string.Join(" > ", orderedNames);
+            }
+            return Name;
+        }
+
+        private static List<string> GetNamesRecursive(InventoryLocation category)
+        {
+            List<string> names = [category.Name];
+
+            if (category.Parent != null)
+            {
+                names.AddRange(GetNamesRecursive(category.Parent));
+            }
+            return names;
+        }
     }
 
     //TODO: Move location types to own class files, add functions

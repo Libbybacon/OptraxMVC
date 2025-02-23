@@ -1,0 +1,28 @@
+﻿@using OptraxDAL.Models.Inventory
+@model IEnumerable<InventoryLocation>
+
+<div class="tab-div">
+    <div class="tab-inner">
+        <table id="strain-table" class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var loc in Model)
+                {
+                    <tr>
+                        <td></td>
+                        <td>@loc.Name</td>
+                        <td>@loc.Description</td>
+                        <td>@loc.GetType()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

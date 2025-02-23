@@ -59,7 +59,7 @@ namespace OptraxDAL.Models.Inventory
 
                 if (Parent.Parent != null)
                 {
-                    names.AddRange(GetNamesRecursive(Parent));
+                    names.AddRange(GetNamesRecursive(Parent.Parent));
                 }
                 List<string> orderedNames = [.. names.AsEnumerable().Reverse()];
 

@@ -3,30 +3,25 @@
 
 @{
     List<InventoryItem> items = ViewBag.Items;
-    
+
 }
 
 <div class="tab-div">
-    <div class="tab-inner">
-        <table class="cat-table w-100">
-            <thead class="top-head">
-                <tr class="">
-                    <th>
-                        <div class="d-flex">
-                            <button class="toggle-all all me-2 toggle" data-toggle-class="child-row">
-                                <span class="show-i"><i class="bi bi-chevron-double-down"></i></span> @* Expand all expandables *@
-                                <span class="hide-i d-none"><i class="bi bi-chevron-double-up"></i></span> @* Collapse all collapsables *@
-                            </button>
-                            <button class="toggle-all cats me-2 toggle" data-toggle-class="child-row">
-                                <span class="show-i"><i class="bi bi-chevron-down"></i></span> @* Expand all categories, hide items *@
-                                <span class="hide-i d-none"><i class="bi bi-chevron-up"></i></span> @* Collapse all child categories *@
-                            </button>
-                            <button class="btn-clear"><span class="me-2 text-grn-dk">+</span>Add New Top Level</button>
-                        </div>
-                    </th>
-                </tr>
-            </thead>
-            <tbody id="categoryTable" class="cat-body d-block">
+    <div class="tab-inner y-scroll">
+        <div class="cat-list w-100 p-2">
+            <div class="top-head d-flex">
+                <button class="toggle-all all me-2 toggle" data-toggle-class="child-row">
+                    <span class="show-i"><i class="bi bi-chevron-double-down"></i></span> @* Expand all expandables *@
+                    <span class="hide-i d-none"><i class="bi bi-chevron-double-up"></i></span> @* Collapse all collapsables *@
+                </button>
+                <button class="toggle-all cats me-2 toggle" data-toggle-class="child-row">
+                    <span class="show-i"><i class="bi bi-chevron-down"></i></span> @* Expand all categories, hide items *@
+                    <span class="hide-i d-none"><i class="bi bi-chevron-up"></i></span> @* Collapse all child categories *@
+                </button>
+                <button class="btn-clear"><span class="me-2 text-grn-dk">+</span>Add New Top Level</button>
+            </div>
+
+            <div class="cat-body d-block">
                 @foreach (var category in Model.OrderBy(m => m.Name).ToList())
                 {
                     List<int> childIDs = category.GetChildIDs();
@@ -37,8 +32,8 @@
 
                     @await Html.PartialAsync("~/Areas/Inventory/Views/Items/_ItemsChild.cshtml", category)
                 }
-            </tbody>
-        </table>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -28,21 +28,21 @@
     //show both
 }
 
-<tr id="cat-@catID" data-name="@Model.Name" class="@(topRow ? "top-row" : "cat-row")">
-    <td style="@indent">
+<div id="cat-@catID" data-name="@Model.Name" class="@(topRow ? "top-row" : "cat-row")">
+    <div style="@indent">
         <div class="d-flex w-100">
             <div class="d-flex">
-            @if (topRow)
-            {
-                <button id="cats-@catID-btn" class="toggle-btn btn-clear" data-toggle-id="child-@catID">
-                    <span class="show-i"><i class="bi bi-chevron-double-down"></i></span>
-                    <span class="hide-i d-none"><i class="bi bi-chevron-double-up"></i></span>
+                @if (topRow)
+                {
+                    <button id="cats-@catID-btn" class="toggle-btn btn-clear" data-toggle-id="child-@catID">
+                        <span class="show-i"><i class="bi bi-chevron-double-down"></i></span>
+                        <span class="hide-i d-none"><i class="bi bi-chevron-double-up"></i></span>
+                    </button>
+                }
+                <button id="items-@catID-btn" class="toggle-btn toggle" data-toggle-id="items-@catID">
+                    <span class="show-i"><i class="bi bi-chevron-compact-down"></i></span>
+                    <span class="hide-i d-none"><i class="bi bi-chevron-compact-up"></i></span>
                 </button>
-            }
-            <button id="items-@catID-btn" class="toggle-btn toggle" data-toggle-id="items-@catID">
-                <span class="show-i"><i class="bi bi-chevron-compact-down"></i></span>
-                <span class="hide-i d-none"><i class="bi bi-chevron-compact-up"></i></span>
-            </button>
             </div>
             <div class="cat-name pt-1">@Model.Name</div>
             <div class="cat-name">@(!string.IsNullOrEmpty(Model.Description) ? " - " + Model.Description : "")</div>
@@ -50,14 +50,15 @@
                 <button class="add-cat toggle me-2 text-success" data-id="@catID" data-parent-id="@(Model.ParentID ?? 0)">+</button>
             </div>
         </div>
-    </td>
-</tr>
+    </div>
+</div>
 
-<tr id="items-@catID" class="items-row w-100" style="display: none">
-    <td style="@indent">
-        <table id="items-table-@catID" class="table cat-table items-table f-sm">
+<div id="items-@catID" class="items-row row w-100" style="display: none">
+    <div style="@indent" class="table-responsive">
+        <table id="items-table-@catID" class="table items-table dt-responsive f-sm">
             <thead class="items-head p-0">
                 <tr class="f-xs">
+                    <th></th>
                     <th class="btn-cell">
                         <input type="hidden" class="cat-string" value="@Model.GetCategoryNamesString()" />
                         <div class="d-flex align-items-center">
@@ -70,6 +71,7 @@
                     <th>SKU</th>
                     <th>Default UOM</th>
                     <th>Stock Type</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -81,7 +83,9 @@
                     string trID = isNew ? $"item-new-{Model.ID}" : $"item-{id}";
 
                     <tr id="@trID" class="item-row @newRow f-xs" data-itemid="@id" data-classtype="item">
+                        <td></td>
                         <td class="btn-cell vtd"></td>
+
                         <td class="Name vtd">
                             <div class="attr-txt">@item.Name</div>
                             <input type="text" class="attr-edit form-control" data-val="@item.Name" name="Name" value="@item.Name" required />
@@ -117,7 +121,7 @@
                                 }
                             </select>
                         </td>
-                        <td colspan="7" data-trid="@trID" class="edit-td py-3 d-none">
+                        @*                         <td colspan="7" data-trid="@trID" class="edit-td py-3 d-none">
                             <form class="item-form">
                                 <div id="" class="pop-div row d-flex col-12">
                                     <div class="popout col-12">
@@ -129,27 +133,27 @@
                                     </div>
                                 </div>
                             </form>
-                        </td>
+                        </td> *@
                     </tr>
                 }
             </tbody>
         </table>
-    </td>
-</tr>
+    </div>
+</div>
 
 @if (Model.Children.Any())
 {
-    <tr id="child-@Model.ID" class="child-row">
-        <td>
-            <table class="table cat-table">
+    <div id="child-@Model.ID" class="child-row">
+        <div>
+            <div class="table cat-table">
                 @foreach (var child in Model.Children.OrderBy(c => c.Name).ToList())
                 {
                     var childVD = new ViewDataDictionary(ViewData) { ["Level"] = level + 1, ["Items"] = items };
 
                     @await Html.PartialAsync("~/Areas/Inventory/Views/Items/_ItemsChild.cshtml", child, childVD)
                 }
-            </table>
-        </td>
-    </tr>
+            </div>
+        </div>
+    </div>
 }
 

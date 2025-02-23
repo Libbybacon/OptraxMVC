@@ -9,7 +9,63 @@ $(document).ready(function () {
 
     loadToggleHandlers();
     setItemHandlers();
+    makeDatatables();
 });
+
+function makeDatatables() {
+    let tbl = $('.items-table').first()
+    $.each($('.items-table'), function () {
+
+        let tableID = $(this).attr('id');
+
+        let dt = $(`#${tableID}`).DataTable({
+            paging: false,
+            info: false,
+            scrollX: false,
+            scrollY: '50vh',
+            overflowY: 'auto',
+            scrollCollapse: true,
+            minWidth: 500,
+            responsive: true,
+            columnDefs: [
+                {
+                    targets: 0,
+                    className: 'dt-control',
+                    data: null,
+                    defaultContent: '',
+                    width: '10px',
+                    orderable: false,
+                    bSortable: false
+                },
+            ],
+            columns: [
+                {
+                    targets: 0,
+                    className: 'dt-control',
+                    data: null,
+                    defaultContent: '',
+                    width: '10px',
+                    orderable: false,
+                    bSortable: false
+                },
+                {
+                    targets: 1,
+                    width: '120px',
+                    orderable: false,
+                    bSortable: false
+                },
+                { targets: 2, classname: 'tablet desktop', orderable: true },
+                { targets: 3, classname: 'tablet desktop phone', orderable: true },
+                { targets: 4, classname: 'tablet desktop', orderable: true },
+                { targets: 5, classname: 'tablet desktop, phone', orderable: true },
+                { targets: 6, classname: 'desktop', orderable: true },
+                { targets: 7, classname: 'tablet desktop, phone', orderable: true },
+            ],
+            order: [2, "desc"],
+
+        })
+    })
+}
 
 function loadToggleHandlers() {
 
@@ -49,10 +105,10 @@ function setItemHandlers() {
         addItemRow($(this))
     });
 
-    $(`.item-row`).off('click').on('click', function (e) {
-        e.stopPropagation();
-        loadPopout($(this))
-    });
+    //$(`.item-row`).off('click').on('click', function (e) {
+    //    e.stopPropagation();
+    //    loadPopout($(this))
+    //});
 
     // each edit cell is form that can be validated then serialized before sending - for new items
     $(`.item-form`).off('submit').on('submit', function (event) {
@@ -237,15 +293,7 @@ function saveNewItem($row, $form) {
     });
 }
 
-function arrayToModel(arr) {
-    var model = {};
 
-    for (var i = 0; i < arr.length; i++) {
-
-        model[arr[i]['name']] = arr[i]['value'];
-    }
-    return model;
-}
 
 function editAttribute($input) {
     var newVal = $input.val();
@@ -292,22 +340,6 @@ function editAttribute($input) {
     });
 }
 
-function showUpdateMessage($parentDiv, success, classes) {
 
-    let text = success ? "Changes Saved!" : "Error Updating";
-    let classnames = (success ? "success " : "error ") + classes;
-    const $div = $('<div>').text(text).addClass(classnames);
-
-    $parentDiv.append($div);
-
-    // make lil update message fade in then out
-    $div.fadeIn(500, function () {
-        setTimeout(function () {
-            $div.fadeOut(500, function () {
-                $div.remove();
-            });
-        }, 1000);
-    });
-}
 
 

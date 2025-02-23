@@ -84,6 +84,14 @@
     }
 }
 
+.error-div {
+    display: flex;
+    color: var(--grn-dk);
+    font-size: 3rem;
+    align-items: center;
+    justify-content: center;
+}
+
 .msg-div {
     display: none;
     text-align: center;
@@ -95,7 +103,6 @@
 
 .success {
     color: var(--grn-dk);
-    /*background-color: var(--grn-lt);*/
 }
 
 .error {
@@ -364,11 +371,22 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     padding-top: 1rem;
     min-height: calc(100vh - 80px) !important;
 }
+.y-scroll{
+    overflow-y: auto;
+}
 
 
 /* Nested Table */
 
-.btn-cell {
+.items-table {
+    border-collapse: collapse !important;
+}
+
+.attr-edit {
+    display: none;
+}
+
+/*.btn-cell {
     width: 120px;
 }
 
@@ -390,10 +408,10 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     .cat-table thead,
     .cat-table tr {
         display: table;
-        width: 100%;
-        table-layout: fixed;
-        border-collapse: collapse;
-    }
+        width: 100%;*/
+        /*table-layout: fixed;*/
+        /*border-collapse: collapse;
+    }*/
 
 .top-row {
     background-color: var(--gray-md);
@@ -404,7 +422,7 @@ input[type=checkbox]:hover, input[type=radio]:hover {
         font-weight: bold;
     }
 
-.cat-body {
+/*.cat-body {
     overflow-y: auto;
 }
 
@@ -444,13 +462,11 @@ input[type=checkbox]:hover, input[type=radio]:hover {
 
 .edit-td {
     padding: .5rem;
-}
+}*/
 
-.attr-edit {
-    display: none;
-}
 
-.popout {
+
+/*.popout {
     padding: .5rem;
     padding-bottom: 1.5rem;
     border-radius: 4px;
@@ -460,16 +476,16 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     border-left: 2px outset var(--blue-lt);
     border-right: 1px solid var(--blue-dk);
     border-bottom: 2px outset var(--blue-dk);
-    box-shadow: -3px 4px 8px rgba(0,0,0,0.4);
+    box-shadow: -3px 4px 8px rgba(0,0,0,0.4);*/
     /*transition: transform 0.3s ease, opacity 0.3s ease;*/
-}
+/*}
 
 .name-div {
     text-align: center;
     font-weight: bold;
     font-size: var(--f-sm);
     color: var(--blue-dk);
-}
+}*/
 
 
 
