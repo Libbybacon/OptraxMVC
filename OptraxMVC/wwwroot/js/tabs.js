@@ -39,7 +39,7 @@ function loadTab(tab) {
 
     localStorage.setItem('activeTab', tabKey);
 
-    let $innerTab = $(`#${tabKey}`).find(".inner-tab");
+    let $innerTab = $(`#${tabKey}`);
 
     if ($innerTab.hasClass("loaded")) return;
 

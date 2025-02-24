@@ -9,32 +9,40 @@
     };
 }
 
-<div class="side-nav d-flex flex-sm-column flex-row justify-content-between bg-dark box-shadow p-2">
-    <div class="logo-div pt-md-0 pt-md-3 pt-0">
+<div class="side-nav d-flex flex-md-column flex-row justify-content-between bg-dark box-shadow p-2">
+    <div class="logo-div pt-lg-0 pt-md-3 pt-0">
         <a href="/" class="text-decoration-none">
-                <img src="~/content/logo-dk.png" alt="Logo" class="logo d-md-block d-none" />
-                <img src="~/content/logo-only-dk.png" alt="Logo" class="logo-sm d-md-none d-flex" />
+            <img src="~/content/logo-dk.png" alt="Logo" class="logo d-lg-block d-none" />
+            <img src="~/content/logo-only-dk.png" alt="Logo" class="logo-sm d-lg-none d-flex" />
         </a>
     </div>
-    <hr class="d-sm-block d-none text-tan">
-    <ul class="nav nav-pills flex-sm-column flex-row mb-auto">
-        <li class="nav-item">
+    <hr class="d-md-block d-none text-tan">
+    <ul class="nav nav-pills d-flex flex-md-column flex-row mb-auto">
+        <li class="nav-item ms-0 me-0 mt-md-2 mt-0">
             <a href="/"
                class="nav-link d-flex @(page == "Dashboard" ? "active" : "")">
-                <i class="bi text-tan bi-grid-3x3 me-md-3 me-0"></i>
-                <span class="d-md-block d-none pt-2">Dashboard</span>
+                <i class="nav-bi bi text-tan bi-grid-3x3 me-lg-3 me-0"></i>
+                <span class="nav-text d-lg-block d-none pt-2">Dashboard</span>
             </a>
         </li>
         @foreach (var item in menuItems)
         {
-            <li class="nav-item">
+            <li class="nav-item ms-0 me-0 mt-md-2 mt-0">
                 <a asp-controller="Tabs" asp-action="LoadTabs" asp-route-navarea="@item.Key"
                    class="nav-link d-flex @(page == item.Key ? "active" : "")">
-                    <i class="bi text-tan bi-@(item.Value) me-md-3 me-0"></i>
-                    <span class="d-md-block d-none pt-2">@item.Key</span>
+                    <i class="nav-bi bi text-tan bi-@(item.Value) me-lg-3 me-0"></i>
+                    <span class="nav-text d-lg-block d-none pt-2">@item.Key</span>
                 </a>
             </li>
         }
+        <li id="nav-hide-li">
+            <div id="nav-hide" class="d-md-flex d-none box-shadow">
+                <div class="nav-hide-tab">
+                    <i id="hide-nav" class="hide-bi bi bi-chevron-compact-left text-tan"></i>
+                    <i id="show-nav" class="hide-bi bi bi-chevron-compact-right text-tan d-none"></i>
+                </div>
+            </div>
+        </li>
     </ul>
     <ul class="nav bot-nav mb-0 ">
         <li class="nav-item">
@@ -44,3 +52,4 @@
         </li>
     </ul>
 </div>
+

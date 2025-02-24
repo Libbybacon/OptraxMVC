@@ -1,42 +1,105 @@
 ﻿@using OptraxDAL.Models.Inventory
+@using OptraxDAL.ViewModels
 @model List<InventoryCategory>
 
 @{
+    List<TagVM> allTags = [];
     List<InventoryItem> items = ViewBag.Items;
-
+    List<InventoryCategory> topCats = Model.Where(c => c.ParentID == null).OrderBy(c => c.Name).ToList();
+    string tagHex = "var(--gray-md)";
 }
 
-<div class="tab-div">
-    <div class="tab-inner y-scroll">
-        <div class="cat-list w-100 p-2">
-            <div class="top-head d-flex">
-                <button class="toggle-all all me-2 toggle" data-toggle-class="child-row">
-                    <span class="show-i"><i class="bi bi-chevron-double-down"></i></span> @* Expand all expandables *@
-                    <span class="hide-i d-none"><i class="bi bi-chevron-double-up"></i></span> @* Collapse all collapsables *@
-                </button>
-                <button class="toggle-all cats me-2 toggle" data-toggle-class="child-row">
-                    <span class="show-i"><i class="bi bi-chevron-down"></i></span> @* Expand all categories, hide items *@
-                    <span class="hide-i d-none"><i class="bi bi-chevron-up"></i></span> @* Collapse all child categories *@
-                </button>
-                <button class="btn-clear"><span class="me-2 text-grn-dk">+</span>Add New Top Level</button>
-            </div>
 
-            <div class="cat-body d-block">
-                @foreach (var category in Model.OrderBy(m => m.Name).ToList())
+<div class="pt-3">
+    <div class="cat-list m-0 d-flex p-3">
+        @foreach (var cat in topCats)
+        {
+            List<TagVM> tags = cat.GetChildTags();
+            cat.ChildTags = tags;
+            allTags.AddRange(tags);
+            string bg = $"background:{cat.HexColor ?? tagHex}";
+
+            <div class="flex-fill">
+                <div class="cat-top text-center w-100 px-2" style="@bg">@cat.Name</div>
+                <div class="d-flex flex-wrap w-100">
+                    @foreach (var tag in tags)
+                    {
+                        <div class="d-flex">
+                            <button type="button" class="tag-btn f-sm m-2" style="background:@(tag.Color ?? tagHex)"></button>
+                            @tag.Name
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="cat-table-div row h-100 w-100 m-0 p-3">
+        <table id="cat-table" class="cat-table table table-bordered w-100">
+            <thead>
+                <tr>
+                    <th class="show-child"></th>
+                    <th class="cat-col"></th>
+                    <th class="child-col"></th>
+                    <th>Name</th>
+                    @* <th>Description</th> *@
+                    <th>Manufacturer</th>
+                    <th>SKU</th>
+                    <th>Default UOM</th>
+                    <th>Stock Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cat in topCats)
                 {
-                    List<int> childIDs = category.GetChildIDs();
-                    List<InventoryItem> catItems = items.Where(i => childIDs.Contains(i.ID)).ToList(); //where items belong to current cat or any of it's children
-                    //items.RemoveAll(i => catItems.Contains(i));
+                    string catBG = $"background-color:{cat.HexColor}";
 
-                    var childVD = new ViewDataDictionary(ViewData) { ["Items"] = items };
 
-                    @await Html.PartialAsync("~/Areas/Inventory/Views/Items/_ItemsChild.cshtml", category)
+                    foreach (var child in cat.Children)
+                    {
+                        List<int> childIDs = child.GetChildIDs();
+                        childIDs.Add(child.ID);
+
+                        List<InventoryItem> catItems = items.Where(i => childIDs.Contains(i.CategoryID)).ToList();
+                        string childBG = $"background-color:{child.HexColor}";
+                        foreach (var item in catItems)
+                        {
+                            string trID = $"item-{cat.ID}-{item.ID}";
+
+                            <tr id="@trID" class="item-row f-xs">
+
+                                <td></td>
+                                <td>@cat.Name</td>
+                                <td>@child.Name</td>
+                                <td class="Name vtd">
+                                    <span class="attr-txt">@item.Name</span>
+                                </td>
+                                @*                                     <td class="Description vtd">
+                                        <span class="attr-txt">@item.Description</span>
+                                    </td> *@
+                                <td class="Manufacturer vtd">
+                                    <span class="attr-txt">@item.Manufacturer</span>
+                                </td>
+                                <td class="SKU vtd">
+                                    <span class="attr-txt">@item.SKU</span>
+                                </td>
+                                <td class="DefaultUOM vtd">
+                                    <span class="attr-txt">@item.DefaultUOM</span>
+                                </td>
+                                <td class="StockType vtd">
+                                    <span class="attr-txt">@item.StockType</span>
+                                </td>
+
+                            </tr>
+                        }
+                    }
                 }
-            </div>
-        </div>
+            </tbody>
+        </table>
     </div>
 </div>
 
 <script src="/js/inventory.js"></script>
+
 
 

@@ -13,57 +13,26 @@ $(document).ready(function () {
 });
 
 function makeDatatables() {
-    let tbl = $('.items-table').first()
-    $.each($('.items-table'), function () {
 
-        let tableID = $(this).attr('id');
+    let tableID = $(this).attr('id');
 
-        let dt = $(`#${tableID}`).DataTable({
-            paging: false,
-            info: false,
-            scrollX: false,
-            scrollY: '50vh',
-            overflowY: 'auto',
-            scrollCollapse: true,
-            minWidth: 500,
-            responsive: true,
-            columnDefs: [
-                {
-                    targets: 0,
-                    className: 'dt-control',
-                    data: null,
-                    defaultContent: '',
-                    width: '10px',
-                    orderable: false,
-                    bSortable: false
-                },
-            ],
-            columns: [
-                {
-                    targets: 0,
-                    className: 'dt-control',
-                    data: null,
-                    defaultContent: '',
-                    width: '10px',
-                    orderable: false,
-                    bSortable: false
-                },
-                {
-                    targets: 1,
-                    width: '120px',
-                    orderable: false,
-                    bSortable: false
-                },
-                { targets: 2, classname: 'tablet desktop', orderable: true },
-                { targets: 3, classname: 'tablet desktop phone', orderable: true },
-                { targets: 4, classname: 'tablet desktop', orderable: true },
-                { targets: 5, classname: 'tablet desktop, phone', orderable: true },
-                { targets: 6, classname: 'desktop', orderable: true },
-                { targets: 7, classname: 'tablet desktop, phone', orderable: true },
-            ],
-            order: [2, "desc"],
+    new DataTable($(`#cat-table`), {
+        info: false,
+        paging: false,
+        responsive: true,
+        order: [
+            [1, "asc"],
+            [2, "asc"]
+        ],
+        rowGroup: {
+            dataSrc: [1, 2]
+        },
+        columnDefs: [
+            { targets: [1, 2], visible: false },
+            //{ targets: [3], orderable: false },
+            //{targets: [5], classname: "desktop"}
+        ]
 
-        })
     })
 }
 

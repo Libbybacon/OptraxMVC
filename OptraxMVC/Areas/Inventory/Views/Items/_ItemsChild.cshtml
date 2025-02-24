@@ -55,15 +55,13 @@
 
 <div id="items-@catID" class="items-row row w-100" style="display: none">
     <div style="@indent" class="table-responsive">
-        <table id="items-table-@catID" class="table items-table dt-responsive f-sm">
+        <table id="items-table-@catID" cellspacing="0" class="table w-100 items-table f-sm">
             <thead class="items-head p-0">
                 <tr class="f-xs">
                     <th></th>
                     <th class="btn-cell">
-                        <input type="hidden" class="cat-string" value="@Model.GetCategoryNamesString()" />
-                        <div class="d-flex align-items-center">
-                            <button class="add-item btn-clear f-xs ms-auto me-4" data-catid="@catID"><span class="add-new-item f-md text-grn-dk pe-2">+</span>New Item</button>
-                        </div>
+                        @* <input type="hidden" class="cat-string" value="@Model.GetChildNamesString()" /> *@
+                        <button class="add-item btn-clear f-xs ms-auto me-4" data-catid="@catID"><span class="add-new-item f-md text-grn-dk pe-2">+</span>New Item</button>
                     </th>
                     <th>Item Name</th>
                     <th>Description</th>
@@ -84,56 +82,44 @@
 
                     <tr id="@trID" class="item-row @newRow f-xs" data-itemid="@id" data-classtype="item">
                         <td></td>
-                        <td class="btn-cell vtd"></td>
+                        <td></td>
 
                         <td class="Name vtd">
-                            <div class="attr-txt">@item.Name</div>
-                            <input type="text" class="attr-edit form-control" data-val="@item.Name" name="Name" value="@item.Name" required />
+                            <span class="attr-txt">@item.Name</span>
+                            @* <input type="text" class="attr-edit form-control" data-val="@item.Name" name="Name" value="@item.Name" required /> *@
                         </td>
                         <td class="Description vtd">
-                            <div class="attr-txt">@item.Description</div>
-                            <textarea class="attr-edit form-control" rows="1" data-val="@item.Description" name="Description" required>@item.Description</textarea>
+                            <span class="attr-txt">@item.Description</span>
+                            @* <textarea class="attr-edit form-control" rows="1" data-val="@item.Description" name="Description" required>@item.Description</textarea> *@
                         </td>
                         <td class="Manufacturer vtd">
-                            <div class="attr-txt">@item.Manufacturer</div>
-                            <input type="text" class="attr-edit form-control" name="Manufacturer" data-val="@item.Manufacturer" value="@item.Manufacturer" />
+                            <span class="attr-txt">@item.Manufacturer</span>
+                            @* <input type="text" class="attr-edit form-control" name="Manufacturer" data-val="@item.Manufacturer" value="@item.Manufacturer" /> *@
                         </td>
                         <td class="SKU vtd">
-                            <div class="attr-txt">@item.SKU</div>
-                            <input type="text" class="attr-edit form-control" name="SKU" data-val="@item.SKU" value="@item.SKU" />
+                            <span class="attr-txt">@item.SKU</span>
+                            @* <input type="text" class="attr-edit form-control" name="SKU" data-val="@item.SKU" value="@item.SKU" /> *@
                         </td>
                         <td class="DefaultUOM vtd">
-                            <div class="attr-txt">@item.DefaultUOM</div>
-                            <select class="attr-edit form-select" name="DefaultUOM" data-val="@item.DefaultUOM">
+                            <span class="attr-txt">@item.DefaultUOM</span>
+                            @*                             <select class="attr-edit form-select" name="DefaultUOM" data-val="@item.DefaultUOM">
                                 @foreach (var uom in uoms)
                                 {
                                     <option value="@uom" @(uom.ToString() == item.DefaultUOM ? "selected" : "")>@uom</option>
                                 }
-                            </select>
+                            </select> *@
                         </td>
                         <td class="StockType vtd">
-                            <div class="attr-txt py-1 px-2">@(isNew ? "" : item.StockType?.Substring(0, 1))</div>
-                            <select class="attr-edit form-select d-none" name="StockType" data-val="@item.StockType" required>
+                            <span class="attr-txt">@(isNew ? "" : item.StockType?.Substring(0, 1))</span>
+                            @*                             <select class="attr-edit form-select d-none" name="StockType" data-val="@item.StockType" required>
                                 <option value="">Select Default UOM</option>
                                 @foreach (var type in stockTypes)
                                 {
                                     <option value="@type" @(type.ToString() == item.StockType ? "selected" : "")>@type</option>
                                 }
-                            </select>
+                            </select> *@
                         </td>
-                        @*                         <td colspan="7" data-trid="@trID" class="edit-td py-3 d-none">
-                            <form class="item-form">
-                                <div id="" class="pop-div row d-flex col-12">
-                                    <div class="popout col-12">
-                                        <div class="pop-row row d-flex pb-2 col-12"></div>
-                                        <div class="save-row row d-flex py-2 w-100 d-none">
-                                            <input type="hidden" name="CategoryID" value="@catID" />
-                                            <button type="submit" class="save-item save-btn m-auto">Save New Item</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </td> *@
+
                     </tr>
                 }
             </tbody>
@@ -157,3 +143,16 @@
     </div>
 }
 
+@*                         <td colspan="7" data-trid="@trID" class="edit-td py-3 d-none">
+                            <form class="item-form">
+                                <div id="" class="pop-div row d-flex col-12">
+                                    <div class="popout col-12">
+                                        <div class="pop-row row d-flex pb-2 col-12"></div>
+                                        <div class="save-row row d-flex py-2 w-100 d-none">
+                                            <input type="hidden" name="CategoryID" value="@catID" />
+                                            <button type="submit" class="save-item save-btn m-auto">Save New Item</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </td> *@

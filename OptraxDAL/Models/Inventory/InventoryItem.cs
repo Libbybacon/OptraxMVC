@@ -15,6 +15,9 @@ namespace OptraxDAL.Models.Inventory
         public int ID { get; set; }
         public int CategoryID { get; set; }
 
+        [MaxLength(255)]
+        public string Tags { get; set; } = "";
+
         [MaxLength(50)]
         public string StockType { get; set; } = "";
         [MaxLength(100)]
