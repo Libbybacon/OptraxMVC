@@ -16,23 +16,38 @@ function makeDatatables() {
 
     let tableID = $(this).attr('id');
 
-    new DataTable($(`#cat-table`), {
+    let invTable = $(`#cat-table`).DataTable({
         info: false,
         paging: false,
         responsive: true,
+        scrollX: false,
+        scrollY: '70vh',
+        overflowY: 'auto',
+        scrollCollapse: true,
         order: [
             [1, "asc"],
             [2, "asc"]
         ],
         rowGroup: {
-            dataSrc: [1, 2]
+            dataSrc: [1, 2],
+            startRender: function (rows, group, level) {
+                if (level == 0) {
+                    var color = $(`#cat-table .${group}`).val() || 'var(--gray-md)';
+                    return $('<tr/>').append(`<th colspan="7" class="parent-head" style="background-color:${color};">${group}</th>`);
+                }
+                if (level == 1) {
+                    var childColor = $(`#cat-table .${group}`).val() || 'var(--gray-lt)';
+                    return $('<tr/>').append(`<th colspan="7" class="child-head"><span class="w-25 p-1 px-5" style="background-color:${childColor};">${group}</span></th>`);
+                }
+            }
         },
         columnDefs: [
-            { targets: [1, 2], visible: false },
-            //{ targets: [3], orderable: false },
-            //{targets: [5], classname: "desktop"}
-        ]
-
+            { classname: "dt-control", targets: [0]},
+            { classname: "never", visible: false, targets: [1, 2] },
+            { classname: "all", targets: [3, 4, 5] },
+            { classname: "desktop", targets: [6] },
+            { classname: "min-tablet-l", targets: [7]},
+        ],
     })
 }
 

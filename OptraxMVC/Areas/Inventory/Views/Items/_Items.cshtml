@@ -9,9 +9,8 @@
     string tagHex = "var(--gray-md)";
 }
 
-
-<div class="pt-3">
-    <div class="cat-list m-0 d-flex p-3">
+<div class="p-3 pt-0">
+    <div class="tag-list flex-wrap m-0  p-3">
         @foreach (var cat in topCats)
         {
             List<TagVM> tags = cat.GetChildTags();
@@ -19,14 +18,14 @@
             allTags.AddRange(tags);
             string bg = $"background:{cat.HexColor ?? tagHex}";
 
-            <div class="flex-fill">
-                <div class="cat-top text-center w-100 px-2" style="@bg">@cat.Name</div>
-                <div class="d-flex flex-wrap w-100">
+            <div class="tag-btns flex-fill mt-1">
+                <div class="cat-top text-center px-2" style="@bg">@cat.Name</div>
+                <div class="d-flex flex-wrap">
                     @foreach (var tag in tags)
                     {
                         <div class="d-flex">
                             <button type="button" class="tag-btn f-sm m-2" style="background:@(tag.Color ?? tagHex)"></button>
-                            @tag.Name
+                            <span class="no-wrap">@tag.Name</span>
                         </div>
                     }
                 </div>
@@ -34,68 +33,76 @@
         }
     </div>
 
-    <div class="cat-table-div row h-100 w-100 m-0 p-3">
-        <table id="cat-table" class="cat-table table table-bordered w-100">
-            <thead>
-                <tr>
-                    <th class="show-child"></th>
-                    <th class="cat-col"></th>
-                    <th class="child-col"></th>
-                    <th>Name</th>
-                    @* <th>Description</th> *@
-                    <th>Manufacturer</th>
-                    <th>SKU</th>
-                    <th>Default UOM</th>
-                    <th>Stock Type</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var cat in topCats)
-                {
-                    string catBG = $"background-color:{cat.HexColor}";
-
-
-                    foreach (var child in cat.Children)
+    <div class="cat-table-div m-0 p-3">
+        <div class="cat-table-outer table-responsive">
+            <table id="cat-table" class="cat-table table table-responsive w-100">
+                <thead>
+                    <tr>
+                        <th class="show-child"></th>
+                        <th class="cat-col"></th>
+                        <th class="child-col"></th>
+                        <th>Name</th>
+                        @* <th>Description</th> *@
+                        <th>Manufacturer</th>
+                        <th>SKU</th>
+                        <th>Default UOM</th>
+                        <th>Stock Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cat in topCats)
                     {
-                        List<int> childIDs = child.GetChildIDs();
-                        childIDs.Add(child.ID);
+                        string catBG = $"background-color:{cat.HexColor}";
 
-                        List<InventoryItem> catItems = items.Where(i => childIDs.Contains(i.CategoryID)).ToList();
-                        string childBG = $"background-color:{child.HexColor}";
-                        foreach (var item in catItems)
+
+                        foreach (var child in cat.Children)
                         {
-                            string trID = $"item-{cat.ID}-{item.ID}";
+                            List<int> childIDs = child.GetChildIDs();
+                            childIDs.Add(child.ID);
 
-                            <tr id="@trID" class="item-row f-xs">
+                            List<InventoryItem> catItems = items.Where(i => childIDs.Contains(i.CategoryID)).ToList();
+                            string childBG = $"background-color:{child.HexColor}";
+                            for (int i = 0; i < catItems.Count; i++)
+                            {
+                                var item = catItems[i];
+                                string trID = $"item-{cat.ID}-{item.ID}";
 
-                                <td></td>
-                                <td>@cat.Name</td>
-                                <td>@child.Name</td>
-                                <td class="Name vtd">
-                                    <span class="attr-txt">@item.Name</span>
-                                </td>
-                                @*                                     <td class="Description vtd">
+                                <tr id="@trID" class="item-row f-xs">
+
+                                    <td></td>
+                                    <td>@cat.Name</td>
+                                    <td>@child.Name</td>
+                                    <td>
+                                        @if (i == 0)
+                                        {
+                                            <input class="@cat.Name" type="hidden" value="@cat.HexColor" />
+                                            <input class="@child.Name" type="hidden" value="@child.HexColor" />
+                                        }
+                                        <span class="attr-txt">@item.Name</span>
+                                    </td>
+                                    @*                                     <td class="Description vtd">
                                         <span class="attr-txt">@item.Description</span>
                                     </td> *@
-                                <td class="Manufacturer vtd">
-                                    <span class="attr-txt">@item.Manufacturer</span>
-                                </td>
-                                <td class="SKU vtd">
-                                    <span class="attr-txt">@item.SKU</span>
-                                </td>
-                                <td class="DefaultUOM vtd">
-                                    <span class="attr-txt">@item.DefaultUOM</span>
-                                </td>
-                                <td class="StockType vtd">
-                                    <span class="attr-txt">@item.StockType</span>
-                                </td>
+                                    <td>
+                                        <span class="attr-txt">@item.Manufacturer</span>
+                                    </td>
+                                    <td>
+                                        <span class="attr-txt">@item.SKU</span>
+                                    </td>
+                                    <td>
+                                        <span class="attr-txt">@item.DefaultUOM</span>
+                                    </td>
+                                    <td>
+                                        <span class="attr-txt">@item.StockType</span>
+                                    </td>
 
-                            </tr>
+                                </tr>
+                            }
                         }
                     }
-                }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
