@@ -7,10 +7,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Grow\Data\**" />
+    <Compile Remove="Areas\Grow\Models\**" />
     <Compile Remove="Areas\Inventory\Data\**" />
+    <Compile Remove="Areas\Inventory\Models\**" />
+    <Compile Remove="Views\Account\**" />
+    <Compile Remove="wwwroot\css\site\**" />
+    <Content Remove="Areas\Grow\Data\**" />
+    <Content Remove="Areas\Grow\Models\**" />
     <Content Remove="Areas\Inventory\Data\**" />
+    <Content Remove="Areas\Inventory\Models\**" />
+    <Content Remove="Views\Account\**" />
+    <Content Remove="wwwroot\css\site\**" />
+    <EmbeddedResource Remove="Areas\Grow\Data\**" />
+    <EmbeddedResource Remove="Areas\Grow\Models\**" />
     <EmbeddedResource Remove="Areas\Inventory\Data\**" />
+    <EmbeddedResource Remove="Areas\Inventory\Models\**" />
+    <EmbeddedResource Remove="Views\Account\**" />
+    <EmbeddedResource Remove="wwwroot\css\site\**" />
+    <None Remove="Areas\Grow\Data\**" />
+    <None Remove="Areas\Grow\Models\**" />
     <None Remove="Areas\Inventory\Data\**" />
+    <None Remove="Areas\Inventory\Models\**" />
+    <None Remove="Views\Account\**" />
+    <None Remove="wwwroot\css\site\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,14 +51,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
     <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Grow\Data\" />
-    <Folder Include="Areas\Grow\Models\" />
-    <Folder Include="Areas\Inventory\Models\" />
-    <Folder Include="Views\Account\" />
-    <Folder Include="wwwroot\css\site\" />
   </ItemGroup>
 
   <ItemGroup>

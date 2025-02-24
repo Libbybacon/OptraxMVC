@@ -15,6 +15,9 @@ namespace OptraxDAL.Models.Inventory
         public int ID { get; set; }
         public int CategoryID { get; set; }
 
+        [MaxLength(255)]
+        public string Tags { get; set; } = "";
+
         [MaxLength(50)]
         public string StockType { get; set; } = "";
         [MaxLength(100)]
@@ -46,31 +49,6 @@ namespace OptraxDAL.Models.Inventory
             Light,
             Durable,
             Consumable,
-        }
-
-        public List<string> GetCategoryNames()
-        {
-            if (Category?.Parent != null)
-            {
-                List<string> orderedNames = [.. GetCategoryNamesRecursive(Category).AsEnumerable().Reverse()];
-
-                orderedNames.Add(Category.Name);
-
-                return orderedNames;
-            }
-            return [Category?.Name];
-        }
-
-        private static List<string> GetCategoryNamesRecursive(InventoryCategory category)
-        {
-            List<string> names = [];
-
-            if (category.Parent != null)
-            {
-                names.AddRange(GetCategoryNamesRecursive(category.Parent));
-            }
-
-            return names;
         }
     }
 }

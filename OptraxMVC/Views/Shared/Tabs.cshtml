@@ -4,7 +4,7 @@
     ViewData["Page"] = Model.Area;
 }
 
-<div class="top-tabs box-shadow">
+<div class="top-tabs max-w-100 box-shadow">
     <ul class="nav nav-tabs justify-content-center" role="tablist">
         @for (int i = 0; i < Model.Tabs.Count; i++)
         {
@@ -32,23 +32,21 @@
     </ul>
 </div>
 
-<div class="tab-content p-0">
+<div class="tab-content h-100 p-0">
     @for (int i = 0; i < Model.Tabs.Count; i++)
     {
         var tab = Model.Tabs[i];
         bool active = i == 0;
         string key = tab.TabKey;
 
-        <div id="@key" class="tab-pane fade @(active ? "show active" : "")" role="tabpanel" aria-labelledby="@key-tab">
-            <div class="inner-tab cust-scroll row col-12 m-0" data-key="@key">
+        <div id="@key" class="tab-pane fade h-100 @(active ? "show active" : "")" role="tabpanel" aria-labelledby="@key-tab">
 
                 <!-- Content loads here-->
 
-            </div>
         </div>
     }
 </div>
-
+<div class="popup d-none ui-widget-overlay"></div>
 @section Scripts {
     <script src="/js/tabs.js"></script>
 }

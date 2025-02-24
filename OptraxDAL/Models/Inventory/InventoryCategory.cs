@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OptraxDAL.ViewModels;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
@@ -13,11 +15,59 @@ namespace OptraxDAL.Models.Inventory
         public required string Name { get; set; }
         [MaxLength(150)]
         public string? Description { get; set; }
+        [MaxLength(10)]
+        public string? HexColor { get; set; }
         public bool Active { get; set; } = true;
 
         public virtual List<InventoryItem> Items { get; set; } = [];
         public virtual InventoryCategory? Parent { get; set; } = null;
         public virtual List<InventoryCategory> Children { get; set; } = [];
+
+        [NotMapped]
+        public List<TagVM> ChildTags { get; set; } = [];
+
+        [NotMapped]
+        public List<TagVM>? ParentTags { get; set; }
+
+        public List<TagVM> GetChildTags()
+        {
+            if (Children.Count > 0)
+            {
+                List<TagVM> tags = [.. Children.Select(c => new TagVM { ID = c.ID, Name = c.Name, Color = c.HexColor })];
+
+                return tags;
+            }
+
+            return [];
+        }
+
+        public List<TagVM> GetParentTags()
+        {
+            if (Parent != null)
+            {
+                List<TagVM> tags = [new TagVM { ID = Parent.ID, Name = Parent.Name, Color = Parent.HexColor }];
+
+                if (Parent.Parent != null)
+                {
+                    tags.AddRange([.. GetParentTagsRecursive(Parent.Parent)]);
+                }
+                return tags;
+            }
+
+            return [];
+        }
+        private static List<TagVM> GetParentTagsRecursive(InventoryCategory cat)
+        {
+            List<TagVM> tags = [new TagVM { ID = cat.ID, Name = cat.Name, Color = cat.HexColor }];
+
+            if (cat.Parent != null)
+            {
+                tags.AddRange([.. GetParentTagsRecursive(cat.Parent)]);
+                return tags;
+            }
+
+            return tags;
+        }
 
         public List<int> GetChildIDs()
         {
@@ -37,9 +87,9 @@ namespace OptraxDAL.Models.Inventory
             return [];
         }
 
-        public static List<int> GetChildIDsRecursive(InventoryCategory category)
+        private static List<int> GetChildIDsRecursive(InventoryCategory category)
         {
-            List<int> childIDs = [.. category.Children.Select(c => c.ID).ToList()];
+            List<int> childIDs = [.. category.Children.Select(c => c.ID)];
 
             foreach (var child in category.Children)
             {
@@ -51,7 +101,43 @@ namespace OptraxDAL.Models.Inventory
             return childIDs;
         }
 
-        public string GetCategoryNamesString()
+        public List<string> GetChildNamesList()
+        {
+            if (Children != null)
+            {
+                List<string> names = [.. Children.Select(c => c.Name)];
+
+                foreach (var child in Children)
+                {
+                    if (child.Children.Count > 0)
+                    {
+                        names.AddRange(GetChildNamesRecursive(child));
+                    }
+                }
+
+                return [.. names.AsEnumerable().Reverse()];
+            }
+            return [Name];
+        }
+
+        private static List<string> GetChildNamesRecursive(InventoryCategory cat)
+        {
+            List<string> names = [cat.Name];
+
+            if (cat.Children.Count > 0)
+            {
+                foreach (var child in cat.Children)
+                {
+                    if (child.Children.Count > 0)
+                    {
+                        names.AddRange(GetChildNamesRecursive(child));
+                    }
+                }
+            }
+            return names;
+        }
+
+        public List<string> GetParentNamesList()
         {
             if (Parent != null)
             {
@@ -59,25 +145,23 @@ namespace OptraxDAL.Models.Inventory
 
                 if (Parent.Parent != null)
                 {
-                    names.AddRange(GetNamesRecursive(Parent));
+                    names.AddRange(GetParentNamesRecursive(Parent.Parent));
                 }
-                List<string> orderedNames = [.. names.AsEnumerable().Reverse()];
 
-                return string.Join(" > ", orderedNames);
+                return [.. names.AsEnumerable().Reverse()];
             }
-            return Name;
+            return [Name];
         }
 
-        private static List<string> GetNamesRecursive(InventoryCategory category)
+        private static List<string> GetParentNamesRecursive(InventoryCategory category)
         {
             List<string> names = [category.Name];
 
             if (category.Parent != null)
             {
-                names.AddRange(GetNamesRecursive(category.Parent));
+                names.AddRange(GetParentNamesRecursive(category.Parent));
             }
             return names;
         }
-
     }
 }

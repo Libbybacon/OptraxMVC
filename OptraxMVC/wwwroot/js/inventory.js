@@ -9,7 +9,47 @@ $(document).ready(function () {
 
     loadToggleHandlers();
     setItemHandlers();
+    makeDatatables();
 });
+
+function makeDatatables() {
+
+    let tableID = $(this).attr('id');
+
+    let invTable = $(`#cat-table`).DataTable({
+        info: false,
+        paging: false,
+        responsive: true,
+        scrollX: false,
+        scrollY: '70vh',
+        overflowY: 'auto',
+        scrollCollapse: true,
+        order: [
+            [1, "asc"],
+            [2, "asc"]
+        ],
+        rowGroup: {
+            dataSrc: [1, 2],
+            startRender: function (rows, group, level) {
+                if (level == 0) {
+                    var color = $(`#cat-table .${group}`).val() || 'var(--gray-md)';
+                    return $('<tr/>').append(`<th colspan="7" class="parent-head" style="background-color:${color};">${group}</th>`);
+                }
+                if (level == 1) {
+                    var childColor = $(`#cat-table .${group}`).val() || 'var(--gray-lt)';
+                    return $('<tr/>').append(`<th colspan="7" class="child-head"><span class="w-25 p-1 px-5" style="background-color:${childColor};">${group}</span></th>`);
+                }
+            }
+        },
+        columnDefs: [
+            { classname: "dt-control", targets: [0]},
+            { classname: "never", visible: false, targets: [1, 2] },
+            { classname: "all", targets: [3, 4, 5] },
+            { classname: "desktop", targets: [6] },
+            { classname: "min-tablet-l", targets: [7]},
+        ],
+    })
+}
 
 function loadToggleHandlers() {
 
@@ -49,10 +89,10 @@ function setItemHandlers() {
         addItemRow($(this))
     });
 
-    $(`.item-row`).off('click').on('click', function (e) {
-        e.stopPropagation();
-        loadPopout($(this))
-    });
+    //$(`.item-row`).off('click').on('click', function (e) {
+    //    e.stopPropagation();
+    //    loadPopout($(this))
+    //});
 
     // each edit cell is form that can be validated then serialized before sending - for new items
     $(`.item-form`).off('submit').on('submit', function (event) {
@@ -237,15 +277,7 @@ function saveNewItem($row, $form) {
     });
 }
 
-function arrayToModel(arr) {
-    var model = {};
 
-    for (var i = 0; i < arr.length; i++) {
-
-        model[arr[i]['name']] = arr[i]['value'];
-    }
-    return model;
-}
 
 function editAttribute($input) {
     var newVal = $input.val();
@@ -292,22 +324,6 @@ function editAttribute($input) {
     });
 }
 
-function showUpdateMessage($parentDiv, success, classes) {
 
-    let text = success ? "Changes Saved!" : "Error Updating";
-    let classnames = (success ? "success " : "error ") + classes;
-    const $div = $('<div>').text(text).addClass(classnames);
-
-    $parentDiv.append($div);
-
-    // make lil update message fade in then out
-    $div.fadeIn(500, function () {
-        setTimeout(function () {
-            $div.fadeOut(500, function () {
-                $div.remove();
-            });
-        }, 1000);
-    });
-}
 
 
