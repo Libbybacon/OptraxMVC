@@ -30,12 +30,12 @@ $(document).ready(function () {
 
 function collapseNav(saveToSession = true) {
     $('.logo').removeClass('d-lg-block');
-    $('.logo-sm').removeClass('d-lg-none');
     $('.nav-bi').removeClass('me-lg-3');
-    $('.nav-text').removeClass('d-lg-block');
+    $('.logo-sm').removeClass('d-lg-none');
     $('.side-nav').css('width', '50px')
-    $('.side-nav').addClass('collapsed').removeClass('expanded')
+    $('.nav-text').removeClass('d-lg-block');
     $('.logout-txt').addClass('f-xs')
+    $('.side-nav').addClass('collapsed').removeClass('expanded')
     $('.nav-hide-tab i').toggleClass('d-none');
 
     if (saveToSession) {
@@ -45,12 +45,12 @@ function collapseNav(saveToSession = true) {
 
 function expandNav(saveToSession = true) {
     $('.logo').addClass('d-lg-block');
-    $('.logo-sm').addClass('d-lg-none');
     $('.nav-bi').addClass('me-lg-3');
-    $('.nav-text').addClass('d-lg-block');
+    $('.logo-sm').addClass('d-lg-none');
     $('.side-nav').css('width', 'auto');
-    $('.side-nav').removeClass('collapsed').addClass('expanded')
+    $('.nav-text').addClass('d-lg-block');
     $('.logout-txt').removeClass('f-xs')
+    $('.side-nav').removeClass('collapsed').addClass('expanded')
     $('.nav-hide-tab i').toggleClass('d-none');
 
     if (saveToSession) {

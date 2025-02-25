@@ -76,7 +76,9 @@ namespace OptraxDAL
 
 
             #region Inventory
+            builder.Entity<InventoryCategory>().HasIndex(x => x.Name).IsUnique();
 
+            builder.Entity<InventoryItem>().HasIndex(x => x.Name).IsUnique();
             builder.Entity<InventoryItem>().HasIndex(x => x.SKU).IsUnique();
             builder.Entity<InventoryItem>().Property(x => x.Active).HasDefaultValue(true);
 
