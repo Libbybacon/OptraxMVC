@@ -5,35 +5,36 @@
 @{
     ViewData["Page"] = Model.Area;
 }
+<input type="hidden" id="tab-page" value="@Model.Area.ToLower()" />
+@* <div style="width: 100%"> *@
+    <div class="top-tabs max-w-100 box-shadow">
+        <ul class="nav nav-tabs justify-content-center" role="tablist">
+            @for (int i = 0; i < Model.Tabs.Count; i++)
+            {
+                var tab = Model.Tabs[i];
+                bool active = i == 0;
+                string key = tab.TabKey;
+                string divider = i < Model.Tabs.Count - 1 ? "divider" : "";
 
-<div class="top-tabs max-w-100 box-shadow">
-    <ul class="nav nav-tabs justify-content-center" role="tablist">
-        @for (int i = 0; i < Model.Tabs.Count; i++)
-        {
-            var tab = Model.Tabs[i];
-            bool active = i == 0;
-            string key = tab.TabKey;
-            string divider = i < Model.Tabs.Count - 1 ? "divider" : "";
-
-            <li class="nav-item px-lg-2 px-1 @(divider)" role="presentation">
-                <button type="button"
-                        role="tab"
-                        id="@key-tab"
-                        class="nav-link px-xl-5 px-md-3 px-1 @(active ? "active" : "")"
-                        data-key="@key"
-                        data-name="@tab.Name"
-                        data-area="@Model.Area"
-                        data-bs-toggle="tab"
-                        data-bs-target="#@key"
-                        aria-controls="@key"
-                        aria-selected="@active">
-                    @(tab.Name)
-                </button>
-            </li>
-        }
-    </ul>
-</div>
-
+                <li class="nav-item px-lg-2 px-1 @(divider)" role="presentation">
+                    <button type="button"
+                            role="tab"
+                            id="@key-tab"
+                            class="nav-link px-xl-5 px-md-3 px-1 @(active ? "active" : "")"
+                            data-key="@key"
+                            data-name="@tab.Name"
+                            data-area="@Model.Area"
+                            data-bs-toggle="tab"
+                            data-bs-target="#@key"
+                            aria-controls="@key"
+                            aria-selected="@active">
+                        @(tab.Name)
+                    </button>
+                </li>
+            }
+        </ul>
+    </div>
+@* </div> *@
 <div class="tab-content h-100 p-0">
     @for (int i = 0; i < Model.Tabs.Count; i++)
     {
@@ -43,7 +44,7 @@
 
         <div id="@key" class="tab-pane fade h-100 @(active ? "show active" : "")" role="tabpanel" aria-labelledby="@key-tab">
 
-                <!-- Content loads here-->
+            <!-- Content loads here-->
 
         </div>
     }

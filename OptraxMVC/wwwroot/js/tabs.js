@@ -1,11 +1,11 @@
 ﻿
-var curTabKey = "";
-var cache = sessionStorage;
+var curPage;
 
 $(document).ready(function () {
 
-    
-    let storedTab = localStorage.getItem('activeTab');    
+    curPage = $('#tab-page').val();
+
+    let storedTab = localStorage.getItem(`${curPage}-active`);
     let firstTab = $(".top-tabs .nav-link.active");
 
     if (storedTab && storedTab !== "undefined") {
@@ -25,19 +25,13 @@ $(document).ready(function () {
     $(".nav-link").on("click", function () {
         loadTab($(this));
     });
-
-    $(document).on("click", ".save-btn", function () {
-        var tabKey = $(this).closest(".tab-pane").attr("id");
-
-        cache.removeItem("tabCache_" + tabKey); // Clear cache for this tab
-    });
 });
 
 function loadTab(tab) {
 
     let tabKey = $(tab).data("key");
 
-    localStorage.setItem('activeTab', tabKey);
+    localStorage.setItem(`${curPage}-active`, tabKey);
 
     let $innerTab = $(`#${tabKey}`);
 
