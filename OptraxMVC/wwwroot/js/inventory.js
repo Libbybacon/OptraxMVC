@@ -1,5 +1,7 @@
-﻿var showAll = false;
+﻿
 var $popout;
+var none = 'd-none';
+var bg = 'background-color';
 
 $(document).ready(function () {
 
@@ -7,14 +9,15 @@ $(document).ready(function () {
         editAttribute($(this));
     });
 
-    loadToggleHandlers();
-    setItemHandlers();
-    makeDatatables();
+    $('.toggle-all').off('click').on('click', function () {
+        showHide($(this));
+    })
+
+    //setItemHandlers();
+    makeDatatable();
 });
 
-function makeDatatables() {
-
-    let tableID = $(this).attr('id');
+function makeDatatable() {
 
     let invTable = $(`#cat-table`).DataTable({
         info: false,
@@ -31,57 +34,110 @@ function makeDatatables() {
         rowGroup: {
             dataSrc: [1, 2],
             startRender: function (rows, group, level) {
+                let is1 = level == 1;
+                let grp = group.replace(/\s+/g, "");
+                let color = $(`#cat-table .${grp}`).val() || 'var(--gray-lt)';
+
+                let $hidei = $('<i/>').addClass(`bi bi-chevron-up hide-i hide1 ${is1 ? 'item-hide' : ''}`)
+                let $showi = $('<i/>').addClass(`bi bi-chevron-down show-i d-none ${is1 ? 'item-show' : ''}`);
+                let $btn = $('<button/>').addClass('toggle').data('grp', grp).append($showi).append($hidei).on('click', function () { showHide(this) });
+                let $th = $('<th/>').attr('colspan', 7).append($btn)
+
                 if (level == 0) {
-                    var color = $(`#cat-table .${group}`).val() || 'var(--gray-md)';
-                    return $('<tr/>').append(`<th colspan="7" class="parent-head" style="background-color:${color};">${group}</th>`);
+                    return $('<tr/>').addClass('parent-head').append($th.css(bg, color).append(group));
                 }
                 if (level == 1) {
-                    var childColor = $(`#cat-table .${group}`).val() || 'var(--gray-lt)';
-                    return $('<tr/>').append(`<th colspan="7" class="child-head"><span class="w-25 p-1 px-5" style="background-color:${childColor};">${group}</span></th>`);
+                    $btn.addClass('toggle-items');
+                    return $('<tr/>').addClass('child-head').append($th.append($('<span/>').css(bg, color)).append(group));
                 }
             }
         },
         columnDefs: [
-            { classname: "dt-control", targets: [0]},
-            { classname: "never", visible: false, targets: [1, 2] },
-            { classname: "all", targets: [3, 4, 5] },
-            { classname: "desktop", targets: [6] },
-            { classname: "min-tablet-l", targets: [7]},
+            { className: "dt-control", targets: 0, sortable: false },
+            { className: "never", visible: false, targets: [1, 2] },
+            { className: "all", targets: [3, 4, 5] },
+            { className: "desktop", targets: [6] },
+            { className: "min-tablet-l", targets: [7] },
+            //{ sortable: false, targets: [1, 2, 3, 4, 5, 6, 7] }
         ],
-    })
-}
-
-function loadToggleHandlers() {
-
-    $(".toggle-btn").off('click').on('click', function () {
-        var toggleId = $(this).data("toggle-id");
-
-        $(`#${toggleId}-btn span`).toggleClass('d-none');
-
-        $("#" + toggleId).toggle();
-    });
-
-    $('.toggle-cats').off('click').on('click', function () {
-        $(this).parents('.top-row').nextAll('.child-row').addClass('d-none');
-    })
-
-    $(".toggle-all").off('click').on('click', function () {
-
-        if ($(this).hasClass('all')) {
-            showAll ? $(".items-row").hide() : $(".items-row").show();
-            showAll ? $(".child-row").hide() : $(".child-row").show();
+        layout: {
+            topStart: {
+                buttons: [
+                    {
+                        text: 'New Category',
+                        className: 'add-cat table-btn btn-clear',
+                        action: function (e, dt, node, config) {
+                            addCategory();
+                        }
+                    },
+                    {
+                        text: 'New Item',
+                        className: 'add-item table-btn btn-clear',
+                        action: function (e, dt, node, config) {
+                            addItem();
+                        }
+                    },
+                ]
+            }
+        },
+        initComplete: function () {
+            let $span = $('<span>').addClass('add-plus').text('+')
+            $('.table-btn').prepend($span);
         }
-        else {
-            $(".items-row").hide()
-            showAll ? $(".child-row").show() : $(".child-row").hide();
-        }
+    })
 
-        $(`.toggle .${(showAll ? 'show' : 'hide')}-i`).removeClass('d-none');
-        $(`.toggle .${(showAll ? 'hide' : 'show')}-i`).addClass('d-none');
-
-        showAll = !showAll;
+    $(window).on('resize', function () {
+        invTable.columns.adjust();
+        invTable.responsive.recalc();
     });
 }
+
+function showHide(btn, isItems = false) {
+
+    let isAll = $(btn).hasClass('toggle-all');
+
+    let grp = isAll ? '' : $(btn).data('grp').replace(/\s+/g, ""); // Remove white space from multi-word categories
+    let itemClass = isAll ? '.item-row' : `.item-cat-${grp}`;
+
+    let $hidei = $(btn).find('.hide-i');
+    let $showi = $(btn).find('.show-i');
+
+    if ($(btn).hasClass('toggle-items')) {
+
+        $(`.item-child-${grp}`).removeClass(none).addClass($hidei.hasClass(none) ? '' : none);
+
+        $(btn).find('i').toggleClass('d-none');
+    }
+    else {
+
+        let $children = isAll ? $('.child-head') : $(btn).parents('tr').nextUntil('.dtrg-level-0', '.dtrg-level-1');
+
+        let show1 = $showi.hasClass('show1');
+        let show2 = $showi.hasClass('show2');
+        let hide1 = $hidei.hasClass('hide1');
+        let hide2 = $hidei.hasClass('hide2');
+
+        $(itemClass).removeClass(none).addClass(show2 ? '' : none) // Hide items
+
+        $.each($children, function () { 
+            $(this).removeClass(none).addClass(hide2 ? none : ''); // Hide children
+            $(this).find('.item-hide').removeClass(none).addClass(show2 ? '' : none); // Update child toggle icons
+            $(this).find('.item-show').removeClass(none).addClass(show2 ? none : '');
+        });
+
+        if (isAll) {
+            $.each($('.parent-head'), function () { // Update parent toggle icons
+                $(this).find('.hide-i').removeClass('d-none hide1 hide2').addClass(hide1 ? 'hide2' : (show2 ? 'hide1' : none));
+                $(this).find('.show-i').removeClass('d-none show1 show2').addClass(hide2 ? 'show1' : (show1 ? 'show2' : none));
+            });
+        }
+
+        // Button icons
+        $hidei.removeClass('d-none hide1 hide2').addClass(show2 ? 'hide1' : (hide1 ? 'hide2' : none));
+        $showi.removeClass('d-none show1 show2').addClass(hide2 ? 'show1' : (show1 ? 'show2' : none));
+    }
+}
+
 
 function setItemHandlers() {
 
@@ -278,13 +334,13 @@ function saveNewItem($row, $form) {
 }
 
 
-
+// Save updates whenever input value changes
 function editAttribute($input) {
     var newVal = $input.val();
     var oldVal = $input.data('val');
 
     if (newVal === oldVal) {
-        return;
+        return; // Don't hit controller if no change
     }
 
     var $row = $input.closest('tr');
@@ -307,7 +363,7 @@ function editAttribute($input) {
             if (response.success) {
 
                 $input.data('val', newVal);
-                $input.attr('data-val', newVal); // store new val in data attr 
+                $input.attr('data-val', newVal); 
 
                 showUpdateMessage($parentDiv, true);
             }
@@ -323,7 +379,3 @@ function editAttribute($input) {
         }
     });
 }
-
-
-
-

@@ -9,8 +9,8 @@
     string tagHex = "var(--gray-md)";
 }
 
-<div class="p-3 pt-0">
-    <div class="tag-list flex-wrap m-0  p-3">
+<div class="p-md-3 p-0 pt-0">
+@*     <div class="tag-list flex-wrap m-0  px-md-4 px-0">
         @foreach (var cat in topCats)
         {
             List<TagVM> tags = cat.GetChildTags();
@@ -19,26 +19,31 @@
             string bg = $"background:{cat.HexColor ?? tagHex}";
 
             <div class="tag-btns flex-fill mt-1">
-                <div class="cat-top text-center px-2" style="@bg">@cat.Name</div>
+                <div class="tag-top text-center px-2" style="@bg"><span class=""></span>@cat.Name</div>
                 <div class="d-flex flex-wrap">
                     @foreach (var tag in tags)
                     {
-                        <div class="d-flex">
-                            <button type="button" class="tag-btn f-sm m-2" style="background:@(tag.Color ?? tagHex)"></button>
-                            <span class="no-wrap">@tag.Name</span>
+                        <div class="d-flex col-6">
+                            <button type="button" data-id="@tag.ID" class="tag-btn m-2" style="background:@(tag.Color ?? tagHex)"></button>
+                            <span class="tag-txt">@tag.Name</span>
                         </div>
                     }
                 </div>
             </div>
         }
-    </div>
+    </div> *@
 
-    <div class="cat-table-div m-0 p-3">
+    <div class="cat-table-div m-0 px-lg-3 px-2">
         <div class="cat-table-outer table-responsive">
-            <table id="cat-table" class="cat-table table table-responsive w-100">
+            <table id="cat-table" class="cat-table table table-responsive top w-100">
                 <thead>
                     <tr>
-                        <th class="show-child"></th>
+                        <th class="show-child">
+                            <button class="toggle toggle-all">
+                                <i class="bi bi-chevron-down show-i d-none"></i>
+                                <i class="bi bi-chevron-up hide1 hide-i"></i>
+                            </button>
+                        </th>
                         <th class="cat-col"></th>
                         <th class="child-col"></th>
                         <th>Name</th>
@@ -60,14 +65,16 @@
                             List<int> childIDs = child.GetChildIDs();
                             childIDs.Add(child.ID);
 
-                            List<InventoryItem> catItems = items.Where(i => childIDs.Contains(i.CategoryID)).ToList();
+                            List<InventoryItem> catItems = items.Where(i => childIDs.Contains(i.CategoryID)).OrderBy(i => i.Name).ToList();
                             string childBG = $"background-color:{child.HexColor}";
                             for (int i = 0; i < catItems.Count; i++)
                             {
                                 var item = catItems[i];
-                                string trID = $"item-{cat.ID}-{item.ID}";
+                                string trID = $"item-{item.ID}";
+                                string catClass = $"item-cat-{cat.Name.Replace(" ", "")}";
+                                string childClass = $"item-child-{child.Name.Replace(" ", "")}";
 
-                                <tr id="@trID" class="item-row f-xs">
+                                <tr id="@trID" class="@catClass @childClass item-row f-xs">
 
                                     <td></td>
                                     <td>@cat.Name</td>
@@ -75,8 +82,8 @@
                                     <td>
                                         @if (i == 0)
                                         {
-                                            <input class="@cat.Name" type="hidden" value="@cat.HexColor" />
-                                            <input class="@child.Name" type="hidden" value="@child.HexColor" />
+                                            <input class="@cat.Name.Replace(" ", "")" type="hidden" value="@cat.HexColor" />
+                                            <input class="@child.Name.Replace(" ", "")" type="hidden" value="@child.HexColor" />
                                         }
                                         <span class="attr-txt">@item.Name</span>
                                     </td>
