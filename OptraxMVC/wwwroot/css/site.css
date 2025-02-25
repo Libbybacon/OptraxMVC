@@ -343,6 +343,9 @@ input[type=checkbox]:hover, input[type=radio]:hover {
 }
 
 
+    .top-row .cat-name {
+        font-weight: bold;
+    }
 
 
 .dt-layout-table{
