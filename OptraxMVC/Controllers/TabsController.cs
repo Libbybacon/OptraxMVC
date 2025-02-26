@@ -36,7 +36,7 @@ namespace OptraxMVC.Controllers
         {
             var tabVM = new TabsVM() { Area = area, Tabs = [new Tab() { Name = name, TabKey = "" }] };
             var tab = tabVM.Tabs[0];
-
+            tabVM.SetTabViewPath(tab);
 
             object? model = tabVM.Area switch
             {
@@ -71,6 +71,7 @@ namespace OptraxMVC.Controllers
             switch (tab.Name)
             {
                 case "Items":
+                    tab.ViewPath = $"~/Areas/Inventory/Views/InventoryItems/_{tab.Name}.cshtml";
                     ViewBag.Items = await db.InventoryItems.OrderBy(c => c.CategoryID).ToListAsync() ?? [];
                     break;
                 default:
@@ -82,7 +83,7 @@ namespace OptraxMVC.Controllers
                 return NotFound();
             }
 
-            tabVM.SetTabViewPath(tab);
+
 
             return PartialView(tab.ViewPath, model);
         }

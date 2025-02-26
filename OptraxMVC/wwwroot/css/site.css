@@ -2,6 +2,7 @@
     --wht-lt: #F5F9F8;
     --wht-grn: #F0F6F4;
     --wht-blue: #F4F9FB;
+    --blue-xlt: #C0D1D8;
     --blue-lt: #789CAB;
     --blue-md: #366C84;
     --blue-dk: #030726;
@@ -21,6 +22,8 @@
     --gray-dk: #DADADA;
     --gray-xdk: #BABABA;
     --gray-xxdk: #AAAAAA;
+    --box-shdw: 0px 1px 6px rgba(0,0,0,0.4);
+    --box-shdw-hov: 0px 2px 7px rgba(0,0,0,.4);
 }
 
 .bg-dark {
@@ -35,39 +38,79 @@
     color: var(--tan-dk);
 }
 
+/* Popup */
+
+#overlay {
+    display: none;
+    background: rgba(0,0,0,.5);
+}
+
+#popup {
+    display: none;
+    top: 33%;
+    left: 50%;
+    width: auto;
+    min-width: 450px;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 4px;
+    color: var(--blue-dk);
+    box-shadow: var(--box-shdw);
+    border: 1px solid var(--gray-xxdk);
+}
+
+    #popup #popupTop {
+        position: relative;
+        font-weight: bold;
+        font-size: var(--f-xxl);
+    }
+
+    #popup #popupTitle {
+        margin: auto;
+        text-align: center;
+        padding-top: .5rem;
+    }
+
+    #popup #popupClose {
+        position: absolute;
+        top: .5rem;
+        right: .5rem;
+        border: none;
+        
+        border-radius: 4px;
+        background: white;
+    }
+
+        #popup #popupClose:hover {
+            font-weight: 600;
+            padding: .2rem .8rem;
+            box-shadow: var(--box-shdw);
+            background-color: var(--blue-xlt);
+        }
+
+    #popup label {
+        font-weight: bold;
+        padding-left: .2rem;
+        margin-top: 1.5rem;
+    }
+
+    #popup .save-btn {
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
 
 @media only screen and (max-width: 576px) {
     .dash-container {
         max-height: calc(100vh - 40px) !important;
     }
-
-    /*.cat-body {
-        min-height: calc(100vh - 155px) !important;
-        max-height: calc(100vh - 155px) !important;*/ /* 100 - nav, 15 - top margin, 40 - header  extra 40 to make it even ??*/
-    /*}*/
-
-    .popout {
-        transform: scale(1.05) !important;
-    }
 }
 
 @media only screen and (min-width: 576) and (max-width: 786) {
-
-    /*.cat-body {
-        min-height: calc(100vh - 155px) !important;
-        max-height: calc(100vh - 155px) !important;*/ /* 100 - nav, 15 - top margin, 40 - header  extra 40 to make it even ??*/
-    /*}*/
-
-    .popout {
-        transform: scale(1.05) !important;
-    }
 }
 
 @media only screen and (min-width: 768px) {
-    .cat-body {
-        min-height: calc(100vh - 130x) !important; /* 50 - nav, 15 - top margin, 40 - header, extra 25 to leave margin at bottom (just adding another 15 doesn't create space below - why ?? table padding?)*/
-        max-height: calc(100vh - 130px) !important;
-    }
 }
 
 .error-div {
@@ -97,7 +140,7 @@
 }
 
 .box-shadow {
-    box-shadow: 2px .25rem .75rem rgba(0, 0, 0, .4);
+    box-shadow: var(--box-shdw);
 }
 
 .y-scroll {
@@ -111,6 +154,8 @@
 .no-wrap {
     white-space: nowrap;
 }
+
+
 /* Site Layout */
 html {
     height: 100vh;
@@ -124,9 +169,7 @@ body {
     min-width: 500px !important;
     height: 100% !important;
     font-family: 'Roboto' !important;
-    /*background-color: #1C516E !important;*/
     background-color: var(--tan-lt) !important;
-    /*background-color: #334A6E;*/
 }
 
 .content {
@@ -146,25 +189,22 @@ main {
 /* Buttons */
 
 .save-btn {
-    width: 20%;
     font-size: var(--f-md);
     color: var(--wht-grn);
+    white-space: nowrap;
     border-radius: 4px;
-    padding-top: .15rem;
-    padding: .2rem .5rem;
+    padding: .2rem 1rem;
     border: none !important;
-    margin-top: 1rem !important;
-    margin-bottom: 1rem !important;
+    background: var(--grn-md);
+    box-shadow: var(--box-shdw);
     border-bottom: 1px solid var(--grn-dk);
-    background: linear-gradient(var(--grn-lt), var(--grn-dk));
-    /*text-shadow: 1px 1px 2px var(--grn-dk);*/
-    box-shadow: 2px .25rem .75rem rgba(0, 0, 0, .4);
 }
 
     .save-btn:hover {
         color: white;
         text-shadow: 1px 1px 2px var(--grn-dk);
-        box-shadow: 3px .35rem .85rem rgba(0, 0, 0, .4);
+        box-shadow: var(--box-shdw-hov);
+        padding-bottom: .3rem;
         background: linear-gradient(var(--grn-lt), var(--grn-md));
     }
 
@@ -233,25 +273,28 @@ input[type=checkbox]:hover, input[type=radio]:hover {
 
 .dash-card {
     height: 100%;
-    color: var(--grn-lt);
     /*background-color: var(--blue-dk);*/
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--box-shdw)
 }
 
     .dash-card .card-title {
         padding: 0;
         margin: 0;
         padding-top: 5px;
-        font-weight: bold;
+        opacity: .8;
+        font-weight: 600;
         text-align: center;
         color: var(--blue-dk);
         font-size: var(--f-xxl);
-        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+        /*text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);*/
     }
 
     .dash-card .card-info {
-        display: flex;
         height: 100%;
+        display: flex;
+        opacity: .7;
+        font-weight: 700;
+        color: var(--grn-dk);
         align-items: center;
         justify-content: center;
         font-size: var(--f-xxxl);
@@ -285,6 +328,21 @@ input[type=checkbox]:hover, input[type=radio]:hover {
 }
 
 /* Inventory Table */
+#filterCard {
+    width: 100%;
+    border-radius: 4px;
+    box-shadow: var(--box-shdw);
+    background-color: white;
+}
+
+#filterDrop {
+    width: 100%;
+    text-align: center;
+    border: none;
+    border-radius: 4px;
+    color: var(--blue-dk);
+    font-size: var(--f-lg);
+}
 
 .tag-list {
     display: flex;
@@ -296,7 +354,6 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     background-color: white;
     max-width: 250px !important;
     border: 1px solid var(--gray-xdk);
-    box-shadow: 2px 3px 8px rgba(0,0,0,0.3);
 }
 
 .tag-div {
@@ -307,17 +364,16 @@ input[type=checkbox]:hover, input[type=radio]:hover {
 .tag-btn {
     padding: 6px;
     border-radius: 4px;
-    border: 1px solid var(--gray-xdk);
-    box-shadow: 0px 0px 8px var(--gray-dk);
+    border: 1px solid var(--gray-xxdk);
 }
 
-.tag-txt{
+.tag-txt {
     white-space: nowrap;
     font-size: var(--f-xs);
     padding-top: 6px;
 }
 
-.table-btn{
+.table-btn {
     border: 1px solid var(--gray-xdk);
     border-radius: 4px;
 }
@@ -329,52 +385,23 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     margin-right: .2rem;
 }
 
-.add-cat{
+.add-cat {
     margin-right: 1rem;
 }
-
-
 
 /* table wrappers */
 
 .cat-table-div {
-    border-radius: 4px;
     max-width: 100vw;
     background: white;
-    /*box-shadow: 0px 0px 15px rgba(0,0,0,0.4);*/
-    box-shadow: 2px 3px 8px rgba(0,0,0,0.3);
-}
-.cat-table-div {
-    max-width: 100vw;
-}
-
-
-    .top-row .cat-name {
-        font-weight: bold;
-    }
-
-
-.dt-layout-table{
-    margin: 0;
-}
-
-#cat-table tbody {
-    border-collapse: collapse !important;
-    /*border: 2px solid var(--gray-dk);*/
-}
-
-    #cat-table tbody td {
-        padding: .1rem;
-    }
-
-.cat-table-outer {
+    border-radius: 4px;
     margin-top: 1rem;
+    box-shadow: var(--box-shdw);
 }
 
 #cat-table_wrapper,
 .dt-container dt-bootstrap5 dt-empty-footer {
     padding: 0;
-    padding-top: 1rem;
     background: white;
 }
 
@@ -386,6 +413,11 @@ div.dt-container div.dt-layout-table > div {
     padding: .2rem;
 }
 
+table.dataTable td.dt-control:after,
+table.dataTable td.dt-control:before {
+    display: none !important;
+}
+
 #cat-table tbody {
     border-collapse: collapse !important;
 }
@@ -394,20 +426,14 @@ div.dt-container div.dt-layout-table > div {
         padding: .1rem;
     }
 
-table.dataTable td.dt-control:after,
-table.dataTable td.dt-control:before {
-    display: none !important;
-}
-
 /* group header rows */
-/*table.dataTable tr.dtrg-group.dtrg-level-1 th {
-    padding-top: .2rem !important;
-    padding-bottom: .1rem !important;
-}*/
+
 .parent-head th {
+    font-weight: 400 !important;
     padding: .05rem !important;
     padding-left: .1rem !important;
-    font-weight: 400 !important;
+    border-top: 1px solid var(--gray-xxdk);
+    border-bottom: 1px solid var(--gray-xxdk);
 }
 
     .parent-head th i,
@@ -419,32 +445,17 @@ table.dataTable td.dt-control:before {
     padding-top: .2rem !important;
     padding-bottom: .1rem !important;
 }
-.child-head th span {
-    padding: .1rem;
-    padding-left: .75rem;
-    margin-right: .5rem;
-}
+
+    .child-head th span {
+        padding: .1rem;
+        padding-left: .75rem;
+        margin-right: .5rem;
+    }
 
 .show2,
 .hide2 {
     text-shadow: 0px -4px 0px black !important;
 }
-
-.dt_scroll::-webkit-scrollbar {
-    width: 6px;
-}
-
-.dt_scroll::-webkit-scrollbar-track {
-    background: #f1f1f1 !important;
-}
-
-.dt_scroll::-webkit-scrollbar-thumb {
-    background: #888 !important;
-}
-
-    .dt_scroll::-webkit-scrollbar-thumb:hover {
-        background: #555 !important;
-    }
 
 .attr-edit {
     display: none;
@@ -474,7 +485,7 @@ table.dataTable td.dt-control:before {
 .room-card {
     color: var(--tan-lt);
     background-color: var(--grn-md);
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
+    box-shadow: var(--box-shdw);
 }
 
     .room-card:hover {

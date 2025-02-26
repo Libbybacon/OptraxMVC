@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OptraxDAL;
 
@@ -11,9 +12,11 @@ using OptraxDAL;
 namespace OptraxDAL.Migrations
 {
     [DbContext(typeof(OptraxContext))]
-    partial class OptraxContextModelSnapshot : ModelSnapshot
+    [Migration("20250226034915_AddUomTable3")]
+    partial class AddUomTable3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -328,10 +331,6 @@ namespace OptraxDAL.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Category")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("PerQuantity")

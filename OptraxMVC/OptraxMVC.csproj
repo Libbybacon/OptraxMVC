@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Areas\Inventory\Views\Items\_Categories.cshtml" />
+    <Content Remove="Areas\Inventory\Views\InventoryItems\_Categories.cshtml" />
     <Content Remove="Views\Shared\_TreeNode.cshtml" />
   </ItemGroup>
 

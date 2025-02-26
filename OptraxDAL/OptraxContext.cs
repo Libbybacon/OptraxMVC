@@ -15,6 +15,7 @@ namespace OptraxDAL
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Business> Businesses { get; set; }
+        public DbSet<UOM> UOMs { get; set; }
         #endregion
 
         #region Inventory
@@ -71,6 +72,8 @@ namespace OptraxDAL
             builder.Entity<IdentityUserClaim<string>>().ToTable("AspNetUserClaims", "Identity");
             builder.Entity<IdentityUserLogin<string>>().ToTable("AspNetUserLogins", "Identity");
             builder.Entity<IdentityUserToken<string>>().ToTable("AspNetUserTokens", "Identity");
+
+            builder.Entity<UOM>().Property(x => x.PerQuantity).HasPrecision(6, 2);
 
             #endregion
 

@@ -30,7 +30,6 @@ namespace OptraxDAL.Models.Inventory
         public string? SKU { get; set; }
         [MaxLength(25)]
         public string? DefaultUOM { get; set; }
-
         public int? SellerID { get; set; }
         public int? LightTypeID { get; set; }
         public int? ContainerTypeID { get; set; }

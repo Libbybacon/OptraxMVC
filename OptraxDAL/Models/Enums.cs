@@ -70,23 +70,7 @@
             Harvest
         }
 
-        public enum InventoryUOM
-        {
-            Each,
-            Case,
-            Milligram,
-            Gram,
-            Kilogram,
-            Ounce,
-            Pound,
-            Cup,
-            Pint,
-            Quart,
-            Gallon,
-            Milliliter,
-            Liter,
-            Other
-        }
+
 
         public enum StockType
         {

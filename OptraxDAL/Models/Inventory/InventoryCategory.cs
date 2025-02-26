@@ -12,11 +12,13 @@ namespace OptraxDAL.Models.Inventory
         public int? ParentID { get; set; }
 
         [MaxLength(50)]
-        public required string Name { get; set; }
+        public string Name { get; set; } = "";
         [MaxLength(150)]
         public string? Description { get; set; }
         [MaxLength(10)]
         public string? HexColor { get; set; }
+        [MaxLength(10)]
+        public string? TextColor { get; set; } = "#00000000";
         public bool Active { get; set; } = true;
 
         public virtual List<InventoryItem> Items { get; set; } = [];
@@ -24,10 +26,19 @@ namespace OptraxDAL.Models.Inventory
         public virtual List<InventoryCategory> Children { get; set; } = [];
 
         [NotMapped]
+        public string ListName => ParentID.HasValue ? $"{Parent?.Name}-{Name}" : Name;
+
+        [NotMapped]
         public List<TagVM> ChildTags { get; set; } = [];
 
         [NotMapped]
         public List<TagVM>? ParentTags { get; set; }
+
+
+        public string NameNoSpace()
+        {
+            return Name.Replace(" ", "");
+        }
 
         public List<TagVM> GetChildTags()
         {
@@ -73,7 +84,7 @@ namespace OptraxDAL.Models.Inventory
         {
             if (Children.Count > 0)
             {
-                List<int> childIDs = [.. Children.Select(c => c.ID).ToList()];
+                List<int> childIDs = [ID, .. Children.Select(c => c.ID).ToList()];
 
                 foreach (var child in Children)
                 {

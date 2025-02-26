@@ -2,6 +2,8 @@
 @using OptraxDAL.ViewModels
 @model List<InventoryCategory>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css" />
+
 @{
     List<TagVM> allTags = [];
     List<InventoryItem> items = ViewBag.Items;
@@ -9,31 +11,37 @@
     string tagHex = "var(--gray-md)";
 }
 
+
 <div class="p-md-3 p-0 pt-0">
-    <div class="tag-list flex-wrap m-0  px-md-4 px-0">
-        @foreach (var cat in topCats)
-        {
-            List<TagVM> tags = cat.GetChildTags();
-            cat.ChildTags = tags;
-            allTags.AddRange(tags);
-            string bg = $"background:{cat.HexColor ?? tagHex}";
+    <div id="filterCard">
+        <button type="button" id="filterDrop" class="dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#filters" aria-expanded="false" aria-controls="filters">Filters</button>
+        <div id="filters" class="collapse">
+            <div class="tag-list flex-wrap m-0 p-2">
+                @foreach (var cat in topCats)
+                {
+                    List<TagVM> tags = cat.GetChildTags();
+                    cat.ChildTags = tags;
+                    allTags.AddRange(tags);
 
-            <div class="tag-btns flex-fill mt-1">
-                <div class="tag-top text-center px-2" style="@bg"><span class=""></span>@cat.Name</div>
-                <div class="d-flex flex-wrap">
-                    @foreach (var tag in tags)
-                    {
-                        <div class="d-flex col-6">
-                            <button type="button" data-id="@tag.ID" class="tag-btn m-2" style="background:@(tag.Color ?? tagHex)"></button>
-                            <span class="tag-txt">@tag.Name</span>
+                    string bg = $"background:{cat.HexColor ?? tagHex}";
+
+                    <div class="tag-btns flex-fill mt-1">
+                        <div class="tag-top text-center px-2" style="@bg"><span class=""></span>@cat.Name</div>
+                        <div class="d-flex flex-wrap">
+                            @foreach (var tag in tags)
+                            {
+                                <div class="d-flex col-6">
+                                    <button type="button" data-id="@tag.ID" class="tag-btn m-2" style="background:@(tag.Color ?? tagHex)"></button>
+                                    <span class="tag-txt">@tag.Name</span>
+                                </div>
+                            }
                         </div>
-                    }
-                </div>
+                    </div>
+                }
             </div>
-        }
+        </div>
     </div>
-
-    <div class="cat-table-div m-0 px-lg-3 px-2">
+    <div class="cat-table-div  px-lg-3 px-2">
         <div class="cat-table-outer table-responsive">
             <table id="cat-table" class="cat-table table table-responsive top w-100">
                 <thead>
@@ -57,37 +65,27 @@
                 <tbody>
                     @foreach (var cat in topCats)
                     {
-                        string catBG = $"background-color:{cat.HexColor}";
-
-
                         foreach (var child in cat.Children)
                         {
                             List<int> childIDs = child.GetChildIDs();
                             childIDs.Add(child.ID);
-
                             List<InventoryItem> catItems = items.Where(i => childIDs.Contains(i.CategoryID)).OrderBy(i => i.Name).ToList();
-                            string childBG = $"background-color:{child.HexColor}";
-                            for (int i = 0; i < catItems.Count; i++)
+
+                            string catName = cat.NameNoSpace();
+                            string catHex = cat.HexColor ?? tagHex;
+                            string childName = child.NameNoSpace();
+                            string childHex = child.HexColor ?? tagHex;
+
+                            foreach (InventoryItem item in catItems)
                             {
-                                var item = catItems[i];
-                                string trID = $"item-{item.ID}";
-                                string catClass = $"item-cat-{cat.Name.Replace(" ", "")}";
-                                string childClass = $"item-child-{child.Name.Replace(" ", "")}";
-
-                                <tr id="@trID" class="@catClass @childClass item-row f-xs">
-
+                                <tr id="@($"item-{item.ID}")" data-catcol="@catHex" data-childcol="@childHex" class="item-row @catName @childName f-xs">
                                     <td></td>
-                                    <td>@cat.Name</td>
-                                    <td>@child.Name</td>
+                                    <td>@cat.Name-@cat.ID</td>
+                                    <td>@child.Name-@child.ID</td>
                                     <td>
-                                        @if (i == 0)
-                                        {
-                                            <input class="@cat.Name.Replace(" ", "")" type="hidden" value="@cat.HexColor" />
-                                            <input class="@child.Name.Replace(" ", "")" type="hidden" value="@child.HexColor" />
-                                        }
                                         <span class="attr-txt">@item.Name</span>
                                     </td>
-                                    @*                                     <td class="Description vtd">
+                                    @*<td class="Description vtd">
                                         <span class="attr-txt">@item.Description</span>
                                     </td> *@
                                     <td>
@@ -114,6 +112,7 @@
 </div>
 
 <script src="/js/inventory.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
 
 
 

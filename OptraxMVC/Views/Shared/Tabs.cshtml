@@ -6,7 +6,6 @@
     ViewData["Page"] = Model.Area;
 }
 <input type="hidden" id="tab-page" value="@Model.Area.ToLower()" />
-@* <div style="width: 100%"> *@
     <div class="top-tabs max-w-100 box-shadow">
         <ul class="nav nav-tabs justify-content-center" role="tablist">
             @for (int i = 0; i < Model.Tabs.Count; i++)
@@ -34,7 +33,6 @@
             }
         </ul>
     </div>
-@* </div> *@
 <div class="tab-content h-100 p-0">
     @for (int i = 0; i < Model.Tabs.Count; i++)
     {
@@ -49,7 +47,9 @@
         </div>
     }
 </div>
-<div class="popup d-none ui-widget-overlay"></div>
+
+
+
 @section Scripts {
     <script src="/js/tabs.js"></script>
 }

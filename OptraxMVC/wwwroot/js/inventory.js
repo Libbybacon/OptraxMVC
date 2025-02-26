@@ -13,6 +13,10 @@ $(document).ready(function () {
         showHide($(this));
     })
 
+    $('#popupClose').off('click').on('click', function () {
+        closePopup();
+    });
+
     //setItemHandlers();
     makeDatatable();
 });
@@ -24,7 +28,8 @@ function makeDatatable() {
         paging: false,
         responsive: true,
         scrollX: false,
-        scrollY: '70vh',
+        scrollY: true,
+        scrollY: '65vh',
         overflowY: 'auto',
         scrollCollapse: true,
         order: [
@@ -34,21 +39,26 @@ function makeDatatable() {
         rowGroup: {
             dataSrc: [1, 2],
             startRender: function (rows, group, level) {
+                let grpArr = group.split('-');
                 let is1 = level == 1;
-                let grp = group.replace(/\s+/g, "");
-                let color = $(`#cat-table .${grp}`).val() || 'var(--gray-lt)';
+                let colData = is1 ? 'childcol' : 'catcol'
+                let id = grpArr[1];
+                let grp = grpArr[0].replace(/\s+/g, "");
+                let color = $(`#cat-table .item-row.${grp}`).first().data(colData) || 'var(--gray-lt)';
 
                 let $hidei = $('<i/>').addClass(`bi bi-chevron-up hide-i hide1 ${is1 ? 'item-hide' : ''}`)
                 let $showi = $('<i/>').addClass(`bi bi-chevron-down show-i d-none ${is1 ? 'item-show' : ''}`);
                 let $btn = $('<button/>').addClass('toggle').data('grp', grp).append($showi).append($hidei).on('click', function () { showHide(this) });
+
                 let $th = $('<th/>').attr('colspan', 7).append($btn)
 
                 if (level == 0) {
-                    return $('<tr/>').addClass('parent-head').append($th.css(bg, color).append(group));
+                    $th.css(bg, color).append(grpArr[0])
+                    return $('<tr/>').attr('data-id', id).addClass('parent-head').append($th);
                 }
                 if (level == 1) {
                     $btn.addClass('toggle-items');
-                    return $('<tr/>').addClass('child-head').append($th.append($('<span/>').css(bg, color)).append(group));
+                    return $('<tr/>').attr('data-id', id).addClass('child-head').append($th.append($('<span/>').css(bg, color)).append(grpArr[0]));
                 }
             }
         },
@@ -58,7 +68,7 @@ function makeDatatable() {
             { className: "all", targets: [3, 4, 5] },
             { className: "desktop", targets: [6] },
             { className: "min-tablet-l", targets: [7] },
-            //{ sortable: false, targets: [1, 2, 3, 4, 5, 6, 7] }
+            { sortable: false, targets: [1, 2, 3, 4, 5, 6, 7] }
         ],
         layout: {
             topStart: {
@@ -67,14 +77,14 @@ function makeDatatable() {
                         text: 'New Category',
                         className: 'add-cat table-btn btn-clear',
                         action: function (e, dt, node, config) {
-                            addCategory();
+                            addNew('Category');
                         }
                     },
                     {
                         text: 'New Item',
                         className: 'add-item table-btn btn-clear',
                         action: function (e, dt, node, config) {
-                            addItem();
+                            addNew('Item');
                         }
                     },
                 ]
@@ -97,14 +107,14 @@ function showHide(btn, isItems = false) {
     let isAll = $(btn).hasClass('toggle-all');
 
     let grp = isAll ? '' : $(btn).data('grp').replace(/\s+/g, ""); // Remove white space from multi-word categories
-    let itemClass = isAll ? '.item-row' : `.item-cat-${grp}`;
+    let itemClass = isAll ? '.item-row' : `.item-row.${grp}`;
 
     let $hidei = $(btn).find('.hide-i');
     let $showi = $(btn).find('.show-i');
 
     if ($(btn).hasClass('toggle-items')) {
 
-        $(`.item-child-${grp}`).removeClass(none).addClass($hidei.hasClass(none) ? '' : none);
+        $(`.item-row.${grp}`).removeClass(none).addClass($hidei.hasClass(none) ? '' : none);
 
         $(btn).find('i').toggleClass('d-none');
     }
@@ -138,6 +148,37 @@ function showHide(btn, isItems = false) {
     }
 }
 
+
+function addNew(classType) {
+    let catIDs = $('.child-head').map(function () { return $(this).data('id'); }).get();
+
+    let props = {
+        url: '/Inventory/InventoryItems/Create/',
+        data: { catIDs: catIDs },
+        title: `New Inventory ${classType}`
+    }
+    loadPopup(props);
+}
+
+function loadPopup(props) {
+    $.ajax({
+        url: props.url,
+        data: props.data,
+        type: 'POST',
+        success: function (view) {
+            $('#overlay').show();
+            $('#popupContent').html(view);
+            $('#popupTitle').html(props.title)
+            $('#popup').show();
+        }
+    })
+}
+
+function closePopup() {
+    $('#overlay').hide();
+    $('#popupContent').html();
+    $('#popup').hide();
+}
 
 function setItemHandlers() {
 

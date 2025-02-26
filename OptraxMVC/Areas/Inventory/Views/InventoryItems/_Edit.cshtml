@@ -1,0 +1,48 @@
+﻿@using OptraxDAL.Models.Inventory
+@model InventoryItem
+
+@using (Html.BeginForm(null, "InventoryItems", FormMethod.Post, new { id = "itemForm" }))
+{    
+    <div class="d-flex justify-content-center">
+        <div class="row col-12 d-flex w-100">
+            <div class="col-md-4 col-6">
+                <label>Name</label>
+                @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
+            </div>
+            <div class="col-md-4 col-6">
+                <label>Tags</label>
+                @Html.EditorFor(m => m.Tags, "Tags", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(m => m.Tags, "", new { htmlAttributes = new { @class = "val-msg" } })
+            </div>
+            <div class="col-md-4 col-6">
+                <label>Manufacturer</label>
+                @Html.EditorFor(m => m.Manufacturer, "Manufacturer", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(m => m.Manufacturer, "", new { htmlAttributes = new { @class = "val-msg" } })
+            </div>
+            <div class="col-md-4 col-6">
+                <label>SKU</label>
+                @Html.EditorFor(m => m.SKU, "SKU", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(m => m.SKU, "", new { htmlAttributes = new { @class = "val-msg" } })
+            </div>
+            <div class="col-md-4 col-6">
+                <label>Category</label>
+                @Html.DropDownListFor(m => m.CategoryID, new SelectList(ViewBag.Categories, "ID", "ListName"), "Select Category", new { @class = "form-control form-select" })
+                @Html.ValidationMessageFor(m => m.CategoryID, "", new { htmlAttributes = new { @class = "val-msg" } })
+            </div>
+            <div class="col-md-4 col-6">
+                <label>Default UOM</label>
+                @Html.DropDownListFor(m => m.DefaultUOM, new SelectList(ViewBag.UOMs, "UnitName", "ListName"), "Select UoM", new { @class = "form-control form-select" })
+                @Html.ValidationMessageFor(m => m.DefaultUOM, "", new { htmlAttributes = new { @class = "val-msg" } })
+            </div>
+@*             <div class="col-12 d-flex">
+                <label>Container?</label>
+                <input type="checkbox" class="form-check-input" />
+
+                @Html.DropDownListFor(m => m.ContainerTypeID, new SelectList(ViewBag.Containers, "ContainerTypeID", "Name"), "Select Container Type", new { @class = "form-control form-select" })
+                @Html.ValidationMessageFor(m => m.ContainerTypeID, "", new { htmlAttributes = new { @class = "val-msg" } })
+            </div> *@
+        </div>
+    </div>
+    <div class="popup-btns d-flex"><button type="button" class="save-btn mx-auto mt">Save New Item</button></div>
+}
