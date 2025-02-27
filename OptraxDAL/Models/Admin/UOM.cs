@@ -19,7 +19,7 @@ namespace OptraxDAL.Models.Admin
         public decimal? PerQuantity { get; set; }
 
         [NotMapped]
-        public string ListName => PerQuantity.HasValue ? $"{UnitName} ({PerQuantity})" : UnitName;
+        public string ListName => PerQuantity.HasValue ? $"{UnitName} ({Math.Round((double)PerQuantity, 2)})" : UnitName;
     }
 
     public enum UoMCategories

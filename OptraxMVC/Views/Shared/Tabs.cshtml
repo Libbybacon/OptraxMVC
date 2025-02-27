@@ -2,6 +2,11 @@
 
 <link rel="stylesheet" href="~/css/tabs.css" asp-append-version="true" />
 
+@if(Model.Area == "Inventory")
+{
+    <link rel="stylesheet" href="~/css/inventory.css" />
+}
+
 @{
     ViewData["Page"] = Model.Area;
 }

@@ -26,7 +26,7 @@ namespace OptraxDAL.Models.Inventory
         public virtual List<InventoryCategory> Children { get; set; } = [];
 
         [NotMapped]
-        public string ListName => ParentID.HasValue ? $"{Parent?.Name}-{Name}" : Name;
+        public string ListName => ParentID.HasValue ? $"{Parent?.Name} - {Name}" : Name;
 
         [NotMapped]
         public List<TagVM> ChildTags { get; set; } = [];

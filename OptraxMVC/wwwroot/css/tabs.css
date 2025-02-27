@@ -41,21 +41,17 @@
     }
 }
 
-body {
-    background-color: white !important;
-}
-
 .top-tabs {
     height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--blue-dk);
+    background: var(--blue-xdk);
 }
 
 .nav-tabs {
     border-bottom: none;
-    background: var(--blue-dk);
+    background: var(--blue-xdk);
 }
 
     .nav-tabs .nav-link {
@@ -72,7 +68,7 @@ body {
 
         .nav-tabs .nav-link:hover {
             border: none;
-            color: var(--blue-dk);
+            color: var(--blue-xdk);
             background: var(--tan-lt);
         }
 

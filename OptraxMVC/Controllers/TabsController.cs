@@ -72,8 +72,7 @@ namespace OptraxMVC.Controllers
             {
                 case "Items":
                     tab.ViewPath = $"~/Areas/Inventory/Views/InventoryItems/_{tab.Name}.cshtml";
-                    ViewBag.Items = await db.InventoryItems.OrderBy(c => c.CategoryID).ToListAsync() ?? [];
-                    break;
+                    return PartialView(tab.ViewPath);
                 default:
                     break;
             }

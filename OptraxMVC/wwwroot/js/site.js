@@ -26,7 +26,16 @@ $(document).ready(function () {
             collapseNav(false);
         }
     });
+
+    setSelectDrops();
 })
+
+function setSelectDrops() {
+    $('.select2').select2({
+
+    });
+}
+
 
 function collapseNav(saveToSession = true) {
     $('.logo').removeClass('d-lg-block');

@@ -1,43 +1,15 @@
 ﻿@using OptraxDAL.Models.Inventory
 @using OptraxDAL.ViewModels
-@model List<InventoryCategory>
+@* @model List<InventoryCategory> *@
+
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css" />
-
-@{
-    List<TagVM> allTags = [];
-    List<InventoryItem> items = ViewBag.Items;
-    List<InventoryCategory> topCats = Model.Where(c => c.ParentID == null).OrderBy(c => c.Name).ToList();
-    string tagHex = "var(--gray-md)";
-}
-
 
 <div class="p-md-3 p-0 pt-0">
     <div id="filterCard">
         <button type="button" id="filterDrop" class="dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#filters" aria-expanded="false" aria-controls="filters">Filters</button>
         <div id="filters" class="collapse">
             <div class="tag-list flex-wrap m-0 p-2">
-                @foreach (var cat in topCats)
-                {
-                    List<TagVM> tags = cat.GetChildTags();
-                    cat.ChildTags = tags;
-                    allTags.AddRange(tags);
-
-                    string bg = $"background:{cat.HexColor ?? tagHex}";
-
-                    <div class="tag-btns flex-fill mt-1">
-                        <div class="tag-top text-center px-2" style="@bg"><span class=""></span>@cat.Name</div>
-                        <div class="d-flex flex-wrap">
-                            @foreach (var tag in tags)
-                            {
-                                <div class="d-flex col-6">
-                                    <button type="button" data-id="@tag.ID" class="tag-btn m-2" style="background:@(tag.Color ?? tagHex)"></button>
-                                    <span class="tag-txt">@tag.Name</span>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                }
             </div>
         </div>
     </div>
@@ -52,10 +24,10 @@
                                 <i class="bi bi-chevron-up hide1 hide-i"></i>
                             </button>
                         </th>
-                        <th class="cat-col"></th>
-                        <th class="child-col"></th>
+                        <th></th>
+                        <th></th>
                         <th>Name</th>
-                        @* <th>Description</th> *@
+                        <th>Description</th>
                         <th>Manufacturer</th>
                         <th>SKU</th>
                         <th>Default UOM</th>
@@ -63,48 +35,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var cat in topCats)
-                    {
-                        foreach (var child in cat.Children)
-                        {
-                            List<int> childIDs = child.GetChildIDs();
-                            childIDs.Add(child.ID);
-                            List<InventoryItem> catItems = items.Where(i => childIDs.Contains(i.CategoryID)).OrderBy(i => i.Name).ToList();
-
-                            string catName = cat.NameNoSpace();
-                            string catHex = cat.HexColor ?? tagHex;
-                            string childName = child.NameNoSpace();
-                            string childHex = child.HexColor ?? tagHex;
-
-                            foreach (InventoryItem item in catItems)
-                            {
-                                <tr id="@($"item-{item.ID}")" data-catcol="@catHex" data-childcol="@childHex" class="item-row @catName @childName f-xs">
-                                    <td></td>
-                                    <td>@cat.Name-@cat.ID</td>
-                                    <td>@child.Name-@child.ID</td>
-                                    <td>
-                                        <span class="attr-txt">@item.Name</span>
-                                    </td>
-                                    @*<td class="Description vtd">
-                                        <span class="attr-txt">@item.Description</span>
-                                    </td> *@
-                                    <td>
-                                        <span class="attr-txt">@item.Manufacturer</span>
-                                    </td>
-                                    <td>
-                                        <span class="attr-txt">@item.SKU</span>
-                                    </td>
-                                    <td>
-                                        <span class="attr-txt">@item.DefaultUOM</span>
-                                    </td>
-                                    <td>
-                                        <span class="attr-txt">@item.StockType</span>
-                                    </td>
-
-                                </tr>
-                            }
-                        }
-                    }
                 </tbody>
             </table>
         </div>

@@ -3,7 +3,7 @@
 -- Create Date: 2/22/2025
 -- Description: Get full family tree for particular strain
 -- =============================================
-CREATE PROCEDURE GetStrainFullTree
+CREATE OR ALTER PROCEDURE GetStrainFullTree
 (
 	@strainID int
 )
