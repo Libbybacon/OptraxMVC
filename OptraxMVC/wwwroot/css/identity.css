@@ -1,4 +1,15 @@
-﻿.login-bg {
+﻿body {
+    margin-bottom: 0;
+    overflow: hidden;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 500px !important;
+    letter-spacing: .3px;
+    font-family: 'Poppins' !important;
+    background-color: var(--tan-lt) !important;
+}
+
+.login-bg {
     display: flex;
     flex-flow: column;
     flex: 1 0 auto;

@@ -9,19 +9,19 @@
     <div class="login-card card m-auto ">
         <div class="inner-card">
             <section>
-                <div class="logo w-100">
-                    <img src="~/content/logo-dk.png" alt="Logo" />
+                <div class="logo w-100 d-flex">
+                    <img src="~/content/logo-dk.png" alt="Logo" class="mx-auto" />
                 </div>
                 <form id="account" method="post">
                     <hr />
                     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                     <div class="form-floating mb-3">
-                        <input asp-for="Input.Email" class="form-control idInput" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                        <input asp-for="Input.Email" class="form-control idInput" autocomplete="username" value="@("Guest@guest.com")" aria-required="true" placeholder="name@example.com" />
                         <label asp-for="Input.Email" class="form-label">Email</label>
                         <span asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-3">
-                        <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                        <input asp-for="Input.Password" class="form-control" autocomplete="current-password" value="Password1!" aria-required="true" placeholder="password" />
                         <label asp-for="Input.Password" class="form-label login-label">Password</label>
                         <span asp-validation-for="Input.Password" class="text-danger"></span>
                     </div>
