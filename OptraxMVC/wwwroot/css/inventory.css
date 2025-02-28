@@ -167,21 +167,32 @@ table.dataTable td.dt-control:before {
 }
 
 /* Item Details */
-#deetDrop {
+.form-drop {
     width: 100%;
+    font-weight: 500;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    color: var(--blue-dk);
+    font-size: var(--f-md);
+    border-radius: 0 !important;
+    border-bottom: 1px solid var(--gray-xdk);
 }
-
+#histDrop {
+    border-top: 1px solid var(--blue-dk);
+}
 #itemDeets {
-    border-bottom: 1px solid var(--blue-dk);
+
 }
 
-#itemHist {
-}
+
 
 .history-inner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    font-size: var(--f-lg);
+    font-weight: 500;
     min-width: 450px;
     min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15%;
 }

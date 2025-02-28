@@ -41,16 +41,28 @@
     $('.cat-name-ed').on('input', function () {
         $('.hex-prev').val($(this).val());
     })
+
 });
 
 function setSelectDrops() {
-    $('.select2').select2({});
+    $('.select2').select2({
+        theme: "bootstrap-5", // Ensures it follows Bootstrap styles
+        width: "100%"
+    });
+    $(window).on("resize", function () {
+        $(".select2").each(function () {
+            $(this).select2({
+                theme: "bootstrap-5",
+                width: "100%"
+            });
+        });
+    });
 }
 
 function submitForm($form) {
     console.log('url', $form.attr("action"))
-    if ($form.valid()) {  
-      
+    if ($form.valid()) {
+
         $.ajax({
             url: $form.attr("action"),
             type: $form.attr("method"),
