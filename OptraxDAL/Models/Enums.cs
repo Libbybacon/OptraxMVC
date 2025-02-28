@@ -74,8 +74,6 @@
 
         public enum StockType
         {
-            Plant,
-            Light,
             Durable,
             Comsumable
         }

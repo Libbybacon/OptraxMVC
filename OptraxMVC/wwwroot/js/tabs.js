@@ -5,7 +5,7 @@ $(document).ready(function () {
 
     curPage = $('#tab-page').val();
 
-    let storedTab = localStorage.getItem(`${curPage}-active`);
+    let storedTab = sessionStorage.getItem(`${curPage}-active`);
     let firstTab = $(".top-tabs .nav-link.active");
 
     if (storedTab && storedTab !== "undefined") {
@@ -31,7 +31,7 @@ function loadTab(tab) {
 
     let tabKey = $(tab).data("key");
 
-    localStorage.setItem(`${curPage}-active`, tabKey);
+    sessionStorage.setItem(`${curPage}-active`, tabKey);
 
     let $innerTab = $(`#${tabKey}`);
 

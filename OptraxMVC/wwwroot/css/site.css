@@ -24,6 +24,7 @@
     --gray-dk: #DADADA;
     --gray-xdk: #BABABA;
     --gray-xxdk: #AAAAAA;
+    --highlight: #FFFFC2;
     --border-r: 4px;
     --box-shdw: 0px 1px 6px rgba(0,0,0,0.4);
     --box-shdw-hov: 0px 2px 7px rgba(0,0,0,.4);
@@ -33,138 +34,6 @@
     --input-outline: 2px solid var(--blue-dk);
     --input-shdw: 0 0 0 0.15rem var(--blue-md);
 }
-
-.bg-dark {
-    background-color: var(--blue-xdk) !important;
-}
-
-.text-grn-dk {
-    color: var(--grn-dk);
-}
-
-.text-tan {
-    color: var(--tan-dk);
-}
-
-.dt-scroll-body {
-    scrollbar-width: thin;
-    scrollbar-color: var(--gray-xxxdk) white;
-}
-
-/* Select2 Dropdowns */
-
-.select2-search__field {
-    border-radius: var(--border-r);
-    outline-offset: 0;
-}
-
-.select2-search__field {
-    outline: 1px solid var(--blue-dk);
-}
-
-.select2-results__option {
-    padding-top: 2px;
-    padding-bottom: 2px;
-    font-size: var(--f-xs);
-}
-
-    .select2-results__option:hover {
-        background-color: var(--blue-lt) !important;
-    }
-
-.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
-    color: black;
-    background-color: var(--blue-xlt);
-}
-
-.select2-container--default .select2-results__option--selected {
-    color: white !important;
-    background-color: var(--blue-dk) !important;
-}
-
-.select2-container .select2-selection--single {
-    border: none;
-    outline: none;
-    font-size: 1rem;
-}
-
-    .select2-container .select2-selection--single .select2-selection__rendered {
-        line-height: 1.5;
-        padding: .375rem .75rem;
-        font-size: 1rem;
-        border-radius: .375rem;
-        border: var(--input-border) !important;
-    }
-
-.select2-container.select2-container--focus .select2-selection__rendered {
-    outline: var(--input-outline);
-}
-
-/* Popup */
-#overlay {
-    display: none;
-    background: rgba(0,0,0,.5);
-}
-
-#popup {
-    display: none;
-    top: 33%;
-    left: 50%;
-    width: auto;
-    position: fixed;
-    min-width: 450px;
-    background: white;
-    color: var(--blue-xdk);
-    box-shadow: var(--box-shdw);
-    border-radius: var(--border-r);
-    transform: translate(-50%, -50%);
-    border: 1px solid var(--gray-xxdk);
-}
-
-    #popup #popupTop {
-        position: relative;
-        font-weight: bold;
-        font-size: var(--f-xxl);
-    }
-
-        #popup #popupTop #popupTopInner {
-            padding-bottom: .5rem;
-            border-bottom: 1px solid var(--blue-xdk);
-        }
-
-    #popup #popupTitle {
-        margin: auto;
-        text-align: center;
-        padding-top: .5rem;
-    }
-
-    #popup #popupClose {
-        position: absolute;
-        top: .5rem;
-        right: .5rem;
-        border: none;
-        background: white;
-        border-radius: var(--border-r);
-    }
-
-        #popup #popupClose:hover {
-            font-weight: 600;
-            padding: .1rem .6rem;
-            box-shadow: var(--box-shdw-sm);
-            background-color: var(--blue-lt);
-        }
-
-    #popup label {
-        padding-left: .2rem;
-        margin-top: 1.5rem;
-        margin-bottom: .25rem;
-    }
-
-    #popup .save-btn {
-        margin-top: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-
 
 @media only screen and (max-width: 576px) {
     .dash-container {
@@ -178,6 +47,85 @@
 @media only screen and (min-width: 768px) {
 }
 
+.bg-dark {
+    background-color: var(--blue-xdk) !important;
+}
+
+
+.text-tan {
+    color: var(--tan-dk);
+}
+
+
+
+
+
+/* Popup */
+#overlay {
+    display: none;
+    background: rgba(0,0,0,.5);
+}
+
+#popup {
+    display: none;
+    top: 50%;
+    left: 50%;
+    width: auto;
+    position: fixed;
+    min-width: 450px;
+    background: white;
+    color: var(--blue-dk);
+    box-shadow: var(--box-shdw);
+    border-radius: var(--border-r);
+    transform: translate(-50%, -50%);
+    border: 1px solid var(--gray-xxdk);
+}
+
+    #popup #popupTop {
+        position: relative;
+        font-weight: 600;
+        /*font-size: var(--f-xxl);*/
+        padding-top: .3rem;
+    }
+
+        #popup #popupTop #popupTopInner {
+            padding-bottom: .5rem;
+            border-bottom: 1px solid var(--blue-dk);
+        }
+
+    #popup #popupTitle {
+        margin: auto;
+        text-align: center;
+        font-size: var(--f-lg);
+    }
+
+    #popup #popupClose {
+        border: none;
+        background: white;
+        border-radius: var(--border-r);
+    }
+
+        #popup #popupClose:hover {
+            font-weight: 500;
+            box-shadow: var(--box-shdw-sm);
+            color: white;
+            background-color: var(--blue-dk);
+        }
+
+    #popup label {
+        font-weight: 500;
+        padding-left: .2rem;
+        margin-top: 1.5rem;
+        margin-bottom: .25rem;
+    }
+
+    #popup .popup-btns {
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+
+.form-btn {
+}
 
 .box-shadow {
     box-shadow: var(--box-shdw);
@@ -227,43 +175,52 @@ main {
     height: 100%
 }
 
+
+/* Form */
+
+
+
 /* Buttons */
 
-.save-btn {
-    color: white;
+button {
+    border: none;
+    border-radius: var(--border-r) !important;
+}
+
+.form-btn {
+    font-weight: 500;
     letter-spacing: 1px;
     white-space: nowrap;
-    padding: .3rem 2rem;
+    padding: .1rem 1.5rem;
     font-size: var(--f-lg);
-    border: none !important;
-    background: var(--grn-md);
-    border-radius: var(--border-r);
     box-shadow: var(--box-shdw-sm);
 }
 
+.save-btn {
+    color: var(--grn-dk);
+    border: 1px solid var(--grn-dk);
+    background-color: white;
+}
+
     .save-btn:hover {
-        padding-bottom: .275rem;
-        background: var(--grn-lt);
+        color: white;
+        background: var(--grn-dk);
         box-shadow: var(--box-shdw-hov);
-        text-shadow: 1px 1px 2px var(--grn-xdk);
     }
 
     .save-btn:focus {
         outline: 1px solid var(--grn-xdk);
     }
 
-.toggle,
-.toggle-btn {
-    cursor: pointer;
+.toggle {
     margin-right: 5px;
-    border: none;
-    background: none;
 }
 
+.toggle,
 .btn-clear {
     border: none;
-    background: none;
     cursor: pointer;
+    background: none;
 }
 
 /* Inputs */
@@ -279,8 +236,8 @@ main {
     .form-control:focus,
     .form-check-input:focus,
     .btn-link.nav-link:focus {
-        outline: var(--input-outline) !important;
         border: var(--input-border) !important;
+        outline: var(--input-outline) !important;
         box-shadow: var(--input-shdw) !important;
     }
 
@@ -291,6 +248,55 @@ main {
 
 input[type=checkbox]:hover, input[type=radio]:hover {
     cursor: pointer;
+}
+
+/* Select2 Dropdowns */
+
+.select2-search__field {
+    border-radius: var(--border-r);
+    outline-offset: 0;
+}
+
+.select2-search__field {
+    outline: 1px solid var(--blue-dk);
+}
+
+.select2-results__option {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-size: var(--f-xs);
+}
+
+    .select2-results__option:hover {
+        background-color: var(--blue-lt) !important;
+    }
+
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    color: black;
+    background-color: var(--blue-xlt);
+}
+
+.select2-container--default .select2-results__option--selected {
+    color: white !important;
+    background-color: var(--blue-dk) !important;
+}
+
+.select2-container .select2-selection--single {
+    border: none;
+    outline: none;
+    font-size: 1rem;
+}
+
+    .select2-container .select2-selection--single .select2-selection__rendered {
+        line-height: 1.45;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        border-radius: .375rem;
+        border: var(--input-border) !important;
+    }
+
+.select2-container.select2-container--focus .select2-selection__rendered {
+    outline: var(--input-outline);
 }
 
 /* Update Messages */
@@ -319,6 +325,25 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     color: var(--red-dk);
     background-color: var(--red-lt);
 }
+
+.val-msg {
+    color: red;
+    font-size: var(--f-xs);
+}
+
+.form-note {
+    font-weight: 500;
+    font-style: italic;
+    text-align: center;
+    margin-top: 5px;
+    color: var(--blue-dk);
+}
+
+.highlight td {
+    background-color: var(--highlight) !important;
+    transition: background-color 1s ease-in-out;
+}
+
 
 /* Dash */
 

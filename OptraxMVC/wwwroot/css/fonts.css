@@ -48,7 +48,11 @@
 
 .ui-widget,
 .ui-widget select {
-    font-family: 'Roboto' !important;
+    font-family: 'Poppins' !important;
+}
+
+.f-xxs {
+    font-size: var(--f-xxxs) !important;
 }
 
 .f-xxs {
@@ -77,4 +81,8 @@
 
 .f-xxl {
     font-size: var(--f-xxl) !important;
+}
+
+.f-xxxl {
+    font-size: var(--f-xxxl) !important;
 }

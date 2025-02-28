@@ -1,5 +1,6 @@
 ﻿
 var hideNav;
+
 $(document).ready(function () {
     hideNav = sessionStorage.getItem('hideNav');
 
@@ -15,6 +16,10 @@ $(document).ready(function () {
         expandNav();
     });
 
+    $('#popupClose').off('click').on('click', function () {
+        closePopup();
+    });
+
     $(window).on('resize', function () {
         let $nav = $('.side-nav');
         let viewW = $(window).width();
@@ -26,16 +31,7 @@ $(document).ready(function () {
             collapseNav(false);
         }
     });
-
-    setSelectDrops();
 })
-
-function setSelectDrops() {
-    $('.select2').select2({
-
-    });
-}
-
 
 function collapseNav(saveToSession = true) {
     $('.logo').removeClass('d-lg-block');
@@ -67,6 +63,42 @@ function expandNav(saveToSession = true) {
     }
 }
 
+function loadPopup(props) {
+    $.ajax({
+        url: props.url,
+        data: props.data,
+        type: 'POST',
+        success: function (view) {
+            $('#overlay').show();
+            $('#popupContent').html(view);
+            $('#popupTitle').html(props.title)
+            $('#popup').show();
+        }
+    })
+}
+
+function closePopup() {
+    $('#popup').hide();
+    $('#overlay').hide();
+    $('#popupContent').html();
+}
+
+function showUpdateMessage(props) {
+
+    let $div = $('<div>').text(props.msg).addClass(props.css);
+
+    props.msgdiv.append($div);
+
+    $div.fadeIn(500, function () {
+        setTimeout(function () {
+            $div.fadeOut(500, function () {
+                $div.remove();
+            });
+        }, 1000);
+    });
+}
+
+
 function arrayToModel(arr) {
     var model = {};
 
@@ -77,22 +109,37 @@ function arrayToModel(arr) {
     return model;
 }
 
-function showUpdateMessage($parentDiv, success, classes) {
+//$("#modelForm").validate({
+   
+//    errorPlacement: function (error, element) {
+//        error.insertAfter(element); 
+//    },
+//    submitHandler: function (form) {
+//        console.log('validate');
+//        $.ajax({
+//            url: $(form).attr("action"),
+//            type: $(form).attr("method"),
+//            data: $(form).serialize(),
+//            success: function (resp) {
+//                let div = $(form).data('msgdiv');
+//                console.log('div', div);
+//                let msgdiv = $(`#${$(form).data('msgdiv')}`);
 
-    let text = success ? "Changes Saved!" : "Error Updating";
-    let classnames = (success ? "success " : "error ") + classes;
-    const $div = $('<div>').text(text).addClass(classnames);
+//                if (resp.success) {
 
-    $parentDiv.append($div);
-
-    // make lil update message fade in then out
-    $div.fadeIn(500, function () {
-        setTimeout(function () {
-            $div.fadeOut(500, function () {
-                $div.remove();
-            });
-        }, 1000);
-    });
-}
+//                    showUpdateMessage({ css: 'success', msg: 'Changes Saved!', msgdiv: msgdiv })
+//                    closePopup();
+//                }
+//                else {
+//                    showUpdateMessage({ css: 'error', msg: 'Error Saving Changes...', msgdiv: msgdiv })
+//                }
+//            },
+//            error: function () {
+//                alert("");
+//                showUpdateMessage({ css: 'error', msg: 'An error occurred while saving.', msgdiv: msgdiv })
+//            }
+//        });
+//    }
+//});
 
 

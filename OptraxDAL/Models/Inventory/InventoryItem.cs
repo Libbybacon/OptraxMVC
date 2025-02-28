@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿using OptraxDAL.ViewModels;
+using System.ComponentModel.DataAnnotations;
 namespace OptraxDAL.Models.Inventory
 {
     public class InventoryItem
@@ -13,23 +13,37 @@ namespace OptraxDAL.Models.Inventory
         }
 
         public int ID { get; set; }
+
+        [Display(Name = "Category")]
+        [Required(ErrorMessage = "Please select a category.")]
         public int CategoryID { get; set; }
 
         [MaxLength(255)]
-        public string Tags { get; set; } = "";
+        public string? Tags { get; set; } = "";
 
         [MaxLength(50)]
+        [Display(Name = "Stock Type")]
+        [Required(ErrorMessage = "Please select a stock type")]
         public string StockType { get; set; } = "";
+
         [MaxLength(100)]
+        [Required(ErrorMessage = "Please enter a name")]
         public string Name { get; set; } = "";
+
         [MaxLength(250)]
-        public string Description { get; set; } = "";
+        public string? Description { get; set; } = "";
+
         [MaxLength(100)]
+        [Display(Name = "Brand")]
         public string? Manufacturer { get; set; }
+
         [MaxLength(50)]
         public string? SKU { get; set; }
+
         [MaxLength(25)]
+        [Display(Name = "Default UoM")]
         public string? DefaultUOM { get; set; }
+
         public int? SellerID { get; set; }
         public int? LightTypeID { get; set; }
         public int? ContainerTypeID { get; set; }
@@ -49,5 +63,24 @@ namespace OptraxDAL.Models.Inventory
             Durable,
             Consumable,
         }
+
+        public ItemVM ToItemVM(InventoryCategory cat0, InventoryCategory cat1)
+        {
+            ItemVM itemVM = new()
+            {
+                Cat0 = $"{cat0.Name}-{cat0.ID}-{cat0.HexColor}",
+                Cat1 = $"{cat1.Name}-{cat1.ID}-{cat1.HexColor}",
+                ItemID = ID,
+                ItemName = Name,
+                ItemDesc = Description,
+                SKU = SKU,
+                Brand = Manufacturer,
+                StockType = StockType,
+                UoM = DefaultUOM
+            };
+
+            return itemVM;
+        }
+
     }
 }

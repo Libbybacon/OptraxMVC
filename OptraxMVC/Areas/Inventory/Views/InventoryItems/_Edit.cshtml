@@ -1,84 +1,129 @@
 ﻿@using OptraxDAL.Models.Inventory
 @model InventoryItem
 
-<form id="item-form">
-    <div class="d-flex justify-content-center">
-        <div class="row col-12 d-flex w-100">
-            <div class="col-md-4 col-6">
-                <label>Name</label>
-                <input type="text" class="form-control" data-val="@Model.Name" name="Name" value="@Model.Name" required />
-                @*@Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" }) *@
-            </div>
+@{
+    bool isNew = ViewBag.IsNew;
 
-            <div class="col-md-4 col-6">
-                <label>Manufacturer</label>
-                <input type="text" class="form-control" name="Manufacturer" data-val="@Model.Manufacturer" value="@Model.Manufacturer" required/>
-                @*@Html.EditorFor(m => m.Manufacturer, "Manufacturer", new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(m => m.Manufacturer, "", new { htmlAttributes = new { @class = "val-msg" } }) *@
-            </div>
-            <div class="col-md-4 col-6">
-                <label>SKU</label>
-                <input type="text" class="form-control" name="SKU" data-val="@Model.SKU" value="@Model.SKU" />
-                @* @Html.EditorFor(m => m.SKU, "SKU", new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(m => m.SKU, "", new { htmlAttributes = new { @class = "val-msg" } }) *@
-            </div>
-            <div class="col-md-4 col-6">
-                <label>Category</label>
-                <select class="form-select select2" name="CategoryID" data-val="@Model.CategoryID" required>
-                    <option value="">Select Default Category</option>
-                    @foreach (var cat in ViewBag.Categories)
-                    {
-                        <option value="@cat.ID" @(cat.ID == Model.CategoryID ? "selected" : "")>@cat.ListName</option>
-                    }
-                </select>
-                @* @Html.DropDownListFor(m => m.CategoryID, new SelectList(ViewBag.Categories, "ID", "ListName"), "Select Category", new { @class = "form-control form-select select2" })
-                @Html.ValidationMessageFor(m => m.CategoryID, "", new { htmlAttributes = new { @class = "val-msg" } }) *@
-            </div>
-            <div class="col-md-4 col-6">
-                <label>Default UoM</label>
-                <select class="form-select select2" name="DefaultUOM" data-val="@Model.DefaultUOM">
-                    <option value="">Select Default UoM</option>
-                    @foreach (var uom in ViewBag.UOMs)
-                    {
-                        <option value="@uom.UnitName" @(uom.UnitName == Model.DefaultUOM ? "selected" : "")>@uom.ListName</option>
-                    }
-                </select>
-                @* @Html.DropDownListFor(m => m.DefaultUOM, new SelectList(ViewBag.UOMs, "UnitName", "ListName"), "Select UoM", new { @class = "form-control form-select select2" })
-                @Html.ValidationMessageFor(m => m.DefaultUOM, "", new { htmlAttributes = new { @class = "val-msg" } }) *@
-            </div>
-            <div class="col-md-4 col-6">
-                <label>Stock Type</label>
-                <select class="form-select select2" name="StockType" data-val="@Model.StockType">
-                    @foreach (var st in ViewBag.StockTypes)
-                    {
-                        <option value="@st" @(st.ToString() == Model.StockType ? "selected" : "")>@st</option>
-                    }
-                </select>
-                @* @Html.DropDownListFor(m => m.StockType, new SelectList(ViewBag.StockTypes), "Select Stock Type", new { @class = "form-control form-select select2" })
-                @Html.ValidationMessageFor(m => m.StockType, "", new { htmlAttributes = new { @class = "val-msg" } }) *@
-            </div>
-            <div class="col-md-4 col-6">
-                <label>Description</label>
-                <input type="text" class="form-control" name="Description" data-val="@Model.Description" value="@Model.Description" />
-                @* @Html.EditorFor(m => m.Tags, "Tags", new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(m => m.Tags, "", new { htmlAttributes = new { @class = "val-msg" } }) *@
-            </div>
-            <div class="col-md-4 col-6">
-                <label>Tags</label>
-                <input type="text" class="form-control" name="Tags" data-val="@Model.Tags" value="@Model.Tags" />
-                @* @Html.EditorFor(m => m.Tags, "Tags", new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(m => m.Tags, "", new { htmlAttributes = new { @class = "val-msg" } }) *@
-            </div>
+    string showEdit = isNew ? "" : "d-none";
+    string showDeets = isNew ? "d-none" : "";
+}
 
-            @*<div class="col-12 d-flex">
+
+<div class="px-2">
+    <button type="button" id="deetDrop" class="dropdown-toggle @showDeets" data-bs-toggle="collapse" data-bs-target="#itemDeets" aria-expanded="true" aria-controls="itemDeets">Edit Details</button>
+    <div id="itemDeets" class="collapse show">
+        @using (Html.BeginForm("CreateItem", "InventoryItems", FormMethod.Post, new { id = "modelForm", data_func = "saveItem", data_msgdiv = "tableMsg" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="d-flex justify-content-center">
+                <div class="row col-12 d-flex w-100">
+                    <div class="col-md-4 col-6">
+                        @Html.LabelFor(m => m.Name)
+                        @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = $"form-control" } })
+                        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
+                    </div>
+                    <div class="col-md-4 col-6">
+                        @Html.LabelFor(m => m.Manufacturer)
+                        @Html.EditorFor(m => m.Manufacturer, "Manufacturer", new { htmlAttributes = new { @class = $"form-control" } })
+                        @Html.ValidationMessageFor(m => m.Manufacturer, "", new { htmlAttributes = new { @class = "val-msg" } })
+                    </div>
+                    <div class="col-md-4 col-6">
+                        @Html.LabelFor(m => m.SKU)
+                        @Html.EditorFor(m => m.SKU, "SKU", new { htmlAttributes = new { @class = $"form-control form-txt" } })
+                        @Html.ValidationMessageFor(m => m.SKU, "", new { htmlAttributes = new { @class = "val-msg" } })
+                    </div>
+                    <div class="col-md-4 col-6">
+                        @Html.LabelFor(m => m.CategoryID)
+                        @Html.DropDownListFor(m => m.CategoryID, new SelectList(ViewBag.Categories, "ID", "ListName"), "Select Category", new { @class = $"form-control form-select" })
+                        @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = "val-msg" })
+                    </div>
+                    <div class="col-md-4 col-6">
+                        @Html.LabelFor(m => m.DefaultUOM)
+                        @Html.DropDownListFor(m => m.DefaultUOM, new SelectList(ViewBag.UOMs, "UnitName", "ListName"), "Select UoM", new { @class = $"form-control form-select" })
+                        @Html.ValidationMessageFor(m => m.DefaultUOM, "", new { @class = "val-msg" })
+                    </div>
+                    <div class="col-md-4 col-6">
+                        @Html.LabelFor(m => m.StockType)
+                        @Html.DropDownListFor(m => m.StockType, new SelectList(ViewBag.StockTypes), "Select Stock Type", new { @class = $"form-control form-select" })
+                        @Html.ValidationMessageFor(m => m.StockType, "", new { @class = "val-msg" })
+                    </div>
+                    <div class="col-md-4 col-6">
+                        @Html.LabelFor(m => m.Description)
+                        @Html.EditorFor(m => m.Tags, "Tags", new { htmlAttributes = new { @class = $"form-control" } })
+                        @Html.ValidationMessageFor(m => m.Tags, "", new { htmlAttributes = new { @class = "val-msg" } })
+                    </div>
+                    <div class="col-md-4 col-6">
+                        @Html.LabelFor(m => m.Tags)
+                        @Html.EditorFor(m => m.Tags, "Tags", new { htmlAttributes = new { @class = $"form-control" } })
+                        @Html.ValidationMessageFor(m => m.Tags, "", new { htmlAttributes = new { @class = "val-msg" } })
+                    </div>
+
+                    @*<div class="col-12 d-flex">
                 <label>Container?</label>
                 <input type="checkbox" class="form-check-input" />
-
                 @Html.DropDownListFor(m => m.ContainerTypeID, new SelectList(ViewBag.Containers, "ContainerTypeID", "Name"), "Select Container Type", new { @class = "form-control form-select" })
                 @Html.ValidationMessageFor(m => m.ContainerTypeID, "", new { htmlAttributes = new { @class = "val-msg" } })
             </div> *@
+                </div>
+            </div>
+            <div class="popup-btns d-flex justify-content-center">
+                <button type="submit" class="save-btn form-btn">Save</button>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="@showDeets deets-div px-2 pb-2">
+    <button type="button" id="histDrop" class="dropdown-toggle w-100" data-bs-toggle="collapse" data-bs-target="#itemHist" aria-expanded="true" aria-controls="itemHist">Item History</button>
+    <div id="itemHist" class="collapse show">
+        <div class="history-inner">
+            Information about current stock levels, transfers, order histories, etc to go here.
         </div>
     </div>
-    <div class="popup-btns d-flex"><button type="submit" class="save-btn form-save mx-auto mt" data-ng-model="invItem">Save</button></div>
-</form>
+</div>
+
+
+
+<script src="/js/forms.js"></script>
+
+@*         <div class="d-flex justify-content-center">
+            <div class="row col-12 d-flex w-100 form-details">
+                <div class="col-6">
+                    @Html.LabelFor(m => m.Name)
+                    <div class="col-12 form-deet">@Html.DisplayFor(m => m.Name)</div>
+                </div>
+                <div class="col-6">
+                    @Html.LabelFor(m => m.Description)
+                    <div class="col-12 form-deet">@Html.DisplayFor(m => m.Description)</div>
+                </div>
+                <div class="col-md-2 col-4">
+                    @Html.LabelFor(m => m.Manufacturer)
+                    <div class="col-12 form-deet form-deet">@Html.DisplayFor(m => m.Manufacturer)</div>
+                </div>
+                <div class="col-md-2 col-4">
+                    @Html.LabelFor(m => m.SKU)
+                    <div class="col-12 form-deet">@Html.DisplayFor(m => m.SKU)</div>
+                </div>
+                <div class="col-md-2 col-4">
+                    @Html.LabelFor(m => m.CategoryID)
+                    <div class="col-12 form-deet"> @* @Html.DisplayFor(m => m.Category != null ? m.Category.ListName : "") *@
+@* </div> *@
+@*                 </div>
+                <div class="col-md-2 col-4">
+                    @Html.LabelFor(m => m.DefaultUOM)
+                    <div class="col-12 form-deet">@Html.DisplayFor(m => m.DefaultUOM)</div>
+                </div>
+                <div class="col-md-2 col-4">
+                    @Html.LabelFor(m => m.StockType)
+                    <div class="col-12 form-deet">@Html.DisplayFor(m => m.StockType)</div>
+                </div>
+                <div class="col-md-2 col-4">
+                    @Html.LabelFor(m => m.Tags)
+                    <div class="col-12 form-deet">@Html.DisplayFor(m => m.Tags)</div>
+                </div>
+            </div>
+        </div>
+        <div class="popup-btns d-flex justify-content-center">
+            <button type="button" class="edit-btn form-btn me-1">Edit</button>
+        </div>  *@
+@* </div> *@

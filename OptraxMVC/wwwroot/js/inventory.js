@@ -6,6 +6,8 @@ var $itemsTable
 
 $(document).ready(function () {
 
+    makeDatatable();
+
     $(document).on('change', '.attr', function () {
         editAttribute($(this));
     });
@@ -13,23 +15,39 @@ $(document).ready(function () {
     $('.toggle-all').off('click').on('click', function () {
         showHide($(this));
     })
-
-    $('#popupClose').off('click').on('click', function () {
-        closePopup();
-    });
-
-    setItemHandlers();
-    makeDatatable();
 });
 
-function makeDatatable() {
+function setItemHandlers() {
 
+    $(`.item-row td`).hover(
+        function () {
+            $(this).parents('tr').children().addClass('item-hover');
+        },
+        function () {
+            $(this).parents('tr').children().removeClass('item-hover');
+        });
+
+    $('.item-row td').off('click').on('click', function () {
+        let rowData = $itemsTable.row(this).data()
+
+        let props = {
+            url: `/Inventory/InventoryItems/ItemDetails/`,
+            data: { itemID: rowData.itemID },
+            title: rowData.itemName,
+        }
+
+        loadPopup(props);
+    })
+}
+
+
+function makeDatatable() {
     $itemsTable = $(`#cat-table`).DataTable({
         ajax: {
             type: "POST",
             url: '/Inventory/InventoryItems/GetItems/',
             dataSrc: function (data) {
-                return data; 
+                return data;
             }
         },
         info: false,
@@ -48,7 +66,7 @@ function makeDatatable() {
         rowGroup: {
             dataSrc: ["cat0", "cat1"],
             // Html for group header rows - toggle buttons, colors, text
-            startRender: function (rows, group, lvl) {      
+            startRender: function (rows, group, lvl) {
                 let arr = group.split('-'); // 0: Name, 1: ID, 2: HexColor
 
                 let $hidei = $('<i/>').addClass(`bi bi-chevron-up hide-i hide1`)
@@ -57,17 +75,18 @@ function makeDatatable() {
 
                 let $th = $('<th/>').attr('colspan', 7).append($btn)
                 let $tr = $('<tr/>').attr('data-id', arr[1]).addClass(`grp-row cat${lvl}-head`)
-
-                return lvl == 0 ? $tr.append($th.css(bg, arr[2]).append(arr[0])) : $tr.append($th.append($('<span/>').css(bg, arr[2])).append(arr[0]));
+                let $hexIcon = $('<i/>').addClass('bi bi-square-fill m-0 me-2').css('color', arr[2])
+                let $txtSpan = $('<span/>').addClass('head-txt').append(arr[0]);
+                return lvl == 0 ? $tr.append($th.css(bg, arr[2]).append($txtSpan)) : $tr.append($th.append($hexIcon).append($txtSpan));
             }
         },
         columnDefs: [
             { className: "dt-control", data: null, targets: 0, sortable: false },
-            { className: "never", visible: false, targets: [1, 2,4] },
+            { className: "never", visible: false, targets: [1, 2, 4] },
             { className: "all", targets: [3, 5, 6] },
             { className: "desktop", targets: [7] },
             { className: "min-tablet-l", targets: [8] },
-            { sortable: false, targets: [0,1, 2, 3, 4, 5, 6, 7, 8] }
+            { sortable: false, targets: [0, 1, 2, 3, 4, 5, 6, 7, 8] }
         ],
         columns: [
             { targets: 0, data: null, defaultContent: '', className: "dt-control" },
@@ -104,10 +123,16 @@ function makeDatatable() {
             let arr0 = data.cat0.split('-');
             let arr1 = data.cat1.split('-');
             $(row).attr('id', 'item-' + data.itemID);
-            $(row).addClass(`item-row f-xs ${arr0[0].replace(/\s+/g, "")} ${arr1[0].replace(/\s+/g, "") }`);
+            $(row).addClass(`item-row f-xs ${arr0[0].replace(/\s+/g, "")} ${arr1[0].replace(/\s+/g, "")}`);
         },
         drawCallback: function () {
+            console.log('drawCallback')
+            setItemHandlers();
         },
+        initComplete: function () {
+            console.log('init')
+            setItemHandlers();
+        }
     })
 
     $(window).on('resize', function () {
@@ -116,7 +141,7 @@ function makeDatatable() {
     });
 }
 
-function showHide(btn, isItems = false) {
+function showHide(btn) {
 
     let isAll = $(btn).hasClass('toggle-all');
 
@@ -163,137 +188,38 @@ function showHide(btn, isItems = false) {
 }
 
 function addNew(classType) {
-    let catIDs = $('.cat1-head').map(function () { return $(this).data('id'); }).get();
-
     let props = {
         url: `/Inventory/InventoryItems/Create/`,
-        data: { catIDs: catIDs, classType: classType },
-        title: `New Inventory ${classType}`
+        data: {classType: classType },
+        title: `New Inventory ${classType}`,
     }
     loadPopup(props);
 }
 
-function loadPopup(props) {
-    $.ajax({
-        url: props.url,
-        data: props.data,
-        type: 'POST',
-        success: function (view) {
-            $('#overlay').show();
-            $('#popupContent').html(view);
-            $('#popupTitle').html(props.title)
-            $('#popup').show();
+function saveItemSuccess(response) {
 
-            setTimeout(function () {
-                setSelectDrops()
-            }, 0)
+    let data = response.data;
+    let newRow = $itemsTable.row.add(data).draw(false).node();
+
+    setTimeout(function () {
+
+        let tableDiv = $(".dt-scroll-body");
+
+        if (tableDiv.length) {
+            let rowPos = $(newRow).position().top + tableDiv.scrollTop();
+
+            tableDiv.animate({
+                scrollTop: rowPos
+            }, 500);
         }
-    })
-}
 
-function closePopup() {
-    $('#overlay').hide();
-    $('#popupContent').html();
-    $('#popup').hide();
-}
+        $(newRow).addClass("highlight");
 
-function setItemHandlers() {
+        setTimeout(function () {
+            $(newRow).removeClass("highlight");
+        }, 5000);
 
-    $('.form-save').off('click').on('click', function () {
-        saveItem($(this));
-    })
+    }, 100);
 
-    //$(`.add-item`).off('click').on('click', function () {
-    //    addItemRow($(this))
-    //});
-
-    $(document).off('submit').on('submit', $(`#item-form`) ,function (event) {
-        event.preventDefault();
-
-        var form = document.querySelector(`#item-form`);
-
-        if (!form.checkValidity()) {
-            event.stopPropagation();
-            form.reportValidity();
-        }
-        else {
-            saveNewItem($(`#item-form`));
-        }
-    });
-}
-
-function saveNewItem($form) {
-    let itemModel = arrayToModel($($form).serializeArray());
-
-    $.ajax({
-        url: '/Inventory/InventoryItems/CreateItem/',
-        type: 'POST',
-        data: { item: itemModel },
-        success: function (response) {
-            if (response.success) {
-                let data = response.data;
-                let $newRow = $itemsTable.row.add(data).draw(false);
-                //setTimeout(function () {
-                //    $newRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                //}, 200);
-                closePopup();
-                //showUpdateMessage($row.find('.popout'), true, 'f-md p-1')
-            }
-            else {
-                //showUpdateMessage($(`#ta`), false, 'f-md p-1');
-                alert('Update failed: ' + response.msg);
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('Error updating field:', error);
-            alert('An error occurred while saving the changes.' + status);
-        }
-    });
-}
-
-
-// Save updates whenever input value changes
-function editAttribute($input) {
-    var newVal = $input.val();
-    var oldVal = $input.data('val');
-
-    if (newVal === oldVal) {
-        return; // Don't hit controller if no change
-    }
-
-    var $row = $input.closest('tr');
-    var id = $row.data('itemid');
-    let field = $input.attr('name')
-
-    var data = {
-        ID: id,
-        Field: field,
-        Value: newVal,
-        ClassType: $row.data('classtype')
-    }
-
-    $.ajax({
-        url: '/Inventory/Inventory/UpdateAttribute/',
-        type: 'POST',
-        data: data,
-        success: function (response) {
-            $parentDiv = $input.parents('.pop-col');
-            if (response.success) {
-
-                $input.data('val', newVal);
-                $input.attr('data-val', newVal);
-
-                showUpdateMessage($parentDiv, true);
-            }
-            else {
-                $input.text(oldVal);
-                showUpdateMessage($parentDiv, false);
-                alert('Update failed: ' + response.message);
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error('Error updating field:', error);
-            alert('An error occurred while saving the changes.');
-        }
-    });
+    closePopup();
 }

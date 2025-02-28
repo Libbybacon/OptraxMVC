@@ -1,4 +1,4 @@
-﻿namespace OptraxMVC.Areas.Inventory.Models
+﻿namespace OptraxDAL.ViewModels
 {
     public class ItemVM
     {
