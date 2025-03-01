@@ -12,12 +12,12 @@ Grandmother in Michigan in late 2020.
 
 While there I completed a boot camp, and in June 2021 I moved to a small town in Wyoming to begin my first official role as a 
 software developer.  It was a small company (12 people!) with a heavy work load, and during my 3.5+ years there I gained experience working on every
-aspect of building web applications - database design, UI/UX, working with clients, publishing to production sites, etc. - and eventually re-wrote the entire code base
-for one of that company's three core products.  Much of my time outside of work was spent on.... also work, and my original project was left to gather dust.  
+aspect of building web applications - database design, UI/UX, working with clients, deploying updates to production, etc. - and eventually re-wrote the entire code base
+for one of that company's three core products.  Much of my time outside of work was spent on also work, and my original project was left to gather dust.  
 
 In February 2025 I left that company in search of a new opportunity with more room to grow and decided to finally breathe some life into the project that
 started it all.  So here is 'Optrax' (nee GrowFlow - taken, of course) in its nascent form.  I don't know what its future holds, but will continue with regular updates
-until I find a home at a new company or it becomes a production-ready application somewhere down the road.
+until I find a home at a new company or it becomes a production-ready application in its own right.
 
 # About
 
