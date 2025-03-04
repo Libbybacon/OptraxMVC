@@ -1,5 +1,6 @@
 ﻿using OptraxDAL.ViewModels;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace OptraxDAL.Models.Inventory
 {
     public class InventoryItem
@@ -63,6 +64,9 @@ namespace OptraxDAL.Models.Inventory
             Durable,
             Consumable,
         }
+
+        [NotMapped]
+        public string? Changes { get; set; }
 
         public ItemVM ToItemVM(InventoryCategory cat0, InventoryCategory cat1)
         {

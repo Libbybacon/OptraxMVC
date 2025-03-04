@@ -2,50 +2,32 @@
 var $popout;
 var none = 'd-none';
 var bg = 'background-color';
-var $itemsTable
+var $itemsTable;
+
 
 $(document).ready(function () {
 
     makeDatatable();
 
-    $(document).on('change', '.attr', function () {
-        editAttribute($(this));
-    });
+    $(document).on('change', '#top-cat-check', function () {
+        if ($('#top-cat-check').prop('checked') == true) {
+            $('#ParentID').attr('disabled', 'disabled');
+        }
+        else {
+            $('#ParentID').removeAttr('disabled')
+        }
+    })
 
     $('.toggle-all').off('click').on('click', function () {
         showHide($(this));
     })
 });
 
-function setItemHandlers() {
-
-    $(`.item-row td`).hover(
-        function () {
-            $(this).parents('tr').children().addClass('item-hover');
-        },
-        function () {
-            $(this).parents('tr').children().removeClass('item-hover');
-        });
-
-    $('.item-row td').off('click').on('click', function () {
-        let rowData = $itemsTable.row(this).data()
-
-        let props = {
-            url: `/Inventory/InventoryItems/ItemDetails/`,
-            data: { itemID: rowData.itemID },
-            title: rowData.itemName,
-        }
-
-        loadPopup(props);
-    })
-}
-
-
 function makeDatatable() {
     $itemsTable = $(`#cat-table`).DataTable({
         ajax: {
             type: "POST",
-            url: '/Inventory/InventoryItems/GetItems/',
+            url: '/Inventory/Items/GetItems/',
             dataSrc: function (data) {
                 return data;
             }
@@ -71,13 +53,20 @@ function makeDatatable() {
 
                 let $hidei = $('<i/>').addClass(`bi bi-chevron-up hide-i hide1`)
                 let $showi = $('<i/>').addClass(`bi bi-chevron-down show-i d-none`);
-                let $btn = $('<button/>').addClass(`toggle ${lvl == 1 ? 'tgi' : ''}`).data('grp', arr[0].replace(/\s+/g, "")).append($showi).append($hidei).on('click', function () { showHide(this) });
+
+                let $btn = $('<button/>').addClass(`toggle ${lvl == 1 ? 'tgi' : ''}`)
+                    .data('grp', arr[0].replace(/\s+/g, ""))
+                    .append($showi)
+                    .append($hidei)
+                    .on('click', function () { showHide(this) });
 
                 let $th = $('<th/>').attr('colspan', 7).append($btn)
                 let $tr = $('<tr/>').attr('data-id', arr[1]).addClass(`grp-row cat${lvl}-head`)
                 let $hexIcon = $('<i/>').addClass('bi bi-square-fill m-0 me-2').css('color', arr[2])
                 let $txtSpan = $('<span/>').addClass('head-txt').append(arr[0]);
-                return lvl == 0 ? $tr.append($th.css(bg, arr[2]).append($txtSpan)) : $tr.append($th.append($hexIcon).append($txtSpan));
+
+                return lvl == 0 ? $tr.append($th.css(bg, arr[2]).append($txtSpan))
+                    : $tr.append($th.append($hexIcon).append($txtSpan));
             }
         },
         columnDefs: [
@@ -106,14 +95,14 @@ function makeDatatable() {
                         text: 'Add Category',
                         className: 'add-btn table-btn btn-clear',
                         action: function (e, dt, node, config) {
-                            addNew('Category');
+                            addNewCategory();
                         }
                     },
                     {
                         text: 'Add Item',
                         className: 'add-btn table-btn btn-clear',
                         action: function (e, dt, node, config) {
-                            addNew('Item');
+                            addNewItem();
                         }
                     },
                 ]
@@ -122,17 +111,23 @@ function makeDatatable() {
         createdRow: function (row, data, dataIndex) {
             let arr0 = data.cat0.split('-');
             let arr1 = data.cat1.split('-');
+
             $(row).attr('id', 'item-' + data.itemID);
             $(row).addClass(`item-row f-xs ${arr0[0].replace(/\s+/g, "")} ${arr1[0].replace(/\s+/g, "")}`);
+
+            $(row).hover(
+                function () {
+                    $(this).children().addClass('item-hover');
+                },
+                function () {
+                    $(this).children().removeClass('item-hover');
+                }
+            );
+
+            $(row).find('td').on('click', function () {
+                loadItemDetails(data);
+            })
         },
-        drawCallback: function () {
-            console.log('drawCallback')
-            setItemHandlers();
-        },
-        initComplete: function () {
-            console.log('init')
-            setItemHandlers();
-        }
     })
 
     $(window).on('resize', function () {
@@ -187,16 +182,25 @@ function showHide(btn) {
     }
 }
 
-function addNew(classType) {
+function addNewCategory() {
     let props = {
-        url: `/Inventory/InventoryItems/Create/`,
-        data: {classType: classType },
-        title: `New Inventory ${classType}`,
+        url: `/Inventory/Categories/Create/`,
+        data: null,
+        title: `New Inventory Category`,
     }
     loadPopup(props);
 }
 
-function saveItemSuccess(response) {
+function addNewItem() {
+    let props = {
+        url: `/Inventory/Items/Create/`,
+        data: null,
+        title: `New Inventory Item`,
+    }
+    loadPopup(props);
+}
+
+function addItemSuccess(response) {
 
     let data = response.data;
     let newRow = $itemsTable.row.add(data).draw(false).node();
@@ -223,3 +227,31 @@ function saveItemSuccess(response) {
 
     closePopup();
 }
+
+function updateItemSuccess(response) {
+
+    let itemData = response.data;
+    var row = $itemsTable.row(function (idx, data, node) {
+        return data.ID === itemData.itemID  
+    });
+
+    if (row.any()) {
+        row.data(itemData).draw(false); 
+        setTimeout(function () {
+            $(newRow).removeClass("highlight");
+        }, 5000);
+    }
+}
+
+function loadItemDetails(rowData) {
+
+    let props = {
+        url: `/Inventory/Items/Details/`,
+        data: { itemID: rowData.itemID },
+        title: rowData.itemName,
+    }
+    loadPopup(props);
+}
+
+
+

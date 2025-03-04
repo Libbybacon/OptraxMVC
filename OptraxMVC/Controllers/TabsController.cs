@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
 using OptraxMVC.Models;
+using OptraxMVC.Services;
 
 namespace OptraxMVC.Controllers
 {
-    public class TabsController(OptraxContext context) : BaseController(context)
+    public class TabsController(OptraxContext context, IDropdownService dropdownService) : BaseController(context, dropdownService)
     {
 
         // TODO: Move to db table, allow users to customize display orders by rearraging tabs in view 
@@ -71,7 +72,7 @@ namespace OptraxMVC.Controllers
             switch (tab.Name)
             {
                 case "Items":
-                    tab.ViewPath = $"~/Areas/Inventory/Views/InventoryItems/_{tab.Name}.cshtml";
+                    tab.ViewPath = $"~/Areas/Inventory/Views/Items/_{tab.Name}.cshtml";
                     return PartialView(tab.ViewPath);
                 default:
                     break;

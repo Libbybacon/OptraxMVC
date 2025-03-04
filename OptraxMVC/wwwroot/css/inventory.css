@@ -148,13 +148,17 @@ table.dataTable td.dt-control:before {
             font-size: var(--f-xs) !important;
         }
 
-.cat1-head th {
+.cat1-head th,
+.dtrg-level-1 th {
     font-weight: 600;
     font-size: var(--f-sm);
-    padding: .2em .2em;
+    padding: .05rem .05rem !important;
     padding-left: 2rem;
 }
-
+    .cat1-head th i::before {
+        /*margin-top: 3px !important;*/
+        vertical-align: -.16rem !important;
+    }
 .item-hover {
     cursor: pointer;
     font-weight: 500;

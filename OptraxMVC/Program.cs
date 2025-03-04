@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
 using OptraxDAL.Models.Admin;
+using OptraxMVC.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +26,9 @@ builder.Services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
 
 builder.Services.AddRazorPages();
-
+builder.Services.AddScoped<IDropdownService, DropdownService>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
