@@ -328,6 +328,9 @@ function updateItemSuccess(response) {
             $(tblRow).removeClass("highlight");
         }, 5000);
     }
+    setTimeout(function () {
+        setRowGroupClick();
+    }, 500);
 }
 
 
