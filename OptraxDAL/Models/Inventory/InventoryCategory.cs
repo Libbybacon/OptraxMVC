@@ -37,6 +37,11 @@ namespace OptraxDAL.Models.Inventory
         [NotMapped]
         public string? Changes { get; set; }
 
+        public bool IsTop()
+        {
+            return ID > 0 && ParentID == null;
+        }
+
         public string NameNoSpace()
         {
             return Name.Replace(" ", "");

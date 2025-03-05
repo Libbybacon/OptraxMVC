@@ -8,7 +8,7 @@
     var categories = (IEnumerable<SelectListItem>)(ViewData["TopCategories"] ?? new());
 }
 
-@using (Html.BeginForm(formVM.Action, "Categories", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv }))
+@using (Html.BeginForm(formVM.Action, "Categories", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv, data_modelname = "cat" }))
 {
     @Html.AntiForgeryToken()
 
@@ -19,7 +19,7 @@
         <div class="row col-12 d-flex w-100">
             <div class="col-4">
                 @Html.LabelFor(m => m.Name)
-                @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = "form-control attr cat-name-edit" } })
+                @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = "attr form-control cat-name-edit" } })
                 @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
             </div>
             <div class="col-4">
@@ -27,7 +27,7 @@
                 <div class="d-flex justify-content-center">
                     <label class="mt-3">
                         Top Level Category?
-                        <input type="checkbox" id="top-cat-check" class="form-check-input f-lg ms-2" />
+                        <input type="checkbox" id="top-cat-check" class="form-check-input f-lg ms-2" @(Model.IsTop() ? "checked = true" : "") />
                     </label>
                 </div>
             </div>
