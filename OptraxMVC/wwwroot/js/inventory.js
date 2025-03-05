@@ -135,7 +135,7 @@ function makeHeaderToggle(props) {
     let $hidei = $('<i/>').addClass(`bi bi-chevron-up hide-i hide1`)
     let $showi = $('<i/>').addClass(`bi bi-chevron-down show-i d-none`);
 
-    let $btn = $('<button/>').addClass(`toggle ${props.IsTop ? 'tgi' : ''}`)
+    let $btn = $('<button/>').addClass(`toggle ${props.IsTop ? '' : 'tgi'}`)
         .data('grp', props.NameNoSpace)
         .append($showi)
         .append($hidei)
