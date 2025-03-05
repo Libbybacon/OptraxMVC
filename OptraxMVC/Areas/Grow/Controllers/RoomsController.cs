@@ -1,11 +1,12 @@
-﻿using OptraxMVC.Controllers;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
+using OptraxMVC.Controllers;
+using OptraxMVC.Services;
 
 namespace OptraxMVC.Areas.Grow.Controllers
 {
     [Area("Grow")]
-    public class RoomsController(OptraxContext context) : BaseController(context)
+    public class RoomsController(OptraxContext context, IDropdownService dropdownService) : BaseController(context, dropdownService)
     {
         public IActionResult Index()
         {

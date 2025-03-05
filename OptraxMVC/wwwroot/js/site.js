@@ -64,17 +64,25 @@ function expandNav(saveToSession = true) {
 }
 
 function loadPopup(props) {
-    $.ajax({
+    let ajaxOptions = {
         url: props.url,
-        data: props.data,
-        type: 'POST',
+        type: props.type,
         success: function (view) {
             $('#overlay').show();
             $('#popupContent').html(view);
-            $('#popupTitle').html(props.title)
+            $('#popupTitle').html(props.title);
             $('#popup').show();
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading popup:', xhr.responseText);
         }
-    })
+    };
+
+    if (props.data && Object.keys(props.data).length > 0) {
+        ajaxOptions.data = props.data;
+    }
+
+    $.ajax(ajaxOptions);
 }
 
 function closePopup() {
@@ -85,7 +93,7 @@ function closePopup() {
 
 function showUpdateMessage(props) {
 
-    let $div = $('<div>').text(props.msg).addClass(props.css);
+    let $div = $('<div>').text(props.msg).addClass('msg-div').addClass(props.css);
 
     props.msgdiv.append($div);
 
@@ -94,7 +102,7 @@ function showUpdateMessage(props) {
             $div.fadeOut(500, function () {
                 $div.remove();
             });
-        }, 1000);
+        }, 3000);
     });
 }
 

@@ -2,13 +2,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
 using OptraxDAL.Models.Admin;
+using OptraxMVC.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<OptraxContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("OptraxConnection"));
 });
 
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<OptraxContext>()
@@ -25,7 +26,9 @@ builder.Services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
 
 builder.Services.AddRazorPages();
-
+builder.Services.AddScoped<IDropdownService, DropdownService>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

@@ -1,13 +1,14 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
 using OptraxMVC.Models;
+using OptraxMVC.Services;
+using System.Diagnostics;
 
 namespace OptraxMVC.Controllers;
 
 [Authorize]
-public class HomeController(OptraxContext context) : BaseController(context)
+public class HomeController(OptraxContext context, IDropdownService dropdownService) : BaseController(context, dropdownService)
 {
 
     [Authorize]

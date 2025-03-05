@@ -2,50 +2,32 @@
 var $popout;
 var none = 'd-none';
 var bg = 'background-color';
-var $itemsTable
+var $itemsTable;
+
 
 $(document).ready(function () {
 
     makeDatatable();
 
-    $(document).on('change', '.attr', function () {
-        editAttribute($(this));
-    });
+    $(document).on('change', '#top-cat-check', function () {
+        if ($('#top-cat-check').prop('checked') == true) {
+            $('#ParentID').attr('disabled', 'disabled');
+        }
+        else {
+            $('#ParentID').removeAttr('disabled')
+        }
+    })
 
     $('.toggle-all').off('click').on('click', function () {
         showHide($(this));
     })
 });
 
-function setItemHandlers() {
-
-    $(`.item-row td`).hover(
-        function () {
-            $(this).parents('tr').children().addClass('item-hover');
-        },
-        function () {
-            $(this).parents('tr').children().removeClass('item-hover');
-        });
-
-    $('.item-row td').off('click').on('click', function () {
-        let rowData = $itemsTable.row(this).data()
-
-        let props = {
-            url: `/Inventory/InventoryItems/ItemDetails/`,
-            data: { itemID: rowData.itemID },
-            title: rowData.itemName,
-        }
-
-        loadPopup(props);
-    })
-}
-
-
 function makeDatatable() {
     $itemsTable = $(`#cat-table`).DataTable({
         ajax: {
             type: "POST",
-            url: '/Inventory/InventoryItems/GetItems/',
+            url: '/Inventory/Items/GetItems/',
             dataSrc: function (data) {
                 return data;
             }
@@ -65,19 +47,19 @@ function makeDatatable() {
         ],
         rowGroup: {
             dataSrc: ["cat0", "cat1"],
-            // Html for group header rows - toggle buttons, colors, text
-            startRender: function (rows, group, lvl) {
-                let arr = group.split('-'); // 0: Name, 1: ID, 2: HexColor
+            startRender: function (rows, group, level) {
+                let arr = group.split('-'); 
+                let props = {
+                    Level: level,
+                    IsTop: level == 0,
+                    ID: arr[1],
+                    Name: arr[0],
+                    NameNoSpace: arr[0].replace(/\s+/g, ""),                
+                    Color: arr[2],
+                }
 
-                let $hidei = $('<i/>').addClass(`bi bi-chevron-up hide-i hide1`)
-                let $showi = $('<i/>').addClass(`bi bi-chevron-down show-i d-none`);
-                let $btn = $('<button/>').addClass(`toggle ${lvl == 1 ? 'tgi' : ''}`).data('grp', arr[0].replace(/\s+/g, "")).append($showi).append($hidei).on('click', function () { showHide(this) });
-
-                let $th = $('<th/>').attr('colspan', 7).append($btn)
-                let $tr = $('<tr/>').attr('data-id', arr[1]).addClass(`grp-row cat${lvl}-head`)
-                let $hexIcon = $('<i/>').addClass('bi bi-square-fill m-0 me-2').css('color', arr[2])
-                let $txtSpan = $('<span/>').addClass('head-txt').append(arr[0]);
-                return lvl == 0 ? $tr.append($th.css(bg, arr[2]).append($txtSpan)) : $tr.append($th.append($hexIcon).append($txtSpan));
+                let $tr = makeHeaderToggle(props);
+                return $tr
             }
         },
         columnDefs: [
@@ -106,14 +88,14 @@ function makeDatatable() {
                         text: 'Add Category',
                         className: 'add-btn table-btn btn-clear',
                         action: function (e, dt, node, config) {
-                            addNew('Category');
+                            addNewCategory();
                         }
                     },
                     {
                         text: 'Add Item',
                         className: 'add-btn table-btn btn-clear',
                         action: function (e, dt, node, config) {
-                            addNew('Item');
+                            addNewItem();
                         }
                     },
                 ]
@@ -122,22 +104,67 @@ function makeDatatable() {
         createdRow: function (row, data, dataIndex) {
             let arr0 = data.cat0.split('-');
             let arr1 = data.cat1.split('-');
+
             $(row).attr('id', 'item-' + data.itemID);
             $(row).addClass(`item-row f-xs ${arr0[0].replace(/\s+/g, "")} ${arr1[0].replace(/\s+/g, "")}`);
+
+            $(row).hover(
+                function () {
+                    $(this).children().addClass('item-hover');
+                },
+                function () {
+                    $(this).children().removeClass('item-hover');
+                }
+            );
+
+            $(row).find('td').on('click', function () {
+                getItemDetails(data);
+            })
         },
-        drawCallback: function () {
-            console.log('drawCallback')
-            setItemHandlers();
-        },
-        initComplete: function () {
-            console.log('init')
-            setItemHandlers();
+        initComplete: function (settings, json) {
+            setRowGroupClick();
         }
     })
 
     $(window).on('resize', function () {
         $itemsTable.columns.adjust();
         $itemsTable.responsive.recalc();
+    });
+}
+function makeHeaderToggle(props) {
+    let $hidei = $('<i/>').addClass(`bi bi-chevron-up hide-i hide1`)
+    let $showi = $('<i/>').addClass(`bi bi-chevron-down show-i d-none`);
+
+    let $btn = $('<button/>').addClass(`toggle ${props.IsTop ? 'tgi' : ''}`)
+        .data('grp', props.NameNoSpace)
+        .append($showi)
+        .append($hidei)
+        .on('click', function () { showHide(this) });
+
+    let $colorIcon = $('<i/>').addClass('bi bi-square-fill m-0 me-2').css('color', props.Color)
+    let $txtSpan = $('<span/>').addClass('head-txt flex-fill ps-2').append(props.Name);
+
+    let $div = $('<div/>').addClass('d-flex w-100').append($btn)
+    props.IsTop ? $div.append($txtSpan) : $div.append($colorIcon).append($txtSpan);
+
+    let $th = $('<th/>').attr('colspan', 7).append($div);
+    let $tr = $('<tr/>').attr('data-id', props.ID).addClass(`grp-row cat${props.Level}-head`)
+
+    return props.IsTop ? $tr.append($th.css(bg, props.Color)) : $tr.append($th);
+}
+
+function setRowGroupClick() {
+    $(document).find('.head-txt').hover(
+        function () {
+            $(this).addClass('item-hover');
+        },
+        function () {
+            $(this).removeClass('item-hover');
+        }
+    );
+
+    $(document).find('.head-txt').on('click', function () {
+        getCategoryDetails($(this));
     });
 }
 
@@ -187,16 +214,25 @@ function showHide(btn) {
     }
 }
 
-function addNew(classType) {
+function addNewCategory() {
     let props = {
-        url: `/Inventory/InventoryItems/Create/`,
-        data: {classType: classType },
-        title: `New Inventory ${classType}`,
+        type: 'GET',
+        url: `/Inventory/Categories/Create/`,
+        title: `New Inventory Category`,
     }
     loadPopup(props);
 }
 
-function saveItemSuccess(response) {
+function addNewItem() {
+    let props = {
+        type: 'GET',
+        url: `/Inventory/Items/Create/`,
+        title: `New Inventory Item`,
+    }
+    loadPopup(props);
+}
+
+function addItemSuccess(response) {
 
     let data = response.data;
     let newRow = $itemsTable.row.add(data).draw(false).node();
@@ -223,3 +259,51 @@ function saveItemSuccess(response) {
 
     closePopup();
 }
+
+function getItemDetails(rowData) {
+
+    let props = {
+        type: 'POST',
+        url: `/Inventory/Items/Details/`,
+        data: { itemID: rowData.itemID },
+        title: rowData.itemName,
+    }
+    loadPopup(props);
+}
+
+function updateItemSuccess(response) {
+
+    let itemData = response.data;
+    var row = $itemsTable.row(function (idx, data, node) {
+        return data.itemID === itemData.itemID
+    });
+
+    if (row.any()) {
+        tblRow = row.data(itemData).draw(false).node();
+        $(tblRow).addClass("highlight");
+        setTimeout(function () {
+            $(tblRow).removeClass("highlight");
+        }, 5000);
+    }
+}
+
+
+function getCategoryDetails($grp) {
+    let props = {
+        type: 'POST',
+        url: '/Inventory/Categories/Details/',
+        data: { catID: $grp.parents('tr').data('id') },
+        title: `Edit Category: ${$grp.text() }`
+    }
+    loadPopup(props);
+}
+
+function updateCategorySuccess() {
+    $itemsTable.ajax.reload().draw();
+
+    setTimeout(function () {
+        setRowGroupClick();
+    }, 500);
+}
+
+

@@ -49,6 +49,9 @@
 }
 
 /* Buttons */
+button{
+    line-height: normal;
+}
 .table-btn {
     border-radius: var(--border-r);
     border: 1px solid var(--gray-md);
@@ -132,7 +135,9 @@ table.dataTable td.dt-control:before {
 /* group header rows */
 
 .cat0-head th {
-    padding: .1rem .1rem;
+    padding-top: 0;
+    padding-bottom: 0 !important;
+    padding-right: 0;
     font-size: var(--f-sm);
     font-weight: 500 !important;
     border-top: 1px solid var(--gray-xxdk);
@@ -148,19 +153,27 @@ table.dataTable td.dt-control:before {
             font-size: var(--f-xs) !important;
         }
 
-.cat1-head th {
-    font-weight: 600;
+.cat1-head th,
+.dtrg-level-1 th {
+    font-weight: 500;
     font-size: var(--f-sm);
-    padding: .2em .2em;
-    padding-left: 2rem;
+    padding: .05rem .05rem .05rem 2rem !important;
+    /*padding-left:;*/
 }
-
+    .cat1-head th i::before {
+        vertical-align: -.16rem !important;
+    }
 .item-hover {
     cursor: pointer;
     font-weight: 500;
     background-color: #FFEBC2 !important;
 }
 
+.head-text:hover {
+    cursor: pointer;
+    font-weight: 500;
+    background-color: #FFEBC2 !important;
+}
 .show2,
 .hide2 {
     text-shadow: 0px -4px 0px black !important; /* Creates double chevron for collapse/expand toggles */

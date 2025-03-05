@@ -56,10 +56,6 @@
     color: var(--tan-dk);
 }
 
-
-
-
-
 /* Popup */
 #overlay {
     display: none;
@@ -183,11 +179,11 @@ button {
 }
 
 .form-btn {
-    font-weight: 500;
+    /*font-weight: 500;*/
     letter-spacing: 1px;
     white-space: nowrap;
-    padding: .1rem 1.5rem;
-    font-size: var(--f-lg);
+    padding: .1rem 1.5rem .2rem 1.5rem;
+    font-size: var(--f-md);
     box-shadow: var(--box-shdw-sm);
 }
 
@@ -202,7 +198,7 @@ button {
     .save-btn:hover,
     .update-btn:hover {
         color: white;
-        background: var(--grn-dk);
+        background: var(--grn-md);
         box-shadow: var(--box-shdw-hov);
     }
 
@@ -248,10 +244,14 @@ button {
         box-shadow: var(--input-shdw) !important;
     }
 
-.form-check-input:checked {
-    border-color: var(--blue-dk);
-    background-color: var(--blue-md);
+.form-check-input {
+    border: var(--input-border) !important;
 }
+
+    .form-check-input:checked {
+        border-color: var(--blue-dk);
+        background-color: var(--blue-md);
+    }
 
 input[type=checkbox]:hover, input[type=radio]:hover {
     cursor: pointer;
@@ -278,16 +278,26 @@ input[type=checkbox]:hover, input[type=radio]:hover {
             line-height: normal !important;
             white-space: normal !important;
         }
+
         .select2-container .select2-selection--single::after {
             top: 50%;
             right: 10px;
-            content: "▾"; 
+            content: "▾";
             color: #6c757d;
             font-size: 16px;
             position: absolute;
             pointer-events: none;
             transform: translateY(-50%);
         }
+
+.select2-container--disabled {
+
+    background-color: var(--gray-md);
+}
+
+    .select2-container--disabled .select2-selection--single {
+        color: var(--gray-lt) !important;
+    }
 
 .select2-dropdown {
     scrollbar-width: thin;
@@ -337,21 +347,26 @@ input[type=checkbox]:hover, input[type=radio]:hover {
 }
 
 .msg-div {
-    display: none;
-    text-align: center;
-    font-weight: bold;
-    margin-top: 4px;
+    width: 100%;
     padding: 1px;
     padding-top: 8px;
+    font-weight: bold;
+    text-align: center;
 }
 
 .success {
     color: var(--grn-dk);
+    background-color: var(--grn-xlt);
 }
 
 .error {
     color: var(--red-dk);
     background-color: var(--red-lt);
+}
+
+.tableMsg{
+    width: 100%;
+    font-size: var(--f-md);
 }
 
 .val-msg {

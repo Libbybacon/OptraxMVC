@@ -1,0 +1,64 @@
+﻿@using OptraxDAL.Models.Inventory
+@using OptraxMVC.Models
+
+@model InventoryCategory
+
+@{
+    FormVM formVM = ViewBag.FormVM;
+    var categories = (IEnumerable<SelectListItem>)(ViewData["TopCategories"] ?? new());
+}
+
+@using (Html.BeginForm(formVM.Action, "Categories", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv }))
+{
+    @Html.AntiForgeryToken()
+
+    <input id="ID" type="hidden" name="ID" value="@Model.ID" />
+    <input id="changes" type="hidden" name="Changes" />
+    <input id="Description" type="hidden" name="Description" value="@Model.Description" />
+    <div class="d-flex justify-content-center">
+        <div class="row col-12 d-flex w-100">
+            <div class="col-4">
+                @Html.LabelFor(m => m.Name)
+                @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = "form-control attr cat-name-edit" } })
+                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
+            </div>
+            <div class="col-4">
+                <div class="h-50"></div>
+                <div class="d-flex justify-content-center">
+                    <label class="mt-3">
+                        Top Level Category?
+                        <input type="checkbox" id="top-cat-check" class="form-check-input f-lg ms-2" />
+                    </label>
+                </div>
+            </div>
+            <div class="col-4">
+                @Html.LabelFor(m => m.ParentID)
+                @Html.DropDownListFor(m => m.ParentID, categories, "Parent Category", new { @class = "form-select attr select2" })
+                @Html.ValidationMessageFor(m => m.ParentID, "", new { @class = "val-msg" })
+            </div>
+            <div class="col-4">
+                @Html.LabelFor(m => m.HexColor)
+                @Html.EditorFor(m => m.HexColor, "HexColor", new { htmlAttributes = new { @class = "form-control attr hex-pick", data_coloris = "" } })
+                @Html.ValidationMessageFor(m => m.HexColor, "", new { htmlAttributes = new { @class = "val-msg" } })
+            </div>
+            <div class="col-4">
+                @Html.LabelFor(m => m.TextColor)
+                @Html.EditorFor(m => m.TextColor, "TextColor", new { htmlAttributes = new { @class = "form-control attr hex-pick-bw", data_coloris = "" } })
+                @Html.ValidationMessageFor(m => m.TextColor, "", new { htmlAttributes = new { @class = "val-msg" } })
+            </div>
+            <div class="hex-prev-div col-4">
+                <label>Color Preview</label>
+                <input type="text" class="hex-prev form-control" style="background-color: @Model.HexColor; color: @Model.TextColor" value="@Model.Name" readonly>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex w-100">
+        <div class="mx-auto form-note">**Note: New categories will not be visible in table until items have been assigned.</div>
+    </div>
+    <div class="popup-btns d-flex w-100 justify-content-center">
+        <button type="submit" class="save-btn form-btn @(formVM.IsNew ? "" : "d-none")">Save New Category</button>
+        <button type="submit" class="update-btn form-btn d-none">Save Changes</button>
+    </div>
+}
+
+<script src="/js/forms.js"></script>

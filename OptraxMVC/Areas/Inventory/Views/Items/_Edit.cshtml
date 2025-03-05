@@ -1,60 +1,64 @@
 ﻿@using OptraxDAL.Models.Inventory
+@using OptraxMVC.Models
 @model InventoryItem
 
 @{
-    bool isNew = ViewBag.IsNew;
+    FormVM formVM = ViewBag.FormVM;
+    string showDeets = formVM.IsNew ? "d-none" : "";
 
-    string showEdit = isNew ? "" : "d-none";
-    string showDeets = isNew ? "d-none" : "";
+    var uoms = (IEnumerable<SelectListItem>)(ViewData["UOMs"] ?? new());
+    var categories = (IEnumerable<SelectListItem>)(ViewData["Categories"] ?? new());
+    var stockTypes = (IEnumerable<SelectListItem>)(ViewData["StockTypes"] ?? new());
 }
-
 
 <div class="px-2">
     <button type="button" id="deetDrop" class="dropdown-toggle form-drop @showDeets" data-bs-toggle="collapse" data-bs-target="#itemDeets" aria-expanded="true" aria-controls="itemDeets">Edit Details</button>
     <div id="itemDeets" class="collapse show">
-        @using (Html.BeginForm("CreateItem", "InventoryItems", FormMethod.Post, new { id = "modelForm", data_func = "saveItem", data_msgdiv = "tableMsg" }))
+        @using (Html.BeginForm(formVM.Action, "Items", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv}))
         {
             @Html.AntiForgeryToken()
+            <input id="ID" type="hidden" name="ID" value="@Model.ID" />
+            <input id="changes" type="hidden" name="Changes" />
             <div class="d-flex justify-content-center">
                 <div class="row col-12 d-flex w-100">
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.Name)
-                        @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = $"form-control" } })
+                        @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = $"form-control attr", data_ival = Model.Name } })
                         @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
                     </div>
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.Manufacturer)
-                        @Html.EditorFor(m => m.Manufacturer, "Manufacturer", new { htmlAttributes = new { @class = $"form-control" } })
+                        @Html.EditorFor(m => m.Manufacturer, "Manufacturer", new { htmlAttributes = new { @class = $"form-control attr", data_ival = Model.Manufacturer } })
                         @Html.ValidationMessageFor(m => m.Manufacturer, "", new { htmlAttributes = new { @class = "val-msg" } })
                     </div>
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.SKU)
-                        @Html.EditorFor(m => m.SKU, "SKU", new { htmlAttributes = new { @class = $"form-control form-txt" } })
+                        @Html.EditorFor(m => m.SKU, "SKU", new { htmlAttributes = new { @class = $"form-control form-txt attr", data_ival = Model.SKU } })
                         @Html.ValidationMessageFor(m => m.SKU, "", new { htmlAttributes = new { @class = "val-msg" } })
                     </div>
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.CategoryID)
-                        @Html.DropDownListFor(m => m.CategoryID, new SelectList(ViewBag.Categories, "ID", "ListName"), "Select Category", new { @class = $"form-control select2" })
+                        @Html.DropDownListFor(m => m.CategoryID, categories, "Select Category", new { @class = $"form-control select2 attr", data_ival = Model.CategoryID })
                         @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = "val-msg" })
                     </div>
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.DefaultUOM)
-                        @Html.DropDownListFor(m => m.DefaultUOM, new SelectList(ViewBag.UOMs, "UnitName", "ListName"), "Select UoM", new { @class = $"form-control form-select select2" })
+                        @Html.DropDownListFor(m => m.DefaultUOM, uoms, "Select UoM", new { @class = "form-control form-select select2 attr", data_ival = Model.DefaultUOM })
                         @Html.ValidationMessageFor(m => m.DefaultUOM, "", new { @class = "val-msg" })
                     </div>
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.StockType)
-                        @Html.DropDownListFor(m => m.StockType, new SelectList(ViewBag.StockTypes), "Select Stock Type", new { @class = $"form-control select2" })
+                        @Html.DropDownListFor(m => m.StockType, stockTypes, "Select Stock Type", new { @class = $"form-control select2 attr", data_ival = Model.StockType })
                         @Html.ValidationMessageFor(m => m.StockType, "", new { @class = "val-msg" })
                     </div>
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.Description)
-                        @Html.EditorFor(m => m.Tags, "Tags", new { htmlAttributes = new { @class = $"form-control" } })
-                        @Html.ValidationMessageFor(m => m.Tags, "", new { htmlAttributes = new { @class = "val-msg" } })
+                        @Html.EditorFor(m => m.Description, "Description", new { htmlAttributes = new { @class = $"form-control attr", data_ival = Model.Description } })
+                        @Html.ValidationMessageFor(m => m.Description, "", new { htmlAttributes = new { @class = "val-msg" } })
                     </div>
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.Tags)
-                        @Html.EditorFor(m => m.Tags, "Tags", new { htmlAttributes = new { @class = $"form-control" } })
+                        @Html.EditorFor(m => m.Tags, "Tags", new { htmlAttributes = new { @class = $"form-control attr", data_ival = Model.Tags } })
                         @Html.ValidationMessageFor(m => m.Tags, "", new { htmlAttributes = new { @class = "val-msg" } })
                     </div>
 
@@ -67,16 +71,16 @@
                 </div>
             </div>
             <div class="popup-btns d-flex justify-content-center">
-                <button type="submit" class="save-btn form-btn @showEdit">Save</button>
-                <button type="button" class="update-btn form-btn @showDeets">Save</button>
+                <button type="submit" class="save-btn form-btn @(formVM.IsNew ? "" : "d-none")">Save New Item</button>
+                <button type="submit" class="update-btn form-btn d-none">Save Changes</button>
             </div>
         }
     </div>
 </div>
 
 <div class="@showDeets deets-div px-2 pb-2">
-    <button type="button" id="histDrop" class="dropdown-toggle form-drop w-100" data-bs-toggle="collapse" data-bs-target="#itemHist" aria-expanded="true" aria-controls="itemHist">Item History</button>
-    <div id="itemHist" class="collapse show">
+    <button type="button" id="histDrop" class="dropdown-toggle form-drop w-100" data-bs-toggle="collapse" data-bs-target="#itemHist" aria-expanded="false" aria-controls="itemHist">Item History</button>
+    <div id="itemHist" class="collapse">
         <div class="history-inner">
             Information about stock levels, transfers, order histories, etc here.
         </div>

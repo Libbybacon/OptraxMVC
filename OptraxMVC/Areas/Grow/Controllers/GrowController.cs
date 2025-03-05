@@ -1,14 +1,14 @@
-﻿using OptraxMVC.Controllers;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
+using OptraxMVC.Controllers;
 using OptraxMVC.Models;
+using OptraxMVC.Services;
 
 namespace OptraxMVC.Areas.Grow.Controllers
 {
     [Area("Grow")]
-    public class GrowController(OptraxContext context) : BaseController(context)
+    public class GrowController(OptraxContext context, IDropdownService dropdownService) : BaseController(context, dropdownService)
     {
         [Authorize]
         public IActionResult Index()

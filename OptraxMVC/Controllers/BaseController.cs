@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
 using OptraxDAL;
+using OptraxMVC.Services;
 
 namespace OptraxMVC.Controllers
 {
@@ -10,10 +9,12 @@ namespace OptraxMVC.Controllers
     public class BaseController : Controller
     {
         protected readonly OptraxContext db;
+        protected readonly IDropdownService _IDropdowns;
 
-        protected BaseController(OptraxContext context)
+        protected BaseController(OptraxContext context, IDropdownService dropdownService)
         {
             db = context;
+            _IDropdowns = dropdownService;
         }
 
         public Dictionary<string, string> GetMenuItems()
