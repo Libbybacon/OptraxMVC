@@ -16,7 +16,7 @@ namespace OptraxDAL.Models.Inventory
         [MaxLength(150)]
         public string? Description { get; set; }
         [MaxLength(10)]
-        public string? HexColor { get; set; }
+        public string? HexColor { get; set; } = "#FFFFFF";
         [MaxLength(10)]
         public string? TextColor { get; set; } = "#00000000";
         public bool Active { get; set; } = true;
@@ -34,6 +34,8 @@ namespace OptraxDAL.Models.Inventory
         [NotMapped]
         public List<TagVM>? ParentTags { get; set; }
 
+        [NotMapped]
+        public string? Changes { get; set; }
 
         public string NameNoSpace()
         {

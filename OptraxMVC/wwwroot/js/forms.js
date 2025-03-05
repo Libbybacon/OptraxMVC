@@ -20,16 +20,16 @@ var ColorSwatches = [
 var BwSwatches = ["#000000", "#FFFFFF"]
 
 $(document).ready(function () {
+
     Changes = [];
     OrigModel = arrayToModel($('#modelForm').serializeArray()); // save original model values
-
-
 
     if ($.validator && $.validator.unobtrusive) {
         $.validator.unobtrusive.parse($(`#modelForm`));
     }
 
     setSelectDrops();
+    resetModelChanges();
     setItemFormListeners();
 
     $(document).off('submit').on('submit', $(`#modelForm`), function (event) {
@@ -49,26 +49,10 @@ $(document).ready(function () {
         }
         let changed = Changes.length > 0;
 
-        $('#changes').val(changed > 0 ? Changes.toString() : null);        
+        $('#changes').val(changed > 0 ? Changes.toString() : null);      
 
         changed > 0 ? $('.update-btn').removeClass('d-none') : $('.update-btn').addClass('d-none');
-        console.log('changelength', Changes.length)
     })
-
-
-    //$('.attr').off('change').on('change', function () {
-    //    let attrName = $(this).attr('Name')
-    //    let val = $(this).val();
-
-    //    if (val != OrigModel[attrName]) {
-    //        Changes[attrName] = $(this).val();
-    //    }
-    //    else if (Changes[attrName] !== undefined) {           
-    //        delete Changes[attrName];
-    //    }
-    //    console.log('changelength', Changes.length)
-    //    Object.keys(Changes).length > 0 ? $('.update-btn').removeClass('d-none') : $('.update-btn').addClass('d-none');
-    //})
 });
 
 function setItemFormListeners() {
@@ -133,29 +117,43 @@ function setSelectDrops() {
     });
 }
 
-function submitForm($form) {
-    let msgdiv = $(`#${$form.data('msgdiv')}`);
-    console.log('msgdiv', $(`#${$form.data('msgdiv')}`));
+function resetModelChanges() {
+    Changes = [];
+    $('#changes').val(null);
+    OrigModel = arrayToModel($('#modelForm').serializeArray());
 
-    if ($form.valid() && Changes.length > 0) {
+    $(document).find('.update-btn').removeClass('d-none').addClass('d-none');
+}
+
+function submitForm($form) {
+
+    let msgdiv = $(`#${$form.data('msgdiv')}`);
+
+    let proceed = $form.attr('action').includes('Create') || Changes.length > 0;
+
+    if ($form.valid() && proceed) {
 
         $.ajax({
             url: $form.attr("action"),
             type: $form.attr("method"),
             data: $form.serialize(),
-            success: function (response) {            
+            success: function (response) {
                 if (response.success) {
                     switch ($form.data('func')) {
                         case "addItem":
                             addItemSuccess(response);
                             break;
                         case "updateItem":
+                            resetModelChanges();
                             updateItemSuccess(response);
-                            showUpdateMessage({ css: 'success', msg: response.message, msgdiv: msgdiv })
                             break;
+                        case "updateCategory":
+                            resetModelChanges();
+                            updateCategorySuccess();                            
                         default:
-                            showUpdateMessage({ css: 'success', msg: response.message, msgdiv: msgdiv })
+                            closePopup();
                     }
+                    showUpdateMessage({ css: 'success', msg: response.msg, msgdiv: msgdiv })
                 }
                 else {
                     console.log('fail')
@@ -167,4 +165,8 @@ function submitForm($form) {
             }
         });
     }
+    else {
+        console.log('error!')
+    }
 }
+

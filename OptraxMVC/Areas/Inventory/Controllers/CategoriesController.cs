@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
 using OptraxDAL.Models.Inventory;
 using OptraxMVC.Controllers;
+using OptraxMVC.Models;
 using OptraxMVC.Services;
 
 namespace OptraxMVC.Areas.Inventory.Controllers
@@ -10,14 +10,16 @@ namespace OptraxMVC.Areas.Inventory.Controllers
     [Area("Inventory")]
     public class CategoriesController(OptraxContext context, IDropdownService dropdownService) : BaseController(context, dropdownService)
     {
-        [HttpPost]
-        public async Task<IActionResult> Create()
+        [HttpGet]
+        public IActionResult Create()
         {
             try
             {
-                ViewBag.Categories = await db.InventoryCategories.Where(c => c.ParentID == null).OrderBy(c => c.Name).ToListAsync();
+                ViewBag.FormVM = new FormVM() { IsNew = true, JsFunc = "addCategory", Action = "Create", MsgDiv = "tableMsg" };
 
-                return PartialView("_EditCategory", new InventoryCategory() { });
+                ViewData["TopCategories"] = _IDropdowns.GetTopCategories();
+
+                return PartialView("_Edit", new InventoryCategory() { });
             }
             catch (Exception ex)
             {
@@ -27,19 +29,17 @@ namespace OptraxMVC.Areas.Inventory.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(InventoryCategory cat)
+        public async Task<IActionResult> CreateAsync(InventoryCategory cat)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    InventoryCategory newCat = cat;
-
-                    db.InventoryCategories.Add(newCat);
+                    db.InventoryCategories.Add(cat);
 
                     await db.SaveChangesAsync();
 
-                    return Json(new { success = true });
+                    return Json(new { success = true, msg = $"New {(!cat.ParentID.HasValue ? "top level " : "")}category '{cat.Name}' added!" });
                 }
 
                 return Json(new { success = false, errors = ModelState });
@@ -51,15 +51,60 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, string name)
+        public async Task<IActionResult> Details(int catID)
         {
-            var category = db.InventoryCategories.Find(id);
-            if (category == null) return NotFound();
+            try
+            {
+                var category = await db.InventoryCategories.FindAsync(catID);
 
-            category.Name = name;
-            db.SaveChanges();
+                if (category == null)
+                {
+                    return Json(new { success = false, msg = "Category not found" });
+                }
 
-            return Json(new { success = true });
+                ViewData["TopCategories"] = _IDropdowns.GetTopCategories();
+                ViewBag.FormVM = new FormVM() { IsNew = false, JsFunc = "updateCategory", Action = "Edit", MsgDiv = "popupTopInner" };
+
+                return PartialView("_Edit", category);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, msg = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditAsync(InventoryCategory cat)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return Json(new { success = false, msg = "Invalid model" });
+
+                var dbCat = await db.InventoryCategories.FindAsync(cat.ID);
+
+                if (dbCat == null)
+                {
+                    return Json(new { success = false, msg = "Category not found." });
+                }
+
+                List<string> changes = cat.Changes?.Split(",")?.ToList() ?? [];
+
+                foreach (string attrName in changes)
+                {
+                    var prop = typeof(InventoryCategory).GetProperty(attrName) ?? throw new InvalidOperationException($"Property '{attrName}' not found in InventoryCategory.");
+
+                    prop.SetValue(dbCat, prop.GetValue(cat));
+                }
+                await db.SaveChangesAsync();
+
+                return Json(new { success = true, msg = "Category updated!" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, msg = ex.Message });
+            }
         }
     }
 }

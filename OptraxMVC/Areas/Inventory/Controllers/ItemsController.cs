@@ -30,14 +30,13 @@ namespace OptraxMVC.Areas.Inventory.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult Create()
         {
             try
             {
                 LoadViewData();
-                ViewBag.IsNew = true;
-                ViewBag.FormVM = new FormVM() { JsFunction = "addItem", Action = "Create", MsgDiv = ".table-msg" };
+                ViewBag.FormVM = new FormVM() { IsNew = true, JsFunc = "addItem", Action = "Create", MsgDiv = "tableMsg" };
                 return PartialView("_Edit", new InventoryItem() { });
             }
             catch (Exception ex)
@@ -48,7 +47,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(InventoryItem item)
+        public async Task<IActionResult> CreateAsync(InventoryItem item)
         {
             try
             {
@@ -57,7 +56,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                     return Json(new { success = false, errors = ModelState });
                 }
 
-                var itemCats = await _IInventory.GetItemCategoriesAsync(item.ID);
+                var itemCats = await _IInventory.GetItemCategoriesAsync(item.CategoryID);
 
                 if (itemCats == null)
                 {
@@ -93,8 +92,8 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                 }
 
                 LoadViewData();
-                ViewBag.IsNew = false;
-                ViewBag.FormVM = new FormVM() { JsFunction = "editItem", Action = "Edit", MsgDiv = "popupTopInner" };
+                ViewBag.FormVM = new FormVM() { IsNew = false, JsFunc = "updateItem", Action = "Edit", MsgDiv = "popupTopInner" };
+
                 return PartialView("_Edit", item);
 
             }
@@ -121,7 +120,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
 
                 await _IInventory.UpdateItemAsync(item, dbItem);
 
-                var itemCats = await _IInventory.GetItemCategoriesAsync(dbItem.ID);
+                var itemCats = await _IInventory.GetItemCategoriesAsync(dbItem.CategoryID);
                 if (itemCats == null)
                 {
                     return Json(new { success = true, msg = "Invalid category" });

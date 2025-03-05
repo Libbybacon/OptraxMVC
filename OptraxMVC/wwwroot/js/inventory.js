@@ -47,26 +47,19 @@ function makeDatatable() {
         ],
         rowGroup: {
             dataSrc: ["cat0", "cat1"],
-            // Html for group header rows - toggle buttons, colors, text
-            startRender: function (rows, group, lvl) {
-                let arr = group.split('-'); // 0: Name, 1: ID, 2: HexColor
+            startRender: function (rows, group, level) {
+                let arr = group.split('-'); 
+                let props = {
+                    Level: level,
+                    IsTop: level == 0,
+                    ID: arr[1],
+                    Name: arr[0],
+                    NameNoSpace: arr[0].replace(/\s+/g, ""),                
+                    Color: arr[2],
+                }
 
-                let $hidei = $('<i/>').addClass(`bi bi-chevron-up hide-i hide1`)
-                let $showi = $('<i/>').addClass(`bi bi-chevron-down show-i d-none`);
-
-                let $btn = $('<button/>').addClass(`toggle ${lvl == 1 ? 'tgi' : ''}`)
-                    .data('grp', arr[0].replace(/\s+/g, ""))
-                    .append($showi)
-                    .append($hidei)
-                    .on('click', function () { showHide(this) });
-
-                let $th = $('<th/>').attr('colspan', 7).append($btn)
-                let $tr = $('<tr/>').attr('data-id', arr[1]).addClass(`grp-row cat${lvl}-head`)
-                let $hexIcon = $('<i/>').addClass('bi bi-square-fill m-0 me-2').css('color', arr[2])
-                let $txtSpan = $('<span/>').addClass('head-txt').append(arr[0]);
-
-                return lvl == 0 ? $tr.append($th.css(bg, arr[2]).append($txtSpan))
-                    : $tr.append($th.append($hexIcon).append($txtSpan));
+                let $tr = makeHeaderToggle(props);
+                return $tr
             }
         },
         columnDefs: [
@@ -125,14 +118,53 @@ function makeDatatable() {
             );
 
             $(row).find('td').on('click', function () {
-                loadItemDetails(data);
+                getItemDetails(data);
             })
         },
+        initComplete: function (settings, json) {
+            setRowGroupClick();
+        }
     })
 
     $(window).on('resize', function () {
         $itemsTable.columns.adjust();
         $itemsTable.responsive.recalc();
+    });
+}
+function makeHeaderToggle(props) {
+    let $hidei = $('<i/>').addClass(`bi bi-chevron-up hide-i hide1`)
+    let $showi = $('<i/>').addClass(`bi bi-chevron-down show-i d-none`);
+
+    let $btn = $('<button/>').addClass(`toggle ${props.IsTop ? 'tgi' : ''}`)
+        .data('grp', props.NameNoSpace)
+        .append($showi)
+        .append($hidei)
+        .on('click', function () { showHide(this) });
+
+    let $colorIcon = $('<i/>').addClass('bi bi-square-fill m-0 me-2').css('color', props.Color)
+    let $txtSpan = $('<span/>').addClass('head-txt flex-fill ps-2').append(props.Name);
+
+    let $div = $('<div/>').addClass('d-flex w-100').append($btn)
+    props.IsTop ? $div.append($txtSpan) : $div.append($colorIcon).append($txtSpan);
+
+    let $th = $('<th/>').attr('colspan', 7).append($div);
+    let $tr = $('<tr/>').attr('data-id', props.ID).addClass(`grp-row cat${props.Level}-head`)
+
+    return props.IsTop ? $tr.append($th.css(bg, props.Color)) : $tr.append($th);
+}
+
+function setRowGroupClick() {
+    $(document).find('.head-txt').hover(
+        function () {
+            $(this).addClass('item-hover');
+        },
+        function () {
+            $(this).removeClass('item-hover');
+        }
+    );
+
+    $(document).find('.head-txt').on('click', function () {
+        getCategoryDetails($(this));
     });
 }
 
@@ -184,8 +216,8 @@ function showHide(btn) {
 
 function addNewCategory() {
     let props = {
+        type: 'GET',
         url: `/Inventory/Categories/Create/`,
-        data: null,
         title: `New Inventory Category`,
     }
     loadPopup(props);
@@ -193,8 +225,8 @@ function addNewCategory() {
 
 function addNewItem() {
     let props = {
+        type: 'GET',
         url: `/Inventory/Items/Create/`,
-        data: null,
         title: `New Inventory Item`,
     }
     loadPopup(props);
@@ -228,24 +260,10 @@ function addItemSuccess(response) {
     closePopup();
 }
 
-function updateItemSuccess(response) {
-
-    let itemData = response.data;
-    var row = $itemsTable.row(function (idx, data, node) {
-        return data.ID === itemData.itemID  
-    });
-
-    if (row.any()) {
-        row.data(itemData).draw(false); 
-        setTimeout(function () {
-            $(newRow).removeClass("highlight");
-        }, 5000);
-    }
-}
-
-function loadItemDetails(rowData) {
+function getItemDetails(rowData) {
 
     let props = {
+        type: 'POST',
         url: `/Inventory/Items/Details/`,
         data: { itemID: rowData.itemID },
         title: rowData.itemName,
@@ -253,5 +271,39 @@ function loadItemDetails(rowData) {
     loadPopup(props);
 }
 
+function updateItemSuccess(response) {
+
+    let itemData = response.data;
+    var row = $itemsTable.row(function (idx, data, node) {
+        return data.itemID === itemData.itemID
+    });
+
+    if (row.any()) {
+        tblRow = row.data(itemData).draw(false).node();
+        $(tblRow).addClass("highlight");
+        setTimeout(function () {
+            $(tblRow).removeClass("highlight");
+        }, 5000);
+    }
+}
+
+
+function getCategoryDetails($grp) {
+    let props = {
+        type: 'POST',
+        url: '/Inventory/Categories/Details/',
+        data: { catID: $grp.parents('tr').data('id') },
+        title: `Edit Category: ${$grp.text() }`
+    }
+    loadPopup(props);
+}
+
+function updateCategorySuccess() {
+    $itemsTable.ajax.reload().draw();
+
+    setTimeout(function () {
+        setRowGroupClick();
+    }, 500);
+}
 
 

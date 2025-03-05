@@ -12,6 +12,7 @@ namespace OptraxMVC.Services
         List<SelectListItem> GetUOMs();
         List<SelectListItem> GetStockTypes();
         List<SelectListItem> GetCategories();
+        List<SelectListItem> GetTopCategories();
         List<ContainerType> GetContainerTypes();
 
     }
@@ -54,7 +55,23 @@ namespace OptraxMVC.Services
 
                 return db.InventoryCategories?.Where(c => c.ParentID != null)
                                               .Include(c => c.Parent)
-                                              .OrderBy(p => p.Name).ThenBy(c => c.Name)
+                                              .OrderBy(c => c.Parent.Name).ThenBy(c => c.Name)
+                                              .Select(c => new SelectListItem
+                                              {
+                                                  Value = c.ID.ToString(),
+                                                  Text = c.ListName
+                                              })
+                                              .ToList();
+            }) ?? [];
+        }
+
+        public List<SelectListItem> GetTopCategories()
+        {
+            return _cache.GetOrCreate("TopCategories", entry =>
+            {
+                entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+
+                return db.InventoryCategories?.Where(c => c.ParentID == null).OrderBy(c => c.Name)
                                               .Select(c => new SelectListItem
                                               {
                                                   Value = c.ID.ToString(),
