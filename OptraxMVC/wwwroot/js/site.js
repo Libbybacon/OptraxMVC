@@ -116,38 +116,3 @@ function arrayToModel(arr) {
     }
     return model;
 }
-
-//$("#modelForm").validate({
-   
-//    errorPlacement: function (error, element) {
-//        error.insertAfter(element); 
-//    },
-//    submitHandler: function (form) {
-//        console.log('validate');
-//        $.ajax({
-//            url: $(form).attr("action"),
-//            type: $(form).attr("method"),
-//            data: $(form).serialize(),
-//            success: function (resp) {
-//                let div = $(form).data('msgdiv');
-//                console.log('div', div);
-//                let msgdiv = $(`#${$(form).data('msgdiv')}`);
-
-//                if (resp.success) {
-
-//                    showUpdateMessage({ css: 'success', msg: 'Changes Saved!', msgdiv: msgdiv })
-//                    closePopup();
-//                }
-//                else {
-//                    showUpdateMessage({ css: 'error', msg: 'Error Saving Changes...', msgdiv: msgdiv })
-//                }
-//            },
-//            error: function () {
-//                alert("");
-//                showUpdateMessage({ css: 'error', msg: 'An error occurred while saving.', msgdiv: msgdiv })
-//            }
-//        });
-//    }
-//});
-
-

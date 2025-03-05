@@ -17,19 +17,12 @@ $(document).ready(function () {
         setCategoryListeners();
     }
 
-    setModelChanges();
+    if ($('#modelForm').data('func').includes('update')) {
+        setModelChanges();
+    }
+
     setSelectDrops();
 });
-
-function arrayToModel(arr) {
-    var model = {};
-
-    for (var i = 0; i < arr.length; i++) {
-
-        model[arr[i]['name']] = arr[i]['value'];
-    }
-    return model;
-}
 
 function setSelectDrops() {
 
@@ -37,15 +30,6 @@ function setSelectDrops() {
         theme: "bootstrap-5", // Ensures it follows Bootstrap styles
         width: "100%"
     });
-
-    //$(window).on("resize", function () {
-    //    $(".select2").each(function () {
-    //        $(this).select2({
-    //            theme: "bootstrap-5",
-    //            width: "100%"
-    //        });
-    //    });
-    //});
 
     $('.select2').on("change", function () {
         let val = $(this).val();
@@ -86,7 +70,6 @@ function setModelChanges() {
 function submitForm($form) {
 
     let msgdiv = $(`#${$form.data('msgdiv')}`);
-
     let proceed = $form.attr('action').includes('Create') || Changes.length > 0;
 
     if ($form.valid() && proceed) {
@@ -102,14 +85,14 @@ function submitForm($form) {
                             addItemSuccess(response);
                             break;
                         case "updateItem":
+                            setSelectDrops();
                             setModelChanges();
                             updateItemSuccess(response);
-                            setSelectDrops()
                             break;
                         case "updateCategory":
+                            setSelectDrops();
                             setModelChanges();
                             updateCategorySuccess();
-                            setSelectDrops()
                         default:
                             closePopup();
                     }
