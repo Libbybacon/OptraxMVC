@@ -4,20 +4,29 @@ using OptraxDAL.Models.Inventory;
 using OptraxMVC.Controllers;
 using OptraxMVC.Models;
 using OptraxMVC.Services;
+using OptraxMVC.Services.Inventory;
 
 namespace OptraxMVC.Areas.Inventory.Controllers
 {
     [Area("Inventory")]
-    public class CategoriesController(OptraxContext context, IDropdownService dropdownService) : BaseController(context, dropdownService)
+    public class CategoriesController(OptraxContext context, IDropdownService dropdownService, ICategoryService categoryService) : BaseController(context, dropdownService)
     {
+        private readonly ICategoryService _ICategory = categoryService;
+
         [HttpGet]
         public IActionResult Create()
         {
             try
             {
-                ViewBag.FormVM = new FormVM() { IsNew = true, JsFunc = "addCategory", Action = "Create", MsgDiv = "tableMsg" };
+                ViewBag.FormVM = new FormVM()
+                {
+                    IsNew = true,
+                    JsFunc = "addCategory",
+                    Action = "Create",
+                    MsgDiv = "tableMsg"
+                };
 
-                ViewData["TopCategories"] = _IDropdowns.GetTopCategories();
+                ViewData["TopCategories"] = _IDropdowns.GetTopCategoriesList();
 
                 return PartialView("_Edit", new InventoryCategory() { });
             }
@@ -35,13 +44,16 @@ namespace OptraxMVC.Areas.Inventory.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    db.InventoryCategories.Add(cat);
+                    bool saved = await _ICategory.CreateCategoryAsync(cat);
 
-                    await db.SaveChangesAsync();
-
-                    return Json(new { success = true, msg = $"New {(!cat.ParentID.HasValue ? "top level " : "")}category '{cat.Name}' added!" });
+                    var data = new
+                    {
+                        success = saved,
+                        msg = saved ? $"New {(!cat.ParentID.HasValue ? "top level " : "")}category '{cat.Name}' added!"
+                                    : "Error saving new category"
+                    };
+                    return Json(data);
                 }
-
                 return Json(new { success = false, errors = ModelState });
             }
             catch (Exception ex)
@@ -55,15 +67,22 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         {
             try
             {
-                var category = await db.InventoryCategories.FindAsync(catID);
+                InventoryCategory? category = await _ICategory.GetCategoryByIdAsync(catID);
 
                 if (category == null)
                 {
                     return Json(new { success = false, msg = "Category not found" });
                 }
 
-                ViewData["TopCategories"] = _IDropdowns.GetTopCategories();
-                ViewBag.FormVM = new FormVM() { IsNew = false, JsFunc = "updateCategory", Action = "Edit", MsgDiv = "popupTopInner" };
+                ViewData["TopCategories"] = _IDropdowns.GetTopCategoriesList();
+
+                ViewBag.FormVM = new FormVM()
+                {
+                    IsNew = false,
+                    JsFunc = "updateCategory",
+                    Action = "Edit",
+                    MsgDiv = "popupTopInner"
+                };
 
                 return PartialView("_Edit", category);
             }
@@ -82,24 +101,16 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                 if (!ModelState.IsValid)
                     return Json(new { success = false, msg = "Invalid model" });
 
-                var dbCat = await db.InventoryCategories.FindAsync(cat.ID);
+                var dbCat = await _ICategory.GetCategoryByIdAsync(cat.ID);
 
                 if (dbCat == null)
-                {
                     return Json(new { success = false, msg = "Category not found." });
-                }
 
-                List<string> changes = cat.Changes?.Split(",")?.ToList() ?? [];
+                bool saved = await _ICategory.UpdateCategoryAsync(cat, dbCat);
 
-                foreach (string attrName in changes)
-                {
-                    var prop = typeof(InventoryCategory).GetProperty(attrName) ?? throw new InvalidOperationException($"Property '{attrName}' not found in InventoryCategory.");
+                var data = new { success = saved, msg = saved ? "Category changes saved!" : "Error saving category :(" };
 
-                    prop.SetValue(dbCat, prop.GetValue(cat));
-                }
-                await db.SaveChangesAsync();
-
-                return Json(new { success = true, msg = "Category updated!" });
+                return Json(data);
             }
             catch (Exception ex)
             {

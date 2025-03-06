@@ -9,11 +9,17 @@ namespace OptraxMVC.Services
 {
     public interface IDropdownService
     {
-        List<SelectListItem> GetUOMs();
-        List<SelectListItem> GetStockTypes();
-        List<SelectListItem> GetCategories();
-        List<SelectListItem> GetTopCategories();
-        List<ContainerType> GetContainerTypes();
+        List<SelectListItem> GetUomsList();
+        List<SelectListItem> GetStrainsList();
+        List<SelectListItem> GetStartTypesList();
+        List<SelectListItem> GetPlantTypesList();
+        List<SelectListItem> GetStockTypesList();
+        List<SelectListItem> GetCategoriesList();
+        List<SelectListItem> GetTopCategoriesList();
+        List<ContainerType> GetContainerTypesList();
+        List<SelectListItem> GetLocationTypesList();
+        List<SelectListItem> GetLocationsSelectList();
+        List<SelectListItem> GetGrowthPhasesList();
 
     }
 
@@ -22,9 +28,9 @@ namespace OptraxMVC.Services
         private readonly OptraxContext db = context;
         private readonly IMemoryCache _cache = cache;
 
-        public List<SelectListItem> GetUOMs()
+        public List<SelectListItem> GetUomsList()
         {
-            return _cache.GetOrCreate("UOMs", entry =>
+            return _cache.GetOrCreate("UomsSelect", entry =>
             {
                 entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
 
@@ -37,19 +43,50 @@ namespace OptraxMVC.Services
             }) ?? [];
         }
 
-        public List<SelectListItem> GetStockTypes()
+        public List<SelectListItem> GetGrowthPhasesList()
         {
-            return [.. Enum.GetNames(typeof(Enums.StockType))
-                           .Select(e => new SelectListItem
-                           {
-                               Value = e.ToString(),
-                               Text = e.ToString()
-                           })];
+            return [.. Enum.GetNames(typeof(Plant.GrowthPhases)).Select(e => new SelectListItem
+                                                                            {
+                                                                                Value = e.ToString(),
+                                                                                Text = e.ToString()
+                                                                            })];
+        }
+        public List<SelectListItem> GetStartTypesList()
+        {
+            return [.. Enum.GetNames(typeof(Plant.StartTypes)).Select(e => new SelectListItem
+                                                                            {
+                                                                                Value = e.ToString(),
+                                                                                Text = e.ToString()
+                                                                            })];
+        }
+        public List<SelectListItem> GetPlantTypesList()
+        {
+            return [.. Enum.GetNames(typeof(Enums.PlantType)).Select(e => new SelectListItem
+                                                                          {
+                                                                              Value = e.ToString(),
+                                                                              Text = e.ToString()
+                                                                          })];
+        }
+        public List<SelectListItem> GetStockTypesList()
+        {
+            return [.. Enum.GetNames(typeof(Enums.StockType)).Select(e => new SelectListItem
+                                                                          {
+                                                                              Value = e.ToString(),
+                                                                              Text = e.ToString()
+                                                                          })];
+        }
+        public List<SelectListItem> GetLocationTypesList()
+        {
+            return [.. Enum.GetNames(typeof(Enums.LocationType)).Select(e => new SelectListItem
+                                                                             {
+                                                                                 Value = e.ToString(),
+                                                                                 Text = e.ToString()
+                                                                             })];
         }
 
-        public List<SelectListItem> GetCategories()
+        public List<SelectListItem> GetCategoriesList()
         {
-            return _cache.GetOrCreate("Categories", entry =>
+            return _cache.GetOrCreate("CategoriesSelect", entry =>
             {
                 entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
 
@@ -65,9 +102,9 @@ namespace OptraxMVC.Services
             }) ?? [];
         }
 
-        public List<SelectListItem> GetTopCategories()
+        public List<SelectListItem> GetTopCategoriesList()
         {
-            return _cache.GetOrCreate("TopCategories", entry =>
+            return _cache.GetOrCreate("TopCategoriesSelect", entry =>
             {
                 entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
 
@@ -81,13 +118,43 @@ namespace OptraxMVC.Services
             }) ?? [];
         }
 
-        public List<ContainerType> GetContainerTypes()
+        public List<ContainerType> GetContainerTypesList()
         {
-            return _cache.GetOrCreate("ContainerTypes", entry =>
+            return _cache.GetOrCreate("ContainerTypesSelect", entry =>
             {
                 entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
 
                 return db.ContainerTypes.Where(c => c.Active).OrderBy(c => c.Name).ToList();
+            }) ?? [];
+        }
+
+        public List<SelectListItem> GetStrainsList()
+        {
+            return _cache.GetOrCreate("StrainsSelect", entry =>
+            {
+                entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+
+                return db.Strains?.Where(c => c.Active).OrderBy(c => c.Name).Select(c => new SelectListItem
+                {
+                    Value = c.ID.ToString(),
+                    Text = c.Name
+                })
+                                                                                         .ToList();
+            }) ?? [];
+        }
+
+        public List<SelectListItem> GetLocationsSelectList()
+        {
+            return _cache.GetOrCreate("LocationsSelect", entry =>
+            {
+                entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+
+                return db.InventoryLocations?.Where(c => c.Active).OrderBy(c => c.Name).Select(c => new SelectListItem
+                {
+                    Value = c.ID.ToString(),
+                    Text = c.Name
+                })
+                                                                                                    .ToList();
             }) ?? [];
         }
     }

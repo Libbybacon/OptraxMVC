@@ -74,14 +74,15 @@ button{
 
 /* Table Wrappers */
 
-.cat-table-div {
+.table-div {
     margin-top: 1rem;
     max-width: 100vw;
     background: white;
     border-radius: var(--border-r);
 }
 
-#cat-table_wrapper,
+#plant-table_wrapper,
+#grp-table_wrapper,
 div.dt-container div.dt-layout-table > div,
 .dt-container dt-bootstrap5 dt-empty-footer {
     padding: 0;
@@ -114,8 +115,8 @@ div.dt-container div.dt-layout-table > div,
     font-weight: 500 !important;
 }
 
-#cat-table th,
-#cat-table td {
+.grp-table th,
+.grp-table td {
     vertical-align: middle !important;
 }
 
@@ -124,11 +125,11 @@ table.dataTable td.dt-control:before {
     display: none !important;
 }
 
-#cat-table tbody {
+.grp-table tbody {
     border-collapse: collapse !important;
 }
 
-    #cat-table tbody td {
+    .grp-table tbody td {
         padding: .1rem;
     }
 

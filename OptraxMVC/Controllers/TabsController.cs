@@ -51,19 +51,13 @@ namespace OptraxMVC.Controllers
                 },
 
                 "Inventory" => tab.Name switch
-                {
-                    "Plants" => await db.Plants.ToListAsync(),
+                {               
                     "Products" => await db.Products.ToListAsync(),
                     "Stock" => await db.StockItems.ToListAsync(),
                     "Locations" => await db.InventoryLocations.Where(c => c.ParentID == null)
                                                               .Include(c => c.Children)
                                                               .ThenInclude(c => c.Children)
                                                               .ToListAsync(),
-
-                    "Items" => await db.InventoryCategories.Where(c => c.ParentID == null)
-                                                           .Include(c => c.Children)
-                                                           .ThenInclude(c => c.Children)
-                                                           .ToListAsync(),
                     _ => null
                 },
                 _ => null
@@ -72,7 +66,9 @@ namespace OptraxMVC.Controllers
             switch (tab.Name)
             {
                 case "Items":
-                    tab.ViewPath = $"~/Areas/Inventory/Views/Items/_{tab.Name}.cshtml";
+                case "Plants":
+                    tab.ViewPath = $"~/Areas/Inventory/Views/{tab.Name}/_{tab.Name}.cshtml";                   
+                    tab.ViewPath = $"~/Areas/Inventory/Views/{tab.Name}/_{tab.Name}.cshtml";
                     return PartialView(tab.ViewPath);
                 default:
                     break;

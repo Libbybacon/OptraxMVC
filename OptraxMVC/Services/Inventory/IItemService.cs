@@ -3,9 +3,9 @@ using OptraxDAL;
 using OptraxDAL.Models.Inventory;
 using OptraxDAL.ViewModels;
 
-namespace OptraxMVC.Services
+namespace OptraxMVC.Services.Inventory
 {
-    public interface IInventoryService
+    public interface IItemService
     {
         Task<List<ItemVM>> GetItemsAsync();
         Task<InventoryItem?> GetItemByIdAsync(int itemID);
@@ -15,7 +15,7 @@ namespace OptraxMVC.Services
 
     }
 
-    public class InventoryService(OptraxContext context) : IInventoryService
+    public class InventoryService(OptraxContext context) : IItemService
     {
         private readonly OptraxContext db = context;
 
@@ -70,10 +70,7 @@ namespace OptraxMVC.Services
 
             var cat0 = cat1?.Parent;
 
-            return (cat1 != null && cat0 != null) ? [cat0, cat1] : null;
+            return cat1 != null && cat0 != null ? [cat0, cat1] : null;
         }
-
-
     }
-
 }

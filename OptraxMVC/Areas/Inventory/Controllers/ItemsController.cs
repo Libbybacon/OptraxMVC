@@ -5,21 +5,22 @@ using OptraxDAL.ViewModels;
 using OptraxMVC.Controllers;
 using OptraxMVC.Models;
 using OptraxMVC.Services;
+using OptraxMVC.Services.Inventory;
 
 namespace OptraxMVC.Areas.Inventory.Controllers
 {
     [Area("Inventory")]
-    public class ItemsController(OptraxContext context, IDropdownService dropdownService, IInventoryService inventoryService)
+    public class ItemsController(OptraxContext context, IDropdownService dropdownService, IItemService itemService)
     : BaseController(context, dropdownService)
     {
-        private readonly IInventoryService _IInventory = inventoryService;
+        private readonly IItemService _IItem = itemService;
 
         [HttpPost]
         public async Task<IActionResult> GetItems()
         {
             try
             {
-                var data = await _IInventory.GetItemsAsync();
+                var data = await _IItem.GetItemsAsync();
 
                 LoadViewData();
                 return Json(data);
@@ -56,14 +57,14 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                     return Json(new { success = false, errors = ModelState });
                 }
 
-                var itemCats = await _IInventory.GetItemCategoriesAsync(item.CategoryID);
+                var itemCats = await _IItem.GetItemCategoriesAsync(item.CategoryID);
 
                 if (itemCats == null)
                 {
                     return Json(new { success = true, msg = "Invalid category" });
                 }
 
-                ItemVM? itemVM = await _IInventory.CreateItemAsync(item, itemCats);
+                ItemVM? itemVM = await _IItem.CreateItemAsync(item, itemCats);
 
                 if (itemVM == null)
                 {
@@ -84,7 +85,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         {
             try
             {
-                InventoryItem? item = await _IInventory.GetItemByIdAsync(itemID);
+                InventoryItem? item = await _IItem.GetItemByIdAsync(itemID);
 
                 if (item == null)
                 {
@@ -111,16 +112,16 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                 if (!ModelState.IsValid)
                     return Json(new { success = false, msg = "Invalid model" });
 
-                InventoryItem? dbItem = await _IInventory.GetItemByIdAsync(item.ID);
+                InventoryItem? dbItem = await _IItem.GetItemByIdAsync(item.ID);
 
                 if (dbItem == null)
                 {
                     return Json(new { success = false, msg = "Item not found." });
                 }
 
-                await _IInventory.UpdateItemAsync(item, dbItem);
+                await _IItem.UpdateItemAsync(item, dbItem);
 
-                var itemCats = await _IInventory.GetItemCategoriesAsync(dbItem.CategoryID);
+                var itemCats = await _IItem.GetItemCategoriesAsync(dbItem.CategoryID);
                 if (itemCats == null)
                 {
                     return Json(new { success = true, msg = "Invalid category" });
@@ -137,10 +138,10 @@ namespace OptraxMVC.Areas.Inventory.Controllers
 
         private void LoadViewData()
         {
-            ViewData["UOMs"] = _IDropdowns.GetUOMs();
-            ViewData["StockTypes"] = _IDropdowns.GetStockTypes();
-            ViewData["Categories"] = _IDropdowns.GetCategories();
-            ViewData["Containers"] = _IDropdowns.GetContainerTypes();
+            ViewData["UOMs"] = _IDropdowns.GetUomsList();
+            ViewData["StockTypes"] = _IDropdowns.GetStockTypesList();
+            ViewData["Categories"] = _IDropdowns.GetCategoriesList();
+            ViewData["Containers"] = _IDropdowns.GetContainerTypesList();
         }
     }
 }

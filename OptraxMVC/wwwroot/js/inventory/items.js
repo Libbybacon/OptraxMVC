@@ -1,30 +1,5 @@
-﻿
-var $popout;
-var none = 'd-none';
-var bg = 'background-color';
-var $itemsTable;
-
-
-$(document).ready(function () {
-
-    makeDatatable();
-
-    $(document).on('change', '#top-cat-check', function () {
-        if ($('#top-cat-check').prop('checked') == true) {
-            $('#ParentID').attr('disabled', 'disabled');
-        }
-        else {
-            $('#ParentID').removeAttr('disabled')
-        }
-    })
-
-    $('.toggle-all').off('click').on('click', function () {
-        showHide($(this));
-    })
-});
-
-function makeDatatable() {
-    $itemsTable = $(`#cat-table`).DataTable({
+﻿function makeDatatable() {
+    $itemsTable = $(`#grp-table`).DataTable({
         ajax: {
             type: "POST",
             url: '/Inventory/Items/GetItems/',
@@ -48,13 +23,13 @@ function makeDatatable() {
         rowGroup: {
             dataSrc: ["cat0", "cat1"],
             startRender: function (rows, group, level) {
-                let arr = group.split('-'); 
+                let arr = group.split('-');
                 let props = {
                     Level: level,
                     IsTop: level == 0,
                     ID: arr[1],
                     Name: arr[0],
-                    NameNoSpace: arr[0].replace(/\s+/g, ""),                
+                    NameNoSpace: arr[0].replace(/\s+/g, ""),
                     Color: arr[2],
                 }
 
@@ -122,7 +97,7 @@ function makeDatatable() {
             })
         },
         initComplete: function (settings, json) {
-            setRowGroupClick();
+            setRowGroupHover();
         }
     })
 
@@ -131,6 +106,7 @@ function makeDatatable() {
         $itemsTable.responsive.recalc();
     });
 }
+
 function makeHeaderToggle(props) {
     let $hidei = $('<i/>').addClass(`bi bi-chevron-up hide-i hide1`)
     let $showi = $('<i/>').addClass(`bi bi-chevron-down show-i d-none`);
@@ -153,69 +129,7 @@ function makeHeaderToggle(props) {
     return props.IsTop ? $tr.append($th.css(bg, props.Color)) : $tr.append($th);
 }
 
-function setRowGroupClick() {
-    $(document).find('.head-txt').hover(
-        function () {
-            $(this).addClass('item-hover');
-        },
-        function () {
-            $(this).removeClass('item-hover');
-        }
-    );
-
-    $(document).find('.head-txt').on('click', function () {
-        getCategoryDetails($(this));
-    });
-}
-
-function showHide(btn) {
-
-    let isAll = $(btn).hasClass('toggle-all');
-
-    let grp = isAll ? '' : $(btn).data('grp').replace(/\s+/g, ""); // Remove white space from multi-word categories
-    let itemClass = isAll ? '.item-row' : `.item-row.${grp}`;
-
-    let $hidei = $(btn).find('.hide-i');
-    let $showi = $(btn).find('.show-i');
-
-    if ($(btn).hasClass('tgi')) {
-
-        $(`.item-row.${grp}`).removeClass(none).addClass($hidei.hasClass(none) ? '' : none);
-
-        $(btn).find('i').toggleClass('d-none');
-    }
-    else {
-
-        let $children = isAll ? $('.cat1-head') : $(btn).parents('tr').nextUntil('.dtrg-level-0', '.dtrg-level-1');
-
-        let show1 = $showi.hasClass('show1');
-        let show2 = $showi.hasClass('show2');
-        let hide1 = $hidei.hasClass('hide1');
-        let hide2 = $hidei.hasClass('hide2');
-
-        $(itemClass).removeClass(none).addClass(show2 ? '' : none) // Hide items
-
-        $.each($children, function () {
-            $(this).removeClass(none).addClass(hide2 ? none : ''); // Hide children
-            $(this).find('.hide-i').removeClass(none).addClass(show2 ? '' : none); // Update cat1 toggle icons
-            $(this).find('.show-i').removeClass(none).addClass(show2 ? none : '');
-        });
-
-        if (isAll) {
-            $.each($('.cat0-head'), function () { // Update cat0 toggle icons
-                $(this).find('.hide-i').removeClass('d-none hide1 hide2').addClass(hide1 ? 'hide2' : (show2 ? 'hide1' : none));
-                $(this).find('.show-i').removeClass('d-none show1 show2').addClass(hide2 ? 'show1' : (show1 ? 'show2' : none));
-            });
-        }
-
-        // Button icons
-        $hidei.removeClass('d-none hide1 hide2').addClass(show2 ? 'hide1' : (hide1 ? 'hide2' : none));
-        $showi.removeClass('d-none show1 show2').addClass(hide2 ? 'show1' : (show1 ? 'show2' : none));
-    }
-}
-
 function setCategoryListeners() {
-    console.log('ischecked', $('#top-cat-check').prop('checked'))
     if ($('#top-cat-check').prop('checked') == true) {
         $('#ParentID').attr('disabled', 'disabled');
     }
@@ -264,6 +178,24 @@ function addNewCategory() {
         title: `New Inventory Category`,
     }
     loadPopup(props);
+}
+
+function getCategoryDetails($grp) {
+    let props = {
+        type: 'POST',
+        url: '/Inventory/Categories/Details/',
+        data: { catID: $grp.parents('tr').data('id') },
+        title: `Edit Category: ${$grp.text()}`
+    }
+    loadPopup(props);
+}
+
+function updateCategorySuccess() {
+    $itemsTable.ajax.reload().draw();
+
+    setTimeout(function () {
+        setRowGroupHover();
+    }, 500);
 }
 
 function addNewItem() {
@@ -329,27 +261,6 @@ function updateItemSuccess(response) {
         }, 5000);
     }
     setTimeout(function () {
-        setRowGroupClick();
+        setRowGroupHover();
     }, 500);
 }
-
-
-function getCategoryDetails($grp) {
-    let props = {
-        type: 'POST',
-        url: '/Inventory/Categories/Details/',
-        data: { catID: $grp.parents('tr').data('id') },
-        title: `Edit Category: ${$grp.text() }`
-    }
-    loadPopup(props);
-}
-
-function updateCategorySuccess() {
-    $itemsTable.ajax.reload().draw();
-
-    setTimeout(function () {
-        setRowGroupClick();
-    }, 500);
-}
-
-

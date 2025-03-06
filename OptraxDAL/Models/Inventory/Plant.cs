@@ -9,17 +9,28 @@ namespace OptraxDAL.Models.Inventory
     {
         public Plant() { }
 
+        [Required]
         [MaxLength(50)]
-        public required string TrackingID { get; set; }
-        public int StrainID { get; set; }
+        public string TrackingID { get; set; } = "";
+        
+        [Required]
+        public int StrainID { get; set; } = 0;
+        
         public int? ParentID { get; set; }
+        
+        [Required]
         public bool IsMother { get; set; } = false;
+
+        [Required]
+        public string StartType { get; set; } = "Clone";
+        
+        [Required]
         [MaxLength(10)]
-        public required string StartPhase { get; set; }
+        public string GrowthPhase { get; set; } = "Seed";
+
         public int? CropID { get; set; }
 
-        public virtual required Strain Strain { get; set; }
-
+        public virtual Strain Strain { get; set; } = new();
         public virtual Crop? Crop { get; set; }
         public virtual Plant? Parent { get; set; }
 

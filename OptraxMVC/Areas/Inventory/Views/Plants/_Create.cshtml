@@ -1,0 +1,81 @@
+﻿@using OptraxDAL.Models.Inventory
+@using OptraxDAL.ViewModels
+@using OptraxMVC.Models
+
+@model Plant
+
+@{
+    FormVM formVM = ViewBag.FormVM;
+
+    var strains = (IEnumerable<SelectListItem>)(ViewData["StrainsList"] ?? new());
+    var phases = (IEnumerable<SelectListItem>)(ViewData["Phases"] ?? new());
+    var startTypes = (IEnumerable<SelectListItem>)(ViewData["StartTypes"] ?? new());
+}
+
+@using (Html.BeginForm(formVM.Action, "Plants", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv }))
+{
+    @Html.AntiForgeryToken()
+    <input id="changes" type="hidden" name="Changes" />
+    <div class="d-flex justify-content-center">
+        <div class="row col-12 d-flex w-100">
+            <div class="col-xl-4 col-6">
+                @Html.LabelFor(m => m.StrainID)
+                @Html.DropDownListFor(m => m.StrainID, strains, "Select Strain", new { @class = $"form-control select2 attr", data_ival = Model.StrainID })
+                @Html.ValidationMessageFor(m => m.StrainID, "", new { @class = "val-msg" })
+            </div>
+            <div class="col-xl-4 col-6">
+                @Html.LabelFor(m => m.IsMother)
+                @Html.EditorFor(m => m.IsMother, "IsMother", new { htmlAttributes = new { @class = $"form-check-input attr", data_ival = Model.IsMother } })
+                @Html.ValidationMessageFor(m => m.IsMother, "", new { @class = "val-msg" })
+            </div>
+            @*             <div class="col-xl-4 col-6">
+                @Html.LabelFor(m => m.StartType)
+                @Html.DropDownListFor(m => m.StartPhase, strains, "Select Phase", new { @class = $"form-control select2 attr", data_ival = Model.StrainID })
+                @Html.ValidationMessageFor(m => m.StartPhase, "", new { htmlAttributes = new { @class = "val-msg" } })
+            </div> *@
+            @*             <div class="col-xl-4 col-6">
+                @Html.LabelFor(m => m.StartPhase)
+                @Html.DropDownListFor(m => m.StartPhase, strains, "Select Phase", new { @class = $"form-control select2 attr", data_ival = Model.StrainID })
+                @Html.ValidationMessageFor(m => m.StartPhase, "", new { htmlAttributes = new { @class = "val-msg" } })
+            </div>
+            <div class="col-xl-4 col-6">
+                @Html.LabelFor(m => m.SKU)
+                @Html.EditorFor(m => m.SKU, "SKU", new { htmlAttributes = new { @class = $"form-control form-txt attr", data_ival = Model.SKU } })
+                @Html.ValidationMessageFor(m => m.SKU, "", new { htmlAttributes = new { @class = "val-msg" } })
+            </div>
+            <div class="col-xl-4 col-6">
+                @Html.LabelFor(m => m.CategoryID)
+                @Html.DropDownListFor(m => m.CategoryID, categories, "Select Category", new { @class = $"form-control select2 attr", data_ival = Model.CategoryID })
+                @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = "val-msg" })
+            </div>
+            <div class="col-xl-4 col-6">
+                @Html.LabelFor(m => m.DefaultUOM)
+                @Html.DropDownListFor(m => m.DefaultUOM, uoms, "Select UoM", new { @class = "form-control form-select select2 attr", data_ival = Model.DefaultUOM })
+                @Html.ValidationMessageFor(m => m.DefaultUOM, "", new { @class = "val-msg" })
+            </div>
+
+            <div class="col-xl-4 col-6">
+                @Html.LabelFor(m => m.Description)
+                @Html.EditorFor(m => m.Description, "Description", new { htmlAttributes = new { @class = $"form-control attr", data_ival = Model.Description } })
+                @Html.ValidationMessageFor(m => m.Description, "", new { htmlAttributes = new { @class = "val-msg" } })
+            </div>
+            <div class="col-xl-4 col-6">
+                @Html.LabelFor(m => m.Tags)
+                @Html.EditorFor(m => m.Tags, "Tags", new { htmlAttributes = new { @class = $"form-control attr", data_ival = Model.Tags } })
+                @Html.ValidationMessageFor(m => m.Tags, "", new { htmlAttributes = new { @class = "val-msg" } })
+            </div> *@
+
+            @*<div class="col-12 d-flex">
+                <label>Container?</label>
+                <input type="checkbox" class="form-check-input" />
+                @Html.DropDownListFor(m => m.ContainerTypeID, new SelectList(ViewBag.Containers, "ContainerTypeID", "Name"), "Select Container Type", new { @class = "form-control form-select" })
+                @Html.ValidationMessageFor(m => m.ContainerTypeID, "", new { htmlAttributes = new { @class = "val-msg" } })
+            </div> *@
+        </div>
+    </div>
+    <div class="popup-btns d-flex justify-content-center">
+        <button type="submit" class="save-btn form-btn @(formVM.IsNew ? "" : "d-none")">Save New Item</button>
+        <button type="submit" class="update-btn form-btn d-none">Save Changes</button>
+    </div>
+}
+

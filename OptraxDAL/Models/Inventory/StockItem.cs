@@ -21,7 +21,7 @@ namespace OptraxDAL.Models.Inventory
         public bool NeedsTransferApproval { get; set; } = false;
         public decimal? PurchasePrice { get; set; }
 
-        public virtual required InventoryItem InventoryItem { get; set; }
+        public virtual InventoryItem InventoryItem { get; set; } = new();
         public virtual ICollection<InventoryLocation> Locations { get; set; } = [];
         public virtual ICollection<InventoryTransfer> Transfers { get; set; } = [];
     }
