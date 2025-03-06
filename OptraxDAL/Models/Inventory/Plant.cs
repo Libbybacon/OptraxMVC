@@ -26,7 +26,8 @@ namespace OptraxDAL.Models.Inventory
         
         [Required]
         [MaxLength(10)]
-        public string GrowthPhase { get; set; } = "Seed";
+        [Display(Name="Growth Phase")]
+        public string StartPhase { get; set; } = "Seed";
 
         public int? CropID { get; set; }
 

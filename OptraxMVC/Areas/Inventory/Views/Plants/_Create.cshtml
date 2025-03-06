@@ -28,14 +28,14 @@
                 @Html.EditorFor(m => m.IsMother, "IsMother", new { htmlAttributes = new { @class = $"form-check-input attr", data_ival = Model.IsMother } })
                 @Html.ValidationMessageFor(m => m.IsMother, "", new { @class = "val-msg" })
             </div>
-            @*             <div class="col-xl-4 col-6">
+            <div class="col-xl-4 col-6">
                 @Html.LabelFor(m => m.StartType)
-                @Html.DropDownListFor(m => m.StartPhase, strains, "Select Phase", new { @class = $"form-control select2 attr", data_ival = Model.StrainID })
-                @Html.ValidationMessageFor(m => m.StartPhase, "", new { htmlAttributes = new { @class = "val-msg" } })
-            </div> *@
-            @*             <div class="col-xl-4 col-6">
+                @Html.DropDownListFor(m => m.StartType, startTypes, "Select Start Type", new { @class = $"form-control select2 attr", data_ival = Model.StartType })
+                @Html.ValidationMessageFor(m => m.StartType, "", new { htmlAttributes = new { @class = "val-msg" } })
+            </div>
+            <div class="col-xl-4 col-6">
                 @Html.LabelFor(m => m.StartPhase)
-                @Html.DropDownListFor(m => m.StartPhase, strains, "Select Phase", new { @class = $"form-control select2 attr", data_ival = Model.StrainID })
+                @Html.DropDownListFor(m => m.StartPhase, phases, "Select Phase", new { @class = $"form-control select2 attr", data_ival = Model.StartPhase })
                 @Html.ValidationMessageFor(m => m.StartPhase, "", new { htmlAttributes = new { @class = "val-msg" } })
             </div>
             <div class="col-xl-4 col-6">
@@ -63,7 +63,7 @@
                 @Html.LabelFor(m => m.Tags)
                 @Html.EditorFor(m => m.Tags, "Tags", new { htmlAttributes = new { @class = $"form-control attr", data_ival = Model.Tags } })
                 @Html.ValidationMessageFor(m => m.Tags, "", new { htmlAttributes = new { @class = "val-msg" } })
-            </div> *@
+            </div>
 
             @*<div class="col-12 d-flex">
                 <label>Container?</label>
