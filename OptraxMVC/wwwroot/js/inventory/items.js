@@ -130,6 +130,16 @@ function makeHeaderToggle(props) {
 }
 
 function setCategoryListeners() {
+
+    $(document).on('change', '#top-cat-check', function () {
+        if ($('#top-cat-check').prop('checked') == true) {
+            $('#ParentID').attr('disabled', 'disabled');
+        }
+        else {
+            $('#ParentID').removeAttr('disabled')
+        }
+    })
+
     if ($('#top-cat-check').prop('checked') == true) {
         $('#ParentID').attr('disabled', 'disabled');
     }

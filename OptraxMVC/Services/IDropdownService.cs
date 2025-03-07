@@ -3,12 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using OptraxDAL;
 using OptraxDAL.Models;
+using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
 
 namespace OptraxMVC.Services
 {
     public interface IDropdownService
     {
+        List<Strain> GetStrains();
         List<SelectListItem> GetUomsList();
         List<SelectListItem> GetStrainsList();
         List<SelectListItem> GetStartTypesList();
@@ -128,6 +130,15 @@ namespace OptraxMVC.Services
             }) ?? [];
         }
 
+        public List<Strain> GetStrains()
+        {
+            return _cache.GetOrCreate("StrainsSelect", entry =>
+            {
+                entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+
+                return db.Strains?.Where(c => c.Active).OrderBy(c => c.Name).ToList();
+            }) ?? [];
+        }
         public List<SelectListItem> GetStrainsList()
         {
             return _cache.GetOrCreate("StrainsSelect", entry =>
@@ -138,8 +149,7 @@ namespace OptraxMVC.Services
                 {
                     Value = c.ID.ToString(),
                     Text = c.Name
-                })
-                                                                                         .ToList();
+                }).ToList();
             }) ?? [];
         }
 

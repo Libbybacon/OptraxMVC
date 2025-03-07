@@ -120,6 +120,20 @@
         padding-bottom: 1.5rem;
     }
 
+.form-top {
+    padding-left: 15%;
+    padding-right: 15%;
+}
+
+    .form-top div {
+        margin-top: 1rem;
+        padding-bottom: .25rem;
+        font-size: var(--f-md);
+        font-weight: 500;
+        text-align: center;
+        border-bottom: 1px solid var(--blue-dk);
+    }
+
 .form-btn {
 }
 
@@ -139,6 +153,10 @@
     white-space: nowrap;
 }
 
+.readonly{
+    pointer-events: none !important;
+    background-color: var(--gray-lt);
+}
 
 /* Site Layout */
 html {
@@ -219,9 +237,10 @@ button {
 
 /* Inputs */
 
-.attr.form-control{
+.attr.form-control {
     font-size: var(--f-xs) !important;
 }
+
 .form-select {
     max-height: 100px !important; /* Set max dropdown height */
     overflow-y: auto; /* Enable vertical scroll */
@@ -296,7 +315,6 @@ input[type=checkbox]:hover, input[type=radio]:hover {
         }
 
 .select2-container--disabled {
-
     background-color: var(--gray-md);
 }
 
@@ -362,7 +380,7 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     background-color: var(--red-lt);
 }
 
-.tableMsg{
+.tableMsg {
     width: 100%;
     font-size: var(--f-md);
 }

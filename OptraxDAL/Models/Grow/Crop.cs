@@ -1,5 +1,6 @@
 ﻿using OptraxDAL.Models.Inventory;
 using OptraxDAL.Models.Products;
+using System.ComponentModel.DataAnnotations;
 
 namespace OptraxDAL.Models.Grow
 {
@@ -8,14 +9,26 @@ namespace OptraxDAL.Models.Grow
         public Crop() { }
 
         public int ID { get; set; }
+        [Display(Name="Crop Name")]
         public string? Name { get; set; }
+
+        [Display(Name = "Strain")]
         public int StrainID { get; set; }
-        public int? BatchID { get; set; }
+
+        [MaxLength(50)]
+        [Display(Name = "Batch ID")]
+        public string? BatchID { get; set; }
+
         public int? LocationID { get; set; }
 
-        public required string CurrentPhase { get; set; }
+        [Required]
+        [Display(Name = "Current Phase")]
+        public string CurrentPhase { get; set; } = "";
 
+        [Display(Name = "Start Date")]
         public DateTimeOffset? StartDate { get; set; }
+
+        [Display(Name = "End Date")]
         public DateTimeOffset? EndDate { get; set; }
 
         public DateTimeOffset? VegStart { get; set; }
@@ -24,7 +37,9 @@ namespace OptraxDAL.Models.Grow
         public DateTimeOffset? FlowerStart { get; set; }
         public DateTimeOffset? FlowerEnd { get; set; }
 
+        [Display(Name = "Expected Veg Days")]
         public int? ExpectedVegDays { get; set; }
+        [Display(Name = "Expected Flower Days")]
         public int? ExpectedFlowerDays { get; set; }
 
         public decimal? WasteQuantity { get; set; }
@@ -33,7 +48,7 @@ namespace OptraxDAL.Models.Grow
         public string? Notes { get; set; }
 
         public virtual RoomLocation? Location { get; set; }
-        public virtual required Strain Strain { get; set; }
+        public virtual Strain? Strain { get; set; }
         public virtual ICollection<Plant> Plants { get; set; } = [];
         public virtual ICollection<ProductItem> ProductItems { get; set; } = [];
 

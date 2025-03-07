@@ -9,10 +9,12 @@ namespace OptraxDAL.ViewModels
     public class PlantVM
     {
         public int PlantID { get; set; }
-        public string TrackingID { get; set; } = "";
+        public string? CropID { get; set; }
         public int StrainID { get; set; }
-        public int? CropID { get; set; }
+        public string TrackingID { get; set; } = "";
+        public string? Strain { get; set; } = "";
         public bool IsMother { get; set; } = false;
+        public string? MotherName { get; set; }
         public string StartType { get; set; } = "";
         public string StartPhase { get; set; } = "";
         public string? CurrentPhase { get; set; }

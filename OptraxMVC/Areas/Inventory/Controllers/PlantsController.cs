@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
+using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
 using OptraxDAL.ViewModels;
 using OptraxMVC.Controllers;
@@ -33,7 +34,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             try
             {
@@ -45,16 +46,36 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                     MsgDiv = "tableMsg"
                 };
 
-                ViewData["StrainsList"] = _IDropdowns.GetStrainsList();
+                ViewData["StrainsList"] = _IDropdowns.GetStrains();
                 ViewData["Phases"] = _IDropdowns.GetGrowthPhasesList();
                 ViewData["StartTypes"] = _IDropdowns.GetStartTypesList();
-               
-                return PartialView("_Create", new Plant() { });
+
+                int inventoryID = await _IPlants.GetPlantInventoryIDAsync();
+
+                return PartialView("_Create", new Plant() { InventoryItemID = inventoryID, });
             }
             catch (Exception ex)
             {
                 return Json(new { success = false, msg = ex.Message });
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAsync(Plant plant)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { msg = "Invalid model" });
+
+            try
+            {
+                ResponseVM response = await _IPlants.CreateAsync(plant);
+
+                return Json(response);
+            }
+            catch (Exception ex) {
+                return Json(new { success = false, msg = ex.Message });
+            }
+        }
     }
 }
+

@@ -9,15 +9,6 @@ $(document).ready(function () {
 
     makeDatatable();
 
-    $(document).on('change', '#top-cat-check', function () {
-        if ($('#top-cat-check').prop('checked') == true) {
-            $('#ParentID').attr('disabled', 'disabled');
-        }
-        else {
-            $('#ParentID').removeAttr('disabled')
-        }
-    })
-
     $('.toggle-all').off('click').on('click', function () {
         showHide($(this));
     })

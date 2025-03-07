@@ -14,8 +14,8 @@ namespace OptraxMVC.Controllers
         private readonly Dictionary<string, List<string>> TabViews = new()
         {
             ["Grow"] = ["Rooms", "Crops", "Plants", "Genetics"],
-            ["Inventory"] = ["Items", "Plants", "Products", "Locations", "Transfers"],
-            ["Sales"] = [],
+            ["Inventory"] = ["Items", "Plants", "Locations", "Transfers"],
+            ["Sales"] = ["Products"],
             ["Reports"] = [],
         };
 
