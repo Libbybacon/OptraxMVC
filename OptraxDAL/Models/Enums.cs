@@ -77,5 +77,14 @@
             Durable,
             Comsumable
         }
+
+        public enum LocationType
+        {
+            Container,
+            Room,
+            Building,
+            Outdoor,
+            OffSite
+        }
     }
 }

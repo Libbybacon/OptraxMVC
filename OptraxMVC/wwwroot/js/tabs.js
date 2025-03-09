@@ -2,33 +2,24 @@
 var curPage;
 
 $(document).ready(function () {
-
-    curPage = $('#tab-page').val();
-
-    let storedTab = sessionStorage.getItem(`${curPage}-active`);
-    let firstTab = $(".top-tabs .nav-link.active");
-
-    if (storedTab && storedTab !== "undefined") {
-        $(firstTab).removeClass('active');
-
-        let $activeTab = $(`button[data-key="${storedTab}"]`);
-        let bsTab = new bootstrap.Tab($activeTab);
-        bsTab.show();
-
-        firstTab = $activeTab;
-    }
-
-    if (firstTab) {
-        loadTab($(firstTab));
-    }
-
     $(".nav-link").on("click", function () {
         loadTab($(this));
     });
+
+    curPage = $('#tab-page').val();
+    let storedTab = sessionStorage.getItem(`${curPage}-active`);
+
+    if (storedTab && storedTab !== "undefined") {
+        let $activeTab = $(`button[data-key="${storedTab}"].nav-link`);
+        $activeTab.trigger('click');
+    }
+    else {
+        let firstTab = $(".top-tabs .nav-link.active");
+        loadTab($(firstTab));
+    }
 });
 
 function loadTab(tab) {
-
     let tabKey = $(tab).data("key");
 
     sessionStorage.setItem(`${curPage}-active`, tabKey);

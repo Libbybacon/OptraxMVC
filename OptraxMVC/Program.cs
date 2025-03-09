@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
 using OptraxDAL.Models.Admin;
 using OptraxMVC.Services;
+using OptraxMVC.Services.Inventory;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +28,10 @@ builder.Services.AddControllersWithViews()
 
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IDropdownService, DropdownService>();
-builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScoped<IItemService, InventoryService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IPlantService, PlantService>();
+//builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddMemoryCache();
 
 var app = builder.Build();

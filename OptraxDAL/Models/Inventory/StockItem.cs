@@ -11,6 +11,7 @@ namespace OptraxDAL.Models.Inventory
         public int ID { get; set; }
         public int InventoryItemID { get; set; }
 
+        [Display(Name="Date Acquired")]
         public DateTimeOffset? PurchaseDate { get; set; }
         public DateTimeOffset? ExpirationDate { get; set; }
 
@@ -21,9 +22,10 @@ namespace OptraxDAL.Models.Inventory
         public bool NeedsTransferApproval { get; set; } = false;
         public decimal? PurchasePrice { get; set; }
 
-        public virtual required InventoryItem InventoryItem { get; set; }
+        public virtual InventoryItem? InventoryItem { get; set; }
         public virtual ICollection<InventoryLocation> Locations { get; set; } = [];
         public virtual ICollection<InventoryTransfer> Transfers { get; set; } = [];
     }
+
 
 }
