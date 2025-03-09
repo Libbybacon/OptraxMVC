@@ -119,10 +119,7 @@ function setPlantListeners() {
         $('#Crop_CurrentPhase').val(phase);
     });
 
-    $('#StrainID').on('change', function () {
-        let strain = $('#StrainID option:selected').text();
-        $('#Crop_BatchID').removeAttr('readonly').val(strain + '-Mothers').attr('readonly', 'readonly');
-    });
+
 
     $('#IsMother').off('change').on('change', function () {
 
@@ -134,6 +131,11 @@ function setPlantListeners() {
 
             $('#Crop_Name').val('Mothers').attr('readonly', 'readonly');
             $('#Crop_BatchID').val(strain + '-Mothers').attr('readonly', 'readonly');
+
+            $('#StrainID').on('change', function () {
+                let strain = $('#StrainID option:selected').text();
+                $('#Crop_BatchID').removeAttr('readonly').val(strain + '-Mothers').attr('readonly', 'readonly');
+            });
         }
         else {
             $('#MotherName').val('').prop('readonly', 'readonly');
