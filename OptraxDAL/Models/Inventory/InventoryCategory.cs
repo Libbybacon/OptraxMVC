@@ -11,6 +11,7 @@ namespace OptraxDAL.Models.Inventory
         public int ID { get; set; }
         public int? ParentID { get; set; }
 
+
         [MaxLength(50)]
         public string Name { get; set; } = "";
         [MaxLength(150)]

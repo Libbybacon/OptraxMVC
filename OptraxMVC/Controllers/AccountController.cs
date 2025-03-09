@@ -4,7 +4,7 @@ using OptraxMVC.Services;
 
 namespace OptraxMVC.Controllers
 {
-    public class AccountController(OptraxContext context, IDropdownService dropdownService) : BaseController(context, dropdownService)
+    public class AccountController(OptraxContext context) : BaseController(context)
     {
 
         [HttpGet]

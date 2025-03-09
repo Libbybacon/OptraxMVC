@@ -5,21 +5,24 @@ using OptraxDAL.ViewModels;
 using OptraxMVC.Controllers;
 using OptraxMVC.Models;
 using OptraxMVC.Services;
+using OptraxMVC.Services.Inventory;
 
 namespace OptraxMVC.Areas.Inventory.Controllers
 {
     [Area("Inventory")]
-    public class ItemsController(OptraxContext context, IDropdownService dropdownService, IInventoryService inventoryService)
-    : BaseController(context, dropdownService)
+    public class ItemsController(OptraxContext context, IDropdownService dropdownService, IItemService itemService)
+    : BaseController(context)
     {
-        private readonly IInventoryService _IInventory = inventoryService;
+        private readonly IItemService _IItem = itemService;
+        private readonly IDropdownService _IDropdowns = dropdownService;
+
 
         [HttpPost]
         public async Task<IActionResult> GetItems()
         {
             try
             {
-                var data = await _IInventory.GetItemsAsync();
+                var data = await _IItem.GetItemsAsync();
 
                 LoadViewData();
                 return Json(data);
@@ -52,26 +55,11 @@ namespace OptraxMVC.Areas.Inventory.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                {
                     return Json(new { success = false, errors = ModelState });
-                }
 
-                var itemCats = await _IInventory.GetItemCategoriesAsync(item.CategoryID);
+                ResponseVM response = await _IItem.CreateAsync(item);
 
-                if (itemCats == null)
-                {
-                    return Json(new { success = true, msg = "Invalid category" });
-                }
-
-                ItemVM? itemVM = await _IInventory.CreateItemAsync(item, itemCats);
-
-                if (itemVM == null)
-                {
-                    return Json(new { success = false, msg = "Error saving item" });
-                }
-
-                return Json(new { success = true, data = itemVM });
-
+                return Json(response);
             }
             catch (Exception ex)
             {
@@ -84,7 +72,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         {
             try
             {
-                InventoryItem? item = await _IInventory.GetItemByIdAsync(itemID);
+                InventoryItem? item = await _IItem.GetItemByIdAsync(itemID);
 
                 if (item == null)
                 {
@@ -111,23 +99,10 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                 if (!ModelState.IsValid)
                     return Json(new { success = false, msg = "Invalid model" });
 
-                InventoryItem? dbItem = await _IInventory.GetItemByIdAsync(item.ID);
+                ResponseVM response = await _IItem.UpdateAsync(item);
 
-                if (dbItem == null)
-                {
-                    return Json(new { success = false, msg = "Item not found." });
-                }
+                return Json(response);
 
-                await _IInventory.UpdateItemAsync(item, dbItem);
-
-                var itemCats = await _IInventory.GetItemCategoriesAsync(dbItem.CategoryID);
-                if (itemCats == null)
-                {
-                    return Json(new { success = true, msg = "Invalid category" });
-                }
-                ItemVM itemVM = item.ToItemVM(itemCats[0], itemCats[1]);
-
-                return Json(new { success = true, msg = "Item updated!", data = itemVM });
             }
             catch (Exception ex)
             {
@@ -137,10 +112,10 @@ namespace OptraxMVC.Areas.Inventory.Controllers
 
         private void LoadViewData()
         {
-            ViewData["UOMs"] = _IDropdowns.GetUOMs();
-            ViewData["StockTypes"] = _IDropdowns.GetStockTypes();
-            ViewData["Categories"] = _IDropdowns.GetCategories();
-            ViewData["Containers"] = _IDropdowns.GetContainerTypes();
+            ViewData["UOMs"] = _IDropdowns.GetUomsList();
+            ViewData["StockTypes"] = _IDropdowns.GetStockTypesList();
+            ViewData["Categories"] = _IDropdowns.GetCategoriesList();
+            ViewData["Containers"] = _IDropdowns.GetContainerTypesList();
         }
     }
 }

@@ -7,17 +7,22 @@ namespace OptraxDAL.Models.Grow
         public Strain() { }
 
         public int ID { get; set; }
+        [Required]
         [MaxLength(100)]
-        public required string Name { get; set; }
+        public string Name { get; set; } = "";
+
         [MaxLength(250)]
         public string? Description { get; set; }
+
+        [Required]
         [MaxLength(10)]
-        public required string StrainType { get; set; }
+        public string StrainType { get; set; } = "";
         public int? Generation { get; set; }
         public int? OriginID { get; set; }
+
         [MaxLength(50)]
         public string? OriginType { get; set; }
-        public required bool Active { get; set; } = true;
+        public bool Active { get; set; } = true;
 
         public virtual ICollection<Crop> Crops { get; set; } = [];
         public virtual ICollection<StrainRelationship> Parents { get; set; } = [];

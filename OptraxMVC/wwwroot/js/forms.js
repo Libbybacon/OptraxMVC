@@ -13,8 +13,15 @@ $(document).ready(function () {
         submitForm($(`#modelForm`))
     });
 
-    if ($('#modelForm').data('modelname') == 'cat') {
-        setCategoryListeners();
+    switch ($('#modelForm').data('modelname')) {
+        case 'cat':
+            setCategoryListeners();
+            break;
+        case 'plant':
+            setPlantListeners();
+            break;
+        default:
+            break;
     }
 
     if ($('#modelForm').data('func').includes('update')) {
@@ -93,6 +100,8 @@ function submitForm($form) {
                             setSelectDrops();
                             setModelChanges();
                             updateCategorySuccess();
+                        case "addPlants":
+                            addPlantsSuccess(response);
                         default:
                             closePopup();
                     }
