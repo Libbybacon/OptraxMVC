@@ -8,7 +8,7 @@ using OptraxMVC.Services;
 namespace OptraxMVC.Areas.Grow.Controllers
 {
     [Area("Grow")]
-    public class GrowController(OptraxContext context, IDropdownService dropdownService) : BaseController(context, dropdownService)
+    public class GrowController(OptraxContext context) : BaseController(context)
     {
         [Authorize]
         public IActionResult Index()

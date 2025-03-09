@@ -6,7 +6,7 @@ using OptraxMVC.Services;
 namespace OptraxMVC.Areas.Grow.Controllers
 {
     [Area("Grow")]
-    public class RoomsController(OptraxContext context, IDropdownService dropdownService) : BaseController(context, dropdownService)
+    public class RoomsController(OptraxContext context) : BaseController(context)
     {
         public IActionResult Index()
         {

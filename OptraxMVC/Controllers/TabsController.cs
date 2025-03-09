@@ -7,7 +7,7 @@ using OptraxMVC.Services;
 
 namespace OptraxMVC.Controllers
 {
-    public class TabsController(OptraxContext context, IDropdownService dropdownService) : BaseController(context, dropdownService)
+    public class TabsController(OptraxContext context) : BaseController(context)
     {
 
         // TODO: Move to db table, allow users to customize display orders by rearraging tabs in view 
