@@ -74,7 +74,7 @@
                 <div class="form-top col-12">
                     <div class="form-top-head">New Crop</div>
                 </div>
-                <input type="hidden" id="Crop_CurrentPhase" name="Crop.CurrentPhase" />
+                <input type="hidden" id="Crop_CurrentPhase" name="Crop.CurrentPhase" value="@Model.StartPhase"/>
                 <div class="col-6">
                     @Html.LabelFor(m => m.Crop.Name)
                     @Html.EditorFor(m => m.Crop.Name, "", new { htmlAttributes = new { @class = $"form-control" } })

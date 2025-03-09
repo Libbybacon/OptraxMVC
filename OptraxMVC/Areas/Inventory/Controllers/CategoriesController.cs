@@ -9,9 +9,10 @@ using OptraxMVC.Services.Inventory;
 namespace OptraxMVC.Areas.Inventory.Controllers
 {
     [Area("Inventory")]
-    public class CategoriesController(OptraxContext context, IDropdownService dropdownService, ICategoryService categoryService) : BaseController(context, dropdownService)
+    public class CategoriesController(OptraxContext context, IDropdownService dropdownService, ICategoryService categoryService) : BaseController(context)
     {
         private readonly ICategoryService _ICategory = categoryService;
+        private readonly IDropdownService _IDropdowns = dropdownService;
 
         [HttpGet]
         public IActionResult Create()
@@ -42,19 +43,16 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    bool saved = await _ICategory.CreateCategoryAsync(cat);
+                if (!ModelState.IsValid)
+                    return Json(new { success = false, errors = ModelState });
 
-                    var data = new
-                    {
-                        success = saved,
-                        msg = saved ? $"New {(!cat.ParentID.HasValue ? "top level " : "")}category '{cat.Name}' added!"
-                                    : "Error saving new category"
-                    };
-                    return Json(data);
-                }
-                return Json(new { success = false, errors = ModelState });
+                if (await _ICategory.CheckNameAsync(cat.Name))
+                    return Json(new { success = false, msg = "Duplicate Category Name." });
+
+                ResponseVM data = await _ICategory.CreateAsync(cat);
+                return Json(data);
+
+
             }
             catch (Exception ex)
             {
@@ -101,14 +99,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                 if (!ModelState.IsValid)
                     return Json(new { success = false, msg = "Invalid model" });
 
-                var dbCat = await _ICategory.GetCategoryByIdAsync(cat.ID);
-
-                if (dbCat == null)
-                    return Json(new { success = false, msg = "Category not found." });
-
-                bool saved = await _ICategory.UpdateCategoryAsync(cat, dbCat);
-
-                var data = new { success = saved, msg = saved ? "Category changes saved!" : "Error saving category :(" };
+                var data = await _ICategory.UpdateAsync(cat);
 
                 return Json(data);
             }

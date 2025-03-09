@@ -11,9 +11,11 @@ namespace OptraxMVC.Areas.Inventory.Controllers
 {
     [Area("Inventory")]
     public class ItemsController(OptraxContext context, IDropdownService dropdownService, IItemService itemService)
-    : BaseController(context, dropdownService)
+    : BaseController(context)
     {
         private readonly IItemService _IItem = itemService;
+        private readonly IDropdownService _IDropdowns = dropdownService;
+
 
         [HttpPost]
         public async Task<IActionResult> GetItems()
@@ -53,26 +55,11 @@ namespace OptraxMVC.Areas.Inventory.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                {
                     return Json(new { success = false, errors = ModelState });
-                }
 
-                var itemCats = await _IItem.GetItemCategoriesAsync(item.CategoryID);
+                ResponseVM response = await _IItem.CreateAsync(item);
 
-                if (itemCats == null)
-                {
-                    return Json(new { success = true, msg = "Invalid category" });
-                }
-
-                ItemVM? itemVM = await _IItem.CreateItemAsync(item, itemCats);
-
-                if (itemVM == null)
-                {
-                    return Json(new { success = false, msg = "Error saving item" });
-                }
-
-                return Json(new { success = true, data = itemVM });
-
+                return Json(response);
             }
             catch (Exception ex)
             {
@@ -112,23 +99,10 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                 if (!ModelState.IsValid)
                     return Json(new { success = false, msg = "Invalid model" });
 
-                InventoryItem? dbItem = await _IItem.GetItemByIdAsync(item.ID);
+                ResponseVM response = await _IItem.UpdateAsync(item);
 
-                if (dbItem == null)
-                {
-                    return Json(new { success = false, msg = "Item not found." });
-                }
+                return Json(response);
 
-                await _IItem.UpdateItemAsync(item, dbItem);
-
-                var itemCats = await _IItem.GetItemCategoriesAsync(dbItem.CategoryID);
-                if (itemCats == null)
-                {
-                    return Json(new { success = true, msg = "Invalid category" });
-                }
-                ItemVM itemVM = item.ToItemVM(itemCats[0], itemCats[1]);
-
-                return Json(new { success = true, msg = "Item updated!", data = itemVM });
             }
             catch (Exception ex)
             {

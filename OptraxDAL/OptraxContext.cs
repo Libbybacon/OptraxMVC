@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
@@ -9,8 +10,10 @@ using OptraxDAL.Models.Products;
 
 namespace OptraxDAL
 {
-    public class OptraxContext(DbContextOptions<OptraxContext> options) : IdentityDbContext<AppUser>(options)
+    public class OptraxContext(DbContextOptions<OptraxContext> options, IMemoryCache cache) : IdentityDbContext<AppUser>(options)
     {
+        private readonly IMemoryCache _cache = cache;
+
         #region Admin
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Address> Addresses { get; set; }
@@ -211,6 +214,43 @@ namespace OptraxDAL
             #region Product
             builder.Entity<ProductItem>().HasIndex(x => x.Barcode).IsUnique();
             #endregion
+        }
+
+
+
+
+        public override int SaveChanges()
+        {
+            var hasCategoryChanges = ChangeTracker.Entries<InventoryCategory>()
+                                                  .Any(e => e.State == EntityState.Added ||
+                                                            e.State == EntityState.Modified ||
+                                                            e.State == EntityState.Deleted);
+
+            var result = base.SaveChanges();
+
+            if (hasCategoryChanges)
+            {
+                _cache.Remove("CategoriesSelect"); 
+            }
+
+            return result;
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var hasCategoryChanges = ChangeTracker.Entries<InventoryCategory>()
+                                                  .Any(e => e.State == EntityState.Added ||
+                                                            e.State == EntityState.Modified ||
+                                                            e.State == EntityState.Deleted);
+
+            var result = await base.SaveChangesAsync(cancellationToken);
+
+            if (hasCategoryChanges)
+            {
+                _cache.Remove("CategoriesSelect"); 
+            }
+
+            return result;
         }
     }
 }

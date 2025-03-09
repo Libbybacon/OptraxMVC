@@ -14,9 +14,8 @@ namespace OptraxDAL.Models.Inventory
         [MaxLength(50)]
         public string TrackingID { get; set; } = "";
 
-
         [Required]
-        public int StrainID { get; set; } = 0;
+        public int StrainID { get; set; }
 
         public int? ParentID { get; set; }
 
@@ -27,12 +26,12 @@ namespace OptraxDAL.Models.Inventory
         public string? MotherName { get; set; }
 
         [Required]
-        public string StartType { get; set; } = "Clone";
+        public string StartType { get; set; } = "";
 
         [Required]
         [MaxLength(10)]
-        [Display(Name = "Growth Phase")]
-        public string StartPhase { get; set; } = "Seed";
+        [Display(Name = "Phase")]
+        public string StartPhase { get; set; } = "";
 
         public int? CropID { get; set; }
 
@@ -101,7 +100,9 @@ namespace OptraxDAL.Models.Inventory
             Start,
             Veg,
             Flower,
-            PreHarvest
+            Harvest,
+            Processing,
+            Product
         }
 
         public enum StartTypes

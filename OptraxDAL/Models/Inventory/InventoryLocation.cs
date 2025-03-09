@@ -12,6 +12,7 @@ namespace OptraxDAL.Models.Inventory
 
         public int ID { get; set; }
         public int? ParentID { get; set; }
+
         [MaxLength(50)]
         public required string Name { get; set; }
         [MaxLength(250)]
@@ -28,6 +29,9 @@ namespace OptraxDAL.Models.Inventory
 
         [InverseProperty(nameof(InventoryTransfer.Destination))]
         public virtual ICollection<InventoryTransfer> TransfersIn { get; set; } = [];
+
+        [NotMapped]
+        public string LocationType { get; set; } = "";
 
         public string GetParentNamesString()
         {
@@ -85,7 +89,6 @@ namespace OptraxDAL.Models.Inventory
 
         public int AddressID { get; set; }
         public virtual required Address Address { get; set; }
-        //public virtual required BuildingAddress Address { get; set; }
     }
 
     [Table("InventoryLocation")]
@@ -98,10 +101,10 @@ namespace OptraxDAL.Models.Inventory
 
     public enum LocationType
     {
-        Container,
-        Room,
-        Building,
-        Outdoor,
-        OffSite
+        Building = 1,
+        Room = 2,
+        Container = 3,
+        Outdoor = 4,
+        OffSite = 5,
     }
 }

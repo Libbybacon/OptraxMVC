@@ -1,5 +1,4 @@
-﻿
-
+﻿var $plantsTable;
 function makeDatatable() {
     $plantsTable = $(`#plant-table`).DataTable({
         ajax: {
@@ -76,7 +75,7 @@ function makeDatatable() {
         createdRow: function (row, data, dataIndex) {
 
             $(row).attr('id', 'item-' + data.plantID);
-            $(row).addClass(`item-row f-xs ${data.strain.split('-')[0].replace(/\s+/g, "")} ${data.cropID.replace(/\s+/g, "") }`);
+            $(row).addClass(`item-row f-xs d-none ${data.strain.split('-')[0].replace(/\s+/g, "")} ${data.cropID.replace(/\s+/g, "") }`);
 
             $(row).hover(
                 function () {
@@ -103,62 +102,47 @@ function makeDatatable() {
 }
 
 function makeHeaderToggle(props) {
-    let $hidei = $('<i/>').addClass(`bi bi-chevron-up hide-i hide1`)
-    let $showi = $('<i/>').addClass(`bi bi-chevron-down show-i d-none`);
 
-    let $btn = $('<button/>').addClass(`toggle ${props.IsTop ? '' : 'tgi'}`)
-        .data('grp', props.NameNoSpace)
-        .append($showi)
-        .append($hidei)
-        .on('click', function () { showHide(this) });
-
+    let $div = makeRowToggleDiv(props);
     let $txtSpan = $('<span/>').addClass('head-txt flex-fill ps-2').append(props.Name);
+    $div.append($txtSpan);
 
-    let $div = $('<div/>').addClass('d-flex w-100').append($btn).append($txtSpan)
-
-    let $th = $('<th/>').attr('colspan', 7).append($div);
+    let $th = $('<th/>').attr('colspan', 7).addClass(`plant${props.Level}`).append($div);
 
     return $('<tr/>').attr('data-id', props.ID).addClass(`grp-row cat${props.Level}-head`).append($th);
-
 }
 
 function setPlantListeners() {
-
-    $('#IsMother').off('change').on('change', function () {
-        if ($(this).prop('checked') == true) {
-            let strain = $('#StrainID option:selected').text();
-            let phase = $('#StartPhase option:selected').val();
-
-            $('#Quantity').val(1);
-            $('#MotherName').removeAttr('disabled');
-
-            $('#Crop_CurrentPhase').val(phase);
-            $('#Crop_Name').val('Mothers').prop('readonly', 'readonly');
-            $('#Crop_BatchID').val(strain + '-Mothers').attr('readonly', 'readonly');
-
-            $('#StrainID').on('change', function () {
-                let strain = $('#StrainID option:selected').text();
-
-                $('#Crop_BatchID').removeAttr('readonly').val(strain + '-Mothers').attr('readonly', 'readonly');
-            });
-        }
-        else {
-            $('#MotherName').val('');
-            $('#MotherName').attr('disabled', 'disabled');
-            $('#Crop_Name').val('').removeAttr('disabled');
-            $('#Crop_BatchID').val('').removeAttr('readonly');
-
-            $('#StrainID').off('change')
-        }
-    });
 
     $('#StartPhase').on('change', function () {
         let phase = $(this).val();
         $('#Crop_CurrentPhase').val(phase);
     });
 
+    $('#StrainID').on('change', function () {
+        let strain = $('#StrainID option:selected').text();
+        $('#Crop_BatchID').removeAttr('readonly').val(strain + '-Mothers').attr('readonly', 'readonly');
+    });
 
+    $('#IsMother').off('change').on('change', function () {
+
+        if ($(this).prop('checked') == true) {
+            let strain = $('#StrainID option:selected').text();
+
+            $('#Quantity').val(1);
+            $('#MotherName').removeAttr('disabled');
+
+            $('#Crop_Name').val('Mothers').attr('readonly', 'readonly');
+            $('#Crop_BatchID').val(strain + '-Mothers').attr('readonly', 'readonly');
+        }
+        else {
+            $('#MotherName').val('').prop('readonly', 'readonly');
+            $('#Crop_Name').val('').removeAttr('readonly');
+            $('#Crop_BatchID').val('').removeAttr('readonly');
+        }
+    });
 }
+
 function addPlants() {
     let props = {
         type: 'GET',
@@ -168,7 +152,7 @@ function addPlants() {
     loadPopup(props);
 }
 
-function addPlantsSuccess(response) {
+function addPlantsSuccess() {
 
     $plantsTable.ajax.reload();
     //let data = response.data;

@@ -1,4 +1,5 @@
-﻿function makeDatatable() {
+﻿
+function makeDatatable() {
     $itemsTable = $(`#grp-table`).DataTable({
         ajax: {
             type: "POST",
@@ -81,7 +82,7 @@
             let arr1 = data.cat1.split('-');
 
             $(row).attr('id', 'item-' + data.itemID);
-            $(row).addClass(`item-row f-xs ${arr0[0].replace(/\s+/g, "")} ${arr1[0].replace(/\s+/g, "")}`);
+            $(row).addClass(`item-row d-none f-xs ${arr0[0].replace(/\s+/g, "")} ${arr1[0].replace(/\s+/g, "")}`);
 
             $(row).hover(
                 function () {
@@ -108,19 +109,13 @@
 }
 
 function makeHeaderToggle(props) {
-    let $hidei = $('<i/>').addClass(`bi bi-chevron-up hide-i hide1`)
-    let $showi = $('<i/>').addClass(`bi bi-chevron-down show-i d-none`);
 
-    let $btn = $('<button/>').addClass(`toggle ${props.IsTop ? '' : 'tgi'}`)
-        .data('grp', props.NameNoSpace)
-        .append($showi)
-        .append($hidei)
-        .on('click', function () { showHide(this) });
-
+    let $div = makeRowToggleDiv(props)
+    console.log('div', $div )
+    console.log(props)
     let $colorIcon = $('<i/>').addClass('bi bi-square-fill m-0 me-2').css('color', props.Color)
     let $txtSpan = $('<span/>').addClass('head-txt flex-fill ps-2').append(props.Name);
 
-    let $div = $('<div/>').addClass('d-flex w-100').append($btn)
     props.IsTop ? $div.append($txtSpan) : $div.append($colorIcon).append($txtSpan);
 
     let $th = $('<th/>').attr('colspan', 7).append($div);

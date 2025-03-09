@@ -14,9 +14,10 @@ using OptraxMVC.Services.Inventory;
 namespace OptraxMVC.Areas.Inventory.Controllers
 {
     [Area("Inventory")]
-    public class PlantsController(OptraxContext context, IDropdownService dropdownService, IPlantService plantService) : BaseController(context, dropdownService)
+    public class PlantsController(OptraxContext context, IDropdownService dropdownService, IPlantService plantService) : BaseController(context)
     {
         private readonly IPlantService _IPlants = plantService;
+        private readonly IDropdownService _IDropdowns = dropdownService;
 
         [HttpGet]
         public async Task<IActionResult> GetPlants()

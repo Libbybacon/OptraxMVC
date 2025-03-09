@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NuGet.Configuration;
 using OptraxDAL;
 using OptraxDAL.Models.Inventory;
 using OptraxDAL.ViewModels;
+using OptraxMVC.Models;
 
 namespace OptraxMVC.Services.Inventory
 {
@@ -9,8 +11,8 @@ namespace OptraxMVC.Services.Inventory
     {
         Task<List<ItemVM>> GetItemsAsync();
         Task<InventoryItem?> GetItemByIdAsync(int itemID);
-        Task<ItemVM?> CreateItemAsync(InventoryItem item, InventoryCategory[] itemCats);
-        Task<bool> UpdateItemAsync(InventoryItem item, InventoryItem dbItem);
+        Task<ResponseVM> CreateAsync(InventoryItem item);
+        Task<ResponseVM> UpdateAsync(InventoryItem item);
         Task<InventoryCategory[]?> GetItemCategoriesAsync(int categoryId);
 
     }
@@ -29,24 +31,43 @@ namespace OptraxMVC.Services.Inventory
             return await db.InventoryItems.FindAsync(itemID);
         }
 
-        public async Task<ItemVM?> CreateItemAsync(InventoryItem item, InventoryCategory[] itemCats)
+        public async Task<ResponseVM> CreateAsync(InventoryItem item)
         {
+            var itemCats = await GetItemCategoriesAsync(item.CategoryID);
+
+            if (itemCats == null)
+                return new ResponseVM { success = true, msg = "Invalid category" };
+
             try
             {
-                db.InventoryItems.Add(item);
-
+                await db.InventoryItems.AddAsync(item);
                 await db.SaveChangesAsync();
-
-                return item.ToItemVM(itemCats[0], itemCats[1]);
             }
             catch (Exception)
             {
-                return null;
+                return new ResponseVM { success = false, msg = "Error saving item" };
             }
+
+            ItemVM? itemVM = item.ToItemVM(itemCats[0], itemCats[1]);
+
+            if (itemVM == null)
+                return new ResponseVM { success = false, msg = "Error converting item" };
+
+            return new ResponseVM { success = false, msg = "Item Saved!", data = itemVM };
         }
 
-        public async Task<bool> UpdateItemAsync(InventoryItem item, InventoryItem dbItem)
+        public async Task<ResponseVM> UpdateAsync(InventoryItem item)
         {
+            InventoryItem? dbItem = await GetItemByIdAsync(item.ID);
+
+            if (dbItem == null)
+                return new ResponseVM { msg = "Item not found." };
+
+            var itemCats = await GetItemCategoriesAsync(dbItem.CategoryID);
+
+            if (itemCats == null)
+                return new ResponseVM { msg = "Invalid category" };
+
             try
             {
                 List<string> changes = item.Changes?.Split(",")?.ToList() ?? [];
@@ -58,10 +79,15 @@ namespace OptraxMVC.Services.Inventory
                     prop.SetValue(dbItem, prop.GetValue(item));
                 }
                 await db.SaveChangesAsync();
-
-                return true;
             }
-            catch (Exception) { return false; }
+            catch (Exception)
+            {
+                return new ResponseVM { msg = "Error saving changes." };
+            }
+
+            ItemVM itemVM = item.ToItemVM(itemCats[0], itemCats[1]);
+
+            return new ResponseVM { success = false, msg = "Item Updated!", data = itemVM };
         }
 
         public async Task<InventoryCategory[]?> GetItemCategoriesAsync(int categoryId)

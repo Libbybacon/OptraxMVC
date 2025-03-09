@@ -153,10 +153,11 @@
     white-space: nowrap;
 }
 
-.readonly{
+.readonly {
     pointer-events: none !important;
     background-color: var(--gray-lt);
 }
+
 
 /* Site Layout */
 html {

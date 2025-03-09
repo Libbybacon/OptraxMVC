@@ -31,6 +31,7 @@ builder.Services.AddScoped<IDropdownService, DropdownService>();
 builder.Services.AddScoped<IItemService, InventoryService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IPlantService, PlantService>();
+//builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddMemoryCache();
 
 var app = builder.Build();

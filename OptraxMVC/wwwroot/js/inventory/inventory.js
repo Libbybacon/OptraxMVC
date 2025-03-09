@@ -1,9 +1,7 @@
 ﻿
-var $popout;
 var none = 'd-none';
 var bg = 'background-color';
 var $itemsTable;
-
 
 $(document).ready(function () {
 
@@ -73,6 +71,21 @@ function showHide(btn) {
         $hidei.removeClass('d-none hide1 hide2').addClass(show2 ? 'hide1' : (hide1 ? 'hide2' : none));
         $showi.removeClass('d-none show1 show2').addClass(hide2 ? 'show1' : (show1 ? 'show2' : none));
     }
+}
+
+function makeRowToggleDiv(props) {
+    let $hidei = $('<i/>').addClass(`bi bi-chevron-up hide-i  d-none`)
+    let $showi = $('<i/>').addClass(`bi bi-chevron-down show-i ${(props.IsTop ? 'show2' : 'show1')}`);
+
+    let $btn = $('<button/>').addClass(`toggle ${props.IsTop ? '' : 'tgi'}`)
+        .data('grp', props.NameNoSpace)
+        .append($showi)
+        .append($hidei)
+        .on('click', function () { showHide(this) });
+
+    let $div = $('<div/>').addClass('d-flex w-100').append($btn)
+
+    return ($div);
 }
 
 
