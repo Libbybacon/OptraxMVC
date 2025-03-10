@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<OptraxContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("OptraxConnection"));
 });
 
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<OptraxContext>()
@@ -31,8 +31,9 @@ builder.Services.AddScoped<IDropdownService, DropdownService>();
 builder.Services.AddScoped<IItemService, InventoryService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IPlantService, PlantService>();
-//builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddMemoryCache();
+
 
 var app = builder.Build();
 

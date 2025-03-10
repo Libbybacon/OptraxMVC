@@ -12,6 +12,7 @@ namespace OptraxMVC.Services
     {
         List<Strain> GetStrains();
         List<SelectListItem> GetUomsList();
+        List<SelectListItem> GetStatesList();
         List<SelectListItem> GetStrainsList();
         List<SelectListItem> GetStartTypesList();
         List<SelectListItem> GetPlantTypesList();
@@ -84,6 +85,16 @@ namespace OptraxMVC.Services
                                                                                  Value = e.ToString(),
                                                                                  Text = e.ToString()
                                                                              })];
+        }
+
+        public List<SelectListItem> GetStatesList()
+        {
+
+            return [.. Enum.GetNames(typeof(Enums.States)).Select(e => new SelectListItem
+                                                                          {
+                                                                              Value = e.ToString(),
+                                                                              Text = e.ToString()
+                                                                          })];
         }
 
         public List<SelectListItem> GetCategoriesList()
@@ -163,10 +174,10 @@ namespace OptraxMVC.Services
                 {
                     Value = c.ID.ToString(),
                     Text = c.Name
-                })
-                                                                                                    .ToList();
+                }).ToList();
             }) ?? [];
         }
     }
-
 }
+
+

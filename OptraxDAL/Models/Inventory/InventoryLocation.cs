@@ -13,10 +13,13 @@ namespace OptraxDAL.Models.Inventory
         public int ID { get; set; }
         public int? ParentID { get; set; }
 
+        [Required]
         [MaxLength(50)]
-        public required string Name { get; set; }
+        public string Name { get; set; } = "";
+
         [MaxLength(250)]
         public string? Description { get; set; }
+        
         public bool Active { get; set; } = true;
 
         public virtual InventoryLocation? Parent { get; set; } = null;
@@ -69,9 +72,11 @@ namespace OptraxDAL.Models.Inventory
         public ContainerLocation() { }
 
         public int ContainerTypeID { get; set; }
-        public new required string Description { get; set; }
+        
+        [Required]
+        public new string Description { get; set; } = "";
 
-        public required ContainerType ContainerType { get; set; }
+        public ContainerType? ContainerType { get; set; }
     }
 
     [Table("InventoryLocation")]
@@ -95,8 +100,9 @@ namespace OptraxDAL.Models.Inventory
     public class OffsiteLocation : InventoryLocation
     {
         public OffsiteLocation() { }
-
-        public new required string Description { get; set; }
+        
+        [Required]
+        public new string Description { get; set; } = "";
     }
 
     public enum LocationType

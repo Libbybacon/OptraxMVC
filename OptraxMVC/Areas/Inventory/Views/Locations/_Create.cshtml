@@ -1,12 +1,10 @@
 ﻿@using OptraxDAL.Models.Inventory
 @using OptraxMVC.Models
+
 @model InventoryLocation
 
 @{
     FormVM formVM = ViewBag.FormVM;
-    string showDeets = formVM.IsNew ? "d-none" : "";
-
-    var locTypes = (IEnumerable<SelectListItem>)(ViewData["LocationTypes"] ?? new());
 }
 
 <div class="px-2">
@@ -20,42 +18,26 @@
         <div class="d-flex justify-content-center">
             <div class="row col-12 d-flex w-100">
                 <div class="col-xl-4 col-6">
-                    @Html.LabelFor(m => m.Name)
+                    @Html.LabelFor(model => model.Name)
                     @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = $"form-control attr" } })
                     @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
-                </div>
-                <div class="col-xl-4 col-6">
-                    @Html.LabelFor(m => m.LocationType)
-                    @Html.DropDownListFor(m => m.LocationType, locTypes, "Select Location Type", new { @class = $"form-control select2 attr" })
-                    @Html.ValidationMessageFor(m => m.LocationType, "", new { @class = "val-msg" })
                 </div>
                 <div class="col-xl-4 col-6">
                     @Html.LabelFor(m => m.Description)
                     @Html.EditorFor(m => m.Description, "Description", new { htmlAttributes = new { @class = $"form-control attr" } })
                     @Html.ValidationMessageFor(m => m.Description, "", new { htmlAttributes = new { @class = "val-msg" } })
                 </div>
-                @*                 <div class="col-xl-4 col-6">
-                    @Html.LabelFor(m => m.ParentID)
-                    @Html.EditorFor(m => m.SKU, "SKU", new { htmlAttributes = new { @class = $"form-control form-txt attr", data_ival = Model.SKU } })
-                    @Html.ValidationMessageFor(m => m.SKU, "", new { htmlAttributes = new { @class = "val-msg" } })
-                </div>
-*@
             </div>
         </div>
+        @if (Model.LocationType == "Building")
+        {
+            @await Html.PartialAsync("_BuildingLocation", Model, new ViewDataDictionary(ViewData) { })
+        }
         <div class="popup-btns d-flex justify-content-center">
-            <button type="submit" class="save-btn form-btn @(formVM.IsNew ? "" : "d-none")">Save New Item</button>
+            <button type="submit" class="save-btn form-btn @(formVM.IsNew ? "" : "d-none")">Save New Locations</button>
             <button type="submit" class="update-btn form-btn d-none">Save Changes</button>
         </div>
     }
-</div>
-
-<div class="@showDeets deets-div px-2 pb-2">
-    <button type="button" id="histDrop" class="dropdown-toggle form-drop w-100" data-bs-toggle="collapse" data-bs-target="#itemHist" aria-expanded="false" aria-controls="itemHist">Item History</button>
-    <div id="itemHist" class="collapse">
-        <div class="history-inner">
-            Information about stock levels, transfers, order histories, etc here.
-        </div>
-    </div>
 </div>
 
 <script src="/js/forms.js"></script>

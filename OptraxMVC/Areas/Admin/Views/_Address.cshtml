@@ -1,0 +1,51 @@
+﻿@using OptraxDAL.Models.Admin
+
+@model Address
+@{
+    var states = (IEnumerable<SelectListItem>)(ViewData["States"] ?? new());
+}
+
+<div class="d-flex justify-content-center">
+    <div class="row col-12 d-flex w-100">
+        <div class="col-xl-4 col-6">
+            @Html.LabelFor(m => m.Address1)
+            @Html.EditorFor(m => m.Address1, "Address1", new { htmlAttributes = new { @class = $"form-control" } })
+            @Html.ValidationMessageFor(m => m.Address1, "", new { htmlAttributes = new { @class = "val-msg" } })
+        </div>
+        <div class="col-xl-4 col-6">
+            @Html.LabelFor(m => m.Address2)
+            @Html.EditorFor(m => m.Address2, "Address2", new { htmlAttributes = new { @class = $"form-control" } })
+            @Html.ValidationMessageFor(m => m.Address2, "", new { htmlAttributes = new { @class = "val-msg" } })
+        </div>
+        <div class="col-xl-4 col-6">
+            @Html.LabelFor(m => m.City)
+            @Html.EditorFor(m => m.City, "City", new { htmlAttributes = new { @class = $"form-control" } })
+            @Html.ValidationMessageFor(m => m.City, "", new { htmlAttributes = new { @class = "val-msg" } })
+        </div>
+        <div class="col-xl-4 col-6">
+            @Html.LabelFor(m => m.State)
+            @Html.DropDownListFor(m => m.State, states, "Select State", new { @class = $"form-control select2 attr"})
+            @Html.ValidationMessageFor(m => m.State, "", new { htmlAttributes = new { @class = "val-msg" } })
+        </div>
+        <div class="col-xl-4 col-6">
+            @Html.LabelFor(m => m.ZipCode)
+            @Html.EditorFor(m => m.ZipCode, "ZipCode", new { htmlAttributes = new { @class = $"form-control" } })
+            @Html.ValidationMessageFor(m => m.ZipCode, "", new { htmlAttributes = new { @class = "val-msg" } })
+        </div>
+        <div class="col-xl-4 col-6">
+            @Html.LabelFor(m => m.ContactName)
+            @Html.EditorFor(m => m.ContactName, "ContactName", new { htmlAttributes = new { @class = $"form-control" } })
+            @Html.ValidationMessageFor(m => m.ContactName, "", new { htmlAttributes = new { @class = "val-msg" } })
+        </div>
+        <div class="col-xl-4 col-6">
+            @Html.LabelFor(m => m.ContactPhone)
+            @Html.EditorFor(m => m.ContactPhone, "ContactPhone", new { htmlAttributes = new { @class = $"form-control" } })
+            @Html.ValidationMessageFor(m => m.ContactPhone, "", new { htmlAttributes = new { @class = "val-msg" } })
+        </div>
+        <div class="col-xl-4 col-6">
+            @Html.LabelFor(m => m.ContactEmail)
+            @Html.EditorFor(m => m.ContactEmail, "ContactEmail", new { htmlAttributes = new { @class = $"form-control" } })
+            @Html.ValidationMessageFor(m => m.ContactEmail, "", new { htmlAttributes = new { @class = "val-msg" } })
+        </div>
+    </div>
+</div>

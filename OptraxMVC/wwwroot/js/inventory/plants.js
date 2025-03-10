@@ -119,8 +119,6 @@ function setPlantListeners() {
         $('#Crop_CurrentPhase').val(phase);
     });
 
-
-
     $('#IsMother').off('change').on('change', function () {
 
         if ($(this).prop('checked') == true) {

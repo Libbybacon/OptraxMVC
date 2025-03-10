@@ -7,18 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Admin\**" />
     <Compile Remove="Areas\Grow\Data\**" />
     <Compile Remove="Areas\Grow\Models\**" />
     <Compile Remove="Views\Account\**" />
     <Compile Remove="wwwroot\css\site\**" />
+    <Content Remove="Areas\Admin\**" />
     <Content Remove="Areas\Grow\Data\**" />
     <Content Remove="Areas\Grow\Models\**" />
     <Content Remove="Views\Account\**" />
     <Content Remove="wwwroot\css\site\**" />
+    <EmbeddedResource Remove="Areas\Admin\**" />
     <EmbeddedResource Remove="Areas\Grow\Data\**" />
     <EmbeddedResource Remove="Areas\Grow\Models\**" />
     <EmbeddedResource Remove="Views\Account\**" />
     <EmbeddedResource Remove="wwwroot\css\site\**" />
+    <None Remove="Areas\Admin\**" />
     <None Remove="Areas\Grow\Data\**" />
     <None Remove="Areas\Grow\Models\**" />
     <None Remove="Views\Account\**" />
@@ -54,7 +58,10 @@
     <Folder Include="Areas\Admin\Controllers\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Areas\Admin\Views\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Areas\Admin\Views\_Address.cshtml" />
   </ItemGroup>
 
 </Project>

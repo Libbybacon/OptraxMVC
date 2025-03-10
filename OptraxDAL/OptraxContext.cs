@@ -216,21 +216,17 @@ namespace OptraxDAL
             #endregion
         }
 
-
-
-
         public override int SaveChanges()
         {
-            var hasCategoryChanges = ChangeTracker.Entries<InventoryCategory>()
-                                                  .Any(e => e.State == EntityState.Added ||
-                                                            e.State == EntityState.Modified ||
-                                                            e.State == EntityState.Deleted);
+            var hasCategoryChanges = ChangeTracker.Entries<InventoryCategory>().Any(e => e.State == EntityState.Added ||
+                                                                                         e.State == EntityState.Modified ||
+                                                                                         e.State == EntityState.Deleted);
 
             var result = base.SaveChanges();
 
             if (hasCategoryChanges)
             {
-                _cache.Remove("CategoriesSelect"); 
+                _cache.Remove("CategoriesSelect");
             }
 
             return result;
@@ -247,7 +243,7 @@ namespace OptraxDAL
 
             if (hasCategoryChanges)
             {
-                _cache.Remove("CategoriesSelect"); 
+                _cache.Remove("CategoriesSelect");
             }
 
             return result;
