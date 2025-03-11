@@ -23,13 +23,13 @@ function makeDatatable() {
         rowGroup: {
             dataSrc: ["locationType"],
             startRender: function (rows, group, level) {
-                let name = level == 0 ? group.split('-')[0] : group;
+               console.log('group', group, ' level ', level)
                 let props = {
                     Level: level,
                     IsTop: level == 0,
                     ID: group,
-                    Name: name,
-                    NameNoSpace: name.replace(/\s+/g, ""),
+                    Name: group,
+                    NameNoSpace: group.replace(/\s+/g, ""),
                 }
                 let $tr = makeHeaderToggle(props);
                 return $tr
@@ -65,7 +65,7 @@ function makeDatatable() {
         createdRow: function (row, data, dataIndex) {
 
             $(row).attr('id', 'item-' + data.ID);
-            $(row).addClass(`item-row f-xs d-none`);
+            $(row).addClass(`item-row f-xs`);
 
             $(row).hover(
                 function () {
@@ -107,7 +107,6 @@ function SetLocationHandlers() {
 }
 
 function addLocation(type) {
-    console.log('add loc', type)
     let props = {
         type: 'GET',
         url: `/Inventory/Locations/LoadCreate/`,
@@ -115,6 +114,35 @@ function addLocation(type) {
         data: { type: type }
     }
     loadPopup(props);
+}
+
+function addLocationSuccess(response) {
+    console.log('add loc success  response', response);
+    closePopup();
+    let data = response.data;
+    let newRow = $locTable.row.add(data).draw(false).node();
+
+    setTimeout(function () {
+
+        let tableDiv = $(".dt-scroll-body");
+
+        if (tableDiv.length) {
+            let rowPos = $(newRow).position().top + tableDiv.scrollTop();
+
+            tableDiv.animate({
+                scrollTop: rowPos
+            }, 500);
+        }
+
+        $(newRow).addClass("highlight");
+
+        setTimeout(function () {
+            $(newRow).removeClass("highlight");
+        }, 5000);
+
+    }, 100);
+
+
 }
 
 function getLocationDetails(data) {

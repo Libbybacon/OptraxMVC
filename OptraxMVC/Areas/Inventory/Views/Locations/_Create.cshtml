@@ -6,7 +6,7 @@
 @{
     FormVM formVM = ViewBag.FormVM;
 
-    var locations = (IEnumerable<SelectListItem>)(ViewData["Locations"] ?? new());
+    var locations = Model.LocationType == "Room" ? (IEnumerable<SelectListItem>)(ViewData["Buildings"] ?? new()) : new List<SelectListItem>();
 }
 
 <div class="px-2">
