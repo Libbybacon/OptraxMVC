@@ -5,6 +5,8 @@
 
 @{
     FormVM formVM = ViewBag.FormVM;
+
+    var locations = (IEnumerable<SelectListItem>)(ViewData["Locations"] ?? new());
 }
 
 <div class="px-2">
@@ -12,21 +14,28 @@
     @using (Html.BeginForm(formVM.Action, "Locations", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv }))
     {
         @Html.AntiForgeryToken()
-        <input id="ID" type="hidden" name="ID" value="@Model.ID" />
-        <input id="changes" type="hidden" name="Changes" />
 
+        <input type="hidden" id="LocationType" name="LocationType" value="@Model.LocationType" />
         <div class="d-flex justify-content-center">
             <div class="row col-12 d-flex w-100">
-                <div class="col-xl-4 col-6">
+                <div class="col-6">
                     @Html.LabelFor(model => model.Name)
                     @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = $"form-control attr" } })
                     @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
                 </div>
-                <div class="col-xl-4 col-6">
+                <div class="col-6">
                     @Html.LabelFor(m => m.Description)
                     @Html.EditorFor(m => m.Description, "Description", new { htmlAttributes = new { @class = $"form-control attr" } })
                     @Html.ValidationMessageFor(m => m.Description, "", new { htmlAttributes = new { @class = "val-msg" } })
                 </div>
+                @if (Model.LocationType == "Room")
+                {
+                    <div class="col-xl-4 col-6">
+                        @Html.LabelFor(m => m.ParentID)
+                        @Html.DropDownListFor(m => m.ParentID, locations, "Select Parent Location", new { @class = $"form-control select2 attr" })
+                        @Html.ValidationMessageFor(m => m.ParentID, "", new { @class = "val-msg" })
+                    </div>
+                }
             </div>
         </div>
         @if (Model.LocationType == "Building")
@@ -34,7 +43,7 @@
             @await Html.PartialAsync("_BuildingLocation", Model, new ViewDataDictionary(ViewData) { })
         }
         <div class="popup-btns d-flex justify-content-center">
-            <button type="submit" class="save-btn form-btn @(formVM.IsNew ? "" : "d-none")">Save New Locations</button>
+            <button type="submit" class="save-btn form-btn @(formVM.IsNew ? "" : "d-none")">Save New Location</button>
             <button type="submit" class="update-btn form-btn d-none">Save Changes</button>
         </div>
     }

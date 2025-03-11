@@ -11,6 +11,8 @@ namespace OptraxDAL.Models.Inventory
         public InventoryLocation() { }
 
         public int ID { get; set; }
+
+        [Display(Name="Parent Location")]
         public int? ParentID { get; set; }
 
         [Required]

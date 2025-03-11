@@ -62,6 +62,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAsync(Plant plant)
         {
             if (!ModelState.IsValid)

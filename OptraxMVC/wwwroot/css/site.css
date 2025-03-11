@@ -386,6 +386,7 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     font-size: var(--f-md);
 }
 
+.field-validation-error span,
 .val-msg {
     color: red;
     font-size: var(--f-xs);

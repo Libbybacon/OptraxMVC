@@ -51,14 +51,10 @@ function makeDatatable() {
                     {
                         extend: 'collection',
                         text: 'Add Location',
-                        className: 'add-btn dropdown-btn table-btn btn-clear',
+                        className: 'add-btn table-btn btn-clear',
                         buttons: [
-                            {
-                                text: 'Building', action: function () { console.log('click'); addLocation('Building') }
-                            },
-                            {
-                                text: 'Room', action: function () { addLocation('Room') }
-                            },
+                            { text: 'Building', action: function () { addLocation('Building') } },
+                            { text: 'Room', action: function () { addLocation('Room') } },
                             { text: 'Container', action: function () { addLocation('Container') } },
                             { text: 'Offsite', action: function () { addLocation('Offsite') } }
                         ]
@@ -114,7 +110,7 @@ function addLocation(type) {
     console.log('add loc', type)
     let props = {
         type: 'GET',
-        url: `/Inventory/Locations/Create/`,
+        url: `/Inventory/Locations/LoadCreate/`,
         title: `New ${type} Location`,
         data: { type: type }
     }

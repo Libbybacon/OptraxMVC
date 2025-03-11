@@ -78,7 +78,7 @@ function submitForm($form) {
 
     let msgdiv = $(`#${$form.data('msgdiv')}`);
     let proceed = $form.attr('action').includes('Create') || Changes.length > 0;
-
+    console.log('form', $form.serialize());
     if ($form.valid() && proceed) {
 
         $.ajax({
@@ -100,8 +100,12 @@ function submitForm($form) {
                             setSelectDrops();
                             setModelChanges();
                             updateCategorySuccess();
+                            break;
                         case "addPlants":
                             addPlantsSuccess(response);
+                            break;
+                        case "addLocation":
+                            addLocationSuccess(response);
                         default:
                             closePopup();
                     }

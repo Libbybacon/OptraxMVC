@@ -92,6 +92,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(InventoryItem item)
         {
             try

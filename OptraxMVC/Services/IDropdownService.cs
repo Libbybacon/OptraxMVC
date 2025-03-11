@@ -10,20 +10,28 @@ namespace OptraxMVC.Services
 {
     public interface IDropdownService
     {
-        List<Strain> GetStrains();
         List<SelectListItem> GetUomsList();
         List<SelectListItem> GetStatesList();
-        List<SelectListItem> GetStrainsList();
-        List<SelectListItem> GetStartTypesList();
-        List<SelectListItem> GetPlantTypesList();
-        List<SelectListItem> GetStockTypesList();
+        List<ContainerType> GetContainerTypesList();
+
         List<SelectListItem> GetCategoriesList();
         List<SelectListItem> GetTopCategoriesList();
-        List<ContainerType> GetContainerTypesList();
+
+        // Locations
+        Task<List<SelectListItem>> GetBuildings();
+        Task<List<SelectListItem>> GetRooms();
+        Task<List<SelectListItem>> GetContainerLocations();
+        Task<List<SelectListItem>> GetOffsites();
         List<SelectListItem> GetLocationTypesList();
         List<SelectListItem> GetLocationsSelectList();
-        List<SelectListItem> GetGrowthPhasesList();
 
+        // Plants
+        List<Strain> GetStrains();
+        List<SelectListItem> GetStrainsList();
+        List<SelectListItem> GetPlantTypesList();
+        List<SelectListItem> GetStartTypesList();
+        List<SelectListItem> GetStockTypesList();
+        List<SelectListItem> GetGrowthPhasesList();
     }
 
     public class DropdownService(OptraxContext context, IMemoryCache cache) : IDropdownService
@@ -41,56 +49,14 @@ namespace OptraxMVC.Services
                 {
                     Value = u.UnitName,
                     Text = u.ListName
-                })
-                .ToList() ?? [];
+                }).ToList();
             }) ?? [];
         }
 
-        public List<SelectListItem> GetGrowthPhasesList()
-        {
-            return [.. Enum.GetNames(typeof(Plant.GrowthPhases)).Select(e => new SelectListItem
-                                                                            {
-                                                                                Value = e.ToString(),
-                                                                                Text = e.ToString()
-                                                                            })];
-        }
-        public List<SelectListItem> GetStartTypesList()
-        {
-            return [.. Enum.GetNames(typeof(Plant.StartTypes)).Select(e => new SelectListItem
-                                                                            {
-                                                                                Value = e.ToString(),
-                                                                                Text = e.ToString()
-                                                                            })];
-        }
-        public List<SelectListItem> GetPlantTypesList()
-        {
-            return [.. Enum.GetNames(typeof(Enums.PlantType)).Select(e => new SelectListItem
-                                                                          {
-                                                                              Value = e.ToString(),
-                                                                              Text = e.ToString()
-                                                                          })];
-        }
+
         public List<SelectListItem> GetStockTypesList()
         {
             return [.. Enum.GetNames(typeof(Enums.StockType)).Select(e => new SelectListItem
-                                                                          {
-                                                                              Value = e.ToString(),
-                                                                              Text = e.ToString()
-                                                                          })];
-        }
-        public List<SelectListItem> GetLocationTypesList()
-        {
-            return [.. Enum.GetNames(typeof(Enums.LocationType)).Select(e => new SelectListItem
-                                                                             {
-                                                                                 Value = e.ToString(),
-                                                                                 Text = e.ToString()
-                                                                             })];
-        }
-
-        public List<SelectListItem> GetStatesList()
-        {
-
-            return [.. Enum.GetNames(typeof(Enums.States)).Select(e => new SelectListItem
                                                                           {
                                                                               Value = e.ToString(),
                                                                               Text = e.ToString()
@@ -126,8 +92,7 @@ namespace OptraxMVC.Services
                                               {
                                                   Value = c.ID.ToString(),
                                                   Text = c.Name
-                                              })
-                                              .ToList();
+                                              }).ToList();
             }) ?? [];
         }
 
@@ -139,6 +104,32 @@ namespace OptraxMVC.Services
 
                 return db.ContainerTypes.Where(c => c.Active).OrderBy(c => c.Name).ToList();
             }) ?? [];
+        }
+
+        // Plants
+        public List<SelectListItem> GetGrowthPhasesList()
+        {
+            return [.. Enum.GetNames(typeof(Plant.GrowthPhases)).Select(e => new SelectListItem
+                                                                            {
+                                                                                Value = e.ToString(),
+                                                                                Text = e.ToString()
+                                                                            })];
+        }
+        public List<SelectListItem> GetStartTypesList()
+        {
+            return [.. Enum.GetNames(typeof(Plant.StartTypes)).Select(e => new SelectListItem
+                                                                            {
+                                                                                Value = e.ToString(),
+                                                                                Text = e.ToString()
+                                                                            })];
+        }
+        public List<SelectListItem> GetPlantTypesList()
+        {
+            return [.. Enum.GetNames(typeof(Enums.PlantType)).Select(e => new SelectListItem
+                                                                          {
+                                                                              Value = e.ToString(),
+                                                                              Text = e.ToString()
+                                                                          })];
         }
 
         public List<Strain> GetStrains()
@@ -162,6 +153,63 @@ namespace OptraxMVC.Services
                     Text = c.Name
                 }).ToList();
             }) ?? [];
+        }
+
+
+        // Locations
+        public async Task<List<SelectListItem>> GetBuildings()
+        {
+            return await db.InventoryLocations.OfType<BuildingLocation>().OrderBy(c => c.Name).Select(c => new SelectListItem
+            {
+                Value = c.ID.ToString(),
+                Text = c.Name
+            }).ToListAsync();
+        }
+
+        public async Task<List<SelectListItem>> GetRooms()
+        {
+            return await db.InventoryLocations.OfType<RoomLocation>().OrderBy(c => c.Name).Select(c => new SelectListItem
+            {
+                Value = c.ID.ToString(),
+                Text = c.Name
+            }).ToListAsync();
+        }
+
+        public async Task<List<SelectListItem>> GetContainerLocations()
+        {
+            return await db.InventoryLocations.OfType<ContainerLocation>().OrderBy(c => c.Name).Select(c => new SelectListItem
+            {
+                Value = c.ID.ToString(),
+                Text = c.Name
+            }).ToListAsync();
+        }
+
+        public async Task<List<SelectListItem>> GetOffsites()
+        {
+            return await db.InventoryLocations.OfType<OffsiteLocation>().OrderBy(c => c.Name).Select(c => new SelectListItem
+            {
+                Value = c.ID.ToString(),
+                Text = c.Name
+            }).ToListAsync();
+        }
+
+        public List<SelectListItem> GetStatesList()
+        {
+
+            return [.. Enum.GetNames(typeof(Enums.States)).Select(e => new SelectListItem
+                                                                          {
+                                                                              Value = e.ToString(),
+                                                                              Text = e.ToString()
+                                                                          })];
+        }
+
+        public List<SelectListItem> GetLocationTypesList()
+        {
+            return [.. Enum.GetNames(typeof(Enums.LocationType)).Select(e => new SelectListItem
+                                                                             {
+                                                                                 Value = e.ToString(),
+                                                                                 Text = e.ToString()
+                                                                             })];
         }
 
         public List<SelectListItem> GetLocationsSelectList()
