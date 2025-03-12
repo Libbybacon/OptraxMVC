@@ -4,15 +4,15 @@
     {
         public ProductBatch() { }
 
-        public required int ID { get; set; }
+        public int ID { get; set; }
 
-        public required int ProductID { get; set; }
+        public int ProductID { get; set; }
 
-        public required int BatchNumber { get; set; }
+        public int BatchNumber { get; set; }
 
         public int UnitQuantity { get; set; } = 0;
 
-        public virtual required Product Product { get; set; }
+        public virtual Product Product { get; set; } = new();
 
         public virtual ICollection<ProductItem> Units { get; set; } = [];
     }

@@ -15,10 +15,5 @@ namespace OptraxMVC.Areas.Grow.Controllers
         {
             return View();
         }
-
-        public ActionResult LoadTabContent(Tab tab)
-        {
-            return View();
-        }
     }
 }

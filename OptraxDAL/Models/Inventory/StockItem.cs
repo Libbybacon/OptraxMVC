@@ -20,6 +20,8 @@ namespace OptraxDAL.Models.Inventory
         [MaxLength(50)]
         public string? Status { get; set; }
         public bool NeedsTransferApproval { get; set; } = false;
+
+        [Display(Name ="Purchase Price per Item")]
         public decimal? PurchasePrice { get; set; }
 
         public virtual InventoryItem? InventoryItem { get; set; }

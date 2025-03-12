@@ -30,7 +30,7 @@ namespace OptraxMVC.Services.Inventory
 
                 return new ResponseVM {success = true, msg = "Location Added!", data = loc };
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResponseVM { msg = "Error saving new location..." };
             }

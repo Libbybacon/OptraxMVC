@@ -18,7 +18,7 @@ namespace OptraxDAL
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Business> Businesses { get; set; }
-        public DbSet<UOM> UOMs { get; set; }
+        public DbSet<UoM> UoMs { get; set; }
         #endregion
 
         #region Inventory
@@ -40,6 +40,7 @@ namespace OptraxDAL
         public DbSet<BuildingLocation> BuildingLocations { get; set; }
         public DbSet<OffsiteLocation> OffsiteLocations { get; set; }
         public DbSet<InventoryTransfer> InventoryTransfers { get; set; }
+        public DbSet<TransferApproval> TransferApprovals { get; set; }
         #endregion
 
         #region Grow
@@ -49,12 +50,12 @@ namespace OptraxDAL
         public DbSet<Crop> Crops { get; set; }
 
         public DbSet<PlantEvent> PlantEvents { get; set; }
-        public DbSet<PruneEvent> PruneEvents { get; set; }
-        public DbSet<LightEvent> LightEvents { get; set; }
-        public DbSet<GrowthEvent> GrowthEvents { get; set; }
-        public DbSet<TransferEvent> TransferEvents { get; set; }
-        public DbSet<TreatmentEvent> TreatmentEvents { get; set; }
-        public DbSet<TransplantEvent> TransplantEvents { get; set; }
+        //public DbSet<PruneEvent> PruneEvents { get; set; }
+        //public DbSet<LightEvent> LightEvents { get; set; }
+        //public DbSet<GrowthEvent> GrowthEvents { get; set; }
+        //public DbSet<TransferEvent> TransferEvents { get; set; }
+        //public DbSet<TreatmentEvent> TreatmentEvents { get; set; }
+        //public DbSet<TransplantEvent> TransplantEvents { get; set; }
         #endregion
 
         #region Product
@@ -76,16 +77,15 @@ namespace OptraxDAL
             builder.Entity<IdentityUserLogin<string>>().ToTable("AspNetUserLogins", "Identity");
             builder.Entity<IdentityUserToken<string>>().ToTable("AspNetUserTokens", "Identity");
 
-            builder.Entity<UOM>().Property(x => x.PerQuantity).HasPrecision(6, 2);
-
+            builder.Entity<Business>().HasIndex(x => x.Name).IsUnique();
+            builder.Entity<UoM>().Property(x => x.PerQuantity).HasPrecision(6, 2);
             #endregion
-
 
             #region Inventory
             builder.Entity<InventoryCategory>().HasIndex(x => x.Name).IsUnique();
 
-            builder.Entity<InventoryItem>().HasIndex(x => x.Name).IsUnique();
             builder.Entity<InventoryItem>().HasIndex(x => x.SKU).IsUnique();
+            builder.Entity<InventoryItem>().HasIndex(x => x.Name).IsUnique();
             builder.Entity<InventoryItem>().Property(x => x.Active).HasDefaultValue(true);
 
             builder.Entity<InventoryItem>().HasOne(i => i.ContainerType)
@@ -104,7 +104,7 @@ namespace OptraxDAL
             builder.Entity<ContainerType>().Property(x => x.Capacity).HasPrecision(8, 2);
             builder.Entity<ContainerType>().Property(x => x.Active).HasDefaultValue(true);
 
-            // Stock Items TPT
+            #region Stock Items TPT
             builder.Entity<Plant>().ToTable("Plants");
             builder.Entity<Light>().ToTable("Lights");
             builder.Entity<DurableItem>().ToTable("DurableItems");
@@ -112,20 +112,21 @@ namespace OptraxDAL
 
             builder.Entity<Plant>().HasBaseType<StockItem>();
             builder.Entity<Light>().HasBaseType<StockItem>();
-            builder.Entity<ConsumableItem>().HasBaseType<StockItem>();
             builder.Entity<DurableItem>().HasBaseType<StockItem>();
+            builder.Entity<ConsumableItem>().HasBaseType<StockItem>();
 
             builder.Entity<StockItem>().Property(x => x.PurchasePrice).HasPrecision(8, 2);
             builder.Entity<ConsumableItem>().Property(x => x.UnitCount).HasPrecision(8, 2);
+            #endregion
 
             #region Locations TPH
             builder.Entity<InventoryLocation>().Property(x => x.Active).HasDefaultValue(true);
 
             builder.Entity<InventoryLocation>().HasDiscriminator<string>("LocationType")
-                                               .HasValue<ContainerLocation>("Container")
                                                .HasValue<RoomLocation>("Room")
+                                               .HasValue<OffsiteLocation>("Offsite")
                                                .HasValue<BuildingLocation>("Building")
-                                               .HasValue<OffsiteLocation>("Offsite");
+                                               .HasValue<ContainerLocation>("Container");
 
             builder.Entity<BuildingLocation>().HasOne(bl => bl.Address)
                                               .WithOne(a => a.Building)
@@ -151,8 +152,9 @@ namespace OptraxDAL
             #endregion
             #endregion
 
-
             #region Grow
+            builder.Entity<Crop>().HasIndex(x => x.Name).IsUnique();
+            builder.Entity<Crop>().HasIndex(x => x.BatchID).IsUnique();
             builder.Entity<Crop>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
 
             builder.Entity<Crop>().HasOne(c => c.Location)
@@ -164,6 +166,8 @@ namespace OptraxDAL
                                   .WithMany(s => s.Crops)
                                   .HasForeignKey(c => c.StrainID)
                                   .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Strain>().HasIndex(x => x.Name).IsUnique();
 
             // Genetics Relationships
             builder.Entity<StrainRelationship>().HasKey(x => new { x.ParentID, x.ChildID }); // Composite Key
@@ -180,38 +184,38 @@ namespace OptraxDAL
 
             #region Plant Events 
 
-            builder.Entity<PruneEvent>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
-            builder.Entity<TreatmentEvent>().Property(x => x.QuantityApplied).HasPrecision(8, 2);
+            builder.Entity<PlantEvent>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
+            builder.Entity<PlantEvent>().Property(x => x.QuantityApplied).HasPrecision(8, 2);
 
-            // TPH
-            builder.Entity<PlantEvent>().HasDiscriminator<string>("EventType")
-                                        .HasValue<PruneEvent>("Prune")
-                                        .HasValue<LightEvent>("Light")
-                                        .HasValue<GrowthEvent>("Growth")
-                                        .HasValue<TransferEvent>("Transfer")
-                                        .HasValue<TreatmentEvent>("Treatment")
-                                        .HasValue<TransplantEvent>("Transplant");
+            //// TPH
+            //builder.Entity<PlantEvent>().HasDiscriminator<string>("EventType")
+            //                            .HasValue<PruneEvent>("Prune")
+            //                            .HasValue<LightEvent>("Light")
+            //                            .HasValue<GrowthEvent>("Growth")
+            //                            .HasValue<TransferEvent>("Transfer")
+            //                            .HasValue<TreatmentEvent>("Treatment")
+            //                            .HasValue<TransplantEvent>("Transplant");
 
-            builder.Entity<PlantEvent>().HasOne(pe => pe.Plant)
-                                        .WithMany(p => p.PlantEvents)
-                                        .OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<PlantEvent>().HasOne(pe => pe.Plant)
+            //                            .WithMany(p => p.PlantEvents)
+            //                            .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<TransferEvent>().HasOne(ta => ta.Transfer)
-                                           .WithOne(pt => pt.PlantTransfer)
-                                           .HasForeignKey<TransferEvent>(ta => ta.TransferID)
-                                           .OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<TransferEvent>().HasOne(ta => ta.Transfer)
+            //                               .WithOne(pt => pt.PlantTransfer)
+            //                               .HasForeignKey<TransferEvent>(ta => ta.TransferID)
+            //                               .OnDelete(DeleteBehavior.Restrict);
 
 
-            builder.Entity<TreatmentEvent>().HasOne(te => te.Product)
-                                            .WithMany(p => p.PlantTreatments)
-                                            .HasForeignKey(te => te.ProductID)
-                                            .HasPrincipalKey(p => p.ID)
-                                            .OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<TreatmentEvent>().HasOne(te => te.Product)
+            //                                .WithMany(p => p.PlantTreatments)
+            //                                .HasForeignKey(te => te.ProductID)
+            //                                .HasPrincipalKey(p => p.ID)
+            //                                .OnDelete(DeleteBehavior.Restrict);
             #endregion
             #endregion
 
-
-            #region Product
+            #region Products
+            builder.Entity<Product>().HasIndex(x => x.ProductName).IsUnique();
             builder.Entity<ProductItem>().HasIndex(x => x.Barcode).IsUnique();
             #endregion
         }

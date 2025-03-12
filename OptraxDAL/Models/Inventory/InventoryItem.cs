@@ -20,19 +20,19 @@ namespace OptraxDAL.Models.Inventory
         public int CategoryID { get; set; }
 
         [MaxLength(255)]
-        public string? Tags { get; set; } = "";
+        public string? Tags { get; set; } = string.Empty;
 
         [MaxLength(50)]
         [Display(Name = "Stock Type")]
         [Required(ErrorMessage = "Please select a stock type")]
-        public string StockType { get; set; } = "";
+        public string StockType { get; set; } = string.Empty;
 
         [MaxLength(100)]
         [Required(ErrorMessage = "Please enter a name")]
-        public string Name { get; set; } = "";
+        public string Name { get; set; } = string.Empty;
 
         [MaxLength(250)]
-        public string? Description { get; set; } = "";
+        public string? Description { get; set; } = string.Empty;
 
         [MaxLength(100)]
         [Display(Name = "Brand")]
@@ -43,7 +43,11 @@ namespace OptraxDAL.Models.Inventory
 
         [MaxLength(25)]
         [Display(Name = "Default UoM")]
-        public string? DefaultUOM { get; set; }
+        public string? DefaultUoM { get; set; }
+
+        [MaxLength(25)]
+        [Display(Name = "Stock UoM")]
+        public string? StockUoM { get; set; }
 
         public int? SellerID { get; set; }
         public int? LightTypeID { get; set; }
@@ -80,7 +84,7 @@ namespace OptraxDAL.Models.Inventory
                 SKU = SKU,
                 Brand = Manufacturer,
                 StockType = StockType,
-                UoM = DefaultUOM
+                UoM = DefaultUoM
             };
 
             return itemVM;

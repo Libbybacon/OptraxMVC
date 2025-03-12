@@ -113,7 +113,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
 
         private void LoadViewData()
         {
-            ViewData["UOMs"] = _IDropdowns.GetUomsList();
+            ViewData["UoMs"] = _IDropdowns.GetUomsList();
             ViewData["StockTypes"] = _IDropdowns.GetStockTypesList();
             ViewData["Categories"] = _IDropdowns.GetCategoriesList();
             ViewData["Containers"] = _IDropdowns.GetContainerTypesList();

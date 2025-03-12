@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
-    [Table("InventoryLocation")]
+    [Table("InventoryLocations")]
     public abstract class InventoryLocation
     {
         public InventoryLocation() { }
@@ -17,7 +17,7 @@ namespace OptraxDAL.Models.Inventory
 
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; } = "";
+        public string Name { get; set; } = string.Empty;
 
         [MaxLength(250)]
         public string? Description { get; set; }
@@ -25,6 +25,7 @@ namespace OptraxDAL.Models.Inventory
         public bool Active { get; set; } = true;
 
         public virtual InventoryLocation? Parent { get; set; } = null;
+
         public virtual ICollection<InventoryLocation> Children { get; set; } = [];
         public virtual ICollection<StockItem> StockItems { get; set; } = [];
 
@@ -36,7 +37,7 @@ namespace OptraxDAL.Models.Inventory
         public virtual ICollection<InventoryTransfer> TransfersIn { get; set; } = [];
 
         [NotMapped]
-        public string LocationType { get; set; } = "";
+        public string LocationType { get; set; } = string.Empty;
 
         public string GetParentNamesString()
         {
@@ -68,7 +69,7 @@ namespace OptraxDAL.Models.Inventory
     }
 
     //TODO: Move location types to own class files, add functions
-    [Table("InventoryLocation")]
+    [Table("InventoryLocations")]
     public class ContainerLocation : InventoryLocation
     {
         public ContainerLocation() { }
@@ -76,35 +77,35 @@ namespace OptraxDAL.Models.Inventory
         public int ContainerTypeID { get; set; }
         
         [Required]
-        public new string Description { get; set; } = "";
+        public new string Description { get; set; } = string.Empty;
 
         public ContainerType? ContainerType { get; set; }
     }
 
-    [Table("InventoryLocation")]
+    [Table("InventoryLocations")]
     public class RoomLocation : InventoryLocation
     {
         public RoomLocation() { }
 
-        public virtual ICollection<Crop> Crops { get; set; } = [];
+        public virtual ICollection<Crop>? Crops { get; set; } = [];
     }
 
-    [Table("InventoryLocation")]
+    [Table("InventoryLocations")]
     public class BuildingLocation : InventoryLocation
     {
         public BuildingLocation() { }
 
         public int AddressID { get; set; }
-        public virtual required Address Address { get; set; }
+        public virtual required Address Address { get; set; } = new ();
     }
 
-    [Table("InventoryLocation")]
+    [Table("InventoryLocations")]
     public class OffsiteLocation : InventoryLocation
     {
         public OffsiteLocation() { }
         
         [Required]
-        public new string Description { get; set; } = "";
+        public new string Description { get; set; } = string.Empty;
     }
 
     public enum LocationType

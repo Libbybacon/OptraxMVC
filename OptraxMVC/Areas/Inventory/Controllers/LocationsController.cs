@@ -6,6 +6,7 @@ using OptraxMVC.Services;
 using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Inventory;
 using OptraxMVC.Models;
+using System.Text.Json.Serialization;
 
 namespace OptraxMVC.Areas.Inventory.Controllers
 {
@@ -15,7 +16,6 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         private readonly ILocationService _ILocation = locationService;
         private readonly IDropdownService _IDropdowns = dropdownService;
 
-
         [HttpGet]
         [HttpPost]
         public async Task<IActionResult> GetLocations()
@@ -24,7 +24,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
             {
                 var data = await _ILocation.GetLocationsAsync();
 
-                return Json(data);
+                return Json(data, ReferenceHandler.Preserve);
             }
             catch (Exception ex)
             {
@@ -117,7 +117,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
             {
                 return await _ILocation.CreateAsync(loc);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new ResponseVM { success = false, msg = "Error saving location..." };
             }

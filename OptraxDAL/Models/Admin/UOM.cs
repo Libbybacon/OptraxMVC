@@ -3,17 +3,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Admin
 {
-    public class UOM
+    public class UoM
     {
-        public UOM() { }
+        public UoM() { }
 
         [Key]
+        [MaxLength(50)]
         public string UnitName { get; set; } = string.Empty;
 
+        [MaxLength(10)]
         public string UnitAbbr { get; set; } = string.Empty;
 
+        [MaxLength(255)]
         public string Description { get; set; } = string.Empty;
 
+        [MaxLength(50)]
         public string? Category { get; set; }
 
         public decimal? PerQuantity { get; set; }
@@ -30,7 +34,7 @@ namespace OptraxDAL.Models.Admin
         Volume,
         Quantity
     }
-    public enum InventoryUOM
+    public enum InventoryUoM
     {
         Each,
         Case,

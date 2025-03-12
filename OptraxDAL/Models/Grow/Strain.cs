@@ -9,14 +9,14 @@ namespace OptraxDAL.Models.Grow
         public int ID { get; set; }
         [Required]
         [MaxLength(100)]
-        public string Name { get; set; } = "";
+        public string Name { get; set; } = string.Empty;
 
         [MaxLength(250)]
         public string? Description { get; set; }
 
         [Required]
         [MaxLength(10)]
-        public string StrainType { get; set; } = "";
+        public string StrainType { get; set; } = string.Empty;
         public int? Generation { get; set; }
         public int? OriginID { get; set; }
 

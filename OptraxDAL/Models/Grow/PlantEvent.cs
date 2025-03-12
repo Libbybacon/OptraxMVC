@@ -6,37 +6,58 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace OptraxDAL.Models.Grow
 {
     [Table("PlantEvents")]
-    public abstract class PlantEvent
+    public class PlantEvent
     {
         public PlantEvent() { }
         public int ID { get; set; }
         public int PlantID { get; set; }
+
+        [Required]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTimeOffset Date { get; set; }
+
         [MaxLength(25)]
-        public required string EventType { get; set; }
+        public string EventType { get; set; } = string.Empty;
+        
         [MaxLength(25)]
         public string? EventSubType { get; set; }
-        public int UserID { get; set; }
+
+        [ForeignKey("User")]
+        [MaxLength(450)]
+        public string UserID { get; set; } = string.Empty;
+        
         [MaxLength(250)]
         public string? Notes { get; set; }
+        public string NewPhase { get; set; } = string.Empty;
 
-        public virtual required Plant Plant { get; set; }
-        public virtual required AppUser Employee { get; set; }
-    }
+        [ForeignKey("NewLight")]
+        public int NewLightID { get; set; }
 
-    //TODO: Move event types to own class files, add functions
-    [Table("PlantEvents")]
-    public class TreatmentEvent : PlantEvent
-    {
-        public TreatmentEvent() { }
+        public string PruneType { get; set; } = string.Empty;
+        public decimal? WasteQuantity { get; set; }
+        public string? WasteQuantityUoM { get; set; }
 
+
+        [ForeignKey("Transfer")]
+        public int TransferID { get; set; }
+
+        [ForeignKey("NewContainer")]
+        public int NewContainerID { get; set; }
+       
         [MaxLength(25)]
-        public required string TreatmentType { get; set; }
+        public string TreatmentType { get; set; } = string.Empty;
         public int? ProductID { get; set; }
         public decimal? QuantityApplied { get; set; }
+
         [MaxLength(20)]
-        public string? QuantityUOM { get; set; }
+        public string? QuantityUoM { get; set; }
+
+        public virtual Plant? Plant { get; set; }
+        public virtual AppUser? User { get; set; }
+        public virtual Light NewLight { get; set; } = new();
         public virtual ConsumableItem? Product { get; set; }
+        public virtual ContainerType? NewContainer { get; set; }
+        public virtual InventoryTransfer Transfer { get; set; } = new();
     }
 
     public enum TreatmentType
@@ -46,47 +67,6 @@ namespace OptraxDAL.Models.Grow
         Flush,
         PestControl,
         MoldControl
-    }
-
-    [Table("PlantEvents")]
-    public class TransplantEvent : PlantEvent
-    {
-        public TransplantEvent() { }
-        public int NewContainerID { get; set; }
-        public virtual required ContainerType NewContainer { get; set; }
-    }
-
-    [Table("PlantEvents")]
-    public class LightEvent : PlantEvent
-    {
-        public LightEvent() { }
-        public int NewLightID { get; set; }
-        public virtual required Light NewLight { get; set; }
-    }
-
-
-    [Table("PlantEvents")]
-    public class TransferEvent : PlantEvent
-    {
-        public TransferEvent() { }
-        public int TransferID { get; set; }
-        public virtual required InventoryTransfer Transfer { get; set; }
-    }
-
-    [Table("PlantEvents")]
-    public class GrowthEvent : PlantEvent
-    {
-        public GrowthEvent() { }
-        public required string NewPhase { get; set; }
-    }
-
-    [Table("PlantEvents")]
-    public class PruneEvent : PlantEvent
-    {
-        public PruneEvent() { }
-        public required string PruneType { get; set; }
-        public decimal? WasteQuantity { get; set; }
-        public string? WasteQuantityUOM { get; set; }
     }
 
     public enum PruneType

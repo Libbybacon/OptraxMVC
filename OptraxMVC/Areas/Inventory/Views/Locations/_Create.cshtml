@@ -1,11 +1,11 @@
 ﻿@using OptraxDAL.Models.Inventory
 @using OptraxMVC.Models
 
-@model InventoryLocation
+
+    @model InventoryLocation
 
 @{
     FormVM formVM = ViewBag.FormVM;
-
     var locations = Model.LocationType == "Room" ? (IEnumerable<SelectListItem>)(ViewData["Buildings"] ?? new()) : new List<SelectListItem>();
 }
 
@@ -40,7 +40,7 @@
         </div>
         @if (Model.LocationType == "Building")
         {
-            @await Html.PartialAsync("_BuildingLocation", Model, new ViewDataDictionary(ViewData) { })
+            @await Html.PartialAsync("_BuildingLocation", Model, new ViewDataDictionary(ViewData))
         }
         <div class="popup-btns d-flex justify-content-center">
             <button type="submit" class="save-btn form-btn @(formVM.IsNew ? "" : "d-none")">Save New Location</button>

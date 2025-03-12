@@ -1,0 +1,139 @@
+﻿@using OptraxDAL.Models.Grow
+@using OptraxDAL.Models.Inventory
+@using OptraxDAL.ViewModels
+@using OptraxMVC.Models
+
+@model Plant
+
+@{
+    FormVM formVM = ViewBag.FormVM;
+
+    var strains = (IEnumerable<Strain>)(ViewData["StrainsList"] ?? new());
+    var phases = (IEnumerable<SelectListItem>)(ViewData["Phases"] ?? new());
+    var originTypes = (IEnumerable<SelectListItem>)(ViewData["OriginTypes"] ?? new());
+
+    var plantEvents = Model.PlantEvents.ToList();
+
+    Model.Crop = new Crop() { };
+}
+
+@using (Html.BeginForm(formVM.Action, "Plants", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv, data_modelname = "plant" }))
+{
+    @Html.AntiForgeryToken()
+
+    <input id="changes" type="hidden" name="Changes" />
+    <input type="hidden" id="InventoryItemID" name="InventoryItemID" value="@Model.InventoryItemID" />
+
+    <div class="d-flex justify-content-center w-100 ps-2">
+        <div class="w-100 px-2">
+
+            <div class="row col-12 d-flex w-100">
+                <div class="col-xl-4 col-6">
+                    @Html.LabelFor(m => m.StrainID)
+                    <select id="StrainID" name="StrainID" class="form-control select2 attr" data-ival="@Model.StrainID" required>
+                        <option value="">Select Strain</option>
+                        @foreach (Strain strain in strains)
+                        {
+                            <option value="@strain.ID" class="strain-opt" data-stype="@strain.StrainType">@strain.Name</option>
+                        }
+                    </select>
+                    @Html.ValidationMessageFor(m => m.StrainID, "", new { @class = "val-msg" })
+                </div>
+                <div class="col-xl-4 col-6">
+                    @Html.LabelFor(m => m.OriginType)
+                    @Html.DropDownListFor(m => m.OriginType, originTypes, "Select Origin Type", new { @class = $"form-control select2 attr" })
+                    @Html.ValidationMessageFor(m => m.OriginType, "", new { htmlAttributes = new { @class = "val-msg" } })
+                </div>
+                <div class="col-xl-4 col-6">
+                    @Html.LabelFor(m => m.Phase)
+                    @Html.DropDownListFor(m => m.Phase, phases, "Select Phase", new { @class = $"form-control select2 attr" })
+                    @Html.ValidationMessageFor(m => m.Phase, "", new { htmlAttributes = new { @class = "val-msg" } })
+                </div>
+            </div>
+
+            <div class="row col-12 w-100 d-flex">
+                <div class="col-xl-4 col-6 mother-info">
+                    <div class="h-50"></div>
+                    <div class="d-flex justify-content-center">
+                        <label class="mt-2">
+                            Is Mother?
+                            @Html.EditorFor(m => m.IsMother, "", new { htmlAttributes = new { @class = $"form-check-input attr" } })
+                            @Html.ValidationMessageFor(m => m.IsMother, "", new { @class = "val-msg" })
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-6 mother-info">
+                    @Html.LabelFor(m => m.MotherName)
+                    @Html.EditorFor(m => m.MotherName, "", new { htmlAttributes = new { @class = $"form-control", @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(m => m.MotherName, "", new { htmlAttributes = new { @class = "val-msg" } })
+                </div>
+                <div id="parentIdDiv" class="col-xl-4 col-6">
+                    @Html.LabelFor(m => m.ParentID)
+                    <select id="ParentID" name="ParentID" class="form-select"><option>Select strain to load options</option></select>
+                    @Html.ValidationMessageFor(m => m.ParentID, "", new { htmlAttributes = new { @class = "val-msg" } })
+                </div>
+            </div>
+
+            <div class="row col-12 w-100 d-flex">
+                <div class="col-xl-4 col-6">
+                    @Html.LabelFor(m => m.PurchaseDate)
+                    @Html.EditorFor(m => m.PurchaseDate, "", new { htmlAttributes = new { @class = $"form-control", @type = "Date" } })
+                    @Html.ValidationMessageFor(m => m.PurchaseDate, "", new { htmlAttributes = new { @class = "val-msg" } })
+                </div>
+                <div id="buyPrice" class="col-xl-4 col-6">
+                    @Html.LabelFor(m => m.PurchasePrice)
+                    @Html.EditorFor(m => m.PurchasePrice, "", new { htmlAttributes = new { @class = $"form-control" } })
+                    @Html.ValidationMessageFor(m => m.PurchasePrice, "", new { htmlAttributes = new { @class = "val-msg" } })
+                </div>
+                <div class="col-xl-4 col-6">
+                    @Html.LabelFor(m => m.Quantity)
+                    @Html.EditorFor(m => m.Quantity, "", new { htmlAttributes = new { @class = $"form-control", @step = "1" } })
+                    @Html.ValidationMessageFor(m => m.Quantity, "", new { htmlAttributes = new { @class = "val-msg" } })
+                </div>
+            </div>
+
+            <div class="form-top col-12 pt-3"><div class="form-top-head">Plant Transfer Information</div></div>
+            <div id="PlantEvents" class="row col-12 d-flex w-100">
+                @for (int i = 0; i < Model.PlantEvents.Count; i++)
+                {
+                    @Html.EditorFor(m => plantEvents[i], "TransferEvent", new ViewDataDictionary(ViewData))
+                }
+            </div>
+            <div id="Crop" class="row col-12 w-100 d-flex">
+                <div class="form-top pt-3 col-12"><div class="form-top-head">Crop Information</div></div>
+
+                <input type="hidden" id="Crop_CurrentPhase" name="Crop.CurrentPhase" value="@Model.Phase" />
+                <div class="col-6">
+                    @Html.LabelFor(m => Model.Crop.Name)
+                    @Html.EditorFor(m => Model.Crop.Name, "", new { htmlAttributes = new { @class = $"form-control" } })
+                    @Html.ValidationMessageFor(m => Model.Crop.Name, "", new { htmlAttributes = new { @class = "val-msg" } })
+                </div>
+                <div class="col-6">
+                    @Html.LabelFor(m => Model.Crop.BatchID)
+                    @Html.EditorFor(m => Model.Crop.BatchID, "", new { htmlAttributes = new { @class = $"form-control" } })
+                    @Html.ValidationMessageFor(m => Model.Crop.BatchID, "", new { htmlAttributes = new { @class = "val-msg" } })
+                </div>
+            </div>
+
+            <div id="cropDays" class="row col-12 w-100 d-flex">
+                <div class="col-6">
+                    @Html.LabelFor(m => Model.Crop.ExpectedVegDays)
+                    @Html.EditorFor(m => Model.Crop.ExpectedVegDays, "", new { htmlAttributes = new { @class = $"form-control", @step = "1" } })
+                    @Html.ValidationMessageFor(m => Model.Crop.ExpectedVegDays, "", new { htmlAttributes = new { @class = "val-msg" } })
+                </div>
+                <div class="col-6">
+                    @Html.LabelFor(m => Model.Crop.ExpectedFlowerDays)
+                    @Html.EditorFor(m => Model.Crop.ExpectedFlowerDays, "", new { htmlAttributes = new { @class = $"form-control", @step = "1" } })
+                    @Html.ValidationMessageFor(m => Model.Crop.ExpectedFlowerDays, "", new { htmlAttributes = new { @class = "val-msg" } })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup-btns d-flex justify-content-center">
+        <button type="submit" class="save-btn form-btn @(formVM.IsNew ? "" : "d-none")">Save Plants</button>
+        <button type="submit" class="update-btn form-btn d-none">Save Changes</button>
+    </div>
+}
+
+<script src="/js/forms.js"></script>

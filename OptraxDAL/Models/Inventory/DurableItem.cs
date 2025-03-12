@@ -10,7 +10,7 @@ namespace OptraxDAL.Models.Inventory
 
         public int? MaintenanceInterval { get; set; }
         [MaxLength(20)]
-        public string? MaintenanceInvervalUOM { get; set; }
+        public string? MaintenanceInvervalUoM { get; set; }
 
         public DateTimeOffset? LastMaintenanceCheck { get; set; }
     }

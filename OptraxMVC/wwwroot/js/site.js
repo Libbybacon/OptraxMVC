@@ -72,6 +72,9 @@ function loadPopup(props) {
             $('#popupContent').html(view);
             $('#popupTitle').html(props.title);
             $('#popup').show();
+
+            setPopupHeight();
+            window.addEventListener("resize", setPopupHeight);
         },
         error: function (xhr, status, error) {
             console.error('Error loading popup:', xhr.responseText);
@@ -85,10 +88,21 @@ function loadPopup(props) {
     $.ajax(ajaxOptions);
 }
 
+function setPopupHeight() {
+    const popup = $('#popupContent');
+
+    const winHeight = window.innerHeight;
+    const maxPopHeight = winHeight * 0.8;
+    console.log('maxHeight', maxPopHeight)
+    popup.css('max-height', `${maxPopHeight}px`);
+}
+
+
 function closePopup() {
+    window.removeEventListener("resize", setPopupHeight);
     $('#popup').hide();
     $('#overlay').hide();
-    $('#popupContent').html();
+    $('#popupContent').html('');
 }
 
 function showUpdateMessage(props) {

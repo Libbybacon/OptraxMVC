@@ -10,6 +10,5 @@ namespace OptraxDAL.ViewModels
     {
         public LocationVM() { }
 
-        public 
     }
 }

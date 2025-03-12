@@ -29,7 +29,7 @@ namespace OptraxMVC.Services
         List<Strain> GetStrains();
         List<SelectListItem> GetStrainsList();
         List<SelectListItem> GetPlantTypesList();
-        List<SelectListItem> GetStartTypesList();
+        List<SelectListItem> GetOriginTypesList();
         List<SelectListItem> GetStockTypesList();
         List<SelectListItem> GetGrowthPhasesList();
     }
@@ -45,7 +45,7 @@ namespace OptraxMVC.Services
             {
                 entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
 
-                return db.UOMs?.Select(u => new SelectListItem
+                return db.UoMs?.Select(u => new SelectListItem
                 {
                     Value = u.UnitName,
                     Text = u.ListName
@@ -69,15 +69,15 @@ namespace OptraxMVC.Services
             {
                 entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
 
-                return db.InventoryCategories?.Where(c => c.ParentID != null)
-                                              .Include(c => c.Parent)
-                                              .OrderBy(c => c.Parent.Name).ThenBy(c => c.Name)
-                                              .Select(c => new SelectListItem
+                return db.InventoryCategories.Where(c => c.ParentID != null)
+                                             .Include(c => c.Parent)
+                                             .Where(c => c.Parent != null)
+                                             .OrderBy(c => c.Parent!.Name).ThenBy(c => c.Name)
+                                             .Select(c => new SelectListItem
                                               {
                                                   Value = c.ID.ToString(),
                                                   Text = c.ListName
-                                              })
-                                              .ToList();
+                                              }).ToList();
             }) ?? [];
         }
 
@@ -109,18 +109,18 @@ namespace OptraxMVC.Services
         // Plants
         public List<SelectListItem> GetGrowthPhasesList()
         {
-            return [.. Enum.GetNames(typeof(Plant.GrowthPhases)).Select(e => new SelectListItem
+            return [.. Enum.GetNames(typeof(Plant.PlantPhases)).Select(e => new SelectListItem
                                                                             {
                                                                                 Value = e.ToString(),
                                                                                 Text = e.ToString()
                                                                             })];
         }
-        public List<SelectListItem> GetStartTypesList()
+        public List<SelectListItem> GetOriginTypesList()
         {
-            return [.. Enum.GetNames(typeof(Plant.StartTypes)).Select(e => new SelectListItem
+            return [.. Enum.GetNames(typeof(Plant.OriginTypes)).Select(e => new SelectListItem
                                                                             {
                                                                                 Value = e.ToString(),
-                                                                                Text = e.ToString()
+                                                                                Text = e.ToString().Replace("_", " - ")
                                                                             })];
         }
         public List<SelectListItem> GetPlantTypesList()

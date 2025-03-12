@@ -6,7 +6,7 @@
     FormVM formVM = ViewBag.FormVM;
     string showDeets = formVM.IsNew ? "d-none" : "";
 
-    var uoms = (IEnumerable<SelectListItem>)(ViewData["UOMs"] ?? new());
+    var uoms = (IEnumerable<SelectListItem>)(ViewData["UoMs"] ?? new());
     var categories = (IEnumerable<SelectListItem>)(ViewData["Categories"] ?? new());
     var stockTypes = (IEnumerable<SelectListItem>)(ViewData["StockTypes"] ?? new());
 }
@@ -42,9 +42,9 @@
                         @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = "val-msg" })
                     </div>
                     <div class="col-xl-4 col-6">
-                        @Html.LabelFor(m => m.DefaultUOM)
-                        @Html.DropDownListFor(m => m.DefaultUOM, uoms, "Select UoM", new { @class = "form-control form-select select2 attr", data_ival = Model.DefaultUOM })
-                        @Html.ValidationMessageFor(m => m.DefaultUOM, "", new { @class = "val-msg" })
+                        @Html.LabelFor(m => m.DefaultUoM)
+                        @Html.DropDownListFor(m => m.DefaultUoM, uoms, "Select UoM", new { @class = "form-control form-select select2 attr", data_ival = Model.DefaultUoM })
+                        @Html.ValidationMessageFor(m => m.DefaultUoM, "", new { @class = "val-msg" })
                     </div>
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.StockType)

@@ -12,30 +12,33 @@ namespace OptraxDAL.Models.Inventory
         public Plant() { }
 
         [MaxLength(50)]
-        public string TrackingID { get; set; } = "";
+        public string TrackingID { get; set; } = string.Empty;
 
         [Required]
         public int StrainID { get; set; }
 
-        public int? ParentID { get; set; }
+        [Display(Name = "Parent")]
+        public int? ParentID { get; set; } = 0;
 
         [Required]
         public bool IsMother { get; set; } = false;
+
         [MaxLength(50)]
         [Display(Name = "Mother Name")]
         public string? MotherName { get; set; }
 
         [Required]
-        public string StartType { get; set; } = "";
+        public string OriginType { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(10)]
         [Display(Name = "Phase")]
-        public string StartPhase { get; set; } = "";
+        public string Phase { get; set; } = string.Empty;
 
         public int? CropID { get; set; }
 
         public new bool NeedsTransferApproval { get; set; } = true;
+
         public virtual Strain? Strain { get; set; }
         public virtual Crop? Crop { get; set; } = new();
         public virtual Plant? Parent { get; set; }
@@ -67,8 +70,8 @@ namespace OptraxDAL.Models.Inventory
                 ParentID = ParentID,
                 IsMother = IsMother,
                 MotherName = MotherName,
-                StartType = StartType,
-                StartPhase = StartPhase,
+                OriginType = OriginType,
+                Phase = Phase,
                 CropID = CropID,
                 NeedsTransferApproval = true,
 
@@ -87,22 +90,31 @@ namespace OptraxDAL.Models.Inventory
                 StrainID = StrainID,
                 CropID = Crop?.BatchID ?? "",
                 IsMother = IsMother,
-                StartType = StartType,
-                StartPhase = StartPhase,
+                OriginType = OriginType,
+                Phase = Phase,
                 CurrentPhase = Crop?.CurrentPhase ?? "",
                 LocationName = Crop?.Location?.Name ?? "",
             };
         }
-        public enum GrowthPhases
+        public enum PlantPhases
         {
             Seed,
             Seedling,
             Start,
             Veg,
             Flower,
-            Harvest,
+            Harvested,
             Processing,
             Product
+        }
+
+        public enum OriginTypes
+        {
+            Seed_Purchase,
+            Seed_Internal,
+            Start_Purchase,
+            Clone_Purchase,
+            Clone_Internal,
         }
 
         public enum StartTypes

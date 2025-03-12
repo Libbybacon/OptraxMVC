@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
+using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
 using OptraxDAL.ViewModels;
@@ -10,10 +12,12 @@ using OptraxMVC.Controllers;
 using OptraxMVC.Models;
 using OptraxMVC.Services;
 using OptraxMVC.Services.Inventory;
+using System.Security.Claims;
 
-namespace OptraxMVC.Areas.Inventory.Controllers
+namespace OptraxMVC.Areas.Grow.Controllers
 {
-    [Area("Inventory")]
+    [Area("Grow")]
+    [Authorize]
     public class PlantsController(OptraxContext context, IDropdownService dropdownService, IPlantService plantService) : BaseController(context)
     {
         private readonly IPlantService _IPlants = plantService;
@@ -49,11 +53,12 @@ namespace OptraxMVC.Areas.Inventory.Controllers
 
                 ViewData["StrainsList"] = _IDropdowns.GetStrains();
                 ViewData["Phases"] = _IDropdowns.GetGrowthPhasesList();
-                ViewData["StartTypes"] = _IDropdowns.GetStartTypesList();
+                ViewData["OriginTypes"] = _IDropdowns.GetOriginTypesList();
+                ViewData["Locations"] = _IDropdowns.GetLocationsSelectList();
 
-                int inventoryID = await _IPlants.GetPlantInventoryIDAsync();
+                Plant plant = await _IPlants.LoadNewPlant();
 
-                return PartialView("_Create", new Plant() { InventoryItemID = inventoryID, });
+                return PartialView("_Create", plant);
             }
             catch (Exception ex)
             {
@@ -70,11 +75,26 @@ namespace OptraxMVC.Areas.Inventory.Controllers
 
             try
             {
-                ResponseVM response = await _IPlants.CreateAsync(plant);
+                ResponseVM response = await _IPlants.CreateAsync(plant, UserID);
 
                 return Json(response);
             }
             catch (Exception ex) {
+                return Json(new { success = false, msg = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetParentList(int strainID)
+        {
+            try
+            {
+                ResponseVM response = await _IPlants.GetParentListAsync(strainID);
+
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
                 return Json(new { success = false, msg = ex.Message });
             }
         }
