@@ -1,32 +1,32 @@
-﻿-- =============================================
+﻿
+-- =============================================
 -- Author:		Libby
 -- Create date: 3/5/2025
 -- Description:	
 -- =============================================
-CREATE OR ALTER PROCEDURE GetPlantsTableData
+ALTER   PROCEDURE [dbo].[GetPlantsTableData]
 
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 
 SELECT 
 	plant.ID AS PlantID,
-	CropID,
+	crop.BatchID AS CropID,
 	plant.StrainID,
 	TrackingID,
-	strain.[Name] AS Strain,
+	CONCAT(strain.[Name], '-', CAST(strain.ID AS nvarchar)) AS Strain,
 	IsMother,
-	StartType,
-	StartPhase,
+	MotherName,
+	Phase,
+	OriginType,
 	crop.CurrentPhase,
 	loc.[Name] AS LocationName,
-	LocationType
+	LocationType,
+	1 AS Quantity
 FROM [Optrax].[dbo].[Plants] plant
 INNER JOIN Strains strain ON plant.StrainID = strain.ID
 LEFT JOIN Crops crop ON plant.CropID = crop.ID
-LEFT JOIN InventoryLocation loc ON crop.LocationID = loc.ID
+LEFT JOIN InventoryLocations loc ON crop.LocationID = loc.ID
 
 END
-GO
