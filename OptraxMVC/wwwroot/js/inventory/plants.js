@@ -193,7 +193,7 @@ function addPlants() {
     let props = {
         type: 'GET',
         url: `/Grow/Plants/Create/`,
-        title: `New Plant(s)`,
+        title: `Add Plants`,
     }
     loadPopup(props);
 }

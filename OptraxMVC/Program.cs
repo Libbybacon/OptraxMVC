@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
+
 using OptraxDAL.Models.Admin;
+using OptraxMVC.ModelBinders;
 using OptraxMVC.Services;
 using OptraxMVC.Services.Inventory;
 
@@ -16,6 +18,11 @@ builder.Services.AddDbContext<OptraxContext>(options =>
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<OptraxContext>()
                                                      .AddDefaultTokenProviders();
 
+AesEncryptionHelper.Initialize(
+    builder.Configuration["Encryption:Key"] ?? string.Empty,
+    builder.Configuration["Encryption:IV"] ?? string.Empty
+);
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Identity/Account/Login";
@@ -23,16 +30,19 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = "/Identity/Account/Logout";
 });
 
-builder.Services.AddControllersWithViews()
-                .AddRazorRuntimeCompilation();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.ModelBinderProviders.Insert(0, new PlantEventModelBinderProvider());
+})
+.AddRazorRuntimeCompilation();
 
 builder.Services.AddRazorPages();
+builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IDropdownService, DropdownService>();
 builder.Services.AddScoped<IItemService, InventoryService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IPlantService, PlantService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
-builder.Services.AddMemoryCache();
 
 
 var app = builder.Build();

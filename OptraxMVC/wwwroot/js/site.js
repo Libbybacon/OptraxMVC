@@ -84,16 +84,13 @@ function loadPopup(props) {
     if (props.data && Object.keys(props.data).length > 0) {
         ajaxOptions.data = props.data;
     }
-
     $.ajax(ajaxOptions);
 }
 
 function setPopupHeight() {
     const popup = $('#popupContent');
-
     const winHeight = window.innerHeight;
     const maxPopHeight = winHeight * 0.8;
-    console.log('maxHeight', maxPopHeight)
     popup.css('max-height', `${maxPopHeight}px`);
 }
 

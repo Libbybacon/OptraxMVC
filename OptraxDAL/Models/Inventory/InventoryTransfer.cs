@@ -43,15 +43,19 @@ namespace OptraxDAL.Models.Inventory
         [Display(Name = "Is Partial Transfer?")]
         public bool IsPartial { get; set; } = false;
 
+        public string Status { get; set; } = "Initiated";
+
+        public string? Notes { get; set; }
 
         [Display(Name = "Needs Approval")]
         public bool NeedsApproval { get; set; } = false;
         public int? ApprovalID { get; set; }
-        public virtual TransferApproval? Approval { get; set; }
+
 
         public virtual AppUser? User { get; set; }
         public virtual StockItem? StockItem { get; set; }
-        public virtual PlantEvent? PlantTransfer { get; set; }
+        public virtual TransferApproval? Approval { get; set; }
+        public virtual TransferEvent? PlantTransfer { get; set; }
 
 
         [InverseProperty(nameof(InventoryLocation.TransfersOut))]
@@ -59,5 +63,13 @@ namespace OptraxDAL.Models.Inventory
 
         [InverseProperty(nameof(InventoryLocation.TransfersIn))]
         public virtual InventoryLocation? Destination { get; set; }
+
+
+        [NotMapped]
+        public string EncryptedID
+        {
+            get => AesEncryptionHelper.Encrypt(UserID);
+            set => UserID = AesEncryptionHelper.Decrypt(value);
+        }
     }
 }

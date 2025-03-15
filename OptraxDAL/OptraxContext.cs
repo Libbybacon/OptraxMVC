@@ -50,12 +50,12 @@ namespace OptraxDAL
         public DbSet<Crop> Crops { get; set; }
 
         public DbSet<PlantEvent> PlantEvents { get; set; }
-        //public DbSet<PruneEvent> PruneEvents { get; set; }
-        //public DbSet<LightEvent> LightEvents { get; set; }
-        //public DbSet<GrowthEvent> GrowthEvents { get; set; }
-        //public DbSet<TransferEvent> TransferEvents { get; set; }
-        //public DbSet<TreatmentEvent> TreatmentEvents { get; set; }
-        //public DbSet<TransplantEvent> TransplantEvents { get; set; }
+        public DbSet<PruneEvent> PruneEvents { get; set; }
+        public DbSet<LightEvent> LightEvents { get; set; }
+        public DbSet<GrowthEvent> GrowthEvents { get; set; }
+        public DbSet<TransferEvent> TransferEvents { get; set; }
+        public DbSet<TreatmentEvent> TreatmentEvents { get; set; }
+        public DbSet<TransplantEvent> TransplantEvents { get; set; }
         #endregion
 
         #region Product
@@ -184,33 +184,33 @@ namespace OptraxDAL
 
             #region Plant Events 
 
-            builder.Entity<PlantEvent>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
-            builder.Entity<PlantEvent>().Property(x => x.QuantityApplied).HasPrecision(8, 2);
+            builder.Entity<PruneEvent>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
+            builder.Entity<TreatmentEvent>().Property(x => x.QuantityApplied).HasPrecision(8, 2);
 
-            //// TPH
-            //builder.Entity<PlantEvent>().HasDiscriminator<string>("EventType")
-            //                            .HasValue<PruneEvent>("Prune")
-            //                            .HasValue<LightEvent>("Light")
-            //                            .HasValue<GrowthEvent>("Growth")
-            //                            .HasValue<TransferEvent>("Transfer")
-            //                            .HasValue<TreatmentEvent>("Treatment")
-            //                            .HasValue<TransplantEvent>("Transplant");
+            // TPH
+            builder.Entity<PlantEvent>().HasDiscriminator<string>("EventType")
+                                        .HasValue<PruneEvent>("Prune")
+                                        .HasValue<LightEvent>("Light")
+                                        .HasValue<GrowthEvent>("Growth")
+                                        .HasValue<TransferEvent>("Transfer")
+                                        .HasValue<TreatmentEvent>("Treatment")
+                                        .HasValue<TransplantEvent>("Transplant");
 
-            //builder.Entity<PlantEvent>().HasOne(pe => pe.Plant)
-            //                            .WithMany(p => p.PlantEvents)
-            //                            .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<PlantEvent>().HasOne(pe => pe.Plant)
+                                        .WithMany(p => p.PlantEvents)
+                                        .OnDelete(DeleteBehavior.Restrict);
 
-            //builder.Entity<TransferEvent>().HasOne(ta => ta.Transfer)
-            //                               .WithOne(pt => pt.PlantTransfer)
-            //                               .HasForeignKey<TransferEvent>(ta => ta.TransferID)
-            //                               .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<TransferEvent>().HasOne(ta => ta.Transfer)
+                                           .WithOne(pt => pt.PlantTransfer)
+                                           .HasForeignKey<TransferEvent>(ta => ta.TransferID)
+                                           .OnDelete(DeleteBehavior.Restrict);
 
 
-            //builder.Entity<TreatmentEvent>().HasOne(te => te.Product)
-            //                                .WithMany(p => p.PlantTreatments)
-            //                                .HasForeignKey(te => te.ProductID)
-            //                                .HasPrincipalKey(p => p.ID)
-            //                                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<TreatmentEvent>().HasOne(te => te.Product)
+                                            .WithMany(p => p.PlantTreatments)
+                                            .HasForeignKey(te => te.ProductID)
+                                            .HasPrincipalKey(p => p.ID)
+                                            .OnDelete(DeleteBehavior.Restrict);
             #endregion
             #endregion
 

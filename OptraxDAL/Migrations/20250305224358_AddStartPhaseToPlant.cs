@@ -11,7 +11,7 @@ namespace OptraxDAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "StartType",
+                name: "OriginType",
                 table: "Plants",
                 type: "nvarchar(max)",
                 nullable: false,
@@ -42,7 +42,7 @@ namespace OptraxDAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "StartType",
+                name: "OriginType",
                 table: "Plants");
 
             migrationBuilder.AlterColumn<string>(

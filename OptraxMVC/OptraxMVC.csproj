@@ -58,7 +58,8 @@
     <Folder Include="Areas\Admin\Controllers\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Views\Shared\EditorTemplates\" />
+    <Folder Include="Areas\Grow\Views\Shared\EditorTemplates\" />
+    <Folder Include="Areas\Inventory\Views\Shared\EditorTemplates\" />
   </ItemGroup>
 
   <ItemGroup>

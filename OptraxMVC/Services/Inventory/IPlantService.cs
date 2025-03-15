@@ -15,7 +15,7 @@ namespace OptraxMVC.Services.Inventory
 {
     public interface IPlantService
     {
-        Task<Plant> LoadNewPlant();
+        Task<Plant> LoadNewPlant(string UserID);
         Task<ResponseVM> GetParentListAsync(int strainID);
         Task<int> GetPlantInventoryIDAsync();
         Task<List<PlantVM>> GetPlantsAsync();
@@ -34,21 +34,29 @@ namespace OptraxMVC.Services.Inventory
         }
 
         [Authorize]
-        public async Task<Plant> LoadNewPlant()
+        public async Task<Plant> LoadNewPlant(string UserID)
         {
             int inventoryID = await GetPlantInventoryIDAsync();
 
+            var transfer = new InventoryTransfer()
+            {
+                Date = DateTime.Now,
+                UserID = UserID,
+                UnitCount = 1,
+                UnitUoM = "Each",
+                IsPartial = false,
+                Status = "Initiated",
+                NeedsApproval = false,
+            };
 
             Plant plant = new()
             {
                 InventoryItemID = inventoryID,
                 PlantEvents = [
-                new PlantEvent() {
+                new TransferEvent() {
                         Date = DateTime.Now,
                         EventType = "Transfer",
-                        Transfer = new InventoryTransfer() {
-                            Date = DateTime.Now,
-                        }
+                        Transfer = transfer
                     }]
             };
 
@@ -95,8 +103,6 @@ namespace OptraxMVC.Services.Inventory
                         await db.Crops.AddAsync(crop);
                     }
                     await db.Plants.AddAsync(plant);
-
-                    //TransferEvent transfer = await CreateTransferEventAsync(plant);
                 }
                 else 
                 {
@@ -109,6 +115,13 @@ namespace OptraxMVC.Services.Inventory
 
                     await db.Crops.AddAsync(crop);
                 }
+
+                PlantEvent? pe = plant.PlantEvents.FirstOrDefault();
+
+                if (pe == null)
+                    return new ResponseVM { msg = "Missing Plant Event..." };
+
+                pe.UserID = userID;
 
 
                 await db.SaveChangesAsync();

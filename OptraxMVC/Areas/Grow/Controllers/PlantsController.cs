@@ -51,12 +51,9 @@ namespace OptraxMVC.Areas.Grow.Controllers
                     MsgDiv = "tableMsg"
                 };
 
-                ViewData["StrainsList"] = _IDropdowns.GetStrains();
-                ViewData["Phases"] = _IDropdowns.GetGrowthPhasesList();
-                ViewData["OriginTypes"] = _IDropdowns.GetOriginTypesList();
-                ViewData["Locations"] = _IDropdowns.GetLocationsSelectList();
+                ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["StrainSelects", "PhaseSelects", "OriginTypeSelects", "LocationSelects", "UomSelects"]);
 
-                Plant plant = await _IPlants.LoadNewPlant();
+                Plant plant = await _IPlants.LoadNewPlant(UserID);
 
                 return PartialView("_Create", plant);
             }

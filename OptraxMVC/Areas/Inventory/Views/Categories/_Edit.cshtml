@@ -5,7 +5,7 @@
 
 @{
     FormVM formVM = ViewBag.FormVM;
-    var categories = (IEnumerable<SelectListItem>)(ViewData["TopCategories"] ?? new());
+    DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
 }
 
 @using (Html.BeginForm(formVM.Action, "Categories", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv, data_modelname = "cat" }))
@@ -33,7 +33,7 @@
             </div>
             <div class="col-4">
                 @Html.LabelFor(m => m.ParentID)
-                @Html.DropDownListFor(m => m.ParentID, categories, "Parent Category", new { @class = "form-select attr select2" })
+                @Html.DropDownListFor(m => m.ParentID, drops.TopCategorySelects, "Parent Category", new { @class = "form-select attr select2" })
                 @Html.ValidationMessageFor(m => m.ParentID, "", new { @class = "val-msg" })
             </div>
             <div class="col-4">

@@ -1164,7 +1164,7 @@ namespace OptraxDAL.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<string>("StartType")
+                    b.Property<string>("OriginType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

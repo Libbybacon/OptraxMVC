@@ -1,0 +1,43 @@
+﻿@using OptraxDAL.Models.Grow
+@model PlantEvent
+
+@{
+    int i = (int?)ViewData["Index"] ?? 0;
+    string eventType = Model.EventType;
+}
+
+<input type="hidden" name="PlantEvents[@i].ID" value="@Model.ID" />
+<input type="hidden" name="PlantEvents[@i].Date" value="@DateTime.Now" />
+<input type="hidden" name="PlantEvents[@i].EventType" value="@eventType" />
+<input type="hidden" name="PlantEvents[@i].PlantID" value="@Model.PlantID" />
+<input type="hidden" name="PlantEvents[@i].UserID" value="@Model.EncryptedID" />
+
+@if (Model is TransferEvent transferModel)
+{
+    @Html.EditorFor(m => transferModel, new ViewDataDictionary(ViewData))
+}
+
+@* @switch (eventType)
+{
+    case "Transfer":
+        var model = (TransferEvent)Model;
+        @Html.EditorFor(m => m as TransferEvent, "TransferEvent", new ViewDataDictionary(ViewData))
+        break;
+    case "Treatment":
+        @Html.EditorFor(m => (TreatmentEvent)m, new ViewDataDictionary(ViewData))
+        break;
+    case "Growth":
+        @Html.EditorFor(m => (GrowthEvent)m, new ViewDataDictionary(ViewData))
+        break;
+    case "Prune":
+        @Html.EditorFor(m => (PruneEvent)m, new ViewDataDictionary(ViewData))
+        break;
+    case "Transplant":
+        @Html.EditorFor(m => (TransplantEvent)m, new ViewDataDictionary(ViewData))
+        break;
+    case "Light":
+        @Html.EditorFor(m => (LightEvent)m, new ViewDataDictionary(ViewData))
+        break;
+    default:
+        break;
+} *@

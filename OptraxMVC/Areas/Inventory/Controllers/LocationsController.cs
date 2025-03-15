@@ -33,7 +33,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> LoadCreate(string type)
+        public IActionResult LoadCreate(string type)
         {
             try
             {
@@ -49,11 +49,11 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                 switch (type)
                 {
                     case "Building":
-                        ViewData["States"] = _IDropdowns.GetStatesList();
+                        ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["StateSelects"]);
                         model = new BuildingLocation() { LocationType = type, Address = new Address() { } };
                         break;
                     case "Room":
-                        ViewData["Buildings"] = await _IDropdowns.GetBuildings();
+                        ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["BuildingSelects"]);
                         model = new RoomLocation() { LocationType = type };
                         break;
                     case "Container":

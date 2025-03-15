@@ -3,6 +3,7 @@ using OptraxDAL.ViewModels;
 using AutoMapper;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc;
 
 namespace OptraxDAL.Models.Inventory
 {
@@ -44,6 +45,8 @@ namespace OptraxDAL.Models.Inventory
         public virtual Plant? Parent { get; set; }
 
         public virtual ICollection<Plant> Children { get; set; } = [];
+
+        [BindProperty]
         public virtual ICollection<PlantEvent> PlantEvents { get; set; } = [];
 
         [NotMapped]

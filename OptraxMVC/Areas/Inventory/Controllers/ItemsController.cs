@@ -111,12 +111,10 @@ namespace OptraxMVC.Areas.Inventory.Controllers
             }
         }
 
-        private void LoadViewData()
+        private DropdownsVM LoadViewData()
         {
-            ViewData["UoMs"] = _IDropdowns.GetUomsList();
-            ViewData["StockTypes"] = _IDropdowns.GetStockTypesList();
-            ViewData["Categories"] = _IDropdowns.GetCategoriesList();
-            ViewData["Containers"] = _IDropdowns.GetContainerTypesList();
+            return _IDropdowns.LoadDropdowns(["UomSelects", "StockTypeSelects", "CategorySelects", "ContainerTypeSelects"]);
+            
         }
     }
 }

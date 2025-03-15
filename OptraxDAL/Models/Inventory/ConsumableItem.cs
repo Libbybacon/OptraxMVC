@@ -22,6 +22,6 @@ namespace OptraxDAL.Models.Inventory
         public string UoMName { get; set; } = string.Empty;
         public virtual UoM? UnitUoM { get; set; }
 
-        public virtual ICollection<PlantEvent> PlantTreatments { get; set; } = [];
+        public virtual ICollection<TreatmentEvent> PlantTreatments { get; set; } = [];
     }
 }
