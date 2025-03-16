@@ -21,7 +21,7 @@ namespace OptraxMVC.Models.MappingProfiles
                                                  Date = newEvent.Date,
                                                  EventType = newEvent.EventType,
                                                  UserID = newEvent.UserID,
-                                                 Transfer = newEvent.Transfer.NewPlantTransfer(newPlant)
+                                                 Transfer = newEvent.Transfer.NewTransfer(newPlant)
                                              });
                                          }
                                      });

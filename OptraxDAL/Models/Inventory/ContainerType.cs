@@ -10,12 +10,13 @@ namespace OptraxDAL.Models.Inventory
         public ContainerType() { }
 
         public int ContainerTypeID { get; set; }
-        
+
         [MaxLength(100)]
         public string Name { get; set; } = string.Empty;
 
         [MaxLength(100)]
         public string? Description { get; set; }
+
         public decimal Capacity { get; set; }
 
         [Required]
@@ -23,12 +24,10 @@ namespace OptraxDAL.Models.Inventory
         [ForeignKey("CapacityUoM")]
         [Display(Name = "Capacity UoM")]
         public string UoMName { get; set; } = string.Empty;
+
         public bool Active { get; set; } = true;
 
         public virtual UoM CapacityUoM { get; set; } = new();
-        public virtual ICollection<InventoryItem> InventoryItems { get; set; } = [];
         public virtual ICollection<PlantEvent>? Transplants { get; set; } = [];
-        public virtual ICollection<ContainerLocation> ContainerLocations { get; set; } = [];
-
     }
 }

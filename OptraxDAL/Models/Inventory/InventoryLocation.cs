@@ -1,17 +1,14 @@
-﻿using OptraxDAL.Models.Admin;
+﻿using Microsoft.AspNetCore.Mvc;
+using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
-    public interface ILocation
-    {
-
-    }
 
     [Table("InventoryLocations")]
-    public abstract class InventoryLocation : ILocation
+    public abstract class InventoryLocation
     {
         public InventoryLocation() { }
 
@@ -29,10 +26,13 @@ namespace OptraxDAL.Models.Inventory
 
         public bool Active { get; set; } = true;
 
+        [MaxLength(1)]
+        public int Level { get; set; }
+
         public virtual InventoryLocation? Parent { get; set; } = null;
 
         public virtual ICollection<InventoryLocation> Children { get; set; } = [];
-        public virtual ICollection<StockItem> StockItems { get; set; } = [];
+        public virtual ICollection<StockItem>? StockItems { get; set; } = [];
 
 
         [InverseProperty(nameof(InventoryTransfer.Origin))]
@@ -44,11 +44,14 @@ namespace OptraxDAL.Models.Inventory
         [NotMapped]
         public string LocationType { get; set; } = string.Empty;
 
+        [NotMapped]
+        public string NameWithType { get => $"{LocationType}: {Name}"; }
+
         public string GetParentNamesString()
         {
             if (Parent != null)
             {
-                List<string> names = [Name, Parent.Name];
+                List<string> names = [NameWithType, Parent.NameWithType];
 
                 if (Parent.Parent != null)
                 {
@@ -61,64 +64,142 @@ namespace OptraxDAL.Models.Inventory
             return Name;
         }
 
-        private static List<string> GetNamesRecursive(InventoryLocation category)
+        private static List<string> GetNamesRecursive(InventoryLocation loc)
         {
-            List<string> names = [category.Name];
+            List<string> names = [loc.NameWithType];
 
-            if (category.Parent != null)
+            if (loc.Parent != null)
             {
-                names.AddRange(GetNamesRecursive(category.Parent));
+                names.AddRange(GetNamesRecursive(loc.Parent));
             }
             return names;
         }
     }
 
-    //TODO: Move location types to own class files, add functions
     [Table("InventoryLocations")]
-    public class ContainerLocation : InventoryLocation
+    public class VehicleLocation : InventoryLocation
     {
-        public ContainerLocation() { }
-
-        public int ContainerTypeID { get; set; }
-
-        [Required]
-        public new string Description { get; set; } = string.Empty;
-
-        public ContainerType? ContainerType { get; set; }
+        public VehicleLocation()
+        {
+            Level = 0;
+        }
     }
 
     [Table("InventoryLocations")]
-    public class RoomLocation : InventoryLocation
+    public class SiteLocation : InventoryLocation
     {
-        public RoomLocation() { }
+        public SiteLocation()
+        {
+            Level = 0;
+        }
+
+        public int? BusinessID { get; set; }
+
+        public virtual Business? Business { get; set; }
+    }
+
+
+    [Table("InventoryLocations")]
+    public class GreenhouseLocation : InventoryLocation
+    {
+        public GreenhouseLocation()
+        {
+            Level = 1;
+        }
 
         public virtual ICollection<Crop>? Crops { get; set; } = [];
     }
 
     [Table("InventoryLocations")]
+    public class FieldLocation : InventoryLocation
+    {
+        public FieldLocation()
+        {
+            Level = 1;
+        }
+
+        public virtual ICollection<Crop>? Crops { get; set; } = [];
+    }
+
+    [Table("InventoryLocations")]
+    public class RowLocation : InventoryLocation
+    {
+        public RowLocation()
+        {
+            Level = 2;
+        }
+
+        public virtual ICollection<Crop>? Crops { get; set; } = [];
+    }
+
+    [Table("InventoryLocations")]
+    public class BedLocation : InventoryLocation
+    {
+        public BedLocation()
+        {
+            Level = 3;
+        }
+    }
+
+    [Table("InventoryLocations")]
+    public class PlotLocation : InventoryLocation
+    {
+        public PlotLocation()
+        {
+            Level = 4;
+        }
+    }
+
+    [Table("InventoryLocations")]
     public class BuildingLocation : InventoryLocation
     {
-        public BuildingLocation() { }
+        public BuildingLocation()
+        {
+            Level = 1;
+        }
 
         public int AddressID { get; set; }
-        public virtual required Address Address { get; set; } = new();
+
+        [BindProperty]
+        public virtual Address Address { get; set; } = new();
     }
+
+    [Table("InventoryLocations")]
+    public class RoomLocation : InventoryLocation
+    {
+        public RoomLocation()
+        {
+            Level = 2;
+        }
+
+        public virtual ICollection<Crop>? Crops { get; set; } = [];
+    }
+
+
 
     [Table("InventoryLocations")]
     public class OffsiteLocation : InventoryLocation
     {
         public OffsiteLocation() { }
 
-        [Required]
-        public new string Description { get; set; } = string.Empty;
+        public int? AddressID { get; set; }
+        public int? BusinessID { get; set; }
+
+        public virtual Address? Address { get; set; }
+        public virtual Business? Business { get; set; }
     }
 
     public enum LocationType
     {
-        Building = 1,
-        Room = 2,
-        Container = 3,
-        Outdoor = 4,
-        OffSite = 5,
+        Site,
+        Field,
+        Row,
+        Bed,
+        Plot,
+        Greenhouse,
+        Building,
+        Room,
+        Vehicle,
+        Offsite
     }
 }

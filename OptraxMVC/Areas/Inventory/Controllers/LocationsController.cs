@@ -56,8 +56,8 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                         ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["BuildingSelects"]);
                         model = new RoomLocation() { LocationType = type };
                         break;
-                    case "Container":
-                        model = new ContainerLocation() { LocationType = type };
+                    case "Vehicle":
+                        model = new VehicleLocation() { LocationType = type };
                         break;
                     case "OffSite":
                         model = new OffsiteLocation() { LocationType = type };
@@ -93,7 +93,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateContainerAsync(ContainerLocation loc)
+        public async Task<IActionResult> CreateVehicleAsync(VehicleLocation loc)
         {
             if (!ModelState.IsValid)
                 return Json(new { msg = "Invalid model" });

@@ -65,7 +65,8 @@ namespace OptraxDAL.Models.Inventory
         [InverseProperty(nameof(InventoryLocation.TransfersIn))]
         public virtual InventoryLocation? Destination { get; set; }
 
-        public InventoryTransfer NewPlantTransfer(Plant plant)
+
+        public InventoryTransfer NewTransfer()
         {
             return new InventoryTransfer()
             {
@@ -79,8 +80,15 @@ namespace OptraxDAL.Models.Inventory
                 Status = Status,
                 Notes = Notes,
                 NeedsApproval = NeedsApproval,
-                StockItem = plant,
+                StockItemID = StockItemID,
             };
+        }
+
+        public InventoryTransfer NewTransfer(Plant plant)
+        {
+            var newTransfer = NewTransfer();
+            newTransfer.StockItem = plant;
+            return newTransfer;
         }
     }
 }

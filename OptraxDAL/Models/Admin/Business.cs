@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OptraxDAL.Models.Inventory;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Admin
@@ -18,11 +19,13 @@ namespace OptraxDAL.Models.Admin
         [MaxLength(250)]
         public string? Description { get; set; }
 
+        public virtual List<InventoryLocation>? Locations { get; set; } = [];
+
         public virtual List<Address> Addresses { get; set; } = [];
     }
     public enum BusinessTypes
     {
-        Source,        
+        Source,
         Retailer,
         Wholesaler,
         Distributor,

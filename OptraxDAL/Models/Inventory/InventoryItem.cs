@@ -50,21 +50,17 @@ namespace OptraxDAL.Models.Inventory
         public string? StockUoM { get; set; }
 
         public int? SellerID { get; set; }
-        public int? LightTypeID { get; set; }
-        public int? ContainerTypeID { get; set; }
 
         public bool NeedsTransferApproval { get; set; } = false;
+
         public bool Active { get; set; } = true;
 
-        public virtual LightType? LightType { get; set; }
-        public virtual ContainerType? ContainerType { get; set; }
         public virtual InventoryCategory? Category { get; set; }
         public virtual ICollection<StockItem> StockItems { get; set; } = [];
 
         public enum InventoryType
         {
             Plant,
-            Light,
             Durable,
             Consumable,
         }

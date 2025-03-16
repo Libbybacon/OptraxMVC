@@ -150,30 +150,6 @@ function setPlantListeners() {
         type.includes('Seed') ? $('.mother-info').addClass(none) : $('.mother-info').removeClass(none);
 
     })
-
-    $('#IsMother').off('change').on('change', function () {
-
-        if ($(this).prop('checked') == true) {
-            let strain = $('#StrainID option:selected').text();
-
-            $('#MotherName').removeAttr('readonly');
-            $('#Quantity').val(1).attr('readonly', 'readonly');
-            $('#Crop_Name').val(strain + 'Mothers').attr('readonly', 'readonly');
-            $('#Crop_BatchID').val(strain + '-Mothers').attr('readonly', 'readonly');
-
-            $('#StrainID').on('change', function () {
-                let strain = $('#StrainID option:selected').text();
-                $('#Crop_Name').removeAttr('readonly').val(strain + 'Mothers').attr('readonly', 'readonly');
-                $('#Crop_BatchID').removeAttr('readonly').val(strain + '-Mothers').attr('readonly', 'readonly');
-            });
-        }
-        else {
-            $('#MotherName').val('').attr('readonly', 'readonly');
-            $('#Quantity').removeAttr('readonly');
-            $('#Crop_Name').val('').removeAttr('readonly');
-            $('#Crop_BatchID').val('').removeAttr('readonly');
-        }
-    });
 }
 
 function loadParentList() {
@@ -187,12 +163,11 @@ function loadParentList() {
             type: 'GET',
             data: { strainID: strainID },
             success: function (response) {
-                console.log('response', response);
+
                 if (response.success) {
                     let $select = $('#ParentID');
                     $select.html('');
                     $.each(response.data, function (index, parent) {
-                        console.log('i', index, 'p', parent);
                         let $opt = $('<option/>').val(parent.ID).text(parent.Name)
                         $select.append($opt)
                     });

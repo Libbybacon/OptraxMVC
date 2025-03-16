@@ -31,13 +31,18 @@ namespace OptraxDAL
         public DbSet<DurableItem> DurableItems { get; set; }
         public DbSet<ConsumableItem> ConsumableItems { get; set; }
 
-        public DbSet<LightType> LightTypes { get; set; }
         public DbSet<ContainerType> ContainerTypes { get; set; }
 
         public DbSet<InventoryLocation> InventoryLocations { get; set; }
-        public DbSet<ContainerLocation> ContainerLocations { get; set; }
-        public DbSet<RoomLocation> RoomLocations { get; set; }
+        public DbSet<SiteLocation> SiteLocations { get; set; }
+        public DbSet<FieldLocation> FieldLocations { get; set; }
+        public DbSet<RowLocation> RowLocations { get; set; }
+        public DbSet<BedLocation> BedLocations { get; set; }
+        public DbSet<PlotLocation> PlotLocations { get; set; }
+        public DbSet<GreenhouseLocation> GreenhouseLocations { get; set; }
         public DbSet<BuildingLocation> BuildingLocations { get; set; }
+        public DbSet<RoomLocation> RoomLocations { get; set; }
+        public DbSet<VehicleLocation> VehicleLocation { get; set; }
         public DbSet<OffsiteLocation> OffsiteLocations { get; set; }
         public DbSet<InventoryTransfer> InventoryTransfers { get; set; }
         public DbSet<TransferApproval> TransferApprovals { get; set; }
@@ -88,19 +93,6 @@ namespace OptraxDAL
             builder.Entity<InventoryItem>().HasIndex(x => x.Name).IsUnique();
             builder.Entity<InventoryItem>().Property(x => x.Active).HasDefaultValue(true);
 
-            builder.Entity<InventoryItem>().HasOne(i => i.ContainerType)
-                                           .WithMany(ct => ct.InventoryItems)
-                                           .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<InventoryItem>().HasOne(i => i.LightType)
-                                           .WithMany(lt => lt.InventoryItems)
-                                           .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<LightType>().Property(x => x.PPF).HasPrecision(6, 2);
-            builder.Entity<LightType>().Property(x => x.PPFD).HasPrecision(6, 2);
-            builder.Entity<LightType>().Property(x => x.ColorSpectrum).HasMaxLength(50);
-            builder.Entity<LightType>().Property(x => x.CoverageAreaSF).HasPrecision(6, 2);
-
             builder.Entity<ContainerType>().Property(x => x.Capacity).HasPrecision(8, 2);
             builder.Entity<ContainerType>().Property(x => x.Active).HasDefaultValue(true);
 
@@ -124,21 +116,21 @@ namespace OptraxDAL
             builder.Entity<InventoryLocation>().Property(x => x.Active).HasDefaultValue(true);
 
             builder.Entity<InventoryLocation>().HasDiscriminator<string>("LocationType")
+                                               .HasValue<SiteLocation>("Site")
+                                               .HasValue<FieldLocation>("Field")
+                                               .HasValue<RowLocation>("Row")
+                                               .HasValue<BedLocation>("Bed")
+                                               .HasValue<PlotLocation>("Plot")
+                                               .HasValue<GreenhouseLocation>("Greenhouse")
+                                               .HasValue<BuildingLocation>("Building")
                                                .HasValue<RoomLocation>("Room")
                                                .HasValue<OffsiteLocation>("Offsite")
-                                               .HasValue<BuildingLocation>("Building")
-                                               .HasValue<ContainerLocation>("Container");
+                                               .HasValue<VehicleLocation>("Vehicle");
 
             builder.Entity<BuildingLocation>().HasOne(bl => bl.Address)
                                               .WithOne(a => a.Building)
                                               .HasForeignKey<BuildingLocation>(bl => bl.AddressID)
                                               .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<ContainerLocation>().HasOne(cl => cl.ContainerType)
-                                               .WithMany(ct => ct.ContainerLocations)
-                                               .HasForeignKey(cl => cl.ContainerTypeID)
-                                               .OnDelete(DeleteBehavior.Restrict);
-
 
             builder.Entity<InventoryTransfer>().Property(x => x.UnitCount).HasPrecision(8, 2);
             builder.Entity<InventoryTransfer>().HasOne(it => it.Origin)

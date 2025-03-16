@@ -117,19 +117,18 @@ namespace OptraxDAL.Models.Grow
     public enum TreatmentType
     {
         Water,
-        Feed,
+        Fertilize,
         Flush,
         PestControl,
-        MoldControl
+        MoldControl,
+        WeedControl
     }
 
     public enum PruneType
     {
-        Top,
+        Deadhead,
         Defoliate,
-        FIM,
-        LST1,
-        LST2,
-        LST3,
+        Dethorn,
+        Trellis,
     }
 }
