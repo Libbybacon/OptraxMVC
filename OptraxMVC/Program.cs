@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
-using OptraxDAL.Helpers;
 using OptraxDAL.Models.Admin;
 using OptraxMVC.Models.ModelBinders;
 using OptraxMVC.Services;
@@ -18,10 +17,10 @@ builder.Services.AddDbContext<OptraxContext>(options =>
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<OptraxContext>()
                                                      .AddDefaultTokenProviders();
 
-AesEncryptionHelper.Initialize(
-    builder.Configuration["Encryption:Key"] ?? string.Empty,
-    builder.Configuration["Encryption:IV"] ?? string.Empty
-);
+//AesEncryptionHelper.Initialize(
+//    builder.Configuration["Encryption:Key"] ?? string.Empty,
+//    builder.Configuration["Encryption:IV"] ?? string.Empty
+//);
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
