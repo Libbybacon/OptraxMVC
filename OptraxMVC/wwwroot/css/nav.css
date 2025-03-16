@@ -156,6 +156,12 @@
             background: var(--grn-xlt);
         }
 
+            .nav-pills li:hover .disabled-link i,
+            .nav-pills li:hover .nav-link.disabled-link {
+                color: var(--tan-lt);
+                background: var(--blue-xdk);
+            }
+
 .nav-pills .nav-link.active,
 .nav-pills .nav-link.active:hover,
 .nav-pills .nav-link.active i {

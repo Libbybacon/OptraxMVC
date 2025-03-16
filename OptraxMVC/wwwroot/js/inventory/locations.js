@@ -18,30 +18,30 @@ function makeDatatable() {
         overflowY: 'auto',
         scrollCollapse: true,
         order: [
-            [1, "asc"],
+    /*        [1, "asc"],*/
         ],
         rowGroup: {
             dataSrc: ["locationType"],
             startRender: function (rows, group, level) {
                console.log('group', group, ' level ', level)
                 let props = {
-                    Level: level,
-                    IsTop: level == 0,
+                    Level: 1,
+                    IsTop: level == 1,
                     ID: group,
                     Name: group,
                     NameNoSpace: group.replace(/\s+/g, ""),
                 }
-                let $tr = makeHeaderToggle(props);
-                return $tr
+                return makeHeaderToggle(props);
             }
         },
         columnDefs: [
             { className: "dt-control", data: null, targets: 0, visible: false, sortable: false },
+            //{ visible: false, targets: [1] }, 
             { sortable: false, targets: [0, 1, 2, 3] }
         ],
         columns: [
             { targets: 0, data: null, defaultContent: '', className: "dt-control" },
-            { targets: 1, data: 'locationType' },
+            { targets: 1, data: 'locationType', render: function () { return ''} },
             { targets: 2, data: 'name' },
             { targets: 3, data: 'description' },
         ],
@@ -64,8 +64,8 @@ function makeDatatable() {
         },
         createdRow: function (row, data, dataIndex) {
 
-            $(row).attr('id', 'item-' + data.ID);
-            $(row).addClass(`item-row f-xs`);
+            $(row).attr('id', 'item-' + data.id);
+            $(row).addClass(`item-row f-xs ${data.locationType}`);
 
             $(row).hover(
                 function () {
@@ -91,8 +91,24 @@ function makeDatatable() {
     });
 }
 
-function makeHeaderToggle() {
+function makeHeaderToggle(props) {
 
+    let $hidei = $('<i/>').addClass(`bi bi-chevron-up hide-i  d-none`)
+    let $showi = $('<i/>').addClass(`bi bi-chevron-down show-i ${(props.IsTop ? 'show2' : 'show1')}`);
+
+    let $btn = $('<button/>').addClass(`toggle ${props.IsTop ? '' : 'tgi'}`)
+        .data('grp', props.NameNoSpace)
+        .append($showi)
+        .append($hidei)
+        .on('click', function () { showHide(this) });
+
+    let $div = $('<div/>').addClass('d-flex w-100').append($btn)
+    let $txtSpan = $('<span/>').addClass('head-txt flex-fill ps-2').append(props.Name);
+    $div.append($txtSpan);
+
+    let $th = $('<th/>').attr('colspan', 7).addClass(`plant${props.Level}`).append($div);
+
+    return $('<tr/>').attr('data-id', props.ID).addClass(`grp-row cat${props.Level}-head`).append($th);
 }
 
 function SetLocationHandlers() {

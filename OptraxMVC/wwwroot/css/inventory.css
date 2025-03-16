@@ -53,28 +53,28 @@ button {
     line-height: normal;
 }
 
+.btn-group button {
+    border-radius: var(--border-r) !important;
+}
 .table-btn {
-    border-radius: var(--border-r);
+    border-radius: 4px;
     border: 1px solid var(--gray-md);
 }
 
 .add-btn {
     margin-right: 1rem;
     color: var(--blue-dk);
-    font-size: var(--f-md);
+    font-size: var(--f-sm);
     box-shadow: var(--box-shdw-sm);
+    border: 1px solid var(--blue-dk);
 }
 
     .add-btn:hover {
         color: white;
-        box-shadow: var(--box-shdw);
-        border: 2px solid var(--blue-dk);
+        /*box-shadow: var(--box-shdw);*/
+        border: 1px solid var(--blue-dk);
         background-color: var(--blue-dk);
     }
-
-.buttons-collection{
-
-}
 
 .dt-button-background{
     display: none;

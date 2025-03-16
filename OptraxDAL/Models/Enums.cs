@@ -78,11 +78,11 @@
 
         public enum LocationType
         {
-            Container,
+            //Container,
             Room,
             Building,
-            Outdoor,
-            OffSite
+            //Outdoor,
+            //OffSite
         }
 
         public enum States

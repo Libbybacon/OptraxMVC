@@ -6,6 +6,7 @@ using OptraxMVC.Controllers;
 using OptraxMVC.Models;
 using OptraxMVC.Services;
 using OptraxMVC.Services.Inventory;
+using System.Text.Json.Serialization;
 
 namespace OptraxMVC.Areas.Inventory.Controllers
 {
@@ -76,8 +77,8 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         {
             if (!ModelState.IsValid)
                 return Json(new { msg = "Invalid model" });
-
-            return Json(await CreateAsync(loc));
+            ResponseVM response = await CreateAsync(loc);
+            return Json(response, ReferenceHandler.Preserve);
         }
 
         [HttpPost]
@@ -114,7 +115,8 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         {
             try
             {
-                return await _ILocation.CreateAsync(loc);
+                ResponseVM response = await _ILocation.CreateAsync(loc);
+                return response;
             }
             catch (Exception)
             {

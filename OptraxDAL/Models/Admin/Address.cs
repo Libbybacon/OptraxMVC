@@ -13,10 +13,11 @@ namespace OptraxDAL.Models.Admin
 
         [Required]
         [MaxLength(100)]
+        [Display(Name = "Address 1")]
         public string Address1 { get; set; } = string.Empty;
 
-        [Required]
         [MaxLength(100)]
+        [Display(Name = "Address 2")]
         public string? Address2 { get; set; }
 
         [Required]
@@ -29,17 +30,19 @@ namespace OptraxDAL.Models.Admin
 
         [Required]
         [MaxLength(20)]
+        [Display(Name = "Zip Code")]
         public string ZipCode { get; set; } = string.Empty;
 
         [MaxLength(100)]
+        [Display(Name = "Contact Name")]
         public string? ContactName { get; set; }
 
         [MaxLength(20)]
-        [RegularExpression(@"\(\d{3}\)\d{3}-\d{4}", ErrorMessage = "Phone number must contain 10 digits.")]
-
+        [Display(Name = "Phone")]
         public string? ContactPhone { get; set; }
 
         [MaxLength(100)]
+        [Display(Name = "Email")]
         public string? ContactEmail { get; set; }
 
         public int? BusinessID { get; set; }

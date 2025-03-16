@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
 using OptraxDAL.Models.Inventory;
-using OptraxDAL.ViewModels;
 using OptraxMVC.Controllers;
 using OptraxMVC.Models;
 using OptraxMVC.Services;
@@ -38,7 +37,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         {
             try
             {
-                LoadViewData();
+                ViewData["Dropdowns"] = LoadViewData();
                 ViewBag.FormVM = new FormVM() { IsNew = true, JsFunc = "addItem", Action = "Create", MsgDiv = "tableMsg" };
                 return PartialView("_Edit", new InventoryItem() { });
             }
@@ -79,7 +78,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                     return Json(new { success = false, msg = "Item not found" });
                 }
 
-                LoadViewData();
+                ViewData["Dropdowns"] = LoadViewData();
                 ViewBag.FormVM = new FormVM() { IsNew = false, JsFunc = "updateItem", Action = "Edit", MsgDiv = "popupTopInner" };
 
                 return PartialView("_Edit", item);
@@ -114,7 +113,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         private DropdownsVM LoadViewData()
         {
             return _IDropdowns.LoadDropdowns(["UomSelects", "StockTypeSelects", "CategorySelects", "ContainerTypeSelects"]);
-            
+
         }
     }
 }

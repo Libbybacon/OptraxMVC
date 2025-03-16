@@ -4,8 +4,9 @@
     Dictionary<string, string> menuItems = new Dictionary<string, string>() {
         { "Grow", "flower2" },
         { "Inventory", "basket3" },
-        { "Sales", "cash-stack" },
-        { "Reports", "file-bar-graph" },
+        { "Schedule-d", "calendar3" },
+        { "Sales-d", "cash-stack" },
+        { "Reports-d", "file-bar-graph" },
     };
 }
 
@@ -20,18 +21,20 @@
     <ul class="nav nav-pills d-flex flex-md-column flex-row mb-auto">
         <li class="nav-item ms-0 me-0 mt-md-2 mt-0">
             <a href="/"
-               class="nav-link d-flex @(page == "Dashboard" ? "active" : "")">
+            class="nav-link d-flex @(page == "Dashboard" ? "active" : "")">
                 <i class="nav-bi bi text-tan bi-grid-3x3 me-lg-3 me-0"></i>
                 <span class="nav-text d-lg-block d-none pt-2">Dashboard</span>
             </a>
         </li>
         @foreach (var item in menuItems)
         {
-            <li class="nav-item ms-0 me-0 mt-md-2 mt-0">
-                <a asp-controller="Tabs" asp-action="LoadTabs" asp-route-navarea="@item.Key"
-                   class="nav-link d-flex @(page == item.Key ? "active" : "")">
+            var key = item.Key.Replace("-d", "");
+            bool disabled =  item.Key.Contains("-d");
+            <li class="nav-item ms-0 me-0 mt-md-2 mt-0" @(item.Key.Contains("-d") ? "disabled" : "")>
+                <a asp-controller="Tabs" asp-action="LoadTabs" asp-route-navarea="@key"
+                   class="nav-link d-flex @(disabled ? "disabled-link" : "") @(page == key ? "active" : "")">
                     <i class="nav-bi bi text-tan bi-@(item.Value) me-lg-3 me-0"></i>
-                    <span class="nav-text d-lg-block d-none pt-2">@item.Key</span>
+                    <span class="nav-text d-lg-block d-none pt-2">@key</span>                   
                 </a>
             </li>
         }

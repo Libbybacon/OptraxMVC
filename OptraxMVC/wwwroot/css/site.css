@@ -210,14 +210,16 @@ button {
 
 
 .save-btn,
-.update-btn {
+.update-btn,
+.edit-btn {
     color: var(--grn-dk);
     border: 1px solid var(--grn-dk);
     background-color: white;
 }
 
     .save-btn:hover,
-    .update-btn:hover {
+    .update-btn:hover,
+    .edit-btn:hover {
         color: white;
         background: var(--grn-md);
         box-shadow: var(--box-shdw-hov);
@@ -238,6 +240,22 @@ button {
     background: none;
 }
 
+.buttons-collection {
+    font-size: var(--f-sm) !important;
+    border: 1px solid var(--blue-dk);
+    
+}
+.disabled-link {
+    pointer-events: none; /* Prevents clicking */
+    opacity: 0.5; /* Fades it out */
+    cursor: not-allowed;
+}
+.disabled-link:hover {
+    pointer-events: none; /* Prevents clicking */
+    opacity: 0.5; /* Fades it out */
+    cursor: not-allowed;
+    background-color: var(--blue-dk);
+}
 /* Inputs */
 
 .attr.form-control {

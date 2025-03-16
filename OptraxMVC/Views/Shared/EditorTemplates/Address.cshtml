@@ -41,7 +41,7 @@
     </div>
     <div class="col-xl-4 col-6">
         @Html.LabelFor(m => m.ContactPhone)
-        @Html.EditorFor(m => m.ContactPhone, "", new { htmlAttributes = new { @class = $"form-control", @pattern = $"\\(\\d{3}\\)\\d{3}-\\d{4}", @placeholder = "(xxx)xxx-xxxx" } })
+        @Html.EditorFor(m => m.ContactPhone, "", new { htmlAttributes = new { @class = $"form-control", @placeholder = "(xxx)xxx-xxxx" } })
         @Html.ValidationMessageFor(m => m.ContactPhone, "", new { htmlAttributes = new { @class = "val-msg" } })
     </div>
     <div class="col-xl-4 col-6">
@@ -51,3 +51,4 @@
     </div>
 </div>
 
+@* @pattern = $"\\(\\d{3}\\)\\d{3}-\\d{4}", *@

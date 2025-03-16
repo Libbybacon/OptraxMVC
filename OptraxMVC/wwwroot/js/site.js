@@ -20,6 +20,21 @@ $(document).ready(function () {
         closePopup();
     });
 
+    $(document).on('click', '#modelForm .edit-btn', function () {
+        let $form = $('#modelForm');
+        $form.find('.view').addClass('d-none');
+        $form.find('.show-ed').removeClass('d-none');
+        $form.find('.attr').removeClass('d-none');
+        $form.find('.cancel-btn').removeClass('d-none');
+    });
+    $(document).on('click', '#modelForm .cancel-btn', function () {
+        let $form = $('#modelForm');
+        $form.find('.view').removeClass('d-none');
+        $form.find('.show-ed').addClass('d-none');
+        $form.find('.attr').addClass('d-none');
+        $form.find('.cancel-btn').addClass('d-none');
+    });
+
     $(window).on('resize', function () {
         let $nav = $('.side-nav');
         let viewW = $(window).width();
