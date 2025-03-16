@@ -8,7 +8,9 @@ $(document).ready(function () {
         $.validator.unobtrusive.parse($(`#modelForm`));
     }
 
+    //$(`#modelForm`).on('submit', submitForm)
     $(document).off('submit').on('submit', $(`#modelForm`), function (event) {
+        console.log('sub 1');
         event.preventDefault();
         submitForm($(`#modelForm`))
     });
@@ -74,11 +76,18 @@ function setModelChanges() {
     });
 }
 
-function submitForm($form) {
+function submitForm() {
 
+    let $form = $(`#modelForm`);
     let msgdiv = $(`#${$form.data('msgdiv')}`);
     let proceed = $form.attr('action').includes('Create') || Changes.length > 0;
+    console.log('form');
 
+    //if ($form.data('func') == "addPlants") {
+    //    console.log('resubmit')
+    //    $(`#modelForm`).off('submit', submitForm);
+    //    $('#modelForm').submit();
+    //}
     if ($form.valid() && proceed) {
 
         $.ajax({
@@ -100,8 +109,12 @@ function submitForm($form) {
                             setSelectDrops();
                             setModelChanges();
                             updateCategorySuccess();
+                            break;
                         case "addPlants":
                             addPlantsSuccess(response);
+                            break;
+                        case "addLocation":
+                            addLocationSuccess(response);
                         default:
                             closePopup();
                     }

@@ -1,19 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
-using OptraxDAL.ViewModels;
 using OptraxMVC.Controllers;
 using OptraxMVC.Models;
 using OptraxMVC.Services;
 using OptraxMVC.Services.Inventory;
 
-namespace OptraxMVC.Areas.Inventory.Controllers
+namespace OptraxMVC.Areas.Grow.Controllers
 {
-    [Area("Inventory")]
+    [Area("Grow")]
+    [Authorize]
     public class PlantsController(OptraxContext context, IDropdownService dropdownService, IPlantService plantService) : BaseController(context)
     {
         private readonly IPlantService _IPlants = plantService;
@@ -47,13 +46,11 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                     MsgDiv = "tableMsg"
                 };
 
-                ViewData["StrainsList"] = _IDropdowns.GetStrains();
-                ViewData["Phases"] = _IDropdowns.GetGrowthPhasesList();
-                ViewData["StartTypes"] = _IDropdowns.GetStartTypesList();
+                ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["StrainSelects", "PhaseSelects", "OriginTypeSelects", "LocationSelects", "UomSelects"]);
 
-                int inventoryID = await _IPlants.GetPlantInventoryIDAsync();
+                Plant plant = await _IPlants.LoadNewPlant(UserID);
 
-                return PartialView("_Create", new Plant() { InventoryItemID = inventoryID, });
+                return PartialView("_Create", plant);
             }
             catch (Exception ex)
             {
@@ -62,18 +59,39 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAsync(Plant plant)
         {
+            if (plant.PlantEvents.First() is TransferEvent transferEvent)
+            {
+                TryValidateModel(transferEvent.Transfer, "PlantEvents[0].Transfer");
+            }
             if (!ModelState.IsValid)
                 return Json(new { msg = "Invalid model" });
 
             try
             {
-                ResponseVM response = await _IPlants.CreateAsync(plant);
+                ResponseVM response = await _IPlants.CreateAsync(plant, UserID);
 
                 return Json(response);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
+                return Json(new { success = false, msg = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetParentList(int strainID)
+        {
+            try
+            {
+                ResponseVM response = await _IPlants.GetParentListAsync(strainID);
+
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
                 return Json(new { success = false, msg = ex.Message });
             }
         }

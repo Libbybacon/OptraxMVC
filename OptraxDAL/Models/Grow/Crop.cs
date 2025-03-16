@@ -9,7 +9,8 @@ namespace OptraxDAL.Models.Grow
         public Crop() { }
 
         public int ID { get; set; }
-        [Display(Name="Crop Name")]
+
+        [Display(Name = "Crop Name")]
         public string? Name { get; set; }
 
         [Display(Name = "Strain")]
@@ -23,7 +24,7 @@ namespace OptraxDAL.Models.Grow
 
         [Required]
         [Display(Name = "Current Phase")]
-        public string CurrentPhase { get; set; } = "";
+        public string CurrentPhase { get; set; } = string.Empty;
 
         [Display(Name = "Start Date")]
         public DateTimeOffset? StartDate { get; set; }
@@ -43,7 +44,7 @@ namespace OptraxDAL.Models.Grow
         public int? ExpectedFlowerDays { get; set; }
 
         public decimal? WasteQuantity { get; set; }
-        public string? WasteQuantityUOM { get; set; }
+        public string? WasteQuantityUoM { get; set; }
 
         public string? Notes { get; set; }
 

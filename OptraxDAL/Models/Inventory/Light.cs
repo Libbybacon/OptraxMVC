@@ -10,6 +10,6 @@ namespace OptraxDAL.Models.Inventory
         public DateTimeOffset? LastMaintenanceCheck { get; set; }
         public bool Active { get; set; } = true;
 
-        public virtual ICollection<LightEvent> PlantLightEvents { get; set; } = [];
+        public virtual ICollection<PlantEvent> PlantLightEvents { get; set; } = [];
     }
 }

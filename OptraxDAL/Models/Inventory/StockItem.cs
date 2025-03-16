@@ -11,7 +11,8 @@ namespace OptraxDAL.Models.Inventory
         public int ID { get; set; }
         public int InventoryItemID { get; set; }
 
-        [Display(Name="Date Acquired")]
+        [Display(Name = "Date Acquired")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTimeOffset? PurchaseDate { get; set; }
         public DateTimeOffset? ExpirationDate { get; set; }
 
@@ -20,6 +21,8 @@ namespace OptraxDAL.Models.Inventory
         [MaxLength(50)]
         public string? Status { get; set; }
         public bool NeedsTransferApproval { get; set; } = false;
+
+        [Display(Name = "Purchase Price per Item")]
         public decimal? PurchasePrice { get; set; }
 
         public virtual InventoryItem? InventoryItem { get; set; }

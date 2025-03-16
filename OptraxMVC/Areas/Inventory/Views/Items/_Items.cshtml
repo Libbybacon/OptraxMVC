@@ -1,18 +1,15 @@
 ﻿@using OptraxDAL.Models.Inventory
 @using OptraxDAL.ViewModels
-@* @model List<InventoryCategory> *@
-
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css" />
 
 <div class="p-md-3 p-0 pt-0">
-    <div id="filterCard">
+    @*<div id="filterCard">
         <button type="button" id="filterDrop" class="dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#filters" aria-expanded="false" aria-controls="filters">Filters</button>
         <div id="filters" class="collapse">
-            <div class="tag-list flex-wrap m-0 p-2">
-            </div>
+            <div class="tag-list flex-wrap m-0 p-2"></div>
         </div>
-    </div>
+    </div> *@
     <div class="table-div  px-lg-3 px-2">
         <div class="table-responsive">
             <div id="tableMsg"></div>
@@ -31,7 +28,7 @@
                         <th>Description</th>
                         <th>Manufacturer</th>
                         <th>SKU</th>
-                        <th>Default UOM</th>
+                        <th>Default UoM</th>
                         <th>Stock Type</th>
                     </tr>
                 </thead>

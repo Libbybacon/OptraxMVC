@@ -3,7 +3,7 @@ function makeDatatable() {
     $plantsTable = $(`#plant-table`).DataTable({
         ajax: {
             type: "GET",
-            url: '/Inventory/Plants/GetPlants/',
+            url: '/Grow/Plants/GetPlants/',
             dataSrc: function (data) {
                 return data;
             }
@@ -37,15 +37,15 @@ function makeDatatable() {
         },
         columnDefs: [
             { className: "dt-control", data: null, targets: 0, sortable: false },
-            {visible: false, targets: [1,2,3]},
-            { className: "all", targets: [4, 5, 6,7] },
-            { sortable: false, targets: [0, 1, 2, 3, 4, 5, 6,7] }
+            { visible: false, targets: [1, 2, 3] },
+            { className: "all", targets: [4, 5, 6, 7] },
+            { sortable: false, targets: [0, 1, 2, 3, 4, 5, 6, 7] }
         ],
         columns: [
             { targets: 0, data: null, defaultContent: '', className: "dt-control" },
             { targets: 1, data: 'strain' },
-            { targets: 2, data: 'isMother'},
-            { targets: 3, data: 'cropID' },            
+            { targets: 2, data: 'isMother' },
+            { targets: 3, data: 'cropID' },
             {
                 targets: 4,
                 data: null,
@@ -55,7 +55,7 @@ function makeDatatable() {
 
                 }
             },
-            { targets: 5, data: 'startType' },
+            { targets: 5, data: 'originType' },
             { targets: 6, data: 'currentPhase' },
             { targets: 7, data: 'locationName' },
         ],
@@ -75,7 +75,7 @@ function makeDatatable() {
         createdRow: function (row, data, dataIndex) {
 
             $(row).attr('id', 'item-' + data.plantID);
-            $(row).addClass(`item-row f-xs d-none ${data.strain.split('-')[0].replace(/\s+/g, "")} ${data.cropID.replace(/\s+/g, "") }`);
+            $(row).addClass(`item-row f-xs d-none ${data.strain.split('-')[0].replace(/\s+/g, "")} ${data.cropID.replace(/\s+/g, "")}`);
 
             $(row).hover(
                 function () {
@@ -114,42 +114,99 @@ function makeHeaderToggle(props) {
 
 function setPlantListeners() {
 
-    $('#StartPhase').on('change', function () {
+    $('#StrainID').on('change', function () {
+        $('#Crop_StrainID').val($(this).val());
+    });
+
+    $('#Phase').on('change', function () {
         let phase = $(this).val();
         $('#Crop_CurrentPhase').val(phase);
     });
 
+    $('.dest-id').on('change', function () {
+        $('#Crop_LocationID').val($(this).val());
+    });
 
+    $('#OriginType').on('change', function () {
+        let type = $(this).val(); 
+        if (type == 'Clone_Internal') {
+            $('#parentIdDiv').removeClass('d-none');
+            $('#ParentID').removeAttr('disabled');
+            loadParentList();
+        }
+        else {
+            $('#ParentID').attr('disabled', 'disabled');
+            $('#parentIdDiv').addClass('d-none');
+        }
+
+        if (type.includes('Seed')){
+            $('#Phase').val('Seed').change();
+        }
+        if (type.includes('Start')) {
+            $('#Phase').val('Start').change();
+        }
+
+        type.includes('Internal') ? $('#buyPrice').addClass(none) : $('#buyPrice').removeClass(none);
+        type.includes('Seed') ? $('.mother-info').addClass(none) : $('.mother-info').removeClass(none);
+
+    })
 
     $('#IsMother').off('change').on('change', function () {
 
         if ($(this).prop('checked') == true) {
             let strain = $('#StrainID option:selected').text();
 
-            $('#Quantity').val(1);
-            $('#MotherName').removeAttr('disabled');
-
-            $('#Crop_Name').val('Mothers').attr('readonly', 'readonly');
+            $('#MotherName').removeAttr('readonly');
+            $('#Quantity').val(1).attr('readonly', 'readonly');
+            $('#Crop_Name').val(strain + 'Mothers').attr('readonly', 'readonly');
             $('#Crop_BatchID').val(strain + '-Mothers').attr('readonly', 'readonly');
 
             $('#StrainID').on('change', function () {
                 let strain = $('#StrainID option:selected').text();
+                $('#Crop_Name').removeAttr('readonly').val(strain + 'Mothers').attr('readonly', 'readonly');
                 $('#Crop_BatchID').removeAttr('readonly').val(strain + '-Mothers').attr('readonly', 'readonly');
             });
         }
         else {
-            $('#MotherName').val('').prop('readonly', 'readonly');
+            $('#MotherName').val('').attr('readonly', 'readonly');
+            $('#Quantity').removeAttr('readonly');
             $('#Crop_Name').val('').removeAttr('readonly');
             $('#Crop_BatchID').val('').removeAttr('readonly');
         }
     });
 }
 
+function loadParentList() {
+
+    var strainID = $('#StrainID').val();
+
+    if (strainID != null) {
+
+        $.ajax({
+            url: '/Grow/Plants/GetParentList/',
+            type: 'GET',
+            data: { strainID: strainID },
+            success: function (response) {
+                console.log('response', response);
+                if (response.success) {
+                    let $select = $('#ParentID');
+                    $select.html('');
+                    $.each(response.data, function (index, parent) {
+                        console.log('i', index, 'p', parent);
+                        let $opt = $('<option/>').val(parent.ID).text(parent.Name)
+                        $select.append($opt)
+                    });
+                }
+            }
+        });
+    }
+}
+
 function addPlants() {
     let props = {
         type: 'GET',
-        url: `/Inventory/Plants/Create/`,
-        title: `New Plant(s)`,
+        url: `/Grow/Plants/Create/`,
+        title: `Add Plants`,
     }
     loadPopup(props);
 }

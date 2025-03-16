@@ -10,16 +10,15 @@ namespace OptraxDAL.Models.Admin
     {
         public AppUser() { }
 
-        public required string FirstName { get; set; }
-
-        public required string LastName { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
 
         public virtual ICollection<PlantEvent> PlantEvents { get; set; } = [];
         public virtual ICollection<InventoryTransfer> InventoryTransfers { get; set; } = [];
+        public virtual ICollection<TransferApproval> TransferApprovals { get; set; } = [];
 
 
         public string FullName => $"{FirstName} {LastName}";
-
         public string DisplayName => $"{LastName}, {FirstName}";
 
     }

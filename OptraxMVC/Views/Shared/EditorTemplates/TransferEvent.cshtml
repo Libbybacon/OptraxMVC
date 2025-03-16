@@ -1,0 +1,10 @@
+﻿@using OptraxDAL.Models.Grow
+
+@model TransferEvent
+
+@Html.HiddenFor(m => m.Date)
+@Html.HiddenFor(m => m.UserID)
+@Html.HiddenFor(m => m.EventType)
+@Html.EditorFor(m => m.Transfer, new ViewDataDictionary(ViewData))
+
+

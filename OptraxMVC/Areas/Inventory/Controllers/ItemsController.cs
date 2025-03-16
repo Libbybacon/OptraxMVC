@@ -92,6 +92,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(InventoryItem item)
         {
             try
@@ -110,12 +111,10 @@ namespace OptraxMVC.Areas.Inventory.Controllers
             }
         }
 
-        private void LoadViewData()
+        private DropdownsVM LoadViewData()
         {
-            ViewData["UOMs"] = _IDropdowns.GetUomsList();
-            ViewData["StockTypes"] = _IDropdowns.GetStockTypesList();
-            ViewData["Categories"] = _IDropdowns.GetCategoriesList();
-            ViewData["Containers"] = _IDropdowns.GetContainerTypesList();
+            return _IDropdowns.LoadDropdowns(["UomSelects", "StockTypeSelects", "CategorySelects", "ContainerTypeSelects"]);
+            
         }
     }
 }

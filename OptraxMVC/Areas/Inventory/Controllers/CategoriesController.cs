@@ -27,7 +27,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                     MsgDiv = "tableMsg"
                 };
 
-                ViewData["TopCategories"] = _IDropdowns.GetTopCategoriesList();
+                ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["TopCategorySelects"]);
 
                 return PartialView("_Edit", new InventoryCategory() { });
             }
@@ -72,7 +72,6 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                     return Json(new { success = false, msg = "Category not found" });
                 }
 
-                ViewData["TopCategories"] = _IDropdowns.GetTopCategoriesList();
 
                 ViewBag.FormVM = new FormVM()
                 {
@@ -81,6 +80,8 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                     Action = "Edit",
                     MsgDiv = "popupTopInner"
                 };
+
+                ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["TopCategorySelects"]);
 
                 return PartialView("_Edit", category);
             }

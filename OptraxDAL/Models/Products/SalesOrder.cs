@@ -7,6 +7,6 @@
 
         public int ID { get; set; }
         public DateTimeOffset Date { get; set; }
-        public virtual required ICollection<ProductItem> Items { get; set; }
+        public virtual ICollection<ProductItem> Items { get; set; } = [];
     }
 }

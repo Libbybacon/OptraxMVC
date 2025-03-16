@@ -8,13 +8,26 @@ namespace OptraxDAL.Models.Admin
     {
         public Business() { }
         public int ID { get; set; }
+
         [MaxLength(100)]
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
+
+        [MaxLength(50)]
+        public string? BusinessType { get; set; }
+
         [MaxLength(250)]
         public string? Description { get; set; }
-        public virtual required List<Address> Addresses { get; set; } = [];
-        //public virtual required BusinessAddress Address { get; set; }
+
+        public virtual List<Address> Addresses { get; set; } = [];
     }
+    public enum BusinessTypes
+    {
+        Source,        
+        Retailer,
+        Wholesaler,
+        Distributor,
+    }
+
 
     //[Table("Businesses")]
     //public class Distributor : Business

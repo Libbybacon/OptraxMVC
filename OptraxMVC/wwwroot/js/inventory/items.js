@@ -111,8 +111,6 @@ function makeDatatable() {
 function makeHeaderToggle(props) {
 
     let $div = makeRowToggleDiv(props)
-    console.log('div', $div )
-    console.log(props)
     let $colorIcon = $('<i/>').addClass('bi bi-square-fill m-0 me-2').css('color', props.Color)
     let $txtSpan = $('<span/>').addClass('head-txt flex-fill ps-2').append(props.Name);
 

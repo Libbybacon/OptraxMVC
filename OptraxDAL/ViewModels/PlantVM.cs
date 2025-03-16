@@ -11,12 +11,12 @@ namespace OptraxDAL.ViewModels
         public int PlantID { get; set; }
         public string? CropID { get; set; }
         public int StrainID { get; set; }
-        public string TrackingID { get; set; } = "";
-        public string? Strain { get; set; } = "";
+        public string TrackingID { get; set; } = string.Empty;
+        public string? Strain { get; set; } = string.Empty;
         public bool IsMother { get; set; } = false;
         public string? MotherName { get; set; }
-        public string StartType { get; set; } = "";
-        public string StartPhase { get; set; } = "";
+        public string OriginType { get; set; } = string.Empty;
+        public string Phase { get; set; } = string.Empty;
         public string? CurrentPhase { get; set; }
         public string? LocationName { get; set; }
         public string? LocationType { get; set; }

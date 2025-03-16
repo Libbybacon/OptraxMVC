@@ -4,6 +4,7 @@ using OptraxDAL;
 using OptraxMVC.Models;
 using OptraxMVC.Services;
 using System.Diagnostics;
+using System.Security.Cryptography;
 
 namespace OptraxMVC.Controllers;
 

@@ -12,7 +12,7 @@ namespace OptraxDAL.Models.Products
         public string? Barcode { get; set; }
         public int? InventoryLocationID { get; set; }
 
-        public virtual required Product Product { get; set; }
+        public virtual Product Product { get; set; } = new();
         public virtual ProductBatch? Batch { get; set; }
         public virtual InventoryLocation? CurrentLocation { get; set; }
     }

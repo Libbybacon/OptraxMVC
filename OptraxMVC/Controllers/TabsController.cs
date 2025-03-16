@@ -14,7 +14,7 @@ namespace OptraxMVC.Controllers
         private readonly Dictionary<string, List<string>> TabViews = new()
         {
             ["Grow"] = ["Rooms", "Crops", "Plants", "Genetics"],
-            ["Inventory"] = ["Items", "Plants", "Locations", "Transfers"],
+            ["Inventory"] = ["Locations", "Transfers", "Items", "Plants"],
             ["Sales"] = ["Products"],
             ["Reports"] = [],
         };
@@ -25,8 +25,8 @@ namespace OptraxMVC.Controllers
             TabsVM tabsVM = new()
             {
                 Area = navarea,
-                Tabs = [.. TabViews[navarea].Select(t =>
-                new Tab() { Name = t, TabKey = $"{t[..3].ToLower()}-{t.ToLower()}" })]
+                Tabs = [.. TabViews[navarea].Select(tab =>
+                new Tab() { Name = tab, TabKey = $"{tab[..3].ToLower()}-{tab.ToLower()}" })]
             };
 
             return View("Tabs", tabsVM);
@@ -45,7 +45,6 @@ namespace OptraxMVC.Controllers
                 {
                     "Rooms" => await db.RoomLocations.ToListAsync(),
                     "Crops" => await db.Crops.ToListAsync(),
-                    "Plants" => await db.Plants.ToListAsync(),
                     "Genetics" => await db.Strains.OrderBy(s => s.Name).ToListAsync(),
                     _ => null
                 },
@@ -54,10 +53,10 @@ namespace OptraxMVC.Controllers
                 {               
                     "Products" => await db.Products.ToListAsync(),
                     "Stock" => await db.StockItems.ToListAsync(),
-                    "Locations" => await db.InventoryLocations.Where(c => c.ParentID == null)
-                                                              .Include(c => c.Children)
-                                                              .ThenInclude(c => c.Children)
-                                                              .ToListAsync(),
+                    //"Locations" => await db.InventoryLocations.Where(c => c.ParentID == null)
+                    //                                          .Include(c => c.Children)
+                    //                                          .ThenInclude(c => c.Children)
+                    //                                          .ToListAsync(),
                     _ => null
                 },
                 _ => null
@@ -67,8 +66,8 @@ namespace OptraxMVC.Controllers
             {
                 case "Items":
                 case "Plants":
-                    tab.ViewPath = $"~/Areas/Inventory/Views/{tab.Name}/_{tab.Name}.cshtml";                   
-                    tab.ViewPath = $"~/Areas/Inventory/Views/{tab.Name}/_{tab.Name}.cshtml";
+                case "Locations":
+                    tab.ViewPath = $"~/Areas/{area}/Views/{tab.Name}/_{tab.Name}.cshtml";
                     return PartialView(tab.ViewPath);
                 default:
                     break;
@@ -78,8 +77,6 @@ namespace OptraxMVC.Controllers
             {
                 return NotFound();
             }
-
-
 
             return PartialView(tab.ViewPath, model);
         }

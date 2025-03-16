@@ -10,21 +10,35 @@ namespace OptraxDAL.Models.Admin
 
         [Key]
         public int ID { get; set; }
+
+        [Required]
         [MaxLength(100)]
-        public required string Address1 { get; set; }
+        public string Address1 { get; set; } = string.Empty;
+
+        [Required]
         [MaxLength(100)]
         public string? Address2 { get; set; }
+
+        [Required]
         [MaxLength(50)]
-        public required string City { get; set; }
+        public string City { get; set; } = string.Empty;
+
+        [Required]
         [MaxLength(10)]
-        public required string State { get; set; }
+        public string State { get; set; } = string.Empty;
+
+        [Required]
         [MaxLength(20)]
-        public required string ZipCode { get; set; }
+        public string ZipCode { get; set; } = string.Empty;
 
         [MaxLength(100)]
         public string? ContactName { get; set; }
+
         [MaxLength(20)]
+        [RegularExpression(@"\(\d{3}\)\d{3}-\d{4}", ErrorMessage = "Phone number must contain 10 digits.")]
+
         public string? ContactPhone { get; set; }
+
         [MaxLength(100)]
         public string? ContactEmail { get; set; }
 
@@ -35,15 +49,4 @@ namespace OptraxDAL.Models.Admin
 
         public virtual BuildingLocation? Building { get; set; }
     }
-
-    //public class BuildingAddress : Address
-    //{
-    //    public int InventoryLocationID { get; set; }
-    //    public virtual required BuildingLocation BuildingLocation { get; set; }
-    //}
-
-    //public class BusinessAddress : Address
-    //{
-    //    public int BusinessID { get; set; }
-    //}
 }

@@ -22,7 +22,7 @@
 				item.Description AS ItemDesc,
 				Manufacturer AS Brand,
 				SKU,
-				DefaultUOM AS UoM,
+				DefaultUoM AS UoM,
 				StockType,
 				Tags
 			FROM InventoryItems item

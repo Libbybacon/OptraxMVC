@@ -72,6 +72,18 @@ button {
         background-color: var(--blue-dk);
     }
 
+.buttons-collection{
+
+}
+
+.dt-button-background{
+    display: none;
+}
+
+.dt-button-collection{
+    display: d-flex;
+    flex-direction: column;
+}
 
 /* Table Wrappers */
 
