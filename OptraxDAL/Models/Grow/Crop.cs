@@ -9,7 +9,8 @@ namespace OptraxDAL.Models.Grow
         public Crop() { }
 
         public int ID { get; set; }
-        [Display(Name="Crop Name")]
+
+        [Display(Name = "Crop Name")]
         public string? Name { get; set; }
 
         [Display(Name = "Strain")]

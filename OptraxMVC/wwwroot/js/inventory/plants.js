@@ -158,11 +158,12 @@ function setPlantListeners() {
 
             $('#MotherName').removeAttr('readonly');
             $('#Quantity').val(1).attr('readonly', 'readonly');
-            $('#Crop_Name').val('Mothers').attr('readonly', 'readonly');
+            $('#Crop_Name').val(strain + 'Mothers').attr('readonly', 'readonly');
             $('#Crop_BatchID').val(strain + '-Mothers').attr('readonly', 'readonly');
 
             $('#StrainID').on('change', function () {
                 let strain = $('#StrainID option:selected').text();
+                $('#Crop_Name').removeAttr('readonly').val(strain + 'Mothers').attr('readonly', 'readonly');
                 $('#Crop_BatchID').removeAttr('readonly').val(strain + '-Mothers').attr('readonly', 'readonly');
             });
         }
