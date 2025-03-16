@@ -19,11 +19,12 @@ namespace OptraxDAL.Models.Inventory
 
         [Required]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTimeOffset Date { get; set; } 
+        public DateTimeOffset Date { get; set; }
 
         [MaxLength(450)]
         [ForeignKey("User")]
         public string UserID { get; set; } = string.Empty;
+
 
         [Required]
         [Display(Name = "Origin")]
@@ -64,12 +65,22 @@ namespace OptraxDAL.Models.Inventory
         [InverseProperty(nameof(InventoryLocation.TransfersIn))]
         public virtual InventoryLocation? Destination { get; set; }
 
-
-        [NotMapped]
-        public string EncryptedID
+        public InventoryTransfer NewPlantTransfer(Plant plant)
         {
-            get => AesEncryptionHelper.Encrypt(UserID);
-            set => UserID = AesEncryptionHelper.Decrypt(value);
+            return new InventoryTransfer()
+            {
+                Date = Date,
+                UserID = UserID,
+                OriginID = OriginID,
+                DestinationID = DestinationID,
+                UnitCount = UnitCount,
+                UnitUoM = UnitUoM,
+                IsPartial = IsPartial,
+                Status = Status,
+                Notes = Notes,
+                NeedsApproval = NeedsApproval,
+                StockItem = plant,
+            };
         }
     }
 }

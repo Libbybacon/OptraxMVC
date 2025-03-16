@@ -7,7 +7,7 @@
 
 @{
     FormVM formVM = ViewBag.FormVM;
-    DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new ());
+    DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
 }
 
 @using (Html.BeginForm(formVM.Action, "Plants", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv, data_modelname = "plant" }))

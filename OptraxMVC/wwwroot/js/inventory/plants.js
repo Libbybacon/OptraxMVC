@@ -55,7 +55,7 @@ function makeDatatable() {
 
                 }
             },
-            { targets: 5, data: 'startType' },
+            { targets: 5, data: 'originType' },
             { targets: 6, data: 'currentPhase' },
             { targets: 7, data: 'locationName' },
         ],
@@ -114,9 +114,17 @@ function makeHeaderToggle(props) {
 
 function setPlantListeners() {
 
+    $('#StrainID').on('change', function () {
+        $('#Crop_StrainID').val($(this).val());
+    });
+
     $('#Phase').on('change', function () {
         let phase = $(this).val();
         $('#Crop_CurrentPhase').val(phase);
+    });
+
+    $('.dest-id').on('change', function () {
+        $('#Crop_LocationID').val($(this).val());
     });
 
     $('#OriginType').on('change', function () {
@@ -124,14 +132,18 @@ function setPlantListeners() {
         if (type == 'Clone_Internal') {
             $('#parentIdDiv').removeClass('d-none');
             $('#ParentID').removeAttr('disabled');
-
-
-
             loadParentList();
         }
         else {
             $('#ParentID').attr('disabled', 'disabled');
             $('#parentIdDiv').addClass('d-none');
+        }
+
+        if (type.includes('Seed')){
+            $('#Phase').val('Seed').change();
+        }
+        if (type.includes('Start')) {
+            $('#Phase').val('Start').change();
         }
 
         type.includes('Internal') ? $('#buyPrice').addClass(none) : $('#buyPrice').removeClass(none);

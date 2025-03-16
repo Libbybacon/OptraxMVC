@@ -1,18 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
-using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
-using OptraxDAL.ViewModels;
 using OptraxMVC.Controllers;
 using OptraxMVC.Models;
 using OptraxMVC.Services;
 using OptraxMVC.Services.Inventory;
-using System.Security.Claims;
 
 namespace OptraxMVC.Areas.Grow.Controllers
 {
@@ -67,6 +62,10 @@ namespace OptraxMVC.Areas.Grow.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAsync(Plant plant)
         {
+            if (plant.PlantEvents.First() is TransferEvent transferEvent)
+            {
+                TryValidateModel(transferEvent.Transfer, "PlantEvents[0].Transfer");
+            }
             if (!ModelState.IsValid)
                 return Json(new { msg = "Invalid model" });
 
@@ -76,7 +75,8 @@ namespace OptraxMVC.Areas.Grow.Controllers
 
                 return Json(response);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return Json(new { success = false, msg = ex.Message });
             }
         }

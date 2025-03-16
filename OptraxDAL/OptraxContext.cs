@@ -120,6 +120,7 @@ namespace OptraxDAL
             #endregion
 
             #region Locations TPH
+            builder.Entity<InventoryLocation>().HasIndex(x => x.Name).IsUnique();
             builder.Entity<InventoryLocation>().Property(x => x.Active).HasDefaultValue(true);
 
             builder.Entity<InventoryLocation>().HasDiscriminator<string>("LocationType")

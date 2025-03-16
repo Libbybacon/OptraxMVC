@@ -9,17 +9,32 @@ namespace OptraxMVC.Services.Inventory
     {
         Task<List<InventoryLocation>> GetLocationsAsync();
         Task<ResponseVM> CreateAsync(InventoryLocation loc);
+        //Task<ResponseVM> CreateAsync(ILocation loc);
     }
 
     public class LocationService(OptraxContext context) : ILocationService
     {
-        OptraxContext db = context;
-       
-        public async Task<List<InventoryLocation>> GetLocationsAsync() { 
-        
+        private readonly OptraxContext db = context;
+
+        public async Task<List<InventoryLocation>> GetLocationsAsync()
+        {
+
             return await db.InventoryLocations.ToListAsync();
         }
 
+        //public async Task<ResponseVM> CreateAsync(ILocation loc)
+        //{
+        //    try
+        //    {
+        //        await db.InventoryLocations.AddAsync(loc);
+        //        await db.SaveChangesAsync();
+        //        return new ResponseVM { success = true, msg = "Location Added!", data = loc };
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return new ResponseVM { msg = "Error saving new location..." };
+        //    }
+        //}
 
         public async Task<ResponseVM> CreateAsync(InventoryLocation loc)
         {
@@ -28,7 +43,7 @@ namespace OptraxMVC.Services.Inventory
                 await db.InventoryLocations.AddAsync(loc);
                 await db.SaveChangesAsync();
 
-                return new ResponseVM {success = true, msg = "Location Added!", data = loc };
+                return new ResponseVM { success = true, msg = "Location Added!", data = loc };
             }
             catch (Exception)
             {

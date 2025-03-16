@@ -2,8 +2,11 @@
 
 @model List<PlantEvent>
 
-
 @for(int i = 0; i < Model.Count; i++)
 {
-    @Html.EditorFor(m=> m[i], new ViewDataDictionary(ViewData));
+    @if (Model[i] is TransferEvent transferModel)
+    {
+        @Html.EditorFor(m => transferModel, "TransferEvent", new ViewDataDictionary(ViewData))
+    }
+    @* @Html.EditorFor(m=> m[i], new ViewDataDictionary(ViewData)); *@
 }

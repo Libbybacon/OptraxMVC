@@ -1,15 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
-using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
 using OptraxDAL.ViewModels;
 using OptraxMVC.Models;
-using System.Security.Claims;
-using System.Text.Json;
+using OptraxMVC.Models.MappingProfiles;
 
 namespace OptraxMVC.Services.Inventory
 {
@@ -51,11 +48,13 @@ namespace OptraxMVC.Services.Inventory
 
             Plant plant = new()
             {
+                PurchaseDate = DateTime.Now,
                 InventoryItemID = inventoryID,
                 PlantEvents = [
                 new TransferEvent() {
                         Date = DateTime.Now,
                         EventType = "Transfer",
+                        UserID = UserID,
                         Transfer = transfer
                     }]
             };
@@ -72,8 +71,7 @@ namespace OptraxMVC.Services.Inventory
         [Authorize]
         public async Task<ResponseVM> CreateAsync(Plant plant, string userID)
         {
-            var invItem = await db.InventoryItems.FindAsync(await GetPlantInventoryIDAsync());
-            plant.InventoryItem = invItem;
+            plant.InventoryItem = await db.InventoryItems.FindAsync(await GetPlantInventoryIDAsync());
 
             var strain = await db.Strains.FindAsync(plant.StrainID);
 
@@ -82,55 +80,31 @@ namespace OptraxMVC.Services.Inventory
 
             try
             {
-                Crop crop = plant.Crop ?? new Crop() { };
+                Crop crop = await db.Crops.Where(c => c.BatchID == plant.Crop.BatchID).FirstOrDefaultAsync() ?? plant.Crop;
+
+                if (crop.StrainID != plant.StrainID)
+                    return new ResponseVM() { msg = "Plant Strain does not match Crop Strain" };
+
                 plant.Crop = crop;
-                crop.Strain = strain;
-                plant.Strain = strain;
+                //crop.Strain = strain;
+                //plant.Strain = strain;
 
-                if (plant.IsMother)
+                var mapper = new MapperConfiguration(cfg => cfg.AddProfile<PlantProfile>()).CreateMapper();
+
+                for (int i = 0; i < plant.Quantity; i++)
                 {
-                    Crop? dbCrop = await db.Crops.Where(c => c.BatchID == crop.BatchID).FirstOrDefaultAsync();
-
-                    if (dbCrop != null)
-                    {
-                        plant.CropID = dbCrop.ID;
-                        plant.Crop = dbCrop;
-                        dbCrop.Plants.Add(plant);
-                    }
-                    else
-                    {
-                        crop.Plants.Add(plant);
-                        await db.Crops.AddAsync(crop);
-                    }
-                    await db.Plants.AddAsync(plant);
+                    var newPlant = mapper.Map<Plant>(plant);
+                    crop.Plants.Add(newPlant);
+                    await db.Plants.AddAsync(newPlant);
                 }
-                else 
-                {
-                    for (int i = 0; i < plant.Quantity; i++)
-                    {
-                        var newPlant = plant.NewPlant();
-                        crop.Plants.Add(newPlant);
-                        await db.Plants.AddAsync(newPlant);
-                    }
-
-                    await db.Crops.AddAsync(crop);
-                }
-
-                PlantEvent? pe = plant.PlantEvents.FirstOrDefault();
-
-                if (pe == null)
-                    return new ResponseVM { msg = "Missing Plant Event..." };
-
-                pe.UserID = userID;
-
 
                 await db.SaveChangesAsync();
 
-                return new ResponseVM() { success = true, msg = "Plants Added!"};
+                return new ResponseVM() { success = true, msg = "Plants Added!" };
             }
             catch (Exception)
             {
-                return new ResponseVM() { msg = "Error adding plants..."};
+                return new ResponseVM() { msg = "Error adding plants..." };
             }
         }
 
@@ -146,9 +120,5 @@ namespace OptraxMVC.Services.Inventory
                 return new ResponseVM() { msg = "Error loading mothers" };
             }
         }
-        //private async Task<TransferEvent> CreateTransferEventAsync(Plant plant)
-        //{
-
-        //}
     }
 }

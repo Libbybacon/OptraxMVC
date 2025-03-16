@@ -10,27 +10,38 @@
     <Compile Remove="Areas\Admin\**" />
     <Compile Remove="Areas\Grow\Data\**" />
     <Compile Remove="Areas\Grow\Models\**" />
+    <Compile Remove="Areas\Grow\Views\Shared\**" />
+    <Compile Remove="Areas\Inventory\Views\Shared\**" />
     <Compile Remove="Views\Account\**" />
     <Compile Remove="wwwroot\css\site\**" />
     <Content Remove="Areas\Admin\**" />
     <Content Remove="Areas\Grow\Data\**" />
     <Content Remove="Areas\Grow\Models\**" />
+    <Content Remove="Areas\Grow\Views\Shared\**" />
+    <Content Remove="Areas\Inventory\Views\Shared\**" />
     <Content Remove="Views\Account\**" />
     <Content Remove="wwwroot\css\site\**" />
     <EmbeddedResource Remove="Areas\Admin\**" />
     <EmbeddedResource Remove="Areas\Grow\Data\**" />
     <EmbeddedResource Remove="Areas\Grow\Models\**" />
+    <EmbeddedResource Remove="Areas\Grow\Views\Shared\**" />
+    <EmbeddedResource Remove="Areas\Inventory\Views\Shared\**" />
     <EmbeddedResource Remove="Views\Account\**" />
     <EmbeddedResource Remove="wwwroot\css\site\**" />
     <None Remove="Areas\Admin\**" />
     <None Remove="Areas\Grow\Data\**" />
     <None Remove="Areas\Grow\Models\**" />
+    <None Remove="Areas\Grow\Views\Shared\**" />
+    <None Remove="Areas\Inventory\Views\Shared\**" />
     <None Remove="Views\Account\**" />
     <None Remove="wwwroot\css\site\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Remove="Areas\Inventory\Views\Items\_Categories.cshtml" />
+    <Content Remove="Views\Shared\EditorTemplates\BuildingLocation.cshtml" />
+    <Content Remove="Views\Shared\EditorTemplates\PlantEvent.cshtml" />
+    <Content Remove="Views\Shared\EditorTemplates\PlantEvents.cshtml" />
     <Content Remove="Views\Shared\_TreeNode.cshtml" />
   </ItemGroup>
 
@@ -58,8 +69,9 @@
     <Folder Include="Areas\Admin\Controllers\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Areas\Grow\Views\Shared\EditorTemplates\" />
-    <Folder Include="Areas\Inventory\Views\Shared\EditorTemplates\" />
+    <Folder Include="Areas\Grow\Views\Plants\EditorTemplates\" />
+    <Folder Include="Views\Shared\EditorTemplates\Inventory\" />
+    <Folder Include="Views\Shared\EditorTemplates\Plants\" />
   </ItemGroup>
 
   <ItemGroup>

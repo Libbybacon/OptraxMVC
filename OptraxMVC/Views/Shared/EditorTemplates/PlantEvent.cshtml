@@ -6,15 +6,9 @@
     string eventType = Model.EventType;
 }
 
-<input type="hidden" name="PlantEvents[@i].ID" value="@Model.ID" />
-<input type="hidden" name="PlantEvents[@i].Date" value="@DateTime.Now" />
-<input type="hidden" name="PlantEvents[@i].EventType" value="@eventType" />
-<input type="hidden" name="PlantEvents[@i].PlantID" value="@Model.PlantID" />
-<input type="hidden" name="PlantEvents[@i].UserID" value="@Model.EncryptedID" />
-
 @if (Model is TransferEvent transferModel)
 {
-    @Html.EditorFor(m => transferModel, new ViewDataDictionary(ViewData))
+    @Html.EditorFor(m => transferModel, "TransferEvent", new ViewDataDictionary(ViewData))
 }
 
 @* @switch (eventType)

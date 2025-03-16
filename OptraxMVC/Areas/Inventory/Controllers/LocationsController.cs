@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
-using OptraxMVC.Controllers;
-using OptraxMVC.Services.Inventory;
-using OptraxMVC.Services;
 using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Inventory;
+using OptraxMVC.Controllers;
 using OptraxMVC.Models;
-using System.Text.Json.Serialization;
+using OptraxMVC.Services;
+using OptraxMVC.Services.Inventory;
 
 namespace OptraxMVC.Areas.Inventory.Controllers
 {
@@ -24,7 +23,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
             {
                 var data = await _ILocation.GetLocationsAsync();
 
-                return Json(data, ReferenceHandler.Preserve);
+                return Json(data);
             }
             catch (Exception ex)
             {

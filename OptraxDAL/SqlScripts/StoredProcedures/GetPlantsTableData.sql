@@ -19,7 +19,7 @@ SELECT
 	IsMother,
 	MotherName,
 	Phase,
-	OriginType,
+	plant.OriginType,
 	crop.CurrentPhase,
 	loc.[Name] AS LocationName,
 	LocationType,

@@ -70,8 +70,6 @@
             Harvest
         }
 
-
-
         public enum StockType
         {
             Durable,
@@ -87,9 +85,8 @@
             OffSite
         }
 
-
-
-        public enum States {
+        public enum States
+        {
             AL,
             AK,
             AZ,
@@ -141,6 +138,5 @@
             WI,
             WY
         }
-
     }
 }

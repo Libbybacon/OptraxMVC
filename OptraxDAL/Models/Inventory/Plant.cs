@@ -1,9 +1,7 @@
 ﻿using OptraxDAL.Models.Grow;
 using OptraxDAL.ViewModels;
-using AutoMapper;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Mvc;
 
 namespace OptraxDAL.Models.Inventory
 {
@@ -19,7 +17,7 @@ namespace OptraxDAL.Models.Inventory
         public int StrainID { get; set; }
 
         [Display(Name = "Parent")]
-        public int? ParentID { get; set; } = 0;
+        public int? ParentID { get; set; } = null;
 
         [Required]
         public bool IsMother { get; set; } = false;
@@ -41,12 +39,11 @@ namespace OptraxDAL.Models.Inventory
         public new bool NeedsTransferApproval { get; set; } = true;
 
         public virtual Strain? Strain { get; set; }
-        public virtual Crop? Crop { get; set; } = new();
+        public virtual Crop Crop { get; set; } = new();
         public virtual Plant? Parent { get; set; }
 
         public virtual ICollection<Plant> Children { get; set; } = [];
 
-        [BindProperty]
         public virtual ICollection<PlantEvent> PlantEvents { get; set; } = [];
 
         [NotMapped]
@@ -59,7 +56,7 @@ namespace OptraxDAL.Models.Inventory
 
         public Plant NewPlant()
         {
-            return new Plant()
+            var newPlant = new Plant()
             {
                 ID = ID,
                 InventoryItemID = InventoryItemID,
@@ -83,6 +80,22 @@ namespace OptraxDAL.Models.Inventory
                 InventoryItem = InventoryItem,
                 Parent = Parent,
             };
+
+            if (PlantEvents.First() is TransferEvent transEvent)
+            {
+                TransferEvent newEvent = new()
+                {
+                    Date = transEvent.Date,
+                    EventType = transEvent.EventType,
+                    UserID = transEvent.UserID,
+                    Notes = transEvent.Notes,
+                    Transfer = transEvent.Transfer.NewPlantTransfer(newPlant),
+                };
+
+                newPlant.PlantEvents.Add(newEvent);
+            }
+
+            return newPlant;
         }
         public PlantVM ToPlantVM()
         {

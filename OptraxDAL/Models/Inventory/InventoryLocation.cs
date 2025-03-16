@@ -5,14 +5,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
+    public interface ILocation
+    {
+
+    }
+
     [Table("InventoryLocations")]
-    public abstract class InventoryLocation
+    public abstract class InventoryLocation : ILocation
     {
         public InventoryLocation() { }
 
         public int ID { get; set; }
 
-        [Display(Name="Parent Location")]
+        [Display(Name = "Parent Location")]
         public int? ParentID { get; set; }
 
         [Required]
@@ -21,7 +26,7 @@ namespace OptraxDAL.Models.Inventory
 
         [MaxLength(250)]
         public string? Description { get; set; }
-        
+
         public bool Active { get; set; } = true;
 
         public virtual InventoryLocation? Parent { get; set; } = null;
@@ -75,7 +80,7 @@ namespace OptraxDAL.Models.Inventory
         public ContainerLocation() { }
 
         public int ContainerTypeID { get; set; }
-        
+
         [Required]
         public new string Description { get; set; } = string.Empty;
 
@@ -96,14 +101,14 @@ namespace OptraxDAL.Models.Inventory
         public BuildingLocation() { }
 
         public int AddressID { get; set; }
-        public virtual required Address Address { get; set; } = new ();
+        public virtual required Address Address { get; set; } = new();
     }
 
     [Table("InventoryLocations")]
     public class OffsiteLocation : InventoryLocation
     {
         public OffsiteLocation() { }
-        
+
         [Required]
         public new string Description { get; set; } = string.Empty;
     }
