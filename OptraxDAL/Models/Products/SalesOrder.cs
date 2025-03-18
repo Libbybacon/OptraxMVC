@@ -1,6 +1,6 @@
 ﻿namespace OptraxDAL.Models.Products
 {
-    public class SalesOrder
+    public class SalesOrder : TrackingBase
     {
 
         public SalesOrder() { }

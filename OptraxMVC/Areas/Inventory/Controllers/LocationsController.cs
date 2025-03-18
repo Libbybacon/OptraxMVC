@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
 using OptraxDAL.Models.Admin;
-using OptraxDAL.Models.Inventory;
 using OptraxMVC.Controllers;
 using OptraxMVC.Models;
 using OptraxMVC.Services;
@@ -111,7 +110,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
             return Json(await CreateAsync(loc));
         }
 
-        private async Task<ResponseVM> CreateAsync(InventoryLocation loc)
+        private async Task<ResponseVM> CreateAsync(Location loc)
         {
             try
             {

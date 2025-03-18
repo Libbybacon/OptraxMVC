@@ -5,6 +5,7 @@ using OptraxDAL;
 using OptraxDAL.Models;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
+using OptraxDAL.Models.Map;
 using OptraxMVC.Models;
 
 namespace OptraxMVC.Services
@@ -26,6 +27,8 @@ namespace OptraxMVC.Services
                 UomSelects = drops.Contains("UomSelects") ? GetUomSelects() : [],
                 StateSelects = drops.Contains("StateSelects") ? GetEnumSelects(typeof(Enums.States)) : [],
                 ContainerTypeList = drops.Contains("ContainerTypeList") ? GetContainerTypesList() : [],
+
+                IconsList = drops.Contains("IconsList") ? GetIconsList() : [],
 
                 PlantTypeSelects = drops.Contains("PlantTypeSelects") ? GetEnumSelects(typeof(Enums.PlantType)) : [],
                 PhaseSelects = drops.Contains("PhaseSelects") ? GetEnumSelects(typeof(Plant.PlantPhases)) : [],
@@ -86,9 +89,18 @@ namespace OptraxMVC.Services
             }) ?? [];
         }
 
+        private List<IconCollection> GetIconsList()
+        {
+            return _cache.GetOrCreate("IconsList", entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+
+                return db.IconCollections.Include(i => i.Icons).OrderBy(c => c.Name).ToList();
+            }) ?? [];
+        }
+
 
         // Plants
-
         private List<SelectListItem> GetStrainSelects()
         {
             return _cache.GetOrCreate("StrainsSelect", entry =>
@@ -156,7 +168,7 @@ namespace OptraxMVC.Services
             {
                 entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
 
-                return db.InventoryLocations?.Where(c => c.Active).OrderBy(c => c.Name).Select(c => new SelectListItem
+                return db.Locations?.Where(c => c.Active).OrderBy(c => c.Name).Select(c => new SelectListItem
                 {
                     Value = c.ID.ToString(),
                     Text = c.Name
@@ -170,7 +182,7 @@ namespace OptraxMVC.Services
             {
                 entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
 
-                return db.InventoryLocations?.Where(c => c.LocationType == type && c.Active).OrderBy(c => c.Name).Select(c => new SelectListItem
+                return db.Locations?.Where(c => c.LocationType == type && c.Active).OrderBy(c => c.Name).Select(c => new SelectListItem
                 {
                     Value = c.ID.ToString(),
                     Text = c.Name

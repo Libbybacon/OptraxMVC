@@ -12,8 +12,9 @@ namespace OptraxMVC.Controllers
         // TODO: Move to db table, allow users to customize display orders by rearraging tabs in view 
         private readonly Dictionary<string, List<string>> TabViews = new()
         {
-            ["Grow"] = ["Rooms", "Plants", "Genetics"],
+            ["Grow"] = ["Map", "Plants", "Genetics"],
             ["Inventory"] = ["Locations", "Items", "Transfers"],
+            ["Settings"] = ["Collections", "Network", "User Management"],
             ["Sales"] = ["Products"],
             ["Reports"] = [],
         };
@@ -59,6 +60,7 @@ namespace OptraxMVC.Controllers
 
             switch (tab.Name)
             {
+                case "Map":
                 case "Items":
                 case "Plants":
                 case "Locations":

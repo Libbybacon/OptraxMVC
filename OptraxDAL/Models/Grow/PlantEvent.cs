@@ -64,17 +64,6 @@ namespace OptraxDAL.Models.Grow
     }
 
     [Table("PlantEvents")]
-    public class LightEvent : PlantEvent
-    {
-        public LightEvent()
-        {
-            EventType = "Light";
-        }
-        public int NewLightID { get; set; }
-        public virtual required Light NewLight { get; set; }
-    }
-
-    [Table("PlantEvents")]
     public class TreatmentEvent : PlantEvent
     {
         public TreatmentEvent()

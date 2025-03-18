@@ -14,11 +14,11 @@ namespace OptraxDAL.Models.Inventory
         public string TrackingID { get; set; } = string.Empty;
 
         [Required]
-        public int StrainID { get; set; }
+        public int SpeciesID { get; set; }
 
-        [Display(Name = "Parent")]
-        public int? ParentID { get; set; } = null;
+        public int? VarietyID { get; set; }
 
+        public int? CultivarID { get; set; }
 
         [Required]
         public string PropagationType { get; set; } = string.Empty;
@@ -53,12 +53,11 @@ namespace OptraxDAL.Models.Inventory
             {
                 PlantID = ID,
                 TrackingID = TrackingID,
-                StrainID = StrainID,
+                StrainID = SpeciesID,
                 CropID = Crop?.BatchID ?? "",
                 PropagationType = PropagationType,
                 Phase = Phase,
                 CurrentPhase = Crop?.CurrentPhase ?? "",
-                LocationName = Crop?.Location?.Name ?? "",
             };
         }
 

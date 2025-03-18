@@ -38,6 +38,9 @@ $(document).ready(function () {
     $(window).on('resize', function () {
         let $nav = $('.side-nav');
         let viewW = $(window).width();
+        let viewH = $(window).height();
+
+        $('#map').css('height', `${viewH - 50}px`);
 
         if (viewW < 768 && $nav.hasClass('collapsed')) {
             expandNav(false);

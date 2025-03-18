@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace OptraxDAL.Models.Inventory
 {
-    public class InventoryItem
+    public class InventoryItem : TrackingBase
     {
         public InventoryItem() { }
 

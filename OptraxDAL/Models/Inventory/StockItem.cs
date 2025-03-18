@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OptraxDAL.Models.Admin;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
     [Table("StockItems")]
-    public abstract class StockItem
+    public abstract class StockItem : TrackingBase
     {
         public StockItem() { }
 
@@ -26,7 +27,7 @@ namespace OptraxDAL.Models.Inventory
         public decimal? PurchasePrice { get; set; }
 
         public virtual InventoryItem? InventoryItem { get; set; }
-        public virtual ICollection<InventoryLocation> Locations { get; set; } = [];
+        public virtual ICollection<Location> Locations { get; set; } = [];
         public virtual ICollection<InventoryTransfer> Transfers { get; set; } = [];
     }
 

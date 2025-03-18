@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
-    public class ContainerType
+    public class ContainerType : TrackingBase
     {
         public ContainerType() { }
 

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Products
 {
-    public class Product
+    public class Product : TrackingBase
     {
         public Product()
         {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
+using OptraxDAL.Models.Map;
 
 namespace OptraxMVC.Models
 {
@@ -11,6 +12,7 @@ namespace OptraxMVC.Models
         public List<SelectListItem> UomSelects { get; set; } = [];
         public List<SelectListItem> StateSelects { get; set; } = [];
         public List<ContainerType> ContainerTypeList { get; set; } = [];
+        public List<IconCollection> IconsList { get; set; } = [];
 
 
         public List<SelectListItem> PlantTypeSelects { get; set; } = [];

@@ -2,7 +2,7 @@
 
 namespace OptraxDAL.Models.Grow
 {
-    public class Strain
+    public class Strain : TrackingBase
     {
         public Strain() { }
 

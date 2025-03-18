@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Admin
 {
-    public class UoM
+    public class UoM : TrackingBase
     {
         public UoM() { }
 

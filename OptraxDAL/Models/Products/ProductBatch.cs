@@ -1,6 +1,6 @@
 ﻿namespace OptraxDAL.Models.Products
 {
-    public class ProductBatch
+    public class ProductBatch : TrackingBase
     {
         public ProductBatch() { }
 

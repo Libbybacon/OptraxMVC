@@ -59,11 +59,11 @@ namespace OptraxDAL.Models.Inventory
         public virtual TransferEvent? PlantTransfer { get; set; }
 
 
-        [InverseProperty(nameof(InventoryLocation.TransfersOut))]
-        public virtual InventoryLocation? Origin { get; set; }
+        [InverseProperty(nameof(Location.TransfersOut))]
+        public virtual Location? Origin { get; set; }
 
-        [InverseProperty(nameof(InventoryLocation.TransfersIn))]
-        public virtual InventoryLocation? Destination { get; set; }
+        [InverseProperty(nameof(Location.TransfersIn))]
+        public virtual Location? Destination { get; set; }
 
 
         public InventoryTransfer NewTransfer()

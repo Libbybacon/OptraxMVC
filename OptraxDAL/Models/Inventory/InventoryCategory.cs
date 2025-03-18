@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
-    public class InventoryCategory
+    public class InventoryCategory : TrackingBase
     {
         public InventoryCategory() { }
 

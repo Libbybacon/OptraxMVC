@@ -1,10 +1,9 @@
-﻿using OptraxDAL.Models.Inventory;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace OptraxDAL.Models.Admin
 {
 
-    public class Address
+    public class Address : TrackingBase
     {
         public Address() { }
 

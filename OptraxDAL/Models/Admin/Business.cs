@@ -1,11 +1,10 @@
-﻿using OptraxDAL.Models.Inventory;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Admin
 {
     [Table("Businesses")]
-    public class Business
+    public class Business : TrackingBase
     {
         public Business() { }
         public int ID { get; set; }
@@ -14,21 +13,21 @@ namespace OptraxDAL.Models.Admin
         public string Name { get; set; } = string.Empty;
 
         [MaxLength(50)]
-        public string? BusinessType { get; set; }
+        public string BusinessType { get; set; } = "Grower";
 
         [MaxLength(250)]
         public string? Description { get; set; }
 
-        public virtual List<InventoryLocation>? Locations { get; set; } = [];
-
         public virtual List<Address> Addresses { get; set; } = [];
+        public virtual List<SiteLocation>? Sites { get; set; } = [];
+        public virtual List<BuildingLocation>? Buildings { get; set; } = [];
+
     }
     public enum BusinessTypes
     {
-        Source,
-        Retailer,
-        Wholesaler,
-        Distributor,
+        Grower,
+        Vendor,
+        Customer,
     }
 
 

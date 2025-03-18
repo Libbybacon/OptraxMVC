@@ -73,7 +73,7 @@ namespace OptraxMVC.Services.Inventory
         {
             plant.InventoryItem = await db.InventoryItems.FindAsync(await GetPlantInventoryIDAsync());
 
-            var strain = await db.Strains.FindAsync(plant.StrainID);
+            var strain = await db.Strains.FindAsync(plant.SpeciesID);
 
             if (strain == null)
                 return new ResponseVM() { msg = "Could not find Strain" };
@@ -82,7 +82,7 @@ namespace OptraxMVC.Services.Inventory
             {
                 Crop crop = await db.Crops.Where(c => c.BatchID == plant.Crop.BatchID).FirstOrDefaultAsync() ?? plant.Crop;
 
-                if (crop.StrainID != plant.StrainID)
+                if (crop.StrainID != plant.SpeciesID)
                     return new ResponseVM() { msg = "Plant Strain does not match Crop Strain" };
 
                 plant.Crop = crop;
@@ -112,7 +112,8 @@ namespace OptraxMVC.Services.Inventory
         {
             try
             {
-                var mothers = await db.Plants.Where(p => p.IsMother && p.StrainID == strainID).Select(p => new { p.ID, Name = p.MotherName }).ToListAsync();
+                var mothers = await db.Plants.Where(p => p.SpeciesID == strainID).Select(p => new { p.ID, Name = p.Phase }).ToListAsync();
+                //var mothers = await db.Plants.Where(p => p.IsMother && p.StrainID == strainID).Select(p => new { p.ID, Name = p.MotherName }).ToListAsync();
                 return new ResponseVM() { success = true, data = mothers };
             }
             catch (Exception)

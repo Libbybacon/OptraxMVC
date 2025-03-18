@@ -2,19 +2,20 @@
     string page = ViewData["Page"]?.ToString() ?? "";
 
     Dictionary<string, string> menuItems = new Dictionary<string, string>() {
-        { "Grow", "flower2" },
+        { "Grow", "flower1" },
         { "Inventory", "basket3" },
         { "Schedule-d", "calendar3" },
         { "Sales-d", "cash-stack" },
         { "Reports-d", "file-bar-graph" },
+        { "Settings", "gear" },
     };
 }
 
-<div class="side-nav d-flex flex-md-column flex-row justify-content-between bg-dark box-shadow p-2">
-    <div class="logo-div d-flex justify-content-center pt-lg-0 pt-md-3 pt-0">
+<div class="side-nav d-flex flex-md-column flex-row justify-content-between box-shadow px-2 pb-2">
+    <div class="logo-div d-flex justify-content-center pt-lg-1 pt-md-1 pt-0">
         <a href="/" class="text-decoration-none">
-            <img src="~/content/logo-xdk.png" alt="Logo" class="logo d-lg-block d-none" />
-            <img src="~/content/logo-only-xdk.png" alt="Logo" class="logo-sm d-lg-none d-flex" />
+            <img src="~/content/logo-grn.png" alt="Logo" class="logo d-lg-block d-none" />
+            <img src="~/content/logo-only-grn.png" alt="Logo" class="logo-sm d-lg-none d-flex" />
         </a>
     </div>
     <hr class="d-md-block d-none text-tan">

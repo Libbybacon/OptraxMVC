@@ -5,6 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
+using OptraxDAL.Models.Map;
 using OptraxDAL.Models.Products;
 
 
@@ -18,6 +19,7 @@ namespace OptraxDAL
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Business> Businesses { get; set; }
+        public DbSet<Input> Inputs { get; set; }
         public DbSet<UoM> UoMs { get; set; }
         #endregion
 
@@ -33,7 +35,7 @@ namespace OptraxDAL
 
         public DbSet<ContainerType> ContainerTypes { get; set; }
 
-        public DbSet<InventoryLocation> InventoryLocations { get; set; }
+        public DbSet<Location> Locations { get; set; }
         public DbSet<SiteLocation> SiteLocations { get; set; }
         public DbSet<FieldLocation> FieldLocations { get; set; }
         public DbSet<RowLocation> RowLocations { get; set; }
@@ -48,7 +50,22 @@ namespace OptraxDAL
         public DbSet<TransferApproval> TransferApprovals { get; set; }
         #endregion
 
+
+        #region Map
+        public DbSet<MapIcon> Icons { get; set; }
+        public DbSet<IconCollection> IconCollections { get; set; }
+        public DbSet<MapObject> MapObjects { get; set; }
+        public DbSet<MapPoint> MapPoints { get; set; }
+        public DbSet<MapLine> MapLines { get; set; }
+        public DbSet<MapPolygon> MapPolygons { get; set; }
+        #endregion
+
+
         #region Grow
+        public DbSet<Batch> Batches { get; set; }
+        public DbSet<Cultivar> Cultivars { get; set; }
+        public DbSet<Species> Species { get; set; }
+        public DbSet<Variety> Varieties { get; set; }
         public DbSet<Strain> Strains { get; set; }
         public DbSet<StrainRelationship> StrainRelationships { get; set; }
 
@@ -56,7 +73,6 @@ namespace OptraxDAL
 
         public DbSet<PlantEvent> PlantEvents { get; set; }
         public DbSet<PruneEvent> PruneEvents { get; set; }
-        public DbSet<LightEvent> LightEvents { get; set; }
         public DbSet<GrowthEvent> GrowthEvents { get; set; }
         public DbSet<TransferEvent> TransferEvents { get; set; }
         public DbSet<TreatmentEvent> TreatmentEvents { get; set; }
@@ -83,6 +99,7 @@ namespace OptraxDAL
             builder.Entity<IdentityUserToken<string>>().ToTable("AspNetUserTokens", "Identity");
 
             builder.Entity<Business>().HasIndex(x => x.Name).IsUnique();
+            builder.Entity<Input>().HasIndex(x => x.InputName).IsUnique();
             builder.Entity<UoM>().Property(x => x.PerQuantity).HasPrecision(6, 2);
             #endregion
 
@@ -111,11 +128,14 @@ namespace OptraxDAL
             builder.Entity<ConsumableItem>().Property(x => x.UnitCount).HasPrecision(8, 2);
             #endregion
 
-            #region Locations TPH
-            builder.Entity<InventoryLocation>().HasIndex(x => x.Name).IsUnique();
-            builder.Entity<InventoryLocation>().Property(x => x.Active).HasDefaultValue(true);
 
-            builder.Entity<InventoryLocation>().HasDiscriminator<string>("LocationType")
+
+
+            #region Locations TPH
+            builder.Entity<Location>().HasIndex(x => x.Name).IsUnique();
+            builder.Entity<Location>().Property(x => x.Active).HasDefaultValue(true);
+
+            builder.Entity<Location>().HasDiscriminator<string>("LocationType")
                                                .HasValue<SiteLocation>("Site")
                                                .HasValue<FieldLocation>("Field")
                                                .HasValue<RowLocation>("Row")
@@ -132,6 +152,16 @@ namespace OptraxDAL
                                               .HasForeignKey<BuildingLocation>(bl => bl.AddressID)
                                               .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<SiteLocation>().HasOne(sl => sl.Business)
+                                          .WithMany(b => b.Sites)
+                                          .HasForeignKey(sl => sl.BusinessID)
+                                          .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<BuildingLocation>().HasOne(bl => bl.Business)
+                                              .WithMany(b => b.Buildings)
+                                              .HasForeignKey(bl => bl.BusinessID)
+                                              .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<InventoryTransfer>().Property(x => x.UnitCount).HasPrecision(8, 2);
             builder.Entity<InventoryTransfer>().HasOne(it => it.Origin)
                                                .WithMany(o => o.TransfersOut)
@@ -145,20 +175,35 @@ namespace OptraxDAL
             #endregion
             #endregion
 
+            #region Map
+            builder.Entity<MapPoint>().ToTable("Points", "Map");
+            builder.Entity<MapLine>().ToTable("Lines", "Map");
+            builder.Entity<MapPolygon>().ToTable("Polygons", "Map");
+
+            builder.Entity<MapPoint>().HasBaseType<MapObject>();
+            builder.Entity<MapLine>().HasBaseType<MapObject>();
+            builder.Entity<MapPolygon>().HasBaseType<MapObject>();
+
+            builder.Entity<MapLine>().Property(l => l.LineGeometry).HasColumnType("geometry");
+            builder.Entity<MapPolygon>().Property(l => l.PolyGeometry).HasColumnType("geometry");
+            builder.Entity<MapPoint>().Property(x => x.Latitude).HasPrecision(12, 8);
+            builder.Entity<MapPoint>().Property(x => x.Longitude).HasPrecision(12, 8);
+
+            #endregion
+
+
             #region Grow
+            builder.Entity<Species>().HasIndex(x => x.SpeciesName).IsUnique();
+            builder.Entity<Species>().Property(x => x.WaterNeedsQty).HasPrecision(8, 2);
+
             builder.Entity<Crop>().HasIndex(x => x.Name).IsUnique();
             builder.Entity<Crop>().HasIndex(x => x.BatchID).IsUnique();
             builder.Entity<Crop>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
 
-            builder.Entity<Crop>().HasOne(c => c.Location)
-                                  .WithMany(r => r.Crops)
-                                  .HasForeignKey(c => c.LocationID)
-                                  .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<Crop>().HasOne(c => c.Strain)
-                                  .WithMany(s => s.Crops)
-                                  .HasForeignKey(c => c.StrainID)
-                                  .OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<Crop>().HasOne(c => c.Species)
+            //                      .WithMany(s => s.Crops)
+            //                      .HasForeignKey(c => c.StrainID)
+            //                      .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Strain>().HasIndex(x => x.Name).IsUnique();
 
@@ -183,7 +228,6 @@ namespace OptraxDAL
             // TPH
             builder.Entity<PlantEvent>().HasDiscriminator<string>("EventType")
                                         .HasValue<PruneEvent>("Prune")
-                                        .HasValue<LightEvent>("Light")
                                         .HasValue<GrowthEvent>("Growth")
                                         .HasValue<TransferEvent>("Transfer")
                                         .HasValue<TreatmentEvent>("Treatment")
