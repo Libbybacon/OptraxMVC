@@ -4,14 +4,14 @@ namespace OptraxDAL.Models
 {
     public abstract class TrackingBase
     {
-        public DateTimeOffset DateCreated { get; set; }
+        public DateTimeOffset? DateCreated { get; set; }
 
         [ForeignKey("Creator")]
-        public string CreatedByID { get; set; } = default!;
+        public string? CreatedUserID { get; set; }
 
         public DateTimeOffset? DateLastModified { get; set; }
 
         [ForeignKey("LastModifier")]
-        public string? LastModifiedByID { get; set; } = default!;
+        public string? LastModifiedUserID { get; set; }
     }
 }

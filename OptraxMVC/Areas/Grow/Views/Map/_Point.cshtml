@@ -6,9 +6,11 @@
 @{
     FormVM formVM = ViewBag.FormVM;
     DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
+
+    int collID = ViewBag.IconCollID;
 }
 
-@using (Html.BeginForm(formVM.Action, "Map", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv, data_modelname = "poly" }))
+@using (Html.BeginForm(formVM.Action, "Map", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv, data_modelname = "point" }))
 {
     @Html.AntiForgeryToken()
 
@@ -22,33 +24,32 @@
     <div id="edit-content" class="px-2">
         <div class="w-100">
             @Html.LabelFor(m => m.Name)
-            @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = "attr form-control" } })
+            @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = "point-info attr form-control" } })
             @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
         </div>
 
-        <label>Select Icon</label>
+        <label class="mb-2">Select Icon</label>
         <div class="w-100 d-flex">
             <div class="icon-coll-list">
-                @* <label class="icon-coll-label">Collections</label> *@
-                @for (int i = 0; i < (drops.IconsList.Count + 5); i++)
+                @foreach (var coll in drops.IconsList)
                 {
-                    var coll = drops.IconsList[0];
+                    bool hasIcon = coll.ID == collID;
 
-                    <div class="icon-coll-div px-3 @(i == 0 ? "selected" : "")">
-                        <div class="icon-coll-inner">@coll.Name</div>
+                    <div class="icon-coll-name  @($"coll-name-{coll.ID}")  @(hasIcon ? "selected" : "")" data-collid="@coll.ID">
+                        <div class="px-3">@coll.Name</div>
                     </div>
                 }
             </div>
-            <div class="icon-coll d-flex ps-3">
-                @for (int i = 0; i < drops.IconsList.Count; i++)
+            <div class="icon-preview flex-fill">
+                @foreach (var coll in drops.IconsList)
                 {
-                    var coll = drops.IconsList[0];
+                    bool hasIcon = coll.ID == collID;
 
-                    <div class="icons d-flex @(i == 0 ? "" : "d-none")">
+                    <div class="preview-div d-flex flex-wrap @($"preview-coll-{coll.ID}")  @(hasIcon ? "" : "d-none")">
                         @foreach (var icon in coll.Icons)
                         {
-                            <div class="icon-div">
-                                <img src="@icon.ImagePath" class="map-icon @(icon.ID == Model.IconID ? "selected" : "")" data-id="@icon.ID" />
+                            <div class="icon-div @(icon.ID == Model.IconID ? "selected" : "") flex-item mx-1 p-2 mb-2" data-iconid="@icon.ID">
+                                <img src="@icon.ImagePath" class="map-icon"/>
                             </div>
                         }
                     </div>
@@ -59,7 +60,7 @@
         <div class="w-100">
             <label>Details</label>
             <br />
-            @Html.TextAreaFor(m => m.Notes, new { @class = "attr form-control w-100", @rows = "3" })
+            @Html.TextAreaFor(m => m.Notes, new { @class = "point-info attr form-control w-100", @rows = "3" })
             @Html.ValidationMessageFor(m => m.Notes, "", new { @class = "val-msg" })
         </div>
     </div>

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using OptraxDAL;
 using OptraxDAL.Models;
+using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
-using OptraxDAL.Models.Map;
 using OptraxMVC.Models;
 
 namespace OptraxMVC.Services
@@ -133,15 +133,15 @@ namespace OptraxMVC.Services
             {
                 entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
 
-                return db.InventoryCategories.Where(c => c.ParentID != null)
-                                             .Include(c => c.Parent)
-                                             .Where(c => c.Parent != null)
-                                             .OrderBy(c => c.Parent!.Name).ThenBy(c => c.Name)
-                                             .Select(c => new SelectListItem
-                                             {
-                                                 Value = c.ID.ToString(),
-                                                 Text = c.ListName
-                                             }).ToList();
+                return db.Categories.Where(c => c.ParentID != null)
+                                    .Include(c => c.Parent)
+                                    .Where(c => c.Parent != null)
+                                    .OrderBy(c => c.Parent!.Name).ThenBy(c => c.Name)
+                                    .Select(c => new SelectListItem
+                                    {
+                                        Value = c.ID.ToString(),
+                                        Text = c.ListName
+                                    }).ToList();
             }) ?? [];
         }
 
@@ -151,12 +151,12 @@ namespace OptraxMVC.Services
             {
                 entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
 
-                return db.InventoryCategories?.Where(c => c.ParentID == null).OrderBy(c => c.Name)
-                                              .Select(c => new SelectListItem
-                                              {
-                                                  Value = c.ID.ToString(),
-                                                  Text = c.Name
-                                              }).ToList();
+                return db.Categories?.Where(c => c.ParentID == null).OrderBy(c => c.Name)
+                                     .Select(c => new SelectListItem
+                                     {
+                                         Value = c.ID.ToString(),
+                                         Text = c.Name
+                                     }).ToList();
             }) ?? [];
         }
 

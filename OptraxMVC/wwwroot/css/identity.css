@@ -1,24 +1,88 @@
-﻿body {
+﻿@media only screen and (max-width: 576px) {
+
+    .form-floating .form-control {
+        line-height: .5 !important;
+        height: 35px !important;
+        min-height: 20px !important;
+        padding: .2rem .5rem !important;
+        font-size: var(--f-sm) !important
+    }
+    .form-floating label {
+        font-size: var(--f-xs) !important;
+    }
+        .logo img {
+            margin-left: auto;
+            margin-right: auto;
+            height: 50px;
+        }
+
+    .login-card {
+        min-width: 95vw !important;
+    }
+    .logo-label {
+        display: none;
+    }
+    }
+
+@media only screen and (min-width: 576px) {
+    .logo img {
+        margin-left: auto;
+        margin-right: auto;
+        height: 50px;
+    }
+
+    .login-card {
+        max-width: 90vw !important;
+    }
+    .logo-label {
+        display: block;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+
+    .logo img {
+        margin-left: auto;
+        margin-right: auto;
+        height: 70px;
+    }
+
+    .login-card {
+        max-width: 60vw !important;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .logo img {
+        margin-left: auto;
+        margin-right: auto;
+        height: 90px;
+    }
+
+    .login-card {
+        max-width: 60vw !important;
+    }
+}
+
+body {
     margin-bottom: 0;
-    overflow: hidden;
+    overflow-y: auto !important;
     width: 100% !important;
-    height: 100% !important;
+    height: 100vh!important;
     min-width: 500px !important;
     letter-spacing: .3px;
     font-family: 'Poppins' !important;
-    background-color: var(--tan-lt) !important;
 }
 
 .login-bg {
     display: flex;
     flex-flow: column;
     flex: 1 0 auto;
-    color: var(--tan-lt);
+    color: var(--grn-dk);
     font-size: var(--f-sm);
-    background-color: var(--tan-lt);
-    /*background-image: url('content/bg-waves.png');*/
-    /*background-repeat: no-repeat;*/
-    /*background-size: cover;*/
+    background-image: url('/content/bg-floral.jpg');
+    background-repeat: repeat;
+    background-size: 500px;
 }
 
     .login-bg hr {
@@ -26,28 +90,26 @@
         opacity: .8;
     }
 
-a,
-.checkbox span{
-    color: var(--tan-lt);
+a {
+    color: var(--grn-md);
     text-decoration: none;
 }
 
-    a:hover {
-        color: var(--purp-md);
+    a:hover,
+    .checkbox span {
+        color: var(--grn-xdk);
     }
 
 .btn {
-    color: var(--tan-lt);
+    color: var(--grn-xlt);
     font-size: var(--f-xl);
-    border-bottom: 1px solid var(--grn-dk);
-    text-shadow: 1px 1px 2px rgba(0,0,0,.2);
-    background: linear-gradient(var(--grn-lt), var(--grn-dk)) !important;
+    text-shadow: 1px 1px 2px var(--grn-xdk);
+    background: var(--grn-md);
 }
 
     .btn:hover {
         color: white;
-        border-bottom: 1px solid var(--grn-dk);
-        background-image: linear-gradient(var(--grn-lt), var(--grn-md)) !important;
+        background: var(--grn-dk);
     }
 
 .login-card {
@@ -56,13 +118,12 @@ a,
     max-width: 60vw;
     position: relative;
     align-items: center;
+    color: var(--grn-dk);
     justify-content: center;
-    background-color: #040D32;
-    border-left: 3px outset var(--grn-md);
-    border-top: 3px outset var(--grn-md);
-    border-right: 3px ridge var(--grn-lt);
-    border-bottom: 3px ridge var(--grn-lt);
+    background-color: var(--grn-xlt);
+    border: 2px ridge var(--grn-md);
     box-shadow: 3px 3px 12px rgba(0,0,0,.4);
+    border-radius: 4px;
 }
 
     .login-card section {
@@ -72,7 +133,7 @@ a,
 .inner-card {
     width: 100%;
     height: 100%;
-    border: 1px solid var(--purp-md);
+    border: 1px solid var(--grn-md);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -82,15 +143,17 @@ a,
     padding-bottom: 6%;
 }
 
-/*.logo {
-    width: 100%;
-    display: flex
-}*/
+.logo img {
+    margin-left: auto;
+    margin-right: auto;
+}
 
-    .logo img {
-        margin-left: auto;
-        margin-right: auto;
-    }
+.logo-label {
+    margin-top: .3rem;
+    color: var(--grn-dk);
+    font-size: var(--f-sm);
+    font-style: italic;
+}
 
 .form-floating > .form-control:not(:placeholder-shown) ~ label::after {
     background: none;

@@ -1,5 +1,8 @@
-﻿namespace OptraxDAL.Models.Products
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace OptraxDAL.Models.Products
 {
+    [Table("ProductBatches", Schema = "Products")]
     public class ProductBatch : TrackingBase
     {
         public ProductBatch() { }

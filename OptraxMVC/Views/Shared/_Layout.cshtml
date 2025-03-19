@@ -41,13 +41,14 @@
             </main>
             @* Popup *@
             <div id="overlay" class="ui-widget-overlay"></div>
+            <div id="popupDialog" class="popup"><div id="dialogContent"></div></div>
             <div id="popup" class="popup">
-                <div id="popupTop" class="d-flex w-100 px-2">
-                    <div id="popupTopInner" class="w-100">
-                        <div class="d-flex w-100"><button id="popupClose" class="ms-auto">X</button></div>
-                        <div id="popupTitle"></div>
-                        <div class="popup-msg"></div>
+                <div id="popupTop" class="w-100 px-2">
+                    <div id="popupTopInner" class="d-flex w-100">
+                        <span id="popupTitle" class=""></span>
+                        <button id="popupClose" class="popup-close">X</button>
                     </div>
+                    <div class="popup-msg"></div>
                 </div>
                 <div id="popupContent"></div>
             </div>

@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Grow
 {
-    [Table("PlantEvents")]
+    [Table("PlantEvents", Schema = "Grow")]
     public abstract class PlantEvent
     {
         public PlantEvent() { }
@@ -78,7 +78,7 @@ namespace OptraxDAL.Models.Grow
 
         [MaxLength(20)]
         public string? QuantityUoM { get; set; }
-        public virtual ConsumableItem? Product { get; set; }
+        public virtual Consumable? Product { get; set; }
     }
 
     [Table("PlantEvents")]

@@ -1,9 +1,9 @@
-﻿using OptraxDAL.Models.Inventory;
-using OptraxDAL.Models.Products;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Grow
 {
+    [Table("Crops", Schema = "Grow")]
     public class Crop : TrackingBase
     {
         public Crop() { }
@@ -11,37 +11,20 @@ namespace OptraxDAL.Models.Grow
         public int ID { get; set; }
 
         [Display(Name = "Crop Name")]
-        public string? Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Display(Name = "Strain")]
-        public int StrainID { get; set; }
-
-        [MaxLength(50)]
-        [Display(Name = "Batch ID")]
-        public string? BatchID { get; set; }
-
-        public int? LocationID { get; set; }
-
-        [Required]
-        [Display(Name = "Current Phase")]
-        public string CurrentPhase { get; set; } = string.Empty;
-
-
-
-        [Display(Name = "Expected Veg Days")]
-        public int? ExpectedVegDays { get; set; }
-
-        [Display(Name = "Expected Flower Days")]
-        public int? ExpectedFlowerDays { get; set; }
-
-        public decimal? WasteQuantity { get; set; }
-        public string? WasteQuantityUoM { get; set; }
-
+        public int SpeciesID { get; set; }
+        public int? VarietyID { get; set; }
+        public int? CultivarID { get; set; }
         public string? Notes { get; set; }
 
         public virtual Species? Species { get; set; }
-        public virtual ICollection<Plant> Plants { get; set; } = [];
-        public virtual ICollection<ProductItem> ProductItems { get; set; } = [];
+        public virtual Variety? Variety { get; set; }
+        public virtual Cultivar? Cultivar { get; set; }
+
+        public virtual ICollection<Batch> Batches { get; set; } = [];
+
 
 
         //public int GetCurrentVegDays()

@@ -38,11 +38,12 @@ builder.Services.AddControllersWithViews(options =>
 builder.Services.AddRazorPages();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IDropdownService, DropdownService>();
-builder.Services.AddScoped<IItemService, InventoryService>();
+builder.Services.AddScoped<IResourceService, ResourceService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IPlantService, PlantService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IMapService, MapService>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 
 var app = builder.Build();

@@ -22,6 +22,9 @@ $(document).ready(function () {
         case 'plant':
             setPlantListeners();
             break;
+        case 'point':
+            setMapListeners();
+            break;
         default:
             break;
     }
@@ -56,7 +59,7 @@ function setModelChanges() {
     $('#changes').val(null);
     OrigModel = arrayToModel($('#modelForm').serializeArray());
 
-    $(document).find('.update-btn').removeClass('d-none').addClass('d-none');
+    $(document).find('.update-btn').addClass('d-none');
 
     $('.attr').off('change').on('change', function () {
 
@@ -83,11 +86,6 @@ function submitForm() {
     let proceed = $form.attr('action').includes('Create') || Changes.length > 0;
     console.log('form');
 
-    //if ($form.data('func') == "addPlants") {
-    //    console.log('resubmit')
-    //    $(`#modelForm`).off('submit', submitForm);
-    //    $('#modelForm').submit();
-    //}
     if ($form.valid() && proceed) {
 
         $.ajax({
@@ -97,13 +95,13 @@ function submitForm() {
             success: function (response) {
                 if (response.success) {
                     switch ($form.data('func')) {
-                        case "addItem":
-                            addItemSuccess(response);
+                        case "addResource":
+                            addResourceSuccess(response);
                             break;
-                        case "updateItem":
+                        case "updateResource":
                             setSelectDrops();
                             setModelChanges();
-                            updateItemSuccess(response);
+                            updateResourceSuccess(response);
                             break;
                         case "updateCategory":
                             setSelectDrops();

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
-using OptraxDAL.Models.Inventory;
-using OptraxDAL.Models.Map;
 
 namespace OptraxMVC.Models
 {

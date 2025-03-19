@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using OptraxDAL.Models;
 using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
@@ -11,29 +12,23 @@ using OptraxDAL.Models.Products;
 
 namespace OptraxDAL
 {
-    public class OptraxContext(DbContextOptions<OptraxContext> options, IMemoryCache cache) : IdentityDbContext<AppUser>(options)
+    public class OptraxContext(DbContextOptions<OptraxContext> options, IMemoryCache cache, ICurrentUserService userService) : IdentityDbContext<AppUser>(options)
     {
-        private readonly IMemoryCache _cache = cache;
+        private readonly IMemoryCache _Cache = cache;
+        private readonly ICurrentUserService _userService = userService;
 
         #region Admin
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Business> Businesses { get; set; }
-        public DbSet<Input> Inputs { get; set; }
+
         public DbSet<UoM> UoMs { get; set; }
-        #endregion
-
-        #region Inventory
-        public DbSet<InventoryCategory> InventoryCategories { get; set; }
-        public DbSet<InventoryItem> InventoryItems { get; set; }
-
-        public DbSet<StockItem> StockItems { get; set; }
-        public DbSet<Plant> Plants { get; set; }
-        public DbSet<Light> Lights { get; set; }
-        public DbSet<DurableItem> DurableItems { get; set; }
-        public DbSet<ConsumableItem> ConsumableItems { get; set; }
-
+        public DbSet<Input> Inputs { get; set; }
         public DbSet<ContainerType> ContainerTypes { get; set; }
+
+        public DbSet<Icon> Icons { get; set; }
+        public DbSet<IconCollection> IconCollections { get; set; }
+
 
         public DbSet<Location> Locations { get; set; }
         public DbSet<SiteLocation> SiteLocations { get; set; }
@@ -46,30 +41,20 @@ namespace OptraxDAL
         public DbSet<RoomLocation> RoomLocations { get; set; }
         public DbSet<VehicleLocation> VehicleLocation { get; set; }
         public DbSet<OffsiteLocation> OffsiteLocations { get; set; }
-        public DbSet<InventoryTransfer> InventoryTransfers { get; set; }
-        public DbSet<TransferApproval> TransferApprovals { get; set; }
-        #endregion
-
-
-        #region Map
-        public DbSet<MapIcon> Icons { get; set; }
-        public DbSet<IconCollection> IconCollections { get; set; }
-        public DbSet<MapObject> MapObjects { get; set; }
-        public DbSet<MapPoint> MapPoints { get; set; }
-        public DbSet<MapLine> MapLines { get; set; }
-        public DbSet<MapPolygon> MapPolygons { get; set; }
         #endregion
 
 
         #region Grow
-        public DbSet<Batch> Batches { get; set; }
-        public DbSet<Cultivar> Cultivars { get; set; }
         public DbSet<Species> Species { get; set; }
         public DbSet<Variety> Varieties { get; set; }
-        public DbSet<Strain> Strains { get; set; }
-        public DbSet<StrainRelationship> StrainRelationships { get; set; }
+        public DbSet<Cultivar> Cultivars { get; set; }
 
         public DbSet<Crop> Crops { get; set; }
+        public DbSet<Batch> Batches { get; set; }
+        public DbSet<Planting> Plantings { get; set; }
+
+        public DbSet<Strain> Strains { get; set; }
+        public DbSet<StrainRelationship> StrainRelationships { get; set; }
 
         public DbSet<PlantEvent> PlantEvents { get; set; }
         public DbSet<PruneEvent> PruneEvents { get; set; }
@@ -79,10 +64,38 @@ namespace OptraxDAL
         public DbSet<TransplantEvent> TransplantEvents { get; set; }
         #endregion
 
+
+        #region Inventory
+        public DbSet<Resource> Resources { get; set; }
+        public DbSet<Category> Categories { get; set; }
+
+        public DbSet<StockItem> StockItems { get; set; }
+        public DbSet<Plant> Plants { get; set; }
+        public DbSet<Light> Lights { get; set; }
+        public DbSet<Durable> Durables { get; set; }
+        public DbSet<Consumable> Consumables { get; set; }
+
+        public DbSet<InventoryTransfer> Transfers { get; set; }
+        public DbSet<TransferApproval> TransferApprovals { get; set; }
+
+        public DbSet<SalesOrder> SalesOrders { get; set; }
+        #endregion
+
+
+        #region Map
+        public DbSet<MapObject> MapObjects { get; set; }
+        public DbSet<MapObjectPoint> MapObjectPoints { get; set; }
+        public DbSet<MapPoint> MapPoints { get; set; }
+        public DbSet<MapLine> MapLines { get; set; }
+        public DbSet<MapPolygon> MapPolygons { get; set; }
+        #endregion
+
+
         #region Product
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductItem> ProductItems { get; set; }
         public DbSet<ProductBatch> ProductBatches { get; set; }
+        public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -104,31 +117,29 @@ namespace OptraxDAL
             #endregion
 
             #region Inventory
-            builder.Entity<InventoryCategory>().HasIndex(x => x.Name).IsUnique();
+            builder.Entity<Category>().HasIndex(x => x.Name).IsUnique();
 
-            builder.Entity<InventoryItem>().HasIndex(x => x.SKU).IsUnique();
-            builder.Entity<InventoryItem>().HasIndex(x => x.Name).IsUnique();
-            builder.Entity<InventoryItem>().Property(x => x.Active).HasDefaultValue(true);
+            builder.Entity<Resource>().HasIndex(x => x.SKU).IsUnique();
+            builder.Entity<Resource>().HasIndex(x => x.Name).IsUnique();
+            builder.Entity<Resource>().Property(x => x.Active).HasDefaultValue(true);
 
             builder.Entity<ContainerType>().Property(x => x.Capacity).HasPrecision(8, 2);
             builder.Entity<ContainerType>().Property(x => x.Active).HasDefaultValue(true);
 
             #region Stock Items TPT
-            builder.Entity<Plant>().ToTable("Plants");
-            builder.Entity<Light>().ToTable("Lights");
-            builder.Entity<DurableItem>().ToTable("DurableItems");
-            builder.Entity<ConsumableItem>().ToTable("Consumables");
+            builder.Entity<Plant>().ToTable("Plants", "Inventory");
+            builder.Entity<Light>().ToTable("Lights", "Inventory");
+            builder.Entity<Durable>().ToTable("Durables", "Inventory");
+            builder.Entity<Consumable>().ToTable("Consumables", "Inventory");
 
             builder.Entity<Plant>().HasBaseType<StockItem>();
             builder.Entity<Light>().HasBaseType<StockItem>();
-            builder.Entity<DurableItem>().HasBaseType<StockItem>();
-            builder.Entity<ConsumableItem>().HasBaseType<StockItem>();
+            builder.Entity<Durable>().HasBaseType<StockItem>();
+            builder.Entity<Consumable>().HasBaseType<StockItem>();
 
             builder.Entity<StockItem>().Property(x => x.PurchasePrice).HasPrecision(8, 2);
-            builder.Entity<ConsumableItem>().Property(x => x.UnitCount).HasPrecision(8, 2);
+            builder.Entity<Consumable>().Property(x => x.UnitCount).HasPrecision(8, 2);
             #endregion
-
-
 
 
             #region Locations TPH
@@ -188,7 +199,11 @@ namespace OptraxDAL
             builder.Entity<MapPolygon>().Property(l => l.PolyGeometry).HasColumnType("geometry");
             builder.Entity<MapPoint>().Property(x => x.Latitude).HasPrecision(12, 8);
             builder.Entity<MapPoint>().Property(x => x.Longitude).HasPrecision(12, 8);
+            builder.Entity<MapPoint>().Property(x => x.Elevation).HasPrecision(12, 8);
 
+            builder.Entity<MapObjectPoint>().Property(x => x.Latitude).HasPrecision(12, 8);
+            builder.Entity<MapObjectPoint>().Property(x => x.Longitude).HasPrecision(12, 8);
+            builder.Entity<MapObjectPoint>().Property(x => x.Elevation).HasPrecision(12, 8);
             #endregion
 
 
@@ -197,13 +212,13 @@ namespace OptraxDAL
             builder.Entity<Species>().Property(x => x.WaterNeedsQty).HasPrecision(8, 2);
 
             builder.Entity<Crop>().HasIndex(x => x.Name).IsUnique();
-            builder.Entity<Crop>().HasIndex(x => x.BatchID).IsUnique();
-            builder.Entity<Crop>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
+            builder.Entity<Batch>().HasIndex(x => x.BatchName).IsUnique();
+            builder.Entity<Planting>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
 
-            //builder.Entity<Crop>().HasOne(c => c.Species)
-            //                      .WithMany(s => s.Crops)
-            //                      .HasForeignKey(c => c.StrainID)
-            //                      .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Batch>().HasOne(c => c.Crop)
+                                  .WithMany(s => s.Batches)
+                                  .HasForeignKey(c => c.CropID)
+                                  .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Strain>().HasIndex(x => x.Name).IsUnique();
 
@@ -259,15 +274,15 @@ namespace OptraxDAL
 
         public override int SaveChanges()
         {
-            var hasCategoryChanges = ChangeTracker.Entries<InventoryCategory>().Any(e => e.State == EntityState.Added ||
-                                                                                         e.State == EntityState.Modified ||
-                                                                                         e.State == EntityState.Deleted);
+            var hasCategoryChanges = ChangeTracker.Entries<Category>().Any(e => e.State == EntityState.Added ||
+                                                                                e.State == EntityState.Modified ||
+                                                                                e.State == EntityState.Deleted);
 
             var result = base.SaveChanges();
 
             if (hasCategoryChanges)
             {
-                _cache.Remove("CategoriesSelect");
+                _Cache.Remove("CategoriesSelect");
             }
 
             return result;
@@ -275,19 +290,34 @@ namespace OptraxDAL
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var hasCategoryChanges = ChangeTracker.Entries<InventoryCategory>()
-                                                  .Any(e => e.State == EntityState.Added ||
-                                                            e.State == EntityState.Modified ||
-                                                            e.State == EntityState.Deleted);
+            var userID = _userService?.UserID;
 
-            var result = await base.SaveChangesAsync(cancellationToken);
-
-            if (hasCategoryChanges)
+            foreach (var entry in ChangeTracker.Entries<TrackingBase>())
             {
-                _cache.Remove("CategoriesSelect");
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.DateCreated = DateTime.Now;
+                    entry.Entity.CreatedUserID = userID;
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.DateLastModified = DateTime.Now;
+                    entry.Entity.LastModifiedUserID = userID;
+                }
             }
 
-            return result;
+            return await base.SaveChangesAsync(cancellationToken);
+
+            //var hasCategoryChanges = ChangeTracker.Entries<Category>()
+            //                          .Any(e => e.State == EntityState.Added ||
+            //                                    e.State == EntityState.Modified ||
+            //                                    e.State == EntityState.Deleted);
+
+
+            //if (hasCategoryChanges)
+            //{
+            //    _cache.Remove("CategoriesSelect");
+            //}
         }
     }
 }

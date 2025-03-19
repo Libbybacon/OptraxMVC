@@ -81,18 +81,52 @@ function expandNav(saveToSession = true) {
     }
 }
 
+function loadPopupDialog(props) {
+    var viewW = $(window).width();
+
+    $('#popupDialog').dialog({
+        classes: {
+            "ui-dialog": "popup-dialog",
+            "ui-dialog-titlebar": "dialog-top",
+            "ui-dialog-title": "dialog-top-inner",
+            "ui-dialog-content": "dialog-content",
+            "ui-dialog-titlebar-close": "popup-close"
+        },
+        autoOpen: true,
+        width: viewW < 786 ? viewW * .8 : viewW * .6,
+        title: props.title,
+        resizable: false,
+        modal: false,
+        height: 'auto',
+        draggable: true,
+        closeText: "X",
+        position: { my: "left top", at: "left top", of: window }
+    });
+    $('#popupDialog').show();
+    $('.popup-close').text("X");
+}
+
+
 function loadPopup(props) {
     let ajaxOptions = {
         url: props.url,
         type: props.type,
         success: function (view) {
-            $('#overlay').show();
-            $('#popupContent').html(view);
-            $('#popupTitle').html(props.title);
-            $('#popup').show();
 
-            setPopupHeight();
-            window.addEventListener("resize", setPopupHeight);
+            if (props.isDialog && props.isDialog == true) {
+                $("#dialogContent").html(view);
+                loadPopupDialog(props)
+            }
+            else
+            {
+                $('#popupContent').html(view);
+                $('#popupTitle').html(props.title);
+                $('#overlay').show(); 
+                $('#popup').show();
+                setPopupHeight();
+
+                window.addEventListener("resize", setPopupHeight);
+            }       
         },
         error: function (xhr, status, error) {
             console.error('Error loading popup:', xhr.responseText);
@@ -102,6 +136,7 @@ function loadPopup(props) {
     if (props.data && Object.keys(props.data).length > 0) {
         ajaxOptions.data = props.data;
     }
+
     $.ajax(ajaxOptions);
 }
 

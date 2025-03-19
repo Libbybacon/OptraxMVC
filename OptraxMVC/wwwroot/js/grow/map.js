@@ -10,6 +10,36 @@ $(document).ready(function () {
     initializeMap();
 })
 
+function setMapListeners() {
+
+    // Change point's tooltip content
+    $('.point-info').on('input', function () {
+        let props = { marker: curMarker, title: $('#Name').val(), desc: $('#Notes').val() }
+        updateMarker(props);
+    });
+
+    // change icon collection display
+    $('.icon-coll-name').on('click', function () {
+        let collID = $(this).data('collid')
+
+        $('.icon-coll-name').removeClass('selected');
+        $(`.coll-name-${collID}`).addClass('selected');
+        $('.preview-div').addClass('d-none');
+        $(`.preview-div.preview-coll-${collID}`).removeClass('d-none');
+    })
+
+    // Update point icon
+    $('.icon-div').on('click', function () {
+        $('.icon-div').removeClass('selected');
+        $('#IconID').val($(this).data('iconid'))
+        $(this).addClass('selected');
+        let imgURL = $(this).find('img').attr('src');
+        let props = { iconURL: imgURL, marker: curMarker, title: $('#Name').val(), desc: $('#Notes').val() }
+        updateMarker(props);
+    })
+}
+
+
 function initializeMap() {
     map = L.map('map', {
         center: [-1.28333, 36.81667],
@@ -29,6 +59,8 @@ function initializeMap() {
         event.originalEvent.preventDefault();  // Prevent default behavior
         event.originalEvent.stopPropagation(); // Stop the event from affecting the page
     });
+
+    loadPoints();
 }
 
 function setMapHeight() {
@@ -63,6 +95,25 @@ L.Control.AddMapObject = L.Control.extend({
     }
 });
 
+function loadPoints() {
+    $.ajax({
+        type: "GET",
+        url: "/Grow/Map/GetMapObjects",
+        success: function (response) {
+            console.log('response', response)
+            if (response.success == true) {
+
+                $.each(response.data, function (index, point) {
+                    console.log('index', index, 'point', point);
+                    let icon = createIcon(point.iconPath);
+                    var marker = L.marker([point.lat, point.long]).addTo(map).setIcon(icon).bindTooltip(point.name, { permanent: true, direction: "top" }).openTooltip();
+                })
+            }
+        }
+    })
+}
+
+
 function toggleDrawingMode() {
     isDrawing = !isDrawing;
 
@@ -89,9 +140,9 @@ function handleMouseDown(event) {
 
     holdTimeout = setTimeout(() => {
         isLongPress = true;
-        addPoint(event.latlng);
+        createPoint(event.latlng);
         toggleDrawingMode(); 
-    }, 1000); 
+    }, 500); 
 }
 
 function handleMouseUp() {
@@ -133,29 +184,34 @@ function finalizeLine(event) {
     map.off('mousemove', updateLine);
 }
 
-function addPoint(latlng) {
-
+function createPoint(latlng) {
 
     let newIcon = createIcon('https://img.icons8.com/?size=100&id=43731&format=png&color=263EDE');
+
     curMarker = L.marker(latlng).addTo(map).setIcon(newIcon).bindTooltip("New Point", { permanent: true, direction: "top" }).openTooltip();
 
     let props = {
         type: 'GET',
         url: `/Grow/Map/AddPoint/`,
         title: `New Point`,
-        data: { lat: latlng.lat, lng: latlng.lng }
+        data: { lat: latlng.lat, lng: latlng.lng },
+        isDialog: true       
     }
     loadPopup(props);
 }
 
 function updateMarker(props) {
-    let newIcon = createIcon(props.newIconUrl);
+    console.log('props', props)
+    if (props.iconURL && props.iconURL.length > 0) {
+        let newIcon = createIcon(props.iconURL);
+        props.marker.setIcon(newIcon);
+    }
 
-    // Update the marker's icon
-    props.marker.setIcon(newIcon);
-
-    let newPopupContent = `<b>${props.newTitle}</b><br>${props.newDescription}`;
-    props.marker.bindPopup(newPopupContent);
+    let title = (props.title != undefined) ? `<b>${props.title}</b>` : "";
+    let desc = (props.desc != undefined) ? `<br>${props.desc}` : "";
+    console.log('title', title, 'desc', desc)
+    let tooltipContent = `${title}${desc}`;
+    props.marker._tooltip.setContent(tooltipContent);
 }
 
 function createIcon(url) {

@@ -1,0 +1,95 @@
+﻿@using OptraxDAL.Models.Inventory
+@using OptraxMVC.Models
+@model Resource
+
+@{
+    FormVM formVM = ViewBag.FormVM;
+    DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
+    string showView = formVM.IsNew ? "d-none" : "";
+    string showEdit = formVM.IsNew ? "" : "d-none";
+    string showSelect = formVM.IsNew ? "" : "d-none";
+}
+<input type="hidden" id="isView" value="@showView.ToString()" />
+
+<div class="px-2">
+    <button type="button" id="deetDrop" class="dropdown-toggle form-drop @showView" data-bs-toggle="collapse" data-bs-target="#itemDeets" aria-expanded="true" aria-controls="itemDeets">Details</button>
+    <div id="itemDeets" class="collapse show">
+        @using (Html.BeginForm(formVM.Action, "Items", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv }))
+        {
+            @Html.AntiForgeryToken()
+            <input id="ID" type="hidden" name="ID" value="@Model.ID" />
+            <input id="changes" type="hidden" name="Changes" />
+
+            <div class="d-flex justify-content-center">
+                <div class="row col-12 d-flex w-100">
+                    <div class="col-xl-4 col-6">
+                        @Html.LabelFor(m => m.Name)
+                        <span class="view @showView">@Html.DisplayFor(m => m.Name)</span>
+                        @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = $"form-control attr {showEdit}", data_ival = Model.Name } })
+                        @Html.ValidationMessageFor(m => m.Name, "", new { @class = $"val-msg {showEdit}" })
+                    </div>
+                    <div class="col-xl-4 col-6">
+                        @Html.LabelFor(m => m.Manufacturer)
+                        <span class="view @showView">@Html.DisplayFor(m => m.Manufacturer)</span>
+                        @Html.EditorFor(m => m.Manufacturer, new { htmlAttributes = new { @class = $"form-control attr {showEdit}", data_ival = Model.Manufacturer } })
+                        @Html.ValidationMessageFor(m => m.Manufacturer, "", new { htmlAttributes = new { @class = $"val-msg {showEdit}" } })
+                    </div>
+                    <div class="col-xl-4 col-6">
+                        @Html.LabelFor(m => m.SKU)
+                        <span class="view @showView">@Html.DisplayFor(m => m.SKU)</span>
+                        @Html.EditorFor(m => m.SKU, new { htmlAttributes = new { @class = $"form-control form-txt attr {showEdit}", data_ival = Model.SKU } })
+                        @Html.ValidationMessageFor(m => m.SKU, "", new { htmlAttributes = new { @class = $"val-msg {showEdit}" } })
+                    </div>
+                    <div class="col-xl-4 col-6">
+                        @Html.LabelFor(m => m.CategoryID)
+                        <span class="view @showView">@Html.DisplayFor(m => m.CategoryID)</span>
+                        @Html.DropDownListFor(m => m.CategoryID, drops.TopCategorySelects, "Select Category", new { @class = $"form-select attr {showSelect}", data_ival = Model.CategoryID })
+                        @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = $"val-msg {showEdit}" })
+                    </div>
+                    <div class="col-xl-4 col-6">
+                        @Html.LabelFor(m => m.DefaultUoM)
+                        <span class="view @showView">@Html.DisplayFor(m => m.DefaultUoM)</span>
+                        @Html.DropDownListFor(m => m.DefaultUoM, drops.UomSelects, "Select UoM", new { @class = $"form-select attr {showSelect}", data_ival = Model.DefaultUoM })
+                        @Html.ValidationMessageFor(m => m.DefaultUoM, "", new { @class = $"val-msg {showEdit}" })
+                    </div>
+                    <div class="col-xl-4 col-6">
+                        @Html.LabelFor(m => m.StockType)
+                        <span class="view @showView">@Html.DisplayFor(m => m.StockType)</span>
+                        @Html.DropDownListFor(m => m.StockType, drops.StockTypeSelects, "Select Stock Type", new { @class = $"form-select attr {showSelect}", data_ival = Model.StockType })
+                        @Html.ValidationMessageFor(m => m.StockType, "", new { @class = $"val-msg {showEdit}" })
+                    </div>
+                    <div class="col-xl-4 col-6">
+                        @Html.LabelFor(m => m.Description)
+                        <span class="view @showView">@Html.DisplayFor(m => m.Description)</span>
+                        @Html.EditorFor(m => m.Description, new { htmlAttributes = new { @class = $"form-control attr {showEdit}", data_ival = Model.Description } })
+                        @Html.ValidationMessageFor(m => m.Description, "", new { htmlAttributes = new { @class = $"val-msg {showEdit}" } })
+                    </div>
+                    <div class="col-xl-4 col-6">
+                        @Html.LabelFor(m => m.Tags)
+                        <span class="view @showView">@Html.DisplayFor(m => m.Tags)</span>
+                        @Html.EditorFor(m => m.Tags, new { htmlAttributes = new { @class = $"form-control attr {showEdit}", data_ival = Model.Tags } })
+                        @Html.ValidationMessageFor(m => m.Tags, "", new { htmlAttributes = new { @class = $"val-msg {showEdit}" } })
+                    </div>
+                </div>
+            </div>
+            <div class="popup-btns d-flex justify-content-center">
+                <button type="button" class="edit-btn view form-btn @showView">Edit</button>
+                <button type="submit" class="update-btn show-ed form-btn me-2 d-none">Save Changes</button>
+                <button type="button" class="cancel-btn show-ed form-btn ms-2 d-none">Cancel</button>
+                <button type="submit" class="save-btn form-btn @showEdit">Save New Item</button>
+
+            </div>
+        }
+    </div>
+</div>
+
+<div class="@showView deets-div px-2 pb-2">
+    <button type="button" id="histDrop" class="dropdown-toggle form-drop w-100" data-bs-toggle="collapse" data-bs-target="#itemHist" aria-expanded="false" aria-controls="itemHist">Item History</button>
+    <div id="itemHist" class="collapse">
+        <div class="history-inner">
+            Information about stock levels, transfers, order histories, etc here.
+        </div>
+    </div>
+</div>
+
+<script src="/js/forms.js"></script>

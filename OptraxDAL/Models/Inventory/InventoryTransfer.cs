@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
+    [Table("Transfers", Schema = "Inventory")]
     public class InventoryTransfer
     {
         public InventoryTransfer() { }

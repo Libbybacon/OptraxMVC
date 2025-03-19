@@ -1,5 +1,8 @@
-﻿namespace OptraxDAL.Models.Grow
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace OptraxDAL.Models.Grow
 {
+    [Table("Species", Schema = "Grow")]
     public class Species : TrackingBase
     {
         public Species() { }

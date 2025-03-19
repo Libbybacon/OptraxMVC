@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace OptraxDAL.Models.Admin
 {
 
-    [Table("Locations")]
+    [Table("Locations", Schema = "Admin")]
     public abstract class Location : TrackingBase
     {
         public Location() { }
@@ -32,6 +32,9 @@ namespace OptraxDAL.Models.Admin
         [MaxLength(1)]
         public int Level { get; set; }
 
+        public int IconID { get; set; }
+
+        public virtual Icon? Icon { get; set; }
         public virtual MapObject? MapObject { get; set; }
         public virtual Location? Parent { get; set; } = null;
 
@@ -82,7 +85,7 @@ namespace OptraxDAL.Models.Admin
         }
     }
 
-    [Table("Locations")]
+    [Table("Locations", Schema = "Admin")]
     public class VehicleLocation : Location
     {
         public VehicleLocation()
@@ -91,7 +94,7 @@ namespace OptraxDAL.Models.Admin
         }
     }
 
-    [Table("Locations")]
+    [Table("Locations", Schema = "Admin")]
     public class SiteLocation : Location
     {
         public SiteLocation()
@@ -106,7 +109,7 @@ namespace OptraxDAL.Models.Admin
     }
 
 
-    [Table("Locations")]
+    [Table("Locations", Schema = "Admin")]
     public class GreenhouseLocation : Location
     {
         public GreenhouseLocation()
@@ -117,7 +120,7 @@ namespace OptraxDAL.Models.Admin
         public virtual ICollection<Crop>? Crops { get; set; } = [];
     }
 
-    [Table("Locations")]
+    [Table("Locations", Schema = "Admin")]
     public class FieldLocation : Location
     {
         public FieldLocation()
@@ -128,7 +131,7 @@ namespace OptraxDAL.Models.Admin
         public virtual ICollection<Crop>? Crops { get; set; } = [];
     }
 
-    [Table("Locations")]
+    [Table("Locations", Schema = "Admin")]
     public class RowLocation : Location
     {
         public RowLocation()
@@ -139,7 +142,7 @@ namespace OptraxDAL.Models.Admin
         public virtual ICollection<Crop>? Crops { get; set; } = [];
     }
 
-    [Table("Locations")]
+    [Table("Locations", Schema = "Admin")]
     public class BedLocation : Location
     {
         public BedLocation()
@@ -148,7 +151,7 @@ namespace OptraxDAL.Models.Admin
         }
     }
 
-    [Table("Locations")]
+    [Table("Locations", Schema = "Admin")]
     public class PlotLocation : Location
     {
         public PlotLocation()
@@ -157,7 +160,7 @@ namespace OptraxDAL.Models.Admin
         }
     }
 
-    [Table("Locations")]
+    [Table("Locations", Schema = "Admin")]
     public class BuildingLocation : Location
     {
         public BuildingLocation()
@@ -175,7 +178,7 @@ namespace OptraxDAL.Models.Admin
 
     }
 
-    [Table("Locations")]
+    [Table("Locations", Schema = "Admin")]
     public class RoomLocation : Location
     {
         public RoomLocation()
@@ -188,7 +191,7 @@ namespace OptraxDAL.Models.Admin
 
 
 
-    [Table("Locations")]
+    [Table("Locations", Schema = "Admin")]
     public class OffsiteLocation : Location
     {
         public OffsiteLocation() { }

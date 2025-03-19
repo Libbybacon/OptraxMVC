@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Admin
 {
-    [Table("Businesses")]
+    [Table("Businesses", Schema = "Admin")]
     public class Business : TrackingBase
     {
         public Business() { }

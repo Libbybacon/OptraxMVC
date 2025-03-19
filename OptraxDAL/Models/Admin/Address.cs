@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Admin
 {
-
+    [Table("Address", Schema = "Admin")]
     public class Address : TrackingBase
     {
         public Address() { }

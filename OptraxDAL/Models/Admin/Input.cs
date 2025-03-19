@@ -1,5 +1,8 @@
-﻿namespace OptraxDAL.Models.Admin
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace OptraxDAL.Models.Admin
 {
+    [Table("Inputs", Schema = "Admin")]
     public class Input : TrackingBase
     {
         public Input() { }

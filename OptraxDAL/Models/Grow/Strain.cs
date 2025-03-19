@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Grow
 {
+    [Table("Strains", Schema = "Grow")]
     public class Strain : TrackingBase
     {
         public Strain() { }

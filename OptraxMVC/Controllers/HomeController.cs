@@ -2,20 +2,19 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
 using OptraxMVC.Models;
-using OptraxMVC.Services;
 using System.Diagnostics;
-using System.Security.Cryptography;
 
 namespace OptraxMVC.Controllers;
 
 [Authorize]
-public class HomeController(OptraxContext context) : BaseController(context)
+public class HomeController(OptraxContext context) : TabsController(context)
 {
 
     [Authorize]
     public IActionResult Index()
     {
-        return View();  // If logged in, show the page (Home/Index)
+
+        return LoadTabs("Grow");
     }
 
     public IActionResult Privacy()

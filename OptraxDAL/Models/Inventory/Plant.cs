@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
-    [Table("Plants")]
+    [Table("Plants", Schema = "Inventory")]
     public class Plant : StockItem
     {
         public Plant() { }
@@ -54,10 +54,8 @@ namespace OptraxDAL.Models.Inventory
                 PlantID = ID,
                 TrackingID = TrackingID,
                 StrainID = SpeciesID,
-                CropID = Crop?.BatchID ?? "",
                 PropagationType = PropagationType,
                 Phase = Phase,
-                CurrentPhase = Crop?.CurrentPhase ?? "",
             };
         }
 

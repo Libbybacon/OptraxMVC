@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
-    [Table("Lights")]
+    [Table("Lights", Schema = "Inventory")]
     public class Light : StockItem
     {
         public DateTimeOffset? FirstInstallDate { get; set; }

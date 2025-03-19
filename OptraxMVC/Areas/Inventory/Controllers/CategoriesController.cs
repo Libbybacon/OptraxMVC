@@ -29,7 +29,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
 
                 ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["TopCategorySelects"]);
 
-                return PartialView("_Edit", new InventoryCategory() { });
+                return PartialView("_Edit", new Category() { });
             }
             catch (Exception ex)
             {
@@ -39,7 +39,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAsync(InventoryCategory cat)
+        public async Task<IActionResult> CreateAsync(Category cat)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         {
             try
             {
-                InventoryCategory? category = await _ICategory.GetCategoryByIdAsync(catID);
+                Category? category = await _ICategory.GetCategoryByIdAsync(catID);
 
                 if (category == null)
                 {
@@ -93,7 +93,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditAsync(InventoryCategory cat)
+        public async Task<IActionResult> EditAsync(Category cat)
         {
             try
             {

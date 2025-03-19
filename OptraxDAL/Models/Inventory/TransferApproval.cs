@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
+    [Table("TransferApprovals", Schema = "Inventory")]
     public class TransferApproval
     {
         public int ID { get; set; }

@@ -16,11 +16,25 @@ namespace OptraxMVC.Areas.Grow.Controllers
         private readonly IDropdownService _IDropdowns = dropdownService;
 
         [HttpGet]
+        public async Task<IActionResult> GetMapObjects()
+        {
+            try
+            {
+                return Json(await _IMap.GetMapObjectsAsync());
+            }
+            catch (Exception)
+            {
+                return Json(new ResponseVM { msg = "Error getting map objects" });
+            }
+        }
+
+        [HttpGet]
         public async Task<IActionResult> AddPoint(decimal? lat, decimal? lng)
         {
             if (lat == null || lng == null)
                 return Json(new { msg = "Invalid coordinates" });
 
+            ViewBag.IconCollID = 1;
             ViewBag.FormVM = LoadFormVM("Point");
             ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["LocationSelects", "IconsList"]);
 
@@ -29,12 +43,19 @@ namespace OptraxMVC.Areas.Grow.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddPointAsync(MapPoint point)
+        public async Task<IActionResult> CreatePointAsync(MapPoint point)
         {
-            if (!ModelState.IsValid)
-                return Json(new { msg = "Invalid model state" });
+            try
+            {
+                if (!ModelState.IsValid)
+                    return Json(new ResponseVM { msg = "Invalid model state" });
 
-            return Json(await _IMap.AddPoint(point));
+                return Json(await _IMap.CreatePointAsync(point));
+            }
+            catch (Exception)
+            {
+                return Json(new ResponseVM { msg = "Error creating point" });
+            }
         }
 
         private static FormVM LoadFormVM(string objType)
@@ -43,7 +64,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
             {
                 IsNew = true,
                 JsFunc = $"add{objType}",
-                Action = $"Add{objType}",
+                Action = $"Create{objType}",
                 MsgDiv = "mapMsg"
             };
             return formVM;

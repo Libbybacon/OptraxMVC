@@ -4,13 +4,13 @@
     --wht-blue: #F4F9FB;
     --blue-xlt: #F1F4F9;
     --blue-lt: #C5D2E7;
-    --blue-md: #8CA6CF;
+    --blue-md: #4E689E;
     --blue-dk: #0F296C;
     --blue-xdk: #030726;
     /*--grn-xlt: #B9DFD5;*/
     --grn-xlt: #EEF7F5;
-    --grn-lt: #4CA992;
-    --grn-md: #2A705E;
+    --grn-lt: #61B39F;
+    --grn-md: #378874;
     --grn-dk: #195C4B;
     --grn-xdk: #124034;
     --tan-lt: #E3E0DC;
@@ -32,8 +32,8 @@
     --box-shdw-sm: 0px 1px 2px rgba(0,0,0,0.4);
     --box-shdw-sm-hov: 0px 1px 4px rgba(0,0,0,0.2);
     --input-border: 1px solid var(--gray-xdk);
-    --input-outline: 2px solid var(--blue-dk);
-    --input-shdw: 0 0 0 0.15rem var(--blue-md);
+    --input-outline: 2px solid var(--grn-dk);
+    --input-shdw: 0 0 0 0.15rem var(--grn-md);
 }
 
 @media only screen and (max-width: 576px) {
@@ -53,6 +53,11 @@
     #popup {
         min-width: 600px;
     }
+
+        .ui-dialog,
+        #popup.ui-dialog-content {
+            max-width: 30vw;
+        }
 }
 
 .text-tan {
@@ -70,65 +75,104 @@
     background: rgba(0,0,0,.5);
 }
 
+.popup-dialog {
+    box-shadow: var(--box-shdw);
+}
+
+.ui-front {
+    z-index: 20000;
+}
+
+.dialog-top {
+    border: none;
+    font-weight: 600;
+    color: var(--grn-xdk);
+    font-size: var(--f-lg);
+    background-color: white;
+}
+
+.dialog-top-inner {
+    text-align: center;
+}
+
+#dialogContent {
+    border-radius: 0;
+    border-top: 1px solid var(--grn-dk) !important;
+}
+
 #popup {
-    display: none;
     top: 50%;
     left: 50%;
     width: auto;
+    z-index: 200;
+    display: none;
     position: fixed;
-    
     background: white;
-    color: var(--blue-dk);
+    color: var(--grn-xdk);
     box-shadow: var(--box-shdw);
     border-radius: var(--border-r);
     transform: translate(-50%, -50%);
     border: 1px solid var(--gray-xxdk);
-    z-index: 2000;
 }
 
-    #popup #popupTop {
-        position: relative;
-        font-weight: 600;
-        padding-top: .3rem;
+#popupDialog {
+    background: white;
+    color: var(--grn-xdk);
+    border-radius: var(--border-r);
+}
+
+#popup #popupTop {
+    position: relative;
+    font-weight: 600;
+    padding-top: .3rem;
+}
+
+    #popup #popupTop #popupTopInner {
+        padding-bottom: .5rem;
+        border-bottom: 1px solid var(--grn-xdk);
     }
 
-        #popup #popupTop #popupTopInner {
-            padding-bottom: .5rem;
-            border-bottom: 1px solid var(--blue-dk);
-        }
+#popup #popupTitle {
+    margin: auto;
+    cursor: default;
+    text-align: center;
+    font-size: var(--f-lg);
+}
 
-    #popup #popupTitle {
-        margin: auto;
-        text-align: center;
-        font-size: var(--f-lg);
-    }
+.popup-close {
+    border: none;
+    background: white;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--grn-xdk);
+    width: max-content;
+    border-radius: var(--border-r);
+}
 
-    #popup #popupClose {
-        border: none;
-        background: white;
-        border-radius: var(--border-r);
-    }
-
-        #popup #popupClose:hover {
-            font-weight: 500;
-            box-shadow: var(--box-shdw-sm);
-            color: white;
-            background-color: var(--blue-dk);
-        }
-
-    #popup label {
+    .popup-close:hover {
+        color: white;
         font-weight: 500;
-        padding-left: .2rem;
-        margin-top: 1.5rem;
-        margin-bottom: .25rem;
+        box-shadow: var(--box-shdw-sm);
+        background-color: var(--grn-dk);
     }
-    #popupContent{
-        overflow-y: auto;
-    }
-    #popup .popup-btns {
-        padding-top: 1.5rem;
-        padding-bottom: 1.5rem;
-    }
+
+.popup label {
+    font-weight: 500;
+    padding-left: .2rem;
+    margin-top: 1.5rem;
+    margin-bottom: .25rem;
+}
+
+#popupContent {
+    overflow-y: auto;
+}
+
+.popup-btns {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
 
 .form-top {
     padding-left: 15%;
@@ -143,9 +187,6 @@
         text-align: center;
         border-bottom: 1px solid var(--blue-dk);
     }
-
-.form-btn {
-}
 
 .box-shadow {
     box-shadow: var(--box-shdw);
@@ -205,17 +246,19 @@ main {
 /* Buttons */
 
 button {
+    font-family: 'Poppins' !important;
     border: none;
     border-radius: var(--border-r);
-/*      letter-spacing: 1px;*/
+    /*      letter-spacing: 1px;*/
 }
 
 .form-btn {
-    /*font-weight: 500;*/
+    font-family: 'Poppins' !important;
+    font-weight: 500;
     letter-spacing: .5px;
     white-space: nowrap;
-    padding: .1rem 1.5rem .2rem 1.5rem;
-    font-size: var(--f-md);
+    padding: .3rem 1.5rem .25rem 1.5rem;
+    font-size: var(--f-md) !important;
     box-shadow: var(--box-shdw-sm);
 }
 
@@ -254,19 +297,20 @@ button {
 .buttons-collection {
     font-size: var(--f-sm) !important;
     border: 1px solid var(--blue-dk);
-    
 }
+
 .disabled-link {
-    pointer-events: none; /* Prevents clicking */
-    opacity: 0.5; /* Fades it out */
+    pointer-events: none;
+    opacity: 0.5;
     cursor: not-allowed;
 }
-.disabled-link:hover {
-    pointer-events: none; /* Prevents clicking */
-    opacity: 0.5; /* Fades it out */
-    cursor: not-allowed;
-    background-color: var(--blue-dk);
-}
+
+    .disabled-link:hover {
+        pointer-events: none;
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: var(--blue-dk);
+    }
 /* Inputs */
 
 .attr.form-control {
@@ -274,8 +318,8 @@ button {
 }
 
 .form-select {
-    max-height: 100px !important; /* Set max dropdown height */
-    overflow-y: auto; /* Enable vertical scroll */
+    max-height: 100px !important;
+    overflow-y: auto;
 }
 
     .form-select option {
@@ -304,8 +348,8 @@ button {
 }
 
     .form-check-input:checked {
-        border-color: var(--blue-dk);
-        background-color: var(--blue-md);
+        border-color: var(--grn-dk);
+        background-color: var(--grn-md);
     }
 
 input[type=checkbox]:hover, input[type=radio]:hover {
@@ -362,7 +406,7 @@ input[type=checkbox]:hover, input[type=radio]:hover {
 }
 
 .select2-search__field {
-    outline: 1px solid var(--blue-md);
+    outline: 1px solid var(--grn-md);
     border-radius: var(--border-r);
 }
 

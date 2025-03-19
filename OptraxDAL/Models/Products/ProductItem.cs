@@ -1,7 +1,9 @@
 ﻿using OptraxDAL.Models.Admin;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Products
 {
+    [Table("ProductItems", Schema = "Products")]
     public class ProductItem : TrackingBase
     {
         public ProductItem() { }
