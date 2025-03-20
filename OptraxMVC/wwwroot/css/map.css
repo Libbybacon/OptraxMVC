@@ -1,12 +1,56 @@
-﻿
+﻿@media only screen and (max-width: 576px) {
+    #map-div {
+        margin-top: 35px;
+    }
+    .map-icon{
+        height: 15px;
+    }
+    .ui-draggable-handle {
+        max-width: 200px !important;
+    }
+}
+
+@media only screen and (min-width: 576px) {
+    #map-div{
+        margin-top: 35px;
+    }
+    .map-icon {
+        height: 15px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    #map-div {
+        margin-top: 45px;
+    }
+    .map-icon {
+        height: 25px;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    #map-div {
+        margin-top: 45px;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    #map-div {
+        margin-top: 45px;
+    }
+}
+
+/*#map-div {
+    margin-top: 35px;
+}*/
+
 /* Map Controls */
 .add-map-obj {
-    color: var(--grn-dk);
     padding: .5rem;
+    color: var(--grn-dk);
     font-size: var(--f-md);
     box-shadow: var(--box-shdw-sm);
     border: 1px solid var(--grn-dk);
-    /*background-color: var(--grn-xlt);*/
     background-color: white;
 }
 
@@ -83,13 +127,12 @@
         box-shadow: var(--box-shdw-sm);
     }
 
-    .icon-div.selected{
-
+    .icon-div.selected {
     }
 
-    .map-icon {
-        height: 25px;
-    }
+/*.map-icon {
+    height: 25px;
+}*/
 
 .icon-label {
     font-size: var(--f-xxxs)

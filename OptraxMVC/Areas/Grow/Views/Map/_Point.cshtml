@@ -7,7 +7,7 @@
     FormVM formVM = ViewBag.FormVM;
     DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
 
-    int collID = ViewBag.IconCollID;
+    int collID = 1;
 }
 
 @using (Html.BeginForm(formVM.Action, "Map", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv, data_modelname = "point" }))
@@ -17,7 +17,7 @@
     <input id="changes" type="hidden" name="Changes" />
 
     @Html.HiddenFor(m => m.ID)
-    @Html.HiddenFor(m => m.IconID)
+    @Html.HiddenFor(m => m.IconID, new {@class="attr"})
     @Html.HiddenFor(m => m.Latitude)
     @Html.HiddenFor(m => m.Longitude)
 

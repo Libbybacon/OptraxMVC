@@ -1,4 +1,5 @@
 ﻿using OptraxDAL.Models.Admin;
+using OptraxDAL.ViewModels;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Map
@@ -30,6 +31,19 @@ namespace OptraxDAL.Models.Map
         public string GetIconPath()
         {
             return Icon?.ImagePath ?? string.Empty;
+        }
+
+        public PointVM ToPointVM()
+        {
+            return new()
+            {
+                ID = ID,
+                Name = Name,
+                Lat = Latitude,
+                Long = Longitude,
+                Description = Notes,
+                IconPath = GetIconPath(),
+            };
         }
     }
 }

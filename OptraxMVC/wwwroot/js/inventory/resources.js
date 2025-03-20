@@ -193,7 +193,7 @@ function getCategoryDetails($grp) {
     loadPopup(props);
 }
 
-function updateCategorySuccess() {
+function editCategorySuccess() {
     $itemsTable.ajax.reload().draw();
 
     setTimeout(function () {
@@ -249,7 +249,7 @@ function getResourceDetails(rowData) {
     loadPopup(props);
 }
 
-function updateResourceSuccess(response) {
+function editResourceSuccess(response) {
 
     let resourceData = response.data;
     var row = $itemsTable.row(function (idx, data, node) {

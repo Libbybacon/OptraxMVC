@@ -8,9 +8,7 @@ $(document).ready(function () {
         $.validator.unobtrusive.parse($(`#modelForm`));
     }
 
-    //$(`#modelForm`).on('submit', submitForm)
     $(document).off('submit').on('submit', $(`#modelForm`), function (event) {
-        console.log('sub 1');
         event.preventDefault();
         submitForm($(`#modelForm`))
     });
@@ -29,10 +27,9 @@ $(document).ready(function () {
             break;
     }
 
-    if ($('#modelForm').data('func').includes('update')) {
+    if ($('#modelForm').data('func').includes('edit')) {
         setModelChanges();
     }
-
     setSelectDrops();
 });
 
@@ -57,6 +54,7 @@ function setSelectDrops() {
 function setModelChanges() {
     Changes = [];
     $('#changes').val(null);
+
     OrigModel = arrayToModel($('#modelForm').serializeArray());
 
     $(document).find('.update-btn').addClass('d-none');
@@ -65,12 +63,15 @@ function setModelChanges() {
 
         let attrName = $(this).attr('Name');
 
-        if ($(this).val() != OrigModel[attrName]) {
-            Changes.push(attrName);
+        if ($(this).val() != OrigModel[attrName])
+        {
+            Changes.push(attrName); // if updated value != original value, add attribute name to list of changes
         }
-        else if (Changes.length > 0) {
-            Changes = Changes.filter(function (c) { return c != attrName });
+        else if (Changes.length > 0)
+        {
+            Changes = Changes.filter(function (c) { return c != attrName }); // if new value == orig value, remove attr from changes if it's in there.
         }
+
         let changed = Changes.length > 0;
 
         $('#changes').val(changed > 0 ? Changes.toString() : null);
@@ -84,7 +85,6 @@ function submitForm() {
     let $form = $(`#modelForm`);
     let msgdiv = $(`#${$form.data('msgdiv')}`);
     let proceed = $form.attr('action').includes('Create') || Changes.length > 0;
-    console.log('form');
 
     if ($form.valid() && proceed) {
 
@@ -94,25 +94,26 @@ function submitForm() {
             data: $form.serialize(),
             success: function (response) {
                 if (response.success) {
+                    $.fn[response.function].call(response);
                     switch ($form.data('func')) {
                         case "addResource":
                             addResourceSuccess(response);
                             break;
-                        case "updateResource":
+                        case "editResource":
                             setSelectDrops();
                             setModelChanges();
-                            updateResourceSuccess(response);
+                            editResourceSuccess(response);
                             break;
-                        case "updateCategory":
+                        case "editCategory":
                             setSelectDrops();
                             setModelChanges();
-                            updateCategorySuccess();
+                            editCategorySuccess();
                             break;
                         case "addPlants":
                             addPlantsSuccess(response);
                             break;
-                        case "addLocation":
-                            addLocationSuccess(response);
+                        case "createLocation":
+                            createLocationSuccess(response);
                         default:
                             closePopup();
                     }

@@ -81,52 +81,36 @@ function expandNav(saveToSession = true) {
     }
 }
 
-function loadPopupDialog(props) {
-    var viewW = $(window).width();
-
-    $('#popupDialog').dialog({
-        classes: {
-            "ui-dialog": "popup-dialog",
-            "ui-dialog-titlebar": "dialog-top",
-            "ui-dialog-title": "dialog-top-inner",
-            "ui-dialog-content": "dialog-content",
-            "ui-dialog-titlebar-close": "popup-close"
-        },
-        autoOpen: true,
-        width: viewW < 786 ? viewW * .8 : viewW * .6,
-        title: props.title,
-        resizable: false,
-        modal: false,
-        height: 'auto',
-        draggable: true,
-        closeText: "X",
-        position: { my: "left top", at: "left top", of: window }
-    });
-    $('#popupDialog').show();
-    $('.popup-close').text("X");
-}
-
-
 function loadPopup(props) {
     let ajaxOptions = {
         url: props.url,
         type: props.type,
         success: function (view) {
 
+            $('#popupContent').html(view);
+            $('#popupTitle').html(props.title);
+
             if (props.isDialog && props.isDialog == true) {
-                $("#dialogContent").html(view);
-                loadPopupDialog(props)
+                $('#popup').draggable({
+                    appendTo: "#map",
+                    iframeFix: true,
+                    refreshPositions: true,
+                    containment: "parent"
+                });
+                $('#popup').removeClass('transform-50');
+                window.addEventListener("resizeDraggable", resizeDraggable);
             }
             else
             {
-                $('#popupContent').html(view);
-                $('#popupTitle').html(props.title);
-                $('#overlay').show(); 
-                $('#popup').show();
-                setPopupHeight();
+                $('#popup').addClass('transform-50');
+                window.addEventListener("resizeHeight", setPopupHeight);
 
-                window.addEventListener("resize", setPopupHeight);
+                $('#overlay').show(); 
             }       
+            $('#popup').show();
+            setPopupHeight();
+
+
         },
         error: function (xhr, status, error) {
             console.error('Error loading popup:', xhr.responseText);
@@ -140,7 +124,15 @@ function loadPopup(props) {
     $.ajax(ajaxOptions);
 }
 
+function resizeDraggable() {
+    if ($("#popup").draggable("instance") != undefined) {
+        $("#popup").draggable("option", "containment", "parent");
+        setPopupHeight();
+    }
+
+}
 function setPopupHeight() {
+    console.log('set height');
     const popup = $('#popupContent');
     const winHeight = window.innerHeight;
     const maxPopHeight = winHeight * 0.8;
@@ -149,7 +141,7 @@ function setPopupHeight() {
 
 
 function closePopup() {
-    window.removeEventListener("resize", setPopupHeight);
+    window.removeEventListener("resizeHeight", setPopupHeight);
     $('#popup').hide();
     $('#overlay').hide();
     $('#popupContent').html('');

@@ -79,7 +79,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                 }
 
                 ViewData["Dropdowns"] = LoadViewData();
-                ViewBag.FormVM = new FormVM() { IsNew = false, JsFunc = "updateResource", Action = "Edit", MsgDiv = "popupTopInner" };
+                ViewBag.FormVM = new FormVM() { IsNew = false, JsFunc = "editResource", Action = "Edit", MsgDiv = "popupTopInner" };
 
                 return PartialView("_Edit", rsrc);
 

@@ -39,7 +39,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                 ViewBag.FormVM = new FormVM()
                 {
                     IsNew = true,
-                    JsFunc = "addLocation",
+                    JsFunc = "createLocation",
                     Action = $"Create{type}",
                     MsgDiv = "tableMsg"
                 };

@@ -20,5 +20,8 @@ namespace OptraxDAL.Models.Map
         public LineString LineGeometry { get; set; } = default!;
 
         public virtual ICollection<MapObjectPoint> LinePoints { get; set; } = [];
+
+        [NotMapped]
+        public string LineString { get; set; } = string.Empty;
     }
 }

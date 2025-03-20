@@ -13,5 +13,8 @@ namespace OptraxDAL.Models
 
         [ForeignKey("LastModifier")]
         public string? LastModifiedUserID { get; set; }
+
+        [NotMapped]
+        public string? Changes { get; set; }
     }
 }

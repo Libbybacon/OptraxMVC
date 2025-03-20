@@ -76,7 +76,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                 ViewBag.FormVM = new FormVM()
                 {
                     IsNew = false,
-                    JsFunc = "updateCategory",
+                    JsFunc = "editCategory",
                     Action = "Edit",
                     MsgDiv = "popupTopInner"
                 };

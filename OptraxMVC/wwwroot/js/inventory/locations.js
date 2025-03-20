@@ -53,10 +53,10 @@ function makeDatatable() {
                         text: 'Add Location',
                         className: 'add-btn table-btn btn-clear',
                         buttons: [
-                            { text: 'Building', action: function () { addLocation('Building') } },
-                            { text: 'Room', action: function () { addLocation('Room') } },
-                            { text: 'Container', action: function () { addLocation('Container') } },
-                            { text: 'Offsite', action: function () { addLocation('Offsite') } }
+                            { text: 'Building', action: function () { createLocation('Building') } },
+                            { text: 'Room', action: function () { createLocation('Room') } },
+                            { text: 'Container', action: function () { createLocation('Container') } },
+                            { text: 'Offsite', action: function () { createLocation('Offsite') } }
                         ]
                     }
                 ]
@@ -122,7 +122,7 @@ function SetLocationHandlers() {
     })
 }
 
-function addLocation(type) {
+function createLocation(type) {
     let props = {
         type: 'GET',
         url: `/Inventory/Locations/LoadCreate/`,
@@ -132,7 +132,7 @@ function addLocation(type) {
     loadPopup(props);
 }
 
-function addLocationSuccess(response) {
+function createLocationSuccess(response) {
     console.log('add loc success  response', response);
     closePopup();
     let data = response.data;

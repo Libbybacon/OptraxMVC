@@ -16,11 +16,11 @@ namespace OptraxMVC.Areas.Grow.Controllers
         private readonly IDropdownService _IDropdowns = dropdownService;
 
         [HttpGet]
-        public async Task<IActionResult> GetMapObjects()
+        public async Task<IActionResult> GetPoints()
         {
             try
             {
-                return Json(await _IMap.GetMapObjectsAsync());
+                return Json(await _IMap.GetPointsAsync());
             }
             catch (Exception)
             {
@@ -32,11 +32,11 @@ namespace OptraxMVC.Areas.Grow.Controllers
         public async Task<IActionResult> AddPoint(decimal? lat, decimal? lng)
         {
             if (lat == null || lng == null)
+            {
                 return Json(new { msg = "Invalid coordinates" });
+            }
 
-            ViewBag.IconCollID = 1;
-            ViewBag.FormVM = LoadFormVM("Point");
-            ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["LocationSelects", "IconsList"]);
+            LoadFormVM("Point", "Create");
 
             return PartialView("_Point", await _IMap.LoadNewPointAsync((decimal)lat, (decimal)lng));
         }
@@ -48,7 +48,9 @@ namespace OptraxMVC.Areas.Grow.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return Json(new ResponseVM { msg = "Invalid model state" });
+                }
 
                 return Json(await _IMap.CreatePointAsync(point));
             }
@@ -58,16 +60,144 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
         }
 
-        private static FormVM LoadFormVM(string objType)
+        [HttpGet]
+        public async Task<IActionResult> EditPoint(int? pointID)
         {
-            FormVM formVM = new()
+            try
             {
-                IsNew = true,
-                JsFunc = $"add{objType}",
-                Action = $"Create{objType}",
+                if (pointID == null)
+                {
+                    return Json(new { msg = "Invalid point ID" });
+                }
+
+                MapPoint? point = await _IMap.LoadEditPointAsync((int)pointID);
+
+                if (point == null)
+                {
+                    return Json(new ResponseVM { msg = "No point found" });
+                }
+
+                LoadFormVM("Point", "Edit");
+
+                return PartialView("_Point", point);
+            }
+            catch (Exception)
+            {
+                return Json(new ResponseVM { msg = "Error loading point" });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditPointAsync(MapPoint point)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return Json(new ResponseVM { msg = "Invalid model state" });
+                }
+
+                return Json(await _IMap.EditPointAsync(point));
+            }
+            catch (Exception)
+            {
+                return Json(new ResponseVM { msg = "Error creating point" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddLine(string? lineString)
+        {
+            if (string.IsNullOrEmpty(lineString))
+            {
+                return Json(new { msg = "Invalid coordinates" });
+            }
+
+            LoadFormVM("Line", "Create");
+
+            return PartialView("_Line", new MapLine() { LineString = lineString });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateLineAsync(MapLine line)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return Json(new ResponseVM { msg = "Invalid model state" });
+                }
+
+                return Json(await _IMap.CreateLineAsync(line));
+            }
+            catch (Exception)
+            {
+                return Json(new ResponseVM { msg = "Error creating line" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditLine(int? lineID)
+        {
+            try
+            {
+                if (lineID == null)
+                {
+                    return Json(new { msg = "Invalid line ID" });
+                }
+
+                MapLine? line = await _IMap.LoadEditLineAsync((int)lineID);
+
+                if (line == null)
+                {
+                    return Json(new ResponseVM { msg = "No line found" });
+                }
+
+                LoadFormVM("Line", "Edit");
+
+                return PartialView("_Line", line);
+            }
+            catch (Exception)
+            {
+                return Json(new ResponseVM { msg = "Error loading line" });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditLineAsync(MapLine line)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return Json(new ResponseVM { msg = "Invalid model state" });
+                }
+
+                return Json(await _IMap.EditLineAsync(line));
+            }
+            catch (Exception)
+            {
+                return Json(new ResponseVM { msg = "Error creating line" });
+            }
+        }
+
+
+        private void LoadFormVM(string objType, string funcType)
+        {
+            ViewBag.FormVM = new FormVM()
+            {
+                IsNew = funcType == ("Create"),
+                JsFunc = $"{funcType.ToLower()}{objType}",
+                Action = $"{funcType}{objType}",
                 MsgDiv = "mapMsg"
             };
-            return formVM;
+
+            ViewBag.IconCollID = 1;
+
+            ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["LocationSelects", "IconsList"]);
         }
     }
 }

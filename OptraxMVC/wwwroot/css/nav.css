@@ -1,8 +1,9 @@
 ﻿@media only screen and (max-width: 576px) {
     .side-nav {
-        display: flex;
-        height: 40px !important;
         width: 100%;
+        display: flex;
+        padding-top: 3px;
+        height: 40px !important;
         border-bottom: 1px solid var(--tan-lt);
     }
 
@@ -18,9 +19,10 @@
 
 @media only screen and (min-width: 576px) {
     .side-nav {
-        display: flex;
-        height: 40px !important;
         width: 100%;
+        display: flex;
+        padding-top: 3px;
+        height: 40px !important;
         border-bottom: 1px solid var(--tan-lt);
     }
 
@@ -36,7 +38,7 @@
 
 @media only screen and (min-width: 768px) {
     .side-nav {
-        width: auto;
+        width: max-content;
         height: 100vh !important;
         border-bottom: 1px solid var(--blue-dk);
     }
@@ -44,6 +46,10 @@
         .side-nav .nav-link i {
             font-size: 1.6rem;
         }
+
+    .logo-sm {
+        margin-bottom: 5px;
+    }
 }
 
 @media only screen and (min-width: 992px) {
@@ -52,11 +58,14 @@
     }
 }
 
+.logo-sm {
+    height: 30px;
+}
 
 .side-nav {
     display: flex;
-    flex-flow: column;
     flex: 0 1;
+
     background-color: var(--grn-xlt);
     z-index: 1001;
     /*border-right: 1px solid var(-);*/
@@ -130,9 +139,7 @@
     margin-bottom: .4rem;
 }
 
-.logo-sm {
-    height: 40px;
-}
+
 
 .navbar {
     border: none;
