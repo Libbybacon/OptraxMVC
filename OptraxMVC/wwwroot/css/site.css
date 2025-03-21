@@ -75,6 +75,9 @@
     }
 }
 
+#clr-picker{
+    z-index: 2002
+}
 .text-tan {
     color: var(--tan-dk);
 }

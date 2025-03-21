@@ -1,4 +1,5 @@
-﻿
+﻿import 
+
 function makeDatatable() {
     $itemsTable = $(`#grp-table`).DataTable({
         ajax: {

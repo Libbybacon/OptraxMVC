@@ -1,19 +1,20 @@
-﻿export let OrigModel;
+﻿
+import apiService from "./api.js";
+
+export let OrigModel;
 export let Changes = [];
 
 export const formUtil = {
     setListeners: function () {
-        console.log('listeners');
         if ($.validator && $.validator.unobtrusive) {
             $.validator.unobtrusive.parse($(`#modelForm`));
         }
         console.log($('#modelForm').data('func'))
         if ($('#modelForm').data('func').includes('edit')) {
             console.log('is change')
-            this.setModelChanges();
+            formUtil.setModelChanges();
         }
-        this.setSelectDrops();
-
+        formUtil.setSelectDrops();
     },
     setSelectDrops: function () {
         $('.select2').select2({
@@ -57,11 +58,14 @@ export const formUtil = {
             changed > 0 ? $('.update-btn').removeClass('d-none') : $('.update-btn').addClass('d-none');
         });
     },
-    checkFormValid: function () {
+    submitForm: async function () {
         let $form = $(`#modelForm`);
         let proceed = $form.attr('action').includes('Create') || Changes.length > 0;
 
-        return ($form.valid() && proceed);
+        if ($form.valid() && proceed) {
+
+            return await apiService.postForm($form.attr("action"), $form.serialize())
+        };
     },
 
     arrayToModel: function (arr) {

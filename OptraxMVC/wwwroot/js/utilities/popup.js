@@ -41,18 +41,36 @@ const popupHandler = {
                     containment: "parent"
                 });
                 $("#popup").removeClass("transform-50");
-                window.addEventListener("resizeDraggable", this.resizeDraggable);
-            } else {
+                window.addEventListener("resizeDraggable", popupHandler.resizeDraggable);
+            }
+            else {
                 $("#popup").addClass("transform-50");
-                window.addEventListener("resizeHeight", this.setPopupHeight);
+                window.addEventListener("resizeHeight", popupHandler.setPopupHeight);
                 $("#overlay").show();
             }
-
+            console.log('props', props)
+            if (props.mod) {
+                popupHandler.loadModule(props.mod);
+            }
             $("#popup").show();
-            this.setPopupHeight;
+            popupHandler.setPopupHeight;
 
         } catch (error) {
             console.error("Error loading popup:", error.message);
+        }
+    },
+    loadModule: async function (mod) {
+        try {
+            const cacheBustedPath = `${mod.path}?v=${Date.now()}`;
+            const module = await import(cacheBustedPath);
+            if (module[mod.method]) {
+                module[mod.method]();
+            }
+            else {
+                console.warn(`Method '${mod.method}' not found in ${mod.path}`);
+            }
+        } catch (err) {
+            console.error(`Failed to load module '${mod.path}':`, err);
         }
     },
 
@@ -70,7 +88,9 @@ const popupHandler = {
         popup.css('max-height', `${maxPopHeight}px`);
     },
     closePopup: function () {
-        window.removeEventListener("resizeHeight", setPopupHeight);
+        window.removeEventListener("resizeHeight", popupHandler.setPopupHeight);
+        window.removeEventListener("resizeDraggable", popupHandler.resizeDraggable);
+
         $('#popup').hide();
         $('#overlay').hide();
         $('#popupContent').html('');

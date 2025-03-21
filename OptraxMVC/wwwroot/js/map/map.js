@@ -1,4 +1,4 @@
-﻿import { pointUtil, lineUtil, polyUtil } from './mapDataUtil.js';
+﻿import { pointUtil, lineUtil, polyUtil, drawUtil, iconUtil, curObject } from './mapUtility.js';
 
 export var map;
 //export const curObject = { val: null };
@@ -7,11 +7,7 @@ var pointsLayer
 var linesLayer
 var polysLayer
 
-let isDrawing = false;
-var isLongPress = false;
-let anchorPoint = null;
-let previewLine = null;
-let holdTimeout = null;
+
 
 $(document).ready(function () {
 
@@ -55,6 +51,7 @@ async function loadFeatures() {
     //    await this.loadPolygons();
     //}, 30000);
     await pointUtil.loadPoints(pointsLayer);
+    //await lineUtil.loadLines(linesLayer);
 }
 
 function initializeLayers() {
@@ -64,12 +61,11 @@ function initializeLayers() {
     }).addTo(map);
 
     pointsLayer = L.geoJSON(null, {
+
         pointToLayer: function (feature, latlng) {
 
             let props = feature.properties;
-
-            let icon = createIcon(props.iconPath);
-
+            let icon = iconUtil.createIcon(props.iconPath);
             var marker = L.marker(latlng, { icon: icon }).bindTooltip(props.name, { permanent: true, direction: "top" });
 
             marker.on('click', function () {
@@ -112,109 +108,13 @@ L.Control.AddMapObject = L.Control.extend({
         L.DomEvent.disableClickPropagation(container);
 
         btn.onclick = function () {
-            toggleDrawingMode();
+            drawUtil.toggleDrawingMode();
         };
         return container;
     }
 });
 
-function toggleDrawingMode() {
-    isDrawing = !isDrawing;
 
-    if (isDrawing) {
-        map.doubleClickZoom.disable();
-        map.getContainer().style.cursor = 'crosshair';
-        map.on('mousedown', handleMouseDown);
-        map.on('mouseup', handleMouseUp);
-        map.on('dblclick', startLine);
-        $('.add-map-obj').addClass('bg-grn-dk');
-    }
-    else {
-        map.getContainer().style.cursor = '';
-        map.off('mousedown', handleMouseDown);
-        map.off('mouseup', handleMouseUp);
-        map.off('dblclick', startLine);
-        map.doubleClickZoom.enable();
-        $('.add-map-obj').removeClass('bg-grn-dk');
-    }
-}
-
-function handleMouseDown(event) {
-    isLongPress = false;
-
-    holdTimeout = setTimeout(() => {
-        isLongPress = true;
-        pointUtil.createPoint(event.latlng);
-        toggleDrawingMode();
-    }, 500);
-}
-
-function handleMouseUp() {
-    clearTimeout(holdTimeout);
-}
-
-function startLine(event) {
-
-    if (anchorPoint) {
-        return; // Ignore if already drawing line
-    }
-
-    anchorPoint = event.latlng;
-
-    previewLine = L.polyline([anchorPoint, anchorPoint], { color: 'blue', dashArray: '5, 5' }).addTo(map); // Temp line that follows the mouse
-
-    map.on('mousemove', updateLine);
-    map.once('click', finalizeLine); // Finalize line on second click
-}
-
-function updateLine(event) {
-    if (!previewLine) return;
-    previewLine.setLatLngs([anchorPoint, event.latlng]);// Update preview line as mouse moves
-}
-
-function finalizeLine(event) {
-
-    if (!anchorPoint) return;
-
-    let endPoint = event.latlng;
-    addLine(anchorPoint, endPoint);
-
-    if (previewLine) {
-        map.removeLayer(previewLine); // Remove preview line
-        previewLine = null;
-    }
-
-    anchorPoint = null;
-    map.off('mousemove', updateLine);
-}
-
-
-export function updateMarker(props) {
-    if (props.iconURL && props.iconURL.length > 0) {
-        let newIcon = createIcon(props.iconURL);
-        props.marker.setIcon(newIcon);
-    }
-
-    let title = (props.title != undefined) ? `<b>${props.title}</b>` : "";
-    let desc = (props.desc != undefined) ? `<br>${props.desc}` : "";
-
-    let tooltipContent = `${title}${desc}`;
-    props.marker._tooltip.setContent(tooltipContent);
-}
-
-function createIcon(url) {
-    return L.icon({
-        iconUrl: url,   // Path to the new icon image
-        iconSize: [32, 32], // Size of the icon
-        iconAnchor: [16, 32], // Point where the icon anchors on the map
-        popupAnchor: [0, -32], // Adjust popup position relative to icon
-        tooltipAnchor: [0, -32] // Adjust popup position relative to icon
-    });
-}
-
-function addLine(start, end) {
-    L.polyline([start, end], { color: 'red' }).addTo(map);
-}
 
 
 

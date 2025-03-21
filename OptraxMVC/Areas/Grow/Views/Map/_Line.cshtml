@@ -1,74 +1,46 @@
 ﻿@using OptraxDAL.Models.Map
 @using OptraxMVC.Models
 
-@model MapPoint
+@model MapLine
 
 @{
     FormVM formVM = ViewBag.FormVM;
     DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
-
-    int collID = 1;
 }
 
-@using (Html.BeginForm(formVM.Action, "Map", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv, data_modelname = "map" }))
+@using (Html.BeginForm(formVM.Action, "Map", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_obj = "line" }))
 {
     @Html.AntiForgeryToken()
 
     <input id="changes" type="hidden" name="Changes" />
 
     @Html.HiddenFor(m => m.ID)
-    @Html.HiddenFor(m => m.IconID, new { @class = "attr" })
-    @Html.HiddenFor(m => m.Latitude)
-    @Html.HiddenFor(m => m.Longitude)
+    @Html.HiddenFor(m => m.LineGeometry, new { @class = "attr" })
 
     <div id="edit-content" class="px-2">
-
-        <div class="d-flex w-100">
-            <div class="w-50">
+        <div class="col-12 d-flex w-100">
+            <div class="col-4">
                 @Html.LabelFor(m => m.Name)
                 @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = "point-info attr form-control" } })
                 @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
             </div>
-            <div class="w-50">
-                @Html.LabelFor(m => m.LocationID)
-                @Html.DropDownListFor(m => m.LocationID, drops.LocationSelects, "Select Location", new { htmlAttributes = new { @class = "attr form-control" } })
-                @Html.ValidationMessageFor(m => m.LocationID, "", new { @class = "val-msg" })
-            </div>
-            @* TODO: Add option to add new location *@
-        </div>
-        <label class="mb-2">Select Icon</label>
-        <div class="w-100 d-flex">
-            <div class="icon-coll-list">
-                @foreach (var coll in drops.IconsList)
-                {
-                    bool hasIcon = coll.ID == collID;
+            <div class="col-4">
+                @Html.LabelFor(m => m.Color)
+                <input type="text" id="Color" name="Color" class="hex-pick attr form-control" data-coloris value="@Model.Color" />
 
-                    <div class="icon-coll-name  @($"coll-name-{coll.ID}")  @(hasIcon ? "selected" : "")" data-collid="@coll.ID">
-                        <div class="px-3">@coll.Name</div>
-                    </div>
-                }
+                @* @Html.EditorFor(m => m.Color, new { htmlAttributes = new { @class = "hex-pick attr form-control" } }) *@
+                @Html.ValidationMessageFor(m => m.Color, "", new { @class = "val-msg" })
             </div>
-            <div class="icon-preview flex-fill">
-                @foreach (var coll in drops.IconsList)
-                {
-                    bool hasIcon = coll.ID == collID;
-
-                    <div class="preview-div d-flex flex-wrap @($"preview-coll-{coll.ID}")  @(hasIcon ? "" : "d-none")">
-                        @foreach (var icon in coll.Icons)
-                        {
-                            <div class="icon-div @(icon.ID == Model.IconID ? "selected" : "") flex-item mx-1 p-2 mb-2" data-iconid="@icon.ID">
-                                <img src="@icon.ImagePath" class="map-icon" />
-                            </div>
-                        }
-                    </div>
-                }
+            <div class="col-4">
+                @Html.LabelFor(m => m.Width)
+                @Html.EditorFor(m => m.Width, new { htmlAttributes = new { @class = "attr form-control", @step="1"} })
+                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
             </div>
         </div>
-
         <div class="w-100">
             <label>Details</label>
             <br />
-            @Html.TextAreaFor(m => m.Notes, new { @class = "point-info attr form-control w-100", @rows = "3" })
+            @Html.TextAreaFor(m => m.Notes, new { @class = "attr form-control w-100", @rows = "3" })
             @Html.ValidationMessageFor(m => m.Notes, "", new { @class = "val-msg" })
         </div>
     </div>
@@ -77,5 +49,3 @@
         <button type="submit" class="update-btn form-btn d-none">Save Changes</button>
     </div>
 }
-
-<script src="/js/forms.js"></script>
