@@ -1,5 +1,81 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using OptraxDAL.Models.Map
+@using OptraxMVC.Models
+
+@model MapPoint
+
 @{
+    FormVM formVM = ViewBag.FormVM;
+    DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
+
+    int collID = 1;
 }
+
+@using (Html.BeginForm(formVM.Action, "Map", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv, data_modelname = "map" }))
+{
+    @Html.AntiForgeryToken()
+
+    <input id="changes" type="hidden" name="Changes" />
+
+    @Html.HiddenFor(m => m.ID)
+    @Html.HiddenFor(m => m.IconID, new { @class = "attr" })
+    @Html.HiddenFor(m => m.Latitude)
+    @Html.HiddenFor(m => m.Longitude)
+
+    <div id="edit-content" class="px-2">
+
+        <div class="d-flex w-100">
+            <div class="w-50">
+                @Html.LabelFor(m => m.Name)
+                @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = "point-info attr form-control" } })
+                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
+            </div>
+            <div class="w-50">
+                @Html.LabelFor(m => m.LocationID)
+                @Html.DropDownListFor(m => m.LocationID, drops.LocationSelects, "Select Location", new { htmlAttributes = new { @class = "attr form-control" } })
+                @Html.ValidationMessageFor(m => m.LocationID, "", new { @class = "val-msg" })
+            </div>
+            @* TODO: Add option to add new location *@
+        </div>
+        <label class="mb-2">Select Icon</label>
+        <div class="w-100 d-flex">
+            <div class="icon-coll-list">
+                @foreach (var coll in drops.IconsList)
+                {
+                    bool hasIcon = coll.ID == collID;
+
+                    <div class="icon-coll-name  @($"coll-name-{coll.ID}")  @(hasIcon ? "selected" : "")" data-collid="@coll.ID">
+                        <div class="px-3">@coll.Name</div>
+                    </div>
+                }
+            </div>
+            <div class="icon-preview flex-fill">
+                @foreach (var coll in drops.IconsList)
+                {
+                    bool hasIcon = coll.ID == collID;
+
+                    <div class="preview-div d-flex flex-wrap @($"preview-coll-{coll.ID}")  @(hasIcon ? "" : "d-none")">
+                        @foreach (var icon in coll.Icons)
+                        {
+                            <div class="icon-div @(icon.ID == Model.IconID ? "selected" : "") flex-item mx-1 p-2 mb-2" data-iconid="@icon.ID">
+                                <img src="@icon.ImagePath" class="map-icon" />
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="w-100">
+            <label>Details</label>
+            <br />
+            @Html.TextAreaFor(m => m.Notes, new { @class = "point-info attr form-control w-100", @rows = "3" })
+            @Html.ValidationMessageFor(m => m.Notes, "", new { @class = "val-msg" })
+        </div>
+    </div>
+    <div class="popup-btns d-flex w-100 justify-content-center">
+        <button type="submit" class="save-btn form-btn @(formVM.IsNew ? "" : "d-none")">Save New Line</button>
+        <button type="submit" class="update-btn form-btn d-none">Save Changes</button>
+    </div>
+}
+
+<script src="/js/forms.js"></script>

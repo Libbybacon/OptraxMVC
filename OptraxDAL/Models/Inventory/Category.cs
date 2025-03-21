@@ -36,9 +36,6 @@ namespace OptraxDAL.Models.Inventory
         [NotMapped]
         public List<TagVM>? ParentTags { get; set; }
 
-        [NotMapped]
-        public string? Changes { get; set; }
-
         public bool IsTop()
         {
             return ID > 0 && ParentID == null;

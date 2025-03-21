@@ -16,7 +16,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
         private readonly IDropdownService _IDropdowns = dropdownService;
 
         [HttpGet]
-        public async Task<IActionResult> GetPoints()
+        public async Task<JsonResult> GetPointsAsync()
         {
             try
             {
@@ -43,7 +43,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreatePointAsync(MapPoint point)
+        public async Task<JsonResult> CreatePointAsync(MapPoint point)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPointAsync(MapPoint point)
+        public async Task<JsonResult> EditPointAsync(MapPoint point)
         {
             try
             {
@@ -107,7 +107,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddLine(string? lineString)
+        public IActionResult AddLine(string? lineString)
         {
             if (string.IsNullOrEmpty(lineString))
             {
@@ -121,7 +121,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateLineAsync(MapLine line)
+        public async Task<JsonResult> CreateLineAsync(MapLine line)
         {
             try
             {
@@ -167,7 +167,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditLineAsync(MapLine line)
+        public async Task<JsonResult> EditLineAsync(MapLine line)
         {
             try
             {

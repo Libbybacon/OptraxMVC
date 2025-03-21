@@ -66,9 +66,6 @@ namespace OptraxDAL.Models.Inventory
             Consumable,
         }
 
-        [NotMapped]
-        public string? Changes { get; set; }
-
         public ResourceVM ToResourceVM(Category cat0, Category cat1)
         {
             ResourceVM rsrcVM = new()

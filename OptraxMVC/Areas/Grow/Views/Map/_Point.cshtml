@@ -10,7 +10,7 @@
     int collID = 1;
 }
 
-@using (Html.BeginForm(formVM.Action, "Map", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv, data_modelname = "point" }))
+@using (Html.BeginForm(formVM.Action, "Map", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv, data_modelname = "map" }))
 {
     @Html.AntiForgeryToken()
 
@@ -70,4 +70,4 @@
     </div>
 }
 
-<script src="/js/forms.js"></script>
+<script type="module" src="/js/map/mapObjectEdit.js"></script>

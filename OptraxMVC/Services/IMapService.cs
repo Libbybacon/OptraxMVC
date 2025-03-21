@@ -14,7 +14,7 @@ namespace OptraxMVC.Services
         Task<ResponseVM> EditPointAsync(MapPoint point);
 
         Task<ResponseVM> GetLinesAsync();
-        Task<MapLine> LoadNewLineAsync(string lineString);
+        MapLine LoadNewLine(string lineString);
         Task<ResponseVM> CreateLineAsync(MapLine line);
         Task<MapLine?> LoadEditLineAsync(int lineID);
         Task<ResponseVM> EditLineAsync(MapLine line);
@@ -169,13 +169,13 @@ namespace OptraxMVC.Services
             }
         }
 
-        public MapLine LoadNewLineAsync(string lineString)
+        public MapLine LoadNewLine(string lineString)
         {
             MapLine line = new()
             {
                 LineString = lineString,
             };
-            return new MapLine() { };
+            return line;
         }
 
         public async Task<ResponseVM> CreateLineAsync(MapLine point)
