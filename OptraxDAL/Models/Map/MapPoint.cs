@@ -9,14 +9,15 @@ namespace OptraxDAL.Models.Map
     {
         public MapPoint() { }
 
-        public MapPoint(decimal lat, decimal lng, decimal elev = 0)
+        public MapPoint(decimal lat, decimal lng, string name)
         {
+            Name = name;
             Latitude = lat;
             Longitude = lng;
-            Elevation = elev;
         }
 
         public int IconID { get; set; } = 1;
+        public int IconCollectionID { get; set; } = 1;
         public int? LocationID { get; set; }
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }

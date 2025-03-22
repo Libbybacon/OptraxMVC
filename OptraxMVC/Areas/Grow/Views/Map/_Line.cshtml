@@ -15,32 +15,46 @@
     <input id="changes" type="hidden" name="Changes" />
 
     @Html.HiddenFor(m => m.ID)
-    @Html.HiddenFor(m => m.LineGeometry, new { @class = "attr" })
+    @Html.HiddenFor(m => m.LineGeometryWKT)
 
     <div id="edit-content" class="px-2">
-        <div class="col-12 d-flex w-100">
-            <div class="col-4">
+        <div class="col-12 d-flex w-100 pe-1">
+            <div class="col-6">
                 @Html.LabelFor(m => m.Name)
-                @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = "point-info attr form-control" } })
+                @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = "form-control attr" } })
                 @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
             </div>
-            <div class="col-4">
+            <div class="col-6 ps-1">
                 @Html.LabelFor(m => m.Color)
-                <input type="text" id="Color" name="Color" class="hex-pick attr form-control" data-coloris value="@Model.Color" />
-
-                @* @Html.EditorFor(m => m.Color, new { htmlAttributes = new { @class = "hex-pick attr form-control" } }) *@
+                <input type="text" id="Color" name="Color" class="hex-pick form-control attr" data-coloris value="@Model.Color" />
                 @Html.ValidationMessageFor(m => m.Color, "", new { @class = "val-msg" })
             </div>
-            <div class="col-4">
+
+        </div>
+        <div class="col-12 d-flex w-100">
+            <div class="col-4 pe-1">
                 @Html.LabelFor(m => m.Width)
-                @Html.EditorFor(m => m.Width, new { htmlAttributes = new { @class = "attr form-control", @step="1"} })
+                @Html.EditorFor(m => m.Width, new { htmlAttributes = new { @class = "form-control attr", @step = "1" } })
                 @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
+            </div>
+            <div class="col-4 px-1">
+                @Html.LabelFor(m => m.Pattern)
+                <select id="Pattern" name="Pattern" class="form-select attr">
+                    <option value="dash" @(Model.Pattern == "dash" ? "selected" : "")>Dash</option>
+                    <option value="solid" @(Model.Pattern == "solid" ? "selected" : "")>Solid</option>
+                </select>
+                @Html.ValidationMessageFor(m => m.Pattern, "", new { @class = "val-msg" })
+            </div>
+            <div class="col-4 ps-1">
+                @Html.LabelFor(m => m.DashArray)
+                @Html.EditorFor(m => m.DashArray, new { htmlAttributes = new { @class = "form-control attr" } })
+                @Html.ValidationMessageFor(m => m.DashArray, "", new { @class = "val-msg" })
             </div>
         </div>
         <div class="w-100">
             <label>Details</label>
             <br />
-            @Html.TextAreaFor(m => m.Notes, new { @class = "attr form-control w-100", @rows = "3" })
+            @Html.TextAreaFor(m => m.Notes, new { @class = "form-control attr w-100", @rows = "3" })
             @Html.ValidationMessageFor(m => m.Notes, "", new { @class = "val-msg" })
         </div>
     </div>

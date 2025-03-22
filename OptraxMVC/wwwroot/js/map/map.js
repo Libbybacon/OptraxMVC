@@ -1,20 +1,19 @@
-﻿import { pointUtil, lineUtil, polyUtil, drawUtil, iconUtil, curObject } from './mapUtility.js';
+﻿import * as util from './mapUtility.js';
 
 export var map;
-//export const curObject = { val: null };
 
-var pointsLayer
-var linesLayer
-var polysLayer
+var pointsLayer;
+var linesLayer;
+var polysLayer;
+var circlesLayer;
 
+
+export const layerIndex = new Map();
 
 
 $(document).ready(function () {
 
     initializeMap();
-    initializeLayers();
-    createControls();
-    loadFeatures();
 
     $(window).on('resize', function () {
         setMapHeight();
@@ -32,6 +31,9 @@ function initializeMap() {
         event.originalEvent.stopPropagation(); // Stop the event from affecting the page
     });
     setMapHeight();
+    initializeLayers();
+    createControls();
+    loadFeatures();
 }
 
 function setMapHeight() {
@@ -50,7 +52,7 @@ async function loadFeatures() {
     //    await this.loadLines();
     //    await this.loadPolygons();
     //}, 30000);
-    await pointUtil.loadPoints(pointsLayer);
+    await util.loadObjects(pointsLayer, 'point');
     //await lineUtil.loadLines(linesLayer);
 }
 
@@ -63,130 +65,101 @@ function initializeLayers() {
     pointsLayer = L.geoJSON(null, {
 
         pointToLayer: function (feature, latlng) {
+            const props = feature.properties;           
 
-            let props = feature.properties;
-            let icon = iconUtil.createIcon(props.iconPath);
-            var marker = L.marker(latlng, { icon: icon }).bindTooltip(props.name, { permanent: true, direction: "top" });
+            const icon = util.iconUtil.createIcon(props.iconPath);
+            const marker = L.marker(latlng, { icon: icon }).bindTooltip(props.name, { permanent: true, direction: "top" });
 
             marker.on('click', function () {
-                pointUtil.editPoint(props.id, props.name, marker);
+                util.curLayer.val = marker;
+                util.onEdit(props.id, 'point', props.name);
             })
+
+            layerIndex.set(props.id, marker);
+
             return marker;
         }
     }).addTo(map);
 
     linesLayer = L.geoJSON(null, {
         style: function (feature) {
-            return { color: feature.properties.color || "blue", weight: 3 };
+            return feature.properties.style;
+        },
+        onEachFeature: (feature, layer) => {
+            const props = feature.properties;
+
+            layerIndex.set(props.id, layer);
+            layer.bindTooltip(props.name, { permanent: true, direction: "top" });
+
+            layer.on('click', function () {
+                util.curLayer.val = layer;
+                util.onEdit(props.id, 'line', props.name);
+            })
+        }
+    }).addTo(map);
+
+    circlesLayer = L.geoJSON(null, {
+        pointToLayer: function (feature, latlng) {
+            if (feature.properties?.style?.radius) {
+                return L.circle(latlng, feature.properties.style);
+            }
+            return L.marker(latlng); // fallback if needed
+        },
+        onEachFeature: function (feature, layer) {
+            const props = feature.properties;
+
+            layer.bindTooltip(props.name, { permanent: true, direction: "top" });
+
+            layerIndex.set(props.id ?? -1, layer);
+
+            layer.on('click', function () {
+                util.curLayer.val = layer;
+                util.onEdit(props.id ?? -1, 'circle', props.name);
+            });
         }
     }).addTo(map);
 
     polysLayer = L.geoJSON(null, {
         style: function (feature) {
-            return { color: feature.properties.color || "green", fillOpacity: 0.5 };
+            return feature.properties.style;
+        },
+        onEachFeature: (feature, layer) => {
+            const props = feature.properties;
+
+            layerIndex.set(props.id, layer);
+            layer.bindTooltip(props.name, { permanent: true, direction: "top" });
+
+            layer.on('click', function () {
+                util.curLayer.val = layer;
+                util.onEdit(props.id, 'polygon', props.name);
+            })
         }
     }).addTo(map);
 }
 
 function createControls() {
+    L.Marker.prototype.options.icon = util.iconUtil.createIcon('https://img.icons8.com/?size=100&id=43731&format=png&color=263EDE')
 
-    let addObjControl = new L.Control.AddMapObject(); // AddMapObject Control
-    map.addControl(addObjControl);
-}
+    var drawControl = new L.Control.Draw({
+        draw: {
+            polyline: true, // enable polyline drawing
+            polygon: true,
+            rectangle: true,
+            circle: true,
+            marker: true,
+            circlemarker: false
+        }
+    });
+    map.addControl(drawControl);
 
-L.Control.AddMapObject = L.Control.extend({
-    options: {
-        position: 'topright'
-    },
-
-    onAdd: function (map) {
-        let container = L.DomUtil.create('div', 'leaflet-control-map-object');
-
-        let btn = L.DomUtil.create('button', 'form-btn add-map-obj', container);
-        btn.innerHTML = 'Add Map Object';
-
-        L.DomEvent.disableClickPropagation(container);
-
-        btn.onclick = function () {
-            drawUtil.toggleDrawingMode();
+    map.on('draw:created', function (e) {
+        const layersetMap = {
+            marker: pointsLayer,
+            polyline: linesLayer,
+            circle: circlesLayer
         };
-        return container;
-    }
-});
+        let layerset = layersetMap[e.type] ?? polysLayer;
+        util.drawUtil.addObject(e, layerset);
 
-
-
-
-
-
-//function toggleDrawingMode() {
-//    isDrawing = !isDrawing;
-
-//    if (isDrawing) {
-//        map.doubleClickZoom.disable();
-//        map.getContainer().style.cursor = 'crosshair';
-//        map.on('click', addLinePoint);
-//        map.on('mousemove', updatePreview);
-//        map.on('dblclick', finalizeLine);
-//        $('.add-map-obj').addClass('bg-grn-dk');
-//    } else {
-//        map.getContainer().style.cursor = '';
-//        map.off('click', addLinePoint);
-//        map.off('mousemove', updatePreview);
-//        map.off('dblclick', finalizeLine);
-//        map.doubleClickZoom.enable();
-//        $('.add-map-obj').removeClass('bg-grn-dk');
-//        resetDrawing();
-//    }
-//}
-
-//function addLinePoint(event) {
-//    let point = event.latlng;
-
-//    if (lineGeom.length === 0) {
-//        lineGeom.push(point);
-//        currentLine = L.polyline([point], { color: 'blue', dashArray: '5, 5' }).addTo(map);
-//    } else {
-//        lineGeom.push(point);
-//        currentLine.setLatLngs(lineGeom);
-//    }
-//}
-
-//function updatePreview(event) {
-//    if (!currentLine || lineGeom.length === 0) return;
-
-
-//    let previewPoints = [...lineGeom, event.latlng]; // Add temporary last point for preview
-//    currentLine.setLatLngs(previewPoints);
-//}
-
-//function finalizeLine() {
-//    if (lineGeom.length < 2) return;
-
-//    console.log("Final Line Coordinates:", lineGeom.map(p => [p.lng, p.lat]));
-
-//    //$("#LineString").value = JSON.stringify(lineGeom.map(p => [p.lng, p.lat]));
-//    $("#LineString").value = JSON.stringify(lineGeom.map(p => [p.lng, p.lat]));
-
-//    let props = {
-//        type: 'GET',
-//        url: `/Grow/Map/AddLine/`,
-//        title: "New Line",
-//        data: { lineString: JSON.stringify(lineGeom.map(p => [p.lng, p.lat])) },
-//        isDialog: true
-//    }
-//    loadPopup(props);
-//    //resetDrawing();
-//}
-
-//function resetDrawing() {
-//    if (currentLine) {
-//        map.removeLayer(currentLine);
-//        currentLine = null;
-//    }
-//    lineGeom = [];
-//}
-
-
-
-
+    });
+}

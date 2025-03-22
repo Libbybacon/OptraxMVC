@@ -8,15 +8,15 @@ namespace OptraxDAL.Models.Map
     public class MapPolygon : MapObject
     {
         public MapPolygon() { }
-
-        public int BorderWidth { get; set; } = 1;
         public int? LocationID { get; set; }
 
-        [MaxLength(9)]
-        public string BorderColor { get; set; } = "#000000";
+        public int BorderWidth { get; set; } = 1;
 
         [MaxLength(9)]
-        public string FillColor { get; set; } = "#000000";
+        public string BorderColor { get; set; } = "#1d52d7";
+
+        [MaxLength(9)]
+        public string FillColor { get; set; } = "#1d52d782";
 
         [MaxLength(15)]
         public string Pattern { get; set; } = "solid";
@@ -24,6 +24,7 @@ namespace OptraxDAL.Models.Map
         public Polygon PolyGeometry { get; set; } = default!;
         public virtual Admin.Location? Location { get; set; }
 
-        public virtual ICollection<MapObjectPoint> PolyPoints { get; set; } = [];
+        [NotMapped]
+        public string? PolyGeometryWKT { get; set; }
     }
 }

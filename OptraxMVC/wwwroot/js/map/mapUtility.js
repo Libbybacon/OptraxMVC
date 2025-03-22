@@ -1,225 +1,248 @@
 ﻿import apiService from '../utilities/api.js';
-import { map } from './map.js';
+import { map, layerIndex } from './map.js';
 
-export var curObject;
+export var curLayer = { val: {} };
 
 const module = { path: '/js/map/mapObjects.js', method: 'init' };
 const urlBase = '/Grow/Map/';
-let props = {
+const typeMap = {
+    marker: 'Point',
+    polyline: 'Line',
+    circle: 'Circle'
+};
+
+const viewProps = {
     type: 'GET',
     isDialog: true,
     mod: module
 }
 
-let isDrawing = false;
-var isLongPress = false;
-let anchorPoint = null;
-let previewLine = null;
-let holdTimeout = null;
-
-export const pointUtil = {
-    loadPoints: async function (pointsLayer) {
-
-        try {
-            const response = await apiService.get('/Grow/Map/GetPoints');
-
-            if (response.success === false) {
-                throw new Error(response.error || "Failed to load points");
-            }
-
-            pointsLayer.addData(response.data);
-        }
-        catch (error) {
-            console.error("Error loading points:", error);
-        }
+const layerProps = {
+    id: -1,
+    style: {
+        weight: 3,
+        dashArray: '5 5',
+        color: '#1d52d7',
+        fillColor: '#1d52d782',
     },
-    createPoint: function (latlng) {
+    iconPath: 'https://img.icons8.com/?size=100&id=43731&format=png&color=263EDE'
+};
 
-        let newIcon = iconUtil.createIcon('https://img.icons8.com/?size=100&id=43731&format=png&color=263EDE');
+export async function loadObjects(mapLayer, layerType) {
+    try {
+        const response = await apiService.get('/Grow/Map/GetObjects', { objType: layerType });
 
-        curObject = L.marker(latlng).addTo(map).setIcon(newIcon).bindTooltip("New Point", { permanent: true, direction: "top" }).openTooltip();
+        if (response.success === false) { throw new Error(response.error || "Failed to load points"); }
 
-        props['title'] = 'New Point'
-        props['data'] = { lat: latlng.lat, lng: latlng.lng };
-        props['url'] = urlBase + 'AddPoint/'
-
-        window.loadPopup(props);
-
-        window.addEventListener("removeNewIcon", this.removeIcon);
-        window.dispatchEvent(new Event("removeNewIcon"));
-    },
-    createSuccess: function (response) {
-
-        window.closePopup();
-    },
-    removeIcon: function () {
-        $(document).on('click', '.ui-draggable .popup-close', function () {
-            curObject.removeFrom(map);
-            window.removeEventListener("removeNewIcon", this.removeIcon);
-        });
-    },
-    editPoint: function (id, name, marker) {
-
-        curObject = marker;
-
-        props['title'] = name;
-        props['data'] = { pointID: id };
-        props['url'] = urlBase + 'EditPoint/'
-
-        window.loadPopup(props);
-    },
-    editSuccess: function (response) {
-        window.closePopup();
+        mapLayer.addData(response.data);
+    }
+    catch (error) {
+        console.error("Error loading points:", error);
     }
 }
 
-export const lineUtil = {
-    loadLines: function () {
-        console.log("Loading lines...");
-    },
-    createLine: function (lineString) {
-        props['title'] = 'New Line'
-        props['data'] = { lineString: lineString };
-        props['url'] = urlBase + 'AddLine/'
+//TODO: center object on map, open edit dialog above
+export function onCreate(response) {
+    window.closePopup();
 
-        window.loadPopup(props);
+    let newID = response.data.id;
+    let layer = layerIndex.get(-1);
+
+    if (!layer) return;
+
+    if (layer.feature && layer.feature.properties) {
+        layer.feature.properties.id = newID; // Update layer w db id
+    }
+
+    layerIndex.set(newID, layer);// Update layerIndex
+    layerIndex.delete(-1);
+}
+
+export function onEdit(id, layerType, name) {
+    viewProps['title'] = name;
+    viewProps['data'] = { id: id, objType: layerType };
+    viewProps['url'] = urlBase + `LoadEdit/`
+
+    window.loadPopup(viewProps).then(() => {
+        drawUtil.restoreStyle();
+    });
+}
+
+export async function onDelete(id, type) {
+    const response = await apiService.post(`${urlBase}DeleteObject/`, { id: id, objType: type })
+
+    let layer = layerIndex.get(id);
+
+    if (!layer) return;
+
+    if (type == 'point') {
+        pointsLayer
+    }
+    if (layer.feature && layer.feature.properties) {
+        layer.feature.properties.id = newID; // Update layer w db id
+    }
+
+    layerIndex.set(newID, layer);// Update layerIndex
+    layerIndex.delete(-1);
+}
+
+
+export const iconUtil = {
+    createIcon: function (url) {
+        return L.icon({
+            iconUrl: url,
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32],
+            tooltipAnchor: [0, -32]
+        });
     },
-    createLineSuccess: function (response) {
-        //if (previewLine) {
-        //    map.removeLayer(previewLine); // Remove preview line
-        //    previewLine = null;
-        //}
-        window.closePopup();
+    updateIcon: function (props) {
+        if (props.iconURL && props.iconURL.length > 0) {
+            let newIcon = iconUtil.createIcon(props.iconURL);
+            props.marker.setIcon(newIcon);
+        }
+
+        let tooltipContent = (props.title != undefined) ? `<b>${props.title}</b>` : "";
+        props.marker._tooltip.setContent(tooltipContent);
     },
     removeIcon: function () {
         $(document).on('click', '.ui-draggable .popup-close', function () {
-            curObject.removeFrom(map);
-            window.removeEventListener("removeNewLine", this.removeLine);
+            let layer = layerIndex.get(-1);
+            console.log('remove icon layer', layer);
+            if (!layer) return;
+
+            map.removeLayer(layer);
+            layerIndex.delete(-1);
+            curLayer.val.removeFrom(map);
+            window.removeEventListener("removeIcon", iconUtil.removeIcon);
         });
     },
-    editLine: function (id, name) {
-        props['title'] = name
-        props['data'] = { lineString: lineString };
-        props['url'] = urlBase + 'EditLine/'
+}
 
-        window.loadPopup(props);
+
+export const lineUtil = {
+
+    editLine: function (id, name) {
+        viewProps['title'] = name
+        viewProps['data'] = { lineID: id };
+        viewProps['url'] = urlBase + 'EditLine/'
+
+        const latlngs = e.layer.getLatLngs();
+
+        const coordString = latlngs.map(p => `${p.lng} ${p.lat}`).join(', ');
+        const wkt = `LINESTRING(${coordString})`;
+
+        window.loadPopup(viewProps).then(() => {
+
+            doNextThing();
+        });
     },
     editLineSuccess: function (response) {
         console.log('response', response);
         window.closePopup();
     },
     updateDisplay: function (input, val) {
+        let layer = curLayer.val;
         switch (input) {
             case 'color':
-                curObject.setStyle({ color: val });
+                layer.setStyle({ color: val });
                 break;
             case 'width':
-                curObject.setStyle({ weight: val });
+                layer.setStyle({ weight: val });
                 break;
             case 'name':
-                curObject._tooltip.setContent(`<b>${val}</b>`);
+                layer._tooltip.setContent(`<b>${val}</b>`);
+                break;
+            case 'dashArray':
+                layer.setStyle({ dashArray: val });
+                break;
+            default:
+                break;
         }
     }
 }
 
-export const polyUtil = {
-    loadPolygons: function () {
-        console.log("Loading polygons...");
-    }
-}
 
 export const drawUtil = {
-    toggleDrawingMode: function () {
-        isDrawing = !isDrawing;
+    addObject: function (e, layerSet) {
+        var l = e.layer;
+        let geojson = l.toGeoJSON();
 
-        if (isDrawing) {
-            map.doubleClickZoom.disable();
-            map.getContainer().style.cursor = 'crosshair';
-            map.on('mousedown', drawUtil.handleMouseDown);
-            map.on('mouseup', drawUtil.handleMouseUp);
-            map.on('dblclick', drawUtil.startLine);
-            $('.add-map-obj').addClass('bg-grn-dk');
-        }
-        else {
-            map.getContainer().style.cursor = '';
-            map.off('mousedown', drawUtil.handleMouseDown);
-            map.off('mouseup', drawUtil.handleMouseUp);
-            map.off('dblclick', drawUtil.startLine);
-            map.doubleClickZoom.enable();
-            $('.add-map-obj').removeClass('bg-grn-dk');
-        }
-    },
-    handleMouseDown: function (event) {
-        isLongPress = false;
+        let type = typeMap[e.layerType] ?? 'Polygon';
 
-        holdTimeout = setTimeout(() => {
-            isLongPress = true;
-            pointUtil.createPoint(event.latlng);
-            toggleDrawingMode();
-        }, 500);
-    },
+        viewProps['title'] = `New ${type}`;
+        viewProps['url'] = urlBase + `AddNewObject/`;
+        viewProps['data'] = { objType: type.toLowerCase() };
+        layerProps["name"] = viewProps['title'];
 
-    handleMouseUp: function () {
-        clearTimeout(holdTimeout);
-    },
-
-    startLine: function (event) {
-
-        if (anchorPoint) {
-            return; // Ignore if already drawing line
+        geojson.properties = layerProps.style;
+        if (layerSet = circlesLayer) {
+            geojson.properties.center = [l.getLatLng().lng, l.getLatLng().lat];
+            geojson.properties.radius = l.getRadius(); // in meters
         }
 
-        anchorPoint = event.latlng;
+        console.log('')
+        layerSet.addData(geojson);
 
-        previewLine = L.polyline([anchorPoint, anchorPoint], { color: 'blue', dashArray: '5, 5' }).bindTooltip("New Line", { permanent: true, direction: "top" }).openTooltip().addTo(map); // Temp line that follows the mouse
+        curLayer.val = l;
+        curLayer.val = drawUtil.getLastLayer(layerSet);
 
-        map.on('mousemove', drawUtil.updatePreviewLine);
-        map.once('click', drawUtil.finalizeLine); // Finalize line on second click
-    },
+        layerIndex.set(-1, curLayer.val);
 
-    updatePreviewLine: function (event) {
-        if (!previewLine) return;
-        previewLine.setLatLngs([anchorPoint, event.latlng]);// Update preview line as mouse moves
-    },
-
-    finalizeLine: function (event) {
-
-        if (!anchorPoint) return;
-        map.off('mousemove', drawUtil.updatePreviewLine);
-
-        let endPoint = event.latlng;
-        curObject = previewLine;
-
-        lineUtil.createLine(anchorPoint, endPoint);
-        anchorPoint = null;
-    },
-
-    addLine: function (start, end) {
-        L.polyline([start, end], { color: 'red' }).addTo(map);
-    }
-}
-
-export const iconUtil = {
-    updateMarker: function (props) {
-        console.log('updateMarker props', props)
-        if (props.iconURL && props.iconURL.length > 0) {
-            let newIcon = iconUtil.createIcon(props.iconURL);
-            props.marker.setIcon(newIcon);
+        if (curLayer.val) {
+            curLayer.val.bindTooltip(layerProps.name, {
+                permanent: true,
+                direction: 'top'
+            })
         }
 
-        let title = (props.title != undefined) ? `<b>${props.title}</b>` : "";
-        let desc = (props.desc != undefined) ? `<br>${props.desc}` : "";
+        window.loadPopup(viewProps).then(() => {
+            drawUtil.restoreStyle();
+        });
 
-        let tooltipContent = `${title}${desc}`;
-        props.marker._tooltip.setContent(tooltipContent);
+        if (e.type == 'point') {
+            window.addEventListener("removeIcon", iconUtil.removeIcon);
+            window.dispatchEvent(new Event("removeIcon"));
+        }
     },
-    createIcon: function (url) {
-        return L.icon({
-            iconUrl: url,   // Path to the new icon image
-            iconSize: [32, 32], // Size of the icon
-            iconAnchor: [16, 32], // Point where the icon anchors on the map
-            popupAnchor: [0, -32], // Adjust popup position relative to icon
-            tooltipAnchor: [0, -32] // Adjust popup position relative to icon
+    getLastLayer: function (layerSet) {
+        let layers = layerSet.getLayers();
+        return layers[layers.length - 1];
+    },
+    restoreStyle: function () {
+        let layer = curLayer.val;
+        let tooltip = layer.getTooltip();
+        layer._origStyle = {
+            icon: layer instanceof L.Marker ? layer.getIcon() : null,
+            style: layer.setStyle ? { ...layer.options } : null,
+            content: tooltip.getContent()
+        };
+
+        window.addEventListener("onCloseEdit", drawUtil.onCloseEdit);
+        window.dispatchEvent(new Event("onCloseEdit"));
+    },
+    onCloseEdit: function () {
+        $(document).on('click', '.ui-draggable .popup-close', function () {
+            let l = curLayer.val;
+            let origStyle = l._origStyle
+            let tooltip = l.getTooltip();
+
+            if (l instanceof L.Marker && origStyle.icon) {
+                l.setIcon(origStyle.icon);
+                l._tooltip.setContent()
+            }
+            else if (l.setStyle && origStyle.style) {
+                l.setStyle(origStyle.style);
+            }
+            if (tooltip) {
+                tooltip.setContent(origStyle.content);
+            }
+            delete l._originalStyle;
+
+            window.removeEventListener("onCloseEdit", drawUtil.onCloseEdit);
         });
     }
+
 }
+

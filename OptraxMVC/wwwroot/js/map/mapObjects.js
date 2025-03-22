@@ -1,5 +1,5 @@
 ﻿import { formUtil } from '../utilities/form.js';
-import { curObject, iconUtil, lineUtil } from './mapUtility.js';
+import { curLayer, onCreate, onDelete, iconUtil, lineUtil } from './mapUtility.js';
 
 
 export function init() {
@@ -9,12 +9,12 @@ export function init() {
 
 function setFormListeners() {
     $('.icon-coll-name').on('click', function () {
-        onSelectIconCollection(); // change icon collection display
+        onSelectIconCollection($(this)); // change icon collection display
     });
     
     $('.point-info').on('input', function () {
-        let props = { marker: curObject, title: $('#Name').val(), desc: $('#Notes').val() }// Change point's tooltip content
-        iconUtil.updateMarker(props);
+        let props = { marker: curLayer.val, title: $('#Name').val(), desc: $('#Notes').val() }// Change point's tooltip content
+        iconUtil.updateIcon(props);
     });
    
     $('.icon-div').on('click', function () {
@@ -29,33 +29,47 @@ function setFormListeners() {
     $('#clr-picker input').on('change', function () {
         lineUtil.updateDisplay('color', $('#Color').val());
     })
-    $('#clr-picker button').on('click', function () {
-        console.log('btn color', $(this).val() )
-        lineUtil.updateDisplay('color', $(this).val());
+    $('#clr-color-area').on('click', function () {
+        var color = $(this).find('#clr-color-marker').css('color')
+        lineUtil.updateDisplay('color', color);
     })
-    //$('#clr-color-area').on('click', function () {
-    //    lineUtil.updateDisplay('color', $('#Color').val());
-    //})
-    //$('#clr-alpha-slider').on('change', function () {
-    //    console.log('color', $('#Color').val());
-    //    lineUtil.updateDisplay('color', $('#Color').val());
-    //});
-    //$('#clr-color-value').on('change', function () {
-    //    console.log('color', $('#Color').val());
-    //    lineUtil.updateDisplay('color', $('#Color').val());
-    //})
-    $('#Color').on('change', function () {
-        lineUtil.updateDisplay('color', $(this).val());
+    $('#clr-swatches').on('click', function () {
+
+        setTimeout(() => {
+            var color = $('#clr-color-marker').css('color')
+            lineUtil.updateDisplay('color', color);
+        }, 50);
+
+    });
+    $('#Pattern').on('change', function () {
+        var pattern = $(this).val();
+        if (pattern == 'solid') {
+            $('#DashArray').val(null).change();
+            $('#DashArray').attr('readonly', 'readonly');
+        }
+        else {
+            $('#DashArray').val('5 5').change();
+            $('#DashArray').removeAttr('readonly');
+        }
+        setTimeout(() => {
+            lineUtil.updateDisplay('dashArray', $('#DashArray').val());
+        }, 50);
     })
+    $('#DashArray').on('input', function () {
+        lineUtil.updateDisplay('dashArray', $(this).val())
+    });
     $('#Width').on('change', function () {
-        console.log('change width', $(this).val());
         lineUtil.updateDisplay('width', $(this).val())
     });
     $('#Name').on('input', function () {
-        console.log('change Name');
-        lineUtil.updateDisplay('name', $('#Notes').val());
+        lineUtil.updateDisplay('name', $('#Name').val());
     });
 
+    $('.delete-btn').on('click', function(){
+        let id = $(this).data('id');
+        let type = $(this).data('type')
+        onDelete(id, type);
+    })
 }
 
 function onSelectIcon($icon) {
@@ -65,13 +79,13 @@ function onSelectIcon($icon) {
     $icon.addClass('selected');
 
     let imgURL = $icon.find('img').attr('src');
-    let props = { iconURL: imgURL, marker: curObject, title: $('#Name').val(), desc: $('#Notes').val() }
+    let props = { iconURL: imgURL, marker: curLayer.val, title: $('#Name').val(), desc: $('#Notes').val() }
 
-    iconUtil.updateMarker(props);
+    iconUtil.updateIcon(props);
 }
 
-function onSelectIconCollection() {
-    let collID = $(this).data('collid')
+function onSelectIconCollection($coll) {
+    let collID = $coll.data('collid')
 
     $('.icon-coll-name').removeClass('selected');
     $(`.coll-name-${collID}`).addClass('selected');
@@ -85,12 +99,11 @@ async function onSubmitForm($form) {
     let response = await formUtil.submitForm();
 
     if (response.success) {
-        window.closePopup();
+
+        onCreate(response);
 
         let objType = $form.data('obj');
-        console.log($form)
         let action = $form.attr('action').includes('Create') ? 'Created' : 'Updated';
-
         window.showMessage({ msg: `${objType} ${action}!`, css: 'success', msgdiv: $('.map-msg') });
     }
     else {

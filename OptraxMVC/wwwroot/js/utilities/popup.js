@@ -48,7 +48,6 @@ const popupHandler = {
                 window.addEventListener("resizeHeight", popupHandler.setPopupHeight);
                 $("#overlay").show();
             }
-            console.log('props', props)
             if (props.mod) {
                 popupHandler.loadModule(props.mod);
             }

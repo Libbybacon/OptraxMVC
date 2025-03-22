@@ -13,12 +13,7 @@
     --grn-md: #378874;
     --grn-dk: #195C4B;
     --grn-xdk: #124034;
-    --tan-lt: #E3E0DC;
-    --tan-md: #AFA49B;
-    --tan-dk: #8F8073;
-    --purp-lt: #C399F5;
-    --purp-md: #AB71F2;
-    --purp-dk: #8C52D2;
+    --red: #B60D0D;
     --gray-xlt: #F8F8F8;
     --gray-lt: #F5F5F5;
     --gray-md: #E0E0E0;
@@ -75,9 +70,10 @@
     }
 }
 
-#clr-picker{
+#clr-picker {
     z-index: 2002
 }
+
 .text-tan {
     color: var(--tan-dk);
 }
@@ -278,17 +274,29 @@ button {
     font-weight: 500;
     letter-spacing: .5px;
     white-space: nowrap;
-    padding: .3rem 1.5rem .25rem 1.5rem;
+    padding: .25rem 1.5rem .25rem 1.5rem;
     font-size: var(--f-md) !important;
     box-shadow: var(--box-shdw-sm);
 }
 
+.delete-btn {
+    color: var(--red);
+    border: 1px solid var(--red);
+    background-color: white;
+}
+
+    .delete-btn:hover {
+        color: white;
+        border: 1px solid var(--red);
+        background-color: var(--red);
+        box-shadow: var(--box-shdw-hov);
+    }
 
 .save-btn,
 .update-btn,
 .edit-btn {
     color: var(--grn-dk);
-    border: 1px solid var(--grn-dk);
+    border: 1px solid var(--grn-xdk);
     background-color: white;
 }
 
@@ -296,7 +304,7 @@ button {
     .update-btn:hover,
     .edit-btn:hover {
         color: white;
-        background: var(--grn-md);
+        background: var(--grn-xdk);
         box-shadow: var(--box-shdw-hov);
     }
 
@@ -334,7 +342,8 @@ button {
     }
 /* Inputs */
 
-.attr.form-control {
+.attr.form-control,
+.attr.form-select {
     font-size: var(--f-xs) !important;
 }
 

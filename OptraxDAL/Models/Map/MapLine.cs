@@ -7,21 +7,26 @@ namespace OptraxDAL.Models.Map
     [Table("Lines", Schema = "Map")]
     public class MapLine : MapObject
     {
-        public MapLine() { }
+        public MapLine()
+        {
+            Name = "New Line";
+        }
 
-        public int Width { get; set; } = 1;
+        public int Width { get; set; } = 3;
 
         [MaxLength(9)]
-        public string Color { get; set; } = "#000000";
+        public string Color { get; set; } = "#1d52d7";
 
         [MaxLength(20)]
-        public string Pattern { get; set; } = "solid";
+        public string Pattern { get; set; } = "dash";
 
-        public LineString LineGeometry { get; set; } = default!;
+        [MaxLength(5)]
+        [Display(Name = "Dash Spacing")]
+        public string? DashArray { get; set; } = "5 5";
 
-        public virtual ICollection<MapObjectPoint> LinePoints { get; set; } = [];
+        public LineString? LineGeometry { get; set; }
 
         [NotMapped]
-        public string LineString { get; set; } = string.Empty;
+        public string LineGeometryWKT { get; set; } = string.Empty;
     }
 }

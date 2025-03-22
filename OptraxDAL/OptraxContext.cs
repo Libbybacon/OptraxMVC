@@ -84,9 +84,9 @@ namespace OptraxDAL
 
         #region Map
         public DbSet<MapObject> MapObjects { get; set; }
-        public DbSet<MapObjectPoint> MapObjectPoints { get; set; }
         public DbSet<MapPoint> MapPoints { get; set; }
         public DbSet<MapLine> MapLines { get; set; }
+        public DbSet<MapCircle> MapCircles { get; set; }
         public DbSet<MapPolygon> MapPolygons { get; set; }
         #endregion
 
@@ -147,16 +147,16 @@ namespace OptraxDAL
             builder.Entity<Location>().Property(x => x.Active).HasDefaultValue(true);
 
             builder.Entity<Location>().HasDiscriminator<string>("LocationType")
-                                               .HasValue<SiteLocation>("Site")
-                                               .HasValue<FieldLocation>("Field")
-                                               .HasValue<RowLocation>("Row")
-                                               .HasValue<BedLocation>("Bed")
-                                               .HasValue<PlotLocation>("Plot")
-                                               .HasValue<GreenhouseLocation>("Greenhouse")
-                                               .HasValue<BuildingLocation>("Building")
-                                               .HasValue<RoomLocation>("Room")
-                                               .HasValue<OffsiteLocation>("Offsite")
-                                               .HasValue<VehicleLocation>("Vehicle");
+                                      .HasValue<SiteLocation>("Site")
+                                      .HasValue<FieldLocation>("Field")
+                                      .HasValue<RowLocation>("Row")
+                                      .HasValue<BedLocation>("Bed")
+                                      .HasValue<PlotLocation>("Plot")
+                                      .HasValue<GreenhouseLocation>("Greenhouse")
+                                      .HasValue<BuildingLocation>("Building")
+                                      .HasValue<RoomLocation>("Room")
+                                      .HasValue<OffsiteLocation>("Offsite")
+                                      .HasValue<VehicleLocation>("Vehicle");
 
             builder.Entity<BuildingLocation>().HasOne(bl => bl.Address)
                                               .WithOne(a => a.Building)
@@ -187,23 +187,43 @@ namespace OptraxDAL
             #endregion
 
             #region Map
-            builder.Entity<MapPoint>().ToTable("Points", "Map");
-            builder.Entity<MapLine>().ToTable("Lines", "Map");
-            builder.Entity<MapPolygon>().ToTable("Polygons", "Map");
+            builder.Entity<MapPoint>(e =>
+            {
+                e.ToTable("Points", "Map");
+                e.HasBaseType<MapObject>();
 
-            builder.Entity<MapPoint>().HasBaseType<MapObject>();
-            builder.Entity<MapLine>().HasBaseType<MapObject>();
-            builder.Entity<MapPolygon>().HasBaseType<MapObject>();
+                e.Property(x => x.Latitude).HasPrecision(12, 8);
+                e.Property(x => x.Longitude).HasPrecision(12, 8);
+                e.Property(x => x.Elevation).HasPrecision(12, 8);
+            });
 
-            builder.Entity<MapLine>().Property(l => l.LineGeometry).HasColumnType("geometry");
-            builder.Entity<MapPolygon>().Property(l => l.PolyGeometry).HasColumnType("geometry");
-            builder.Entity<MapPoint>().Property(x => x.Latitude).HasPrecision(12, 8);
-            builder.Entity<MapPoint>().Property(x => x.Longitude).HasPrecision(12, 8);
-            builder.Entity<MapPoint>().Property(x => x.Elevation).HasPrecision(12, 8);
+            builder.Entity<MapLine>(e =>
+            {
+                e.ToTable("Lines", "Map");
+                e.HasBaseType<MapObject>();
 
-            builder.Entity<MapObjectPoint>().Property(x => x.Latitude).HasPrecision(12, 8);
-            builder.Entity<MapObjectPoint>().Property(x => x.Longitude).HasPrecision(12, 8);
-            builder.Entity<MapObjectPoint>().Property(x => x.Elevation).HasPrecision(12, 8);
+                e.Property(x => x.LineGeometry).HasColumnType("geography ");
+            });
+
+            builder.Entity<MapCircle>(e =>
+            {
+                e.ToTable("Circles", "Map");
+                e.HasBaseType<MapObject>();
+
+                e.Property(x => x.Radius).HasPrecision(12, 8);
+
+                e.Property(c => c.Area).HasComputedColumnSql(
+                        "geography::Point([Latitude], [Longitude], 4326).STBuffer([Radius])",
+                        stored: true);
+            });
+
+            builder.Entity<MapPolygon>(e =>
+            {
+                e.ToTable("Polygons", "Map");
+                e.HasBaseType<MapObject>();
+
+                e.Property(l => l.PolyGeometry).HasColumnType("geography ");
+            });
             #endregion
 
 

@@ -2,7 +2,6 @@
 const apiService = {
 
     request: async function ({ url, method = "GET", data = null, contentType = "json", timeout = 8000 }) {
-
         const controller = new AbortController();
         const id = setTimeout(() => controller.abort(), timeout);
 
@@ -13,23 +12,17 @@ const apiService = {
         };
 
         if (data) {
-            if (method.toUpperCase() === "GET") {
-              
+            if (method.toUpperCase() === "GET" || contentType === null) {
                 const query = new URLSearchParams(data).toString();  // Append query string
-
                 url += (url.includes("?") ? "&" : "?") + query;
             }
             else if (contentType === "json") {
-
-                options.headers["Content-Type"] = "application/json";
-
                 options.body = JSON.stringify(data);
+                options.headers["Content-Type"] = "application/json";
             }
             else if (contentType === "form") {
-
                 options.headers["Content-Type"] = "application/x-www-form-urlencoded";
-
-                options.body = typeof data === "string"  ? data : new URLSearchParams(data).toString();
+                options.body = typeof data === "string" ? data : new URLSearchParams(data).toString();
             }
         }
 
@@ -46,8 +39,6 @@ const apiService = {
                     error: `HTTP ${response.status}: ${response.statusText}`
                 };
             }
-
-            // Auto parse JSON or return text
             const result = responseType.includes("application/json") ? await response.json() : await response.text();
 
             return { success: true, data: result.data };
@@ -64,7 +55,9 @@ const apiService = {
     get: async function (url, params = null) {
         return await this.request({ url, method: "GET", data: params });
     },
-
+    post: async function (url, data = null) {
+        return await this.request({ url, method: "POST", data });
+    },
     postJson: async function (url, data) {
         return await this.request({ url, method: "POST", data, contentType: "json" });
     },
