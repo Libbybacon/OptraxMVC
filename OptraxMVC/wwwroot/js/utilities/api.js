@@ -1,7 +1,7 @@
 ﻿
 const apiService = {
 
-    request: async function ({ url, method = "GET", data = null, contentType = "json", timeout = 8000 }) {
+    request: async function ({ url, method = "GET", data = null, contentType = "json", timeout = 30000 }) {
         const controller = new AbortController();
         const id = setTimeout(() => controller.abort(), timeout);
 
@@ -41,7 +41,9 @@ const apiService = {
             }
             const result = responseType.includes("application/json") ? await response.json() : await response.text();
 
-            return { success: true, data: result.data };
+            const data = result.data ?? result;
+
+            return { success: true, data: data };
         }
         catch (error) {
             clearTimeout(id);

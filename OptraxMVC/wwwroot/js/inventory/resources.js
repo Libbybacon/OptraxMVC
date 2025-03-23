@@ -158,7 +158,7 @@ function setCategoryListeners() {
         $('.hex-prev').val($(this).val());
     });
 
-    $('.hex-pick').on('click', function () {
+    $('.color-picker').on('click', function () {
         Coloris({
             alpha: true,
             swatches: colorSwatches,
@@ -166,7 +166,7 @@ function setCategoryListeners() {
         });
     });
 
-    $('.hex-pick-bw').on('click', function () {
+    $('.color-picker-bw').on('click', function () {
         Coloris({
             alpha: false,
             swatches: bwSwatches,

@@ -138,18 +138,18 @@
     border-radius: var(--border-r);
 }
 
-#popup #popupTop {
+.popup-top {
     position: relative;
     font-weight: 600;
     padding-top: .3rem;
 }
 
-    #popup #popupTop #popupTopInner {
+    .popup-top-inner {
         padding-bottom: .5rem;
         border-bottom: 1px solid var(--grn-xdk);
     }
 
-#popup #popupTitle {
+.popup-title {
     margin: auto;
     cursor: default;
     text-align: center;
@@ -182,7 +182,7 @@
     margin-bottom: .25rem;
 }
 
-#popupContent {
+.popup-content {
     overflow-y: auto;
 }
 

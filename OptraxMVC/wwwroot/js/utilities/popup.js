@@ -1,34 +1,15 @@
-﻿
+﻿import apiService from "./api.js";
+
 const popupHandler = {
 
     loadPopup: async function (props) {
         try {
-            let options = {
-                method: props.type || "GET" // Default to GET if not provided
-            };
+            const response = await apiService.get(props.url, props.data);
 
-            if (props.data && Object.keys(props.data).length > 0) {
-
-                if (options.method.toUpperCase() === "GET") {
-
-                    const url = new URL(props.url, window.location.origin);
-
-                    Object.keys(props.data).forEach(key => url.searchParams.append(key, props.data[key]));
-
-                    props.url = url.href;
-                }
-                else {
-                    options.headers = { "Content-Type": "application/json" };
-                    options.body = JSON.stringify(props.data);
-                }
-            }
-
-            const response = await fetch(props.url, options);
-
-            if (!response.ok) {
+            if (!response.success == true) {
                 throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
             }
-            const view = await response.text();
+            const view = response.data;
 
             document.getElementById("popupContent").innerHTML = view;
             document.getElementById("popupTitle").innerHTML = props.title;

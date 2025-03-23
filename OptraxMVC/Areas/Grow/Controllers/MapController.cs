@@ -20,7 +20,6 @@ namespace OptraxMVC.Areas.Grow.Controllers
         {
             try
             {
-
                 return Json(await _IMap.GetObjectsAsync(objType));
             }
             catch (Exception)
@@ -36,16 +35,16 @@ namespace OptraxMVC.Areas.Grow.Controllers
             {
                 object model = objType switch
                 {
-                    "point" => new MapPoint(),
-                    "line" => new MapLine(),
-                    "circle" => new MapCircle(),
+                    "Point" => new MapPoint(),
+                    "Line" => new MapLine(),
+                    "Circle" => new MapCircle(),
                     _ => new MapPolygon(),
                 };
                 string view = objType switch
                 {
-                    "point" => "Point",
-                    "line" => "Line",
-                    "circle" => "Circle",
+                    "Point" => "Point",
+                    "Line" => "Line",
+                    "Circle" => "Circle",
                     _ => "Polygon"
                 };
 
@@ -57,7 +56,6 @@ namespace OptraxMVC.Areas.Grow.Controllers
             {
                 return Json(new { success = false });
             }
-
         }
 
         [HttpGet]
@@ -65,13 +63,13 @@ namespace OptraxMVC.Areas.Grow.Controllers
         {
             if (id == null) { return Json(new { msg = "Invalid object ID" }); }
 
-            object?[] data = await _IMap.GetObjectAsync((int)id, objType);
+            object? model = await _IMap.GetObjectAsync((int)id, objType);
 
-            if (data == null || data.Length != 2 || data[1] == null) { return Json(new ResponseVM { msg = "Object not found" }); }
+            if (model == null) { return Json(new ResponseVM { msg = "Object not found" }); }
 
-            LoadFormVM((string)data[0]!, "Edit");
+            LoadFormVM(objType, "Edit");
 
-            return PartialView("_Point", data[1]);
+            return PartialView($"_{objType}", model);
         }
 
         [HttpPost]
@@ -84,11 +82,10 @@ namespace OptraxMVC.Areas.Grow.Controllers
                     return Json(new ResponseVM { msg = "Null object id" });
                 }
 
-
                 return Json(await _IMap.DeleteObjectAsync((int)id, objType));
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return Json(new ResponseVM { msg = "Error deleting line" });
             }
@@ -113,35 +110,6 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
         }
 
-
-
-        //[HttpGet]
-        //public async Task<IActionResult> EditPoint(int? pointID)
-        //{
-        //    try
-        //    {
-        //        if (pointID == null)
-        //        {
-        //            return Json(new { msg = "Invalid point ID" });
-        //        }
-
-        //        MapPoint? point = await _IMap.LoadEditPointAsync((int)pointID);
-
-        //        if (point == null)
-        //        {
-        //            return Json(new ResponseVM { msg = "No point found" });
-        //        }
-
-        //        LoadFormVM("Point", "Edit");
-
-        //        return PartialView("_Point", point);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return Json(new ResponseVM { msg = "Error loading point" });
-        //    }
-        //}
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<JsonResult> EditPointAsync(MapPoint point)
@@ -153,14 +121,13 @@ namespace OptraxMVC.Areas.Grow.Controllers
                     return Json(new ResponseVM { msg = "Invalid model state" });
                 }
 
-                return Json(await _IMap.EditPointAsync(point));
+                return Json(await _IMap.EditObjectAsync(point));
             }
             catch (Exception)
             {
                 return Json(new ResponseVM { msg = "Error creating point" });
             }
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -181,33 +148,6 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> EditLine(int? lineID)
-        //{
-        //    try
-        //    {
-        //        if (lineID == null)
-        //        {
-        //            return Json(new { msg = "Invalid line ID" });
-        //        }
-
-        //        MapLine? line = await _IMap.LoadEditLineAsync((int)lineID);
-
-        //        if (line == null)
-        //        {
-        //            return Json(new ResponseVM { msg = "No line found" });
-        //        }
-
-        //        LoadFormVM("Line", "Edit");
-
-        //        return PartialView("_Line", line);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return Json(new ResponseVM { msg = "Error loading line" });
-        //    }
-        //}
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<JsonResult> EditLineAsync(MapLine line)
@@ -219,7 +159,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                     return Json(new ResponseVM { msg = "Invalid model state" });
                 }
 
-                return Json(await _IMap.EditLineAsync(line));
+                return Json(await _IMap.EditObjectAsync(line));
             }
             catch (Exception)
             {
@@ -227,8 +167,81 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> CreateCircleAsync(MapCircle circle)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return Json(new ResponseVM { msg = "Invalid model state" });
+                }
 
+                return Json(await _IMap.CreateObjectAsync(circle));
+            }
+            catch (Exception)
+            {
+                return Json(new ResponseVM { msg = "Error creating line" });
+            }
+        }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> EditCircleAsync(MapCircle circle)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return Json(new ResponseVM { msg = "Invalid model state" });
+                }
+
+                return Json(await _IMap.EditObjectAsync(circle));
+            }
+            catch (Exception)
+            {
+                return Json(new ResponseVM { msg = "Error creating line" });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> CreatePolygonAsync(MapPolygon poly)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return Json(new ResponseVM { msg = "Invalid model state" });
+                }
+
+                return Json(await _IMap.CreateObjectAsync(poly));
+            }
+            catch (Exception)
+            {
+                return Json(new ResponseVM { msg = "Error creating line" });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> EditPolygonAsync(MapPolygon poly)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return Json(new ResponseVM { msg = "Invalid model state" });
+                }
+
+                return Json(await _IMap.EditObjectAsync(poly));
+            }
+            catch (Exception)
+            {
+                return Json(new ResponseVM { msg = "Error creating line" });
+            }
+        }
 
         private void LoadFormVM(string objType, string funcType)
         {

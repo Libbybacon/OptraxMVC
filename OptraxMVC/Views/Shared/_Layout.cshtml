@@ -29,8 +29,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
     
-    <!-- Coloris -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css" />
+    <!-- Color Picker -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.css">
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/nav.css" asp-append-version="true" />
@@ -49,14 +49,14 @@
             <div id="overlay" class="ui-widget-overlay"></div>
             <div id="popupDialog" class="popup"><div id="dialogContent"></div></div>
             <div id="popup" class="popup">
-                <div id="popupTop" class="w-100 px-2">
-                    <div id="popupTopInner" class="d-flex w-100">
-                        <span id="popupTitle" class=""></span>
+                <div id="popupTop" class="popup-top w-100 px-2">
+                    <div id="popupTopInner" class="popup-top-inner d-flex w-100">
+                        <span id="popupTitle" class="popup-title"></span>
                         <button id="popupClose" class="popup-close">X</button>
                     </div>
                     <div class="popup-msg"></div>
                 </div>
-                <div id="popupContent"></div>
+                <div id="popupContent" class="popup-content"></div>
             </div>
         </div>
     </div>
@@ -76,10 +76,12 @@
     <!-- Select2 -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
    
-    <!-- Coloris -->
-    <script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
+    <!-- Color Picker -->
     <script src="~/js/utilities/color.js" asp-append-version="true"></script>
     
+    <script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.js"></script>
+
+
     <!-- Driver - Site Tour -->
     <script src="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.js.iife.js"></script> 
     <script src="~/js/siteTour.js" asp-append-version="true"></script>

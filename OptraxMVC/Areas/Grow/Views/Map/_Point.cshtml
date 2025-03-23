@@ -10,6 +10,7 @@
     int collID = 1;
 }
 
+<div class="popup-msg"></div>
 @using (Html.BeginForm(formVM.Action, "Map", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_obj = "Point" }))
 {
     @Html.AntiForgeryToken()
@@ -21,7 +22,7 @@
     @Html.HiddenFor(m => m.Latitude)
     @Html.HiddenFor(m => m.Longitude)
 
-    <div id="edit-content" class="px-2">
+    <div id="edit-content" class="">
         <div class="w-100">
             @Html.LabelFor(m => m.Name)
             @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = "point-info attr form-control" } })
@@ -65,9 +66,9 @@
         </div>
     </div>
     <div class="popup-btns d-flex w-100 justify-content-center">
-        <button type="submit" class="save-btn form-btn @(formVM.IsNew ? "" : "d-none")">Save New Point</button>
-        <button type="button" class="form-btn delete-btn me-2 @(formVM.IsNew ? "d-none" : "")">Delete Point</button>
-        <button type="submit" class="update-btn form-btn ms-2 @(formVM.IsNew ? "d-none" : "")" data-id="@Model.ID" data-type="point">Save Changes</button>
+        <button type="submit" class="save-btn @(formVM.IsNew ? "" : "d-none")">Save New Point</button>
+        <button type="button" class="delete-btn me-2 @(formVM.IsNew ? "d-none" : "")" data-id="@Model.ID" data-type="point">Delete Point</button>
+        <button type="submit" class="update-btn @(formVM.IsNew ? "d-none" : "")" >Save Changes</button>
     </div>
 }
 

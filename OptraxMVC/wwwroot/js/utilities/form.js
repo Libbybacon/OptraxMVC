@@ -56,8 +56,9 @@ export const formUtil = {
     },
     submitForm: async function () {
         $form = $(`#modelForm`);
+        console.log('formUtil submitForm', Changes);
         let proceed = $form.attr('action').includes('Create') || Changes.length > 0;
-
+        console.log('formUtil submitForm', proceed);
         if ($form.valid() && proceed) {
 
             return await apiService.postForm($form.attr("action"), $form.serialize())

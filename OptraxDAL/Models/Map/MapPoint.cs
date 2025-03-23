@@ -7,7 +7,10 @@ namespace OptraxDAL.Models.Map
     [Table("Points", Schema = "Map")]
     public class MapPoint : MapObject
     {
-        public MapPoint() { }
+        public MapPoint()
+        {
+            Name = "New Point";
+        }
 
         public MapPoint(decimal lat, decimal lng, string name)
         {

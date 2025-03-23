@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NetTopologySuite;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
+using NetTopologySuite.Operation.Valid;
 using OptraxDAL;
 using OptraxDAL.Models.Map;
 using OptraxMVC.Models;
@@ -10,15 +12,10 @@ namespace OptraxMVC.Services
     public interface IMapService
     {
         Task<ResponseVM> GetObjectsAsync(string objType);
-        Task<object?[]> GetObjectAsync(int id, string objType);
+        Task<object?> GetObjectAsync(int id, string objType);
         Task<ResponseVM> CreateObjectAsync(MapObject obj);
+        Task<ResponseVM> EditObjectAsync(MapObject obj);
         Task<ResponseVM> DeleteObjectAsync(int id, string objType);
-
-        Task<ResponseVM> EditPointAsync(MapPoint point);
-        Task<ResponseVM> EditLineAsync(MapLine line);
-        Task<ResponseVM> EditCircleAsync(MapCircle line);
-        Task<ResponseVM> EditPolyAsync(MapPolygon poly);
-
     }
 
     public class MapService(OptraxContext context) : IMapService
@@ -29,21 +26,21 @@ namespace OptraxMVC.Services
         {
             return objType switch
             {
-                "point" => await GetPointsAsync(),
-                "line" => await GetLinesAsync(),
-                "circle" => await GetCirclesAsync(),
+                "Point" => await GetPointsAsync(),
+                "Line" => await GetLinesAsync(),
+                "Circle" => await GetCirclesAsync(),
                 _ => await GetPolygonsAsync(),
             };
         }
 
-        public async Task<object?[]> GetObjectAsync(int id, string objType)
+        public async Task<object?> GetObjectAsync(int id, string objType)
         {
             return objType switch
             {
-                "point" => ["Point", await GetPointAsync(id)],
-                "line" => ["Line", await GetLineAsync(id)],
-                "circle" => ["Line", await GetCircleAsync(id)],
-                _ => ["Polygon", await GetPolygonAsync(id)],
+                "Point" => await GetPointAsync(id),
+                "Line" => await GetLineAsync(id),
+                "Circle" => await GetCircleAsync(id),
+                _ => await GetPolygonAsync(id),
             };
         }
 
@@ -53,8 +50,20 @@ namespace OptraxMVC.Services
             {
                 MapPoint => await CreatePointAsync((MapPoint)obj),
                 MapLine => await CreateLineAsync((MapLine)obj),
-                MapPolygon => await CreatePolyAsync((MapPolygon)obj),
                 MapCircle => await CreateCircleAsync((MapCircle)obj),
+                MapPolygon => await CreatePolyAsync((MapPolygon)obj),
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        public async Task<ResponseVM> EditObjectAsync(MapObject obj)
+        {
+            return obj switch
+            {
+                MapPoint => await EditPointAsync((MapPoint)obj),
+                MapLine => await EditLineAsync((MapLine)obj),
+                MapCircle => await EditCircleAsync((MapCircle)obj),
+                MapPolygon => await EditPolyAsync((MapPolygon)obj),
                 _ => throw new NotImplementedException()
             };
         }
@@ -63,9 +72,9 @@ namespace OptraxMVC.Services
         {
             return objType switch
             {
-                "point" => await DeletePointAsync(id),
-                "line" => await DeleteLineAsync(id),
-                "circle" => await DeleteCircleAsync(id),
+                "Point" => await DeletePointAsync(id),
+                "Line" => await DeleteLineAsync(id),
+                "Circle" => await DeleteCircleAsync(id),
                 _ => await DeletePolyAsync(id),
             };
         }
@@ -75,29 +84,29 @@ namespace OptraxMVC.Services
         {
             try
             {
-                var points = await db.MapPoints
-                    .Where(p => p.Active)
-                    .Include(p => p.Icon)
-                    .Select(p => new
-                    {
-                        type = "Feature",
-                        properties = new
-                        {
-                            id = p.ID,
-                            name = p.Name,
-                            iconPath = p.GetIconPath()
-                        },
-                        geometry = new
-                        {
-                            type = "Point",
-                            coordinates = new[] { p.Longitude, p.Latitude }
-                        }
-                    }).ToListAsync();
+                var features = await db.MapPoints.Where(p => p.Active)
+                                                  .Include(p => p.Icon)
+                                                  .Select(p => new
+                                                  {
+                                                      type = "Feature",
+                                                      properties = new
+                                                      {
+                                                          id = p.ID,
+                                                          name = p.Name,
+                                                          objType = "Point",
+                                                          iconPath = p.GetIconPath()
+                                                      },
+                                                      geometry = new
+                                                      {
+                                                          type = "Point",
+                                                          coordinates = new[] { p.Longitude, p.Latitude }
+                                                      }
+                                                  }).ToListAsync();
 
                 var geoJson = new
                 {
                     type = "FeatureCollection",
-                    features = points
+                    features
                 };
 
                 return new ResponseVM { success = true, data = geoJson };
@@ -117,7 +126,7 @@ namespace OptraxMVC.Services
 
                 return new ResponseVM() { success = true, data = point, function = "createPointSuccess" };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new ResponseVM() { msg = "Error saving Point" };
             }
@@ -130,7 +139,7 @@ namespace OptraxMVC.Services
             return point;
         }
 
-        public async Task<ResponseVM> EditPointAsync(MapPoint point)
+        private async Task<ResponseVM> EditPointAsync(MapPoint point)
         {
             MapPoint? dbPoint = await db.MapPoints.Include(p => p.Icon).FirstOrDefaultAsync(p => p.ID == point.ID);
 
@@ -181,33 +190,32 @@ namespace OptraxMVC.Services
         {
             try
             {
-                var lines = await db.MapLines.Where(l => l.Active)
-                                             .Select(l => new
-                                             {
-                                                 type = "Feature",
-                                                 properties = new
+                var features = (await db.MapLines.Where(l => l.Active)
+                                                 .ToListAsync())
+                                                 .Select(l => new
                                                  {
-                                                     id = l.ID,
-                                                     name = l.Name,
-                                                     style = new
+                                                     type = "Feature",
+                                                     properties = new
                                                      {
+                                                         id = l.ID,
+                                                         name = l.Name,
                                                          color = l.Color,
-                                                         width = l.Width,
+                                                         weight = l.Weight,
                                                          pattern = l.Pattern,
                                                          dashArray = l.DashArray,
+                                                         objType = "Line",
+                                                     },
+                                                     geometry = new
+                                                     {
+                                                         type = "LineString",
+                                                         coordinates = l.LineGeometry!.Coordinates.Select(c => new[] { c.X, c.Y })
                                                      }
-                                                 },
-                                                 geometry = new
-                                                 {
-                                                     type = "polyline",
-                                                     coordinates = l.LineGeometry!.Coordinates.Select(c => new[] { c.X, c.Y })
-                                                 }
-                                             }).ToListAsync();
+                                                 }).ToList();
 
                 var geoJson = new
                 {
                     type = "FeatureCollection",
-                    features = lines
+                    features
                 };
 
                 return new ResponseVM { success = true, data = geoJson };
@@ -224,16 +232,55 @@ namespace OptraxMVC.Services
             {
                 if (!string.IsNullOrWhiteSpace(line.LineGeometryWKT))
                 {
-                    var reader = new WKTReader();
-                    line.LineGeometry = (LineString)reader.Read(line.LineGeometryWKT);
+                    try
+                    {
+                        var ntsGeometryServices = new NtsGeometryServices(new PrecisionModel(), 4326);
+                        var geometryFactory = ntsGeometryServices.CreateGeometryFactory();
+                        var reader = new WKTReader(ntsGeometryServices);
+
+                        var geom = reader.Read(line.LineGeometryWKT);
+
+                        if (!geom.IsValid)
+                        {
+                            var reason = new IsValidOp(geom).ValidationError?.Message;
+                            return new ResponseVM { msg = $"Invalid geometry: {reason}" };
+                        }
+                        else
+                        {
+                            line.LineGeometry = geom as LineString;
+                        }
+                    }
+                    catch (ParseException ex)
+                    {
+                        return new ResponseVM { msg = $"WKT parsing error: {ex.Message}" };
+                    }
                 }
 
                 await db.MapLines.AddAsync(line);
                 await db.SaveChangesAsync();
 
-                return new ResponseVM() { success = true, data = line, function = "createSuccess" };
+                var geoLine = new
+                {
+                    type = "Feature",
+                    properties = new
+                    {
+                        id = line.ID,
+                        name = line.Name,
+                        color = line.Color,
+                        weight = line.Weight,
+                        pattern = line.Pattern,
+                        dashArray = line.DashArray,
+                        objType = "Line",
+                    },
+                    geometry = new
+                    {
+                        type = "LineString",
+                        coordinates = line.LineGeometry!.Coordinates.Select(c => new[] { c.X, c.Y })
+                    }
+                };
+                return new ResponseVM() { success = true, data = geoLine, function = "createSuccess" };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new ResponseVM() { msg = "Error saving Line" };
             }
@@ -298,35 +345,33 @@ namespace OptraxMVC.Services
         {
             try
             {
-                var circles = await db.MapCircles.Where(c => c.Active)
-                                             .Select(c => new
-                                             {
-                                                 type = "Feature",
-                                                 properties = new
-                                                 {
-                                                     style = new
-                                                     {
-                                                         radius = c.Radius,
-                                                         color = c.BorderColor,
-                                                         weight = c.BorderWidth,
-                                                         fillColor = c.FillColor,
-                                                         dashArray = c.DashArray,
-                                                     },
-                                                     id = c.ID,
-                                                     name = c.Name,
-                                                     center = new[] { c.Longitude, c.Latitude },
-                                                 },
-                                                 geometry = new
-                                                 {
-                                                     type = "point",
-                                                     coordinates = new[] { c.Longitude, c.Latitude }
-                                                 }
-                                             }).ToListAsync();
+                var features = await db.MapCircles.Where(c => c.Active)
+                                                  .Select(c => new
+                                                  {
+                                                      type = "Feature",
+                                                      properties = new
+                                                      {
+                                                          id = c.ID,
+                                                          name = c.Name,
+                                                          color = c.Color,
+                                                          weight = c.Weight,
+                                                          fillColor = c.FillColor,
+                                                          dashArray = c.DashArray,
+                                                          radius = c.Radius,
+                                                          center = new[] { c.Longitude, c.Latitude },
+                                                          objType = "Circle",
+                                                      },
+                                                      geometry = new
+                                                      {
+                                                          type = "point",
+                                                          coordinates = new[] { c.Longitude, c.Latitude }
+                                                      }
+                                                  }).ToListAsync();
 
                 var geoJson = new
                 {
                     type = "FeatureCollection",
-                    features = circles
+                    features
                 };
 
                 return new ResponseVM { success = true, data = geoJson };
@@ -346,7 +391,7 @@ namespace OptraxMVC.Services
 
                 return new ResponseVM() { success = true, data = circle, function = "createSuccess" };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new ResponseVM() { msg = "Error saving Circle" };
             }
@@ -359,7 +404,7 @@ namespace OptraxMVC.Services
             return circle;
         }
 
-        public async Task<ResponseVM> EditCircleAsync(MapCircle circle)
+        private async Task<ResponseVM> EditCircleAsync(MapCircle circle)
         {
             MapCircle? dbCircle = await db.MapCircles.FirstOrDefaultAsync(c => c.ID == circle.ID);
 
@@ -411,35 +456,32 @@ namespace OptraxMVC.Services
         {
             try
             {
-                var polys = await db.MapPolygons.Where(p => p.Active)
-                                                .Select(p => new
-                                                {
-                                                    type = "Feature",
-                                                    properties = new
+                var features = (await db.MapPolygons.Where(p => p.Active)
+                                                    .ToListAsync())
+                                                    .Select(p => new
                                                     {
-                                                        style = new
+                                                        type = "Feature",
+                                                        properties = new
                                                         {
                                                             id = p.ID,
                                                             name = p.Name,
-                                                            borderColor = p.BorderColor,
-                                                            borderWidth = p.BorderWidth,
-                                                            fillColor = p.FillColor,
+                                                            color = p.Color,
+                                                            weight = p.Weight,
                                                             pattern = p.Pattern,
+                                                            dashArray = p.DashArray,
+                                                            fillColor = p.FillColor,
+                                                            objType = "Polygon",
                                                         },
-                                                    },
-                                                    geometry = new
-                                                    {
-                                                        type = "polygon",
-                                                        coordinates = new[] {
-                                                            p.PolyGeometry!.Coordinates.Select(coord => new[] { coord.X, coord.Y }).ToArray()
+                                                        geometry = new
+                                                        {
+                                                            type = "Polygon",
+                                                            coordinates = new[] { CloseRing(p.PolyGeometry!.Coordinates) }
                                                         }
-                                                    }
-                                                }).ToListAsync();
-
+                                                    }).ToList();
                 var geoJson = new
                 {
                     type = "FeatureCollection",
-                    features = polys
+                    features
                 };
 
                 return new ResponseVM { success = true, data = geoJson };
@@ -450,22 +492,81 @@ namespace OptraxMVC.Services
             }
         }
 
+        private static double[][] CloseRing(Coordinate[] coords)
+        {
+            var points = coords.Select(c => new[] { c.X, c.Y }).ToList();
+
+            if (!points.First().SequenceEqual(points.Last()))
+            {
+                points.Add(points.First());
+            }
+
+            return [.. points];
+        }
+
         private async Task<ResponseVM> CreatePolyAsync(MapPolygon poly)
         {
             try
             {
                 if (!string.IsNullOrWhiteSpace(poly.PolyGeometryWKT))
                 {
-                    var reader = new WKTReader();
-                    poly.PolyGeometry = (Polygon)reader.Read(poly.PolyGeometryWKT);
+                    try
+                    {
+                        var ntsGeometryServices = new NtsGeometryServices(new PrecisionModel(), 4326);
+                        var geometryFactory = ntsGeometryServices.CreateGeometryFactory();
+                        var reader = new WKTReader(ntsGeometryServices);
+
+                        var geom = reader.Read(poly.PolyGeometryWKT);
+
+                        if (!geom.IsValid)
+                        {
+                            var reason = new IsValidOp(geom).ValidationError?.Message;
+                            return new ResponseVM { msg = $"Invalid geometry: {reason}" };
+                        }
+                        else
+                        {
+                            if (geom is Polygon polygon)
+                            {
+                                poly.PolyGeometry = polygon;
+                            }
+                            else
+                            {
+                                return new ResponseVM { msg = "Provided geometry is not a polygon." };
+                            }
+                        }
+                    }
+                    catch (ParseException ex)
+                    {
+                        return new ResponseVM { msg = $"WKT parsing error: {ex.Message}" };
+                    }
                 }
 
                 await db.MapPolygons.AddAsync(poly);
                 await db.SaveChangesAsync();
 
-                return new ResponseVM() { success = true, data = poly, function = "createSuccess" };
+                var geoPoly = new
+                {
+                    type = "Feature",
+                    properties = new
+                    {
+                        id = poly.ID,
+                        name = poly.Name,
+                        color = poly.Color,
+                        weight = poly.Weight,
+                        pattern = poly.Pattern,
+                        dashArray = poly.DashArray,
+                        fillColor = poly.FillColor,
+                        objType = "Circle",
+                    },
+                    geometry = new
+                    {
+                        type = "Polygon",
+                        coordinates = new[] { CloseRing(poly.PolyGeometry!.Coordinates) }
+                    }
+                };
+                return new ResponseVM() { success = true, data = geoPoly, function = "createSuccess" };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new ResponseVM() { msg = "Error saving Poly" };
             }
@@ -478,7 +579,7 @@ namespace OptraxMVC.Services
             return poly;
         }
 
-        public async Task<ResponseVM> EditPolyAsync(MapPolygon poly)
+        private async Task<ResponseVM> EditPolyAsync(MapPolygon poly)
         {
             MapPolygon? dbPoly = await db.MapPolygons.FirstOrDefaultAsync(p => p.ID == poly.ID);
 

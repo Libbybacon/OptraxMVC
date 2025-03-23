@@ -1,5 +1,6 @@
 ﻿import * as util from './mapUtility.js';
 
+
 export var map;
 
 var pointsLayer;
@@ -7,7 +8,19 @@ var linesLayer;
 var polysLayer;
 var circlesLayer;
 
+const module = { path: '/js/map/mapObjects.js', method: 'init' };
+const urlBase = '/Grow/Map/';
+const typeMap = {
+    marker: 'Point',
+    polyline: 'Line',
+    circle: 'Circle'
+};
 
+const viewProps = {
+    type: 'GET',
+    isDialog: true,
+    mod: module
+}
 export const layerIndex = new Map();
 
 
@@ -34,6 +47,10 @@ function initializeMap() {
     initializeLayers();
     createControls();
     loadFeatures();
+
+    map.on('popupclose', function () {
+        $(document).find(".color-picker").spectrum("hide");
+    });
 }
 
 function setMapHeight() {
@@ -52,8 +69,9 @@ async function loadFeatures() {
     //    await this.loadLines();
     //    await this.loadPolygons();
     //}, 30000);
-    await util.loadObjects(pointsLayer, 'point');
-    //await lineUtil.loadLines(linesLayer);
+    await util.loadObjects(pointsLayer, 'Point');
+    await util.loadObjects(linesLayer, 'Line');
+    await util.loadObjects(polysLayer, 'Polygon');
 }
 
 function initializeLayers() {
@@ -65,76 +83,88 @@ function initializeLayers() {
     pointsLayer = L.geoJSON(null, {
 
         pointToLayer: function (feature, latlng) {
-            const props = feature.properties;           
 
+
+            const props = feature.properties;
+            props["objType"] = 'Point';
             const icon = util.iconUtil.createIcon(props.iconPath);
-            const marker = L.marker(latlng, { icon: icon }).bindTooltip(props.name, { permanent: true, direction: "top" });
+            const layer = L.marker(latlng, { icon: icon });
 
-            marker.on('click', function () {
-                util.curLayer.val = marker;
-                util.onEdit(props.id, 'point', props.name);
-            })
-
-            layerIndex.set(props.id, marker);
-
-            return marker;
+            setActions(props, layer);
+            return layer;
         }
     }).addTo(map);
 
     linesLayer = L.geoJSON(null, {
         style: function (feature) {
-            return feature.properties.style;
+            return setStyle(feature.properties,);
         },
         onEachFeature: (feature, layer) => {
-            const props = feature.properties;
-
-            layerIndex.set(props.id, layer);
-            layer.bindTooltip(props.name, { permanent: true, direction: "top" });
-
-            layer.on('click', function () {
-                util.curLayer.val = layer;
-                util.onEdit(props.id, 'line', props.name);
-            })
+            feature.properties['objType'] = 'Line';
+            setActions(feature.properties, layer);
         }
     }).addTo(map);
 
     circlesLayer = L.geoJSON(null, {
         pointToLayer: function (feature, latlng) {
-            if (feature.properties?.style?.radius) {
-                return L.circle(latlng, feature.properties.style);
+
+            if (feature.properties && feature.properties.radius) {
+                return L.circle(latlng, setStyle(feature.properties));
             }
-            return L.marker(latlng); // fallback if needed
+            return L.marker(latlng); // just render as marker if no radius
         },
-        onEachFeature: function (feature, layer) {
-            const props = feature.properties;
-
-            layer.bindTooltip(props.name, { permanent: true, direction: "top" });
-
-            layerIndex.set(props.id ?? -1, layer);
-
-            layer.on('click', function () {
-                util.curLayer.val = layer;
-                util.onEdit(props.id ?? -1, 'circle', props.name);
-            });
+        onEachFeature: (feature, layer) => {
+            feature.properties['objType'] = 'Circle';
+            setActions(feature.properties, layer);
         }
     }).addTo(map);
 
     polysLayer = L.geoJSON(null, {
         style: function (feature) {
-            return feature.properties.style;
+            feature.properties['opacity'] = 1;
+            return setStyle(feature.properties);
         },
         onEachFeature: (feature, layer) => {
-            const props = feature.properties;
-
-            layerIndex.set(props.id, layer);
-            layer.bindTooltip(props.name, { permanent: true, direction: "top" });
-
-            layer.on('click', function () {
-                util.curLayer.val = layer;
-                util.onEdit(props.id, 'polygon', props.name);
-            })
+            feature.properties['objType'] = 'Polygon';
+            setActions(feature.properties, layer);
         }
     }).addTo(map);
+}
+
+function setActions(props, layer) {
+
+    const type = props.objType;
+    layerIndex.set(props.id, layer);
+
+    layer.bindTooltip(props.name, { permanent: true, direction: "top" });
+
+    layer.on('click', async function (e) {
+
+        util.curLayer.val = layer;
+
+        const center = (type == 'Point' || type == 'Circle') ? e.latlng : layer.getBounds().getCenter();
+        const point = map.setView(center, map.getZoom());
+
+        util.getEdit(props.id, type, center)
+    })
+
+    layer.on('remove', function () {
+        layerIndex.delete(props.id);
+        map.removeLayer(layer);
+    });
+}
+
+function setStyle(props) {
+    let style = {
+        color: props.color,
+        weight: props.weight,
+        dashArray: props.dashArray,
+        fillColor: props.fillColor,
+    }
+    if (props.objType == 'circle') {
+        style["radius"] = props.radius;
+    }
+    return style;
 }
 
 function createControls() {
@@ -153,13 +183,15 @@ function createControls() {
     map.addControl(drawControl);
 
     map.on('draw:created', function (e) {
+        console.log('draw type', e.layerType);
+        console.log('e', e);
         const layersetMap = {
             marker: pointsLayer,
             polyline: linesLayer,
             circle: circlesLayer
         };
-        let layerset = layersetMap[e.type] ?? polysLayer;
-        util.drawUtil.addObject(e, layerset);
+        let layerset = layersetMap[e.layerType] ?? polysLayer;
+        util.addObject(e, layerset);
 
     });
 }

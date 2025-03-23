@@ -8,6 +8,7 @@
     DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
 }
 
+<div class="popup-msg"></div>
 @using (Html.BeginForm(formVM.Action, "Map", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_obj = "line" }))
 {
     @Html.AntiForgeryToken()
@@ -17,7 +18,7 @@
     @Html.HiddenFor(m => m.ID)
     @Html.HiddenFor(m => m.LineGeometryWKT)
 
-    <div id="edit-content" class="px-2">
+    <div id="edit-content" class="">
         <div class="col-12 d-flex w-100 pe-1">
             <div class="col-6">
                 @Html.LabelFor(m => m.Name)
@@ -26,15 +27,15 @@
             </div>
             <div class="col-6 ps-1">
                 @Html.LabelFor(m => m.Color)
-                <input type="text" id="Color" name="Color" class="hex-pick form-control attr" data-coloris value="@Model.Color" />
+                <input type="text" id="Color" name="Color" class="color-picker form-control attr" data-coloris value="@Model.Color" />
                 @Html.ValidationMessageFor(m => m.Color, "", new { @class = "val-msg" })
             </div>
 
         </div>
         <div class="col-12 d-flex w-100">
             <div class="col-4 pe-1">
-                @Html.LabelFor(m => m.Width)
-                @Html.EditorFor(m => m.Width, new { htmlAttributes = new { @class = "form-control attr", @step = "1" } })
+                @Html.LabelFor(m => m.Weight)
+                @Html.EditorFor(m => m.Weight, new { htmlAttributes = new { @class = "form-control attr", @step = "1" } })
                 @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
             </div>
             <div class="col-4 px-1">
@@ -59,7 +60,8 @@
         </div>
     </div>
     <div class="popup-btns d-flex w-100 justify-content-center">
-        <button type="submit" class="save-btn form-btn @(formVM.IsNew ? "" : "d-none")">Save New Line</button>
-        <button type="submit" class="update-btn form-btn d-none">Save Changes</button>
+        <button type="submit" class="save-btn @(formVM.IsNew ? "" : "d-none")">Save New Line</button>
+        <button type="button" class="delete-btn me-2 @(formVM.IsNew ? "d-none" : "")" data-id="@Model.ID" data-type="point">Delete Line</button>
+        <button type="submit" class="update-btn" @(formVM.IsNew ? "d-none" : "")>Save Changes</button>
     </div>
 }

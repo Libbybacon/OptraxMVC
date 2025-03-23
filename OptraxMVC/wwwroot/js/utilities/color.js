@@ -16,19 +16,20 @@
 let bwSwatches = ["#000000", "#FFFFFF"];
 
 $(document).ready(function () {
-    $(document).on('click', '.hex-pick', function () {
-        Coloris({
-            alpha: true,
-            swatches: colorSwatches,
-            onChange: (color) => $('.hex-prev').css('background-color', color)
-        });
-    });
 
-    $(document).on('click', '.hex-pick-bw', function () {
-        Coloris({
-            alpha: false,
-            swatches: bwSwatches,
-            onChange: (color) => $('.hex-prev').css('color', color)
-        });
-    });
+    //$(document).on('click', '.color-picker', function () {
+    //    Coloris({
+    //        alpha: true,
+    //        swatches: colorSwatches,
+    //        onChange: (color) => $('.hex-prev').css('background-color', color)
+    //    });
+    //});
+
+    //$(document).on('click', '.color-picker-bw', function () {
+    //    Coloris({
+    //        alpha: false,
+    //        swatches: bwSwatches,
+    //        onChange: (color) => $('.hex-prev').css('color', color)
+    //    });
+    //});
 })

@@ -2,18 +2,21 @@
     #map-div {
         margin-top: 35px;
     }
-    .map-icon{
+
+    .map-icon {
         height: 15px;
     }
+
     .ui-draggable-handle {
         max-width: 200px !important;
     }
 }
 
 @media only screen and (min-width: 576px) {
-    #map-div{
+    #map-div {
         margin-top: 35px;
     }
+
     .map-icon {
         height: 15px;
     }
@@ -23,6 +26,7 @@
     #map-div {
         margin-top: 45px;
     }
+
     .map-icon {
         height: 25px;
     }
@@ -40,10 +44,26 @@
     }
 }
 
+.leaflet-draw-toolbar {
+}
+
+    .leaflet-draw-toolbar a {
+        color: var(--grn-dk);
+        width: 25px !important;
+        height: 25px !important;
+        line-height: 1;
+        background-position-y: -3px !important;
+    }
+
+/*.leaflet-draw-draw-marker {
+    background-size: 20px 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW1hcC1waW4iPjxwYXRoIGQ9Ik0yMCAxMGMwIDQuOTkzLTUuNTM5IDEwLjE5My03LjM5OSAxMS43OTlhMSAxIDAgMCAxLTEuMjAyIDBDOS41MzkgMjAuMTkzIDQgMTQuOTkzIDQgMTBhOCA4IDAgMCAxIDE2IDAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSIzIi8+PC9zdmc+') !important;
+}*/
 /*#map-div {
     margin-top: 35px;
 }*/
-
 /* Map Controls */
 .add-map-obj {
     padding: .5rem;
@@ -70,7 +90,7 @@
 .icon-coll-list {
     padding-top: 0;
     overflow-y: auto;
-    max-height: 200px;
+    max-height: 100px;
     overflow-x: hidden;
     scrollbar-width: thin;
     white-space: nowrap;
@@ -83,7 +103,7 @@
 .icon-preview {
     padding-top: .25rem;
     overflow-y: auto;
-    max-height: 200px;
+    max-height: 100px;
     scrollbar-width: thin;
     border: 1px inset var(--grn-dk);
     background-color: var(--wht-grn);
@@ -155,3 +175,36 @@
             font-size: var(--f-xl);
             color: var(--grn-dk);
         }
+
+.leaflet-popup-content{
+    margin: 0;
+    width: max-content;
+}
+
+.edit-popup{
+    font-family: 'Poppins';
+    color: var(--grn-xdk);
+    padding: .3rem;
+}
+
+.leaflet-container.coloris-open {
+    pointer-events: none; /* Block all map interaction */
+}
+
+#clr-picker {
+    pointer-events: auto !important; /* Allow Coloris to remain clickable */
+    z-index: 100000; /* Ensure it's on top */
+}
+
+#edit-content .form-select,
+#edit-content .form-control {
+    height: 30px;
+
+}
+
+#edit-content label{
+    white-space: nowrap;
+    font-weight: 500;
+    padding-left: 3px;
+    font-size: var(--f-xs)
+}

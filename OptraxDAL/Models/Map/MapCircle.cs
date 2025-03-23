@@ -7,7 +7,10 @@ namespace OptraxDAL.Models.Map
     [Table("Circles", Schema = "Map")]
     public class MapCircle : MapObject
     {
-        public MapCircle() { }
+        public MapCircle()
+        {
+            Name = "New Circle";
+        }
 
         public double Latitude { get; set; } = 0;
 
@@ -15,18 +18,24 @@ namespace OptraxDAL.Models.Map
 
         public double Radius { get; set; } = 0;
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public Polygon? Area { get; private set; }
-
-        public int BorderWidth { get; set; } = 1;
+        [Display(Name = "Border Width")]
+        public int Weight { get; set; } = 3;
 
         [MaxLength(9)]
-        public string BorderColor { get; set; } = "#1d52d7";
+        public string Color { get; set; } = "#1d52d7";
 
         [MaxLength(9)]
+        [Display(Name = "Border Color")]
         public string FillColor { get; set; } = "#1d52d782I'";
 
         [MaxLength(15)]
+        [Display(Name = "Dash Spacing")]
         public string DashArray { get; set; } = "5 5";
+
+        [MaxLength(20)]
+        public string Pattern { get; set; } = "dash";
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public Polygon? Area { get; private set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿@using OptraxDAL.Models.Map
 @using OptraxMVC.Models
 
-@model MapPolygon
+@model MapCircle
 
 @{
     FormVM formVM = ViewBag.FormVM;
@@ -15,31 +15,31 @@
     <input id="changes" type="hidden" name="Changes" />
 
     @Html.HiddenFor(m => m.ID)
-    @Html.HiddenFor(m => m.PolyGeometryWKT)
+    @Html.HiddenFor(m => m.Latitude)
+    @Html.HiddenFor(m => m.Longitude)
+    @Html.HiddenFor(m => m.Radius);
 
     <div id="edit-content" class="px-2">
-        <div class="row col-12 w-100 pe-1 m-0">
+        <div class="col-12 d-flex w-100 pe-1">
             <div class="col-6">
                 @Html.LabelFor(m => m.Name)
                 @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = "form-control attr" } })
                 @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
             </div>
-            <div class="col-6">
+            <div class="col-6 ps-1">
                 @Html.LabelFor(m => m.Color)
-                <input type="text" id="Color" name="Color" class="color-picker form-control attr" data-coloris value="@Model.Color" />
+                <input type="text" id="Color" name="Color" class="color-picker form-control attr" value="@Model.Color" />
                 @Html.ValidationMessageFor(m => m.Color, "", new { @class = "val-msg" })
             </div>
-            <div class="col-6">
-                @Html.LabelFor(m => m.FillColor)
-                <input type="text" id="FillColor" name="FillColor" class="color-picker form-control attr" data-coloris value="@Model.Color" />
-                @Html.ValidationMessageFor(m => m.FillColor, "", new { @class = "val-msg" })
-            </div>
-            <div class="col-6">
+
+        </div>
+        <div class="col-12 d-flex w-100">
+            <div class="col-4 pe-1">
                 @Html.LabelFor(m => m.Weight)
                 @Html.EditorFor(m => m.Weight, new { htmlAttributes = new { @class = "form-control attr", @step = "1" } })
                 @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
             </div>
-            <div class="col-6">
+            <div class="col-4 px-1">
                 @Html.LabelFor(m => m.Pattern)
                 <select id="Pattern" name="Pattern" class="form-select attr">
                     <option value="dash" @(Model.Pattern == "dash" ? "selected" : "")>Dash</option>
@@ -47,23 +47,21 @@
                 </select>
                 @Html.ValidationMessageFor(m => m.Pattern, "", new { @class = "val-msg" })
             </div>
-            <div class="col-6">
+            <div class="col-4 ps-1">
                 @Html.LabelFor(m => m.DashArray)
                 @Html.EditorFor(m => m.DashArray, new { htmlAttributes = new { @class = "form-control attr" } })
                 @Html.ValidationMessageFor(m => m.DashArray, "", new { @class = "val-msg" })
             </div>
-
-            <div class="col-12">
-                <label>Details</label>
-                <br />
-                @Html.TextAreaFor(m => m.Notes, new { @class = "form-control attr w-100", @rows = "3" })
-                @Html.ValidationMessageFor(m => m.Notes, "", new { @class = "val-msg" })
-            </div>
+        </div>
+        <div class="w-100">
+            <label>Details</label>
+            <br />
+            @Html.TextAreaFor(m => m.Notes, new { @class = "form-control attr w-100", @rows = "3" })
+            @Html.ValidationMessageFor(m => m.Notes, "", new { @class = "val-msg" })
         </div>
     </div>
     <div class="popup-btns d-flex w-100 justify-content-center">
-        <button type="submit" class="save-btn @(formVM.IsNew ? "" : "d-none")">Save Polygon</button>
-        <button type="button" class="delete-btn me-2 @(formVM.IsNew ? "d-none" : "")" data-id="@Model.ID" data-type="point">Delete Polygon</button>
-        <button type="submit" class="update-btn @(formVM.IsNew ? "d-none" : "")">Save Changes</button>
+        <button type="submit" class="save-btn form-btn @(formVM.IsNew ? "" : "d-none")">Save New Line</button>
+        <button type="submit" class="update-btn form-btn d-none">Save Changes</button>
     </div>
 }

@@ -12,17 +12,20 @@ namespace OptraxDAL.Models.Map
             Name = "New Line";
         }
 
-        public int Width { get; set; } = 3;
+        [Display(Name = "Width")]
+        public int Weight { get; set; } = 3;
 
         [MaxLength(9)]
         public string Color { get; set; } = "#1d52d7";
 
+        [MaxLength(15)]
+        [Display(Name = "Dash Spacing")]
+        public string DashArray { get; set; } = "5 5";
+
+
         [MaxLength(20)]
         public string Pattern { get; set; } = "dash";
 
-        [MaxLength(5)]
-        [Display(Name = "Dash Spacing")]
-        public string? DashArray { get; set; } = "5 5";
 
         public LineString? LineGeometry { get; set; }
 
