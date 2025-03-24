@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Caching.Memory;
 using OptraxDAL.Models;
 using OptraxDAL.Models.Admin;
@@ -102,6 +103,9 @@ namespace OptraxDAL
         {
             base.OnModelCreating(builder);
 
+            var rgbaConverter = new ValueConverter<ColorRgba, byte[]>(v => v.ToBytes(), v => ColorRgba.FromBytes(v));
+
+
             #region Admin
             builder.Entity<AppUser>().ToTable("AspNetUsers", "Identity");
             builder.Entity<IdentityRole>().ToTable("AspNetRoles", "Identity");
@@ -189,9 +193,8 @@ namespace OptraxDAL
             #region Map
             builder.Entity<MapPoint>(e =>
             {
-                e.ToTable("Points", "Map");
                 e.HasBaseType<MapObject>();
-
+                e.ToTable("Points", "Map");
                 e.Property(x => x.Latitude).HasPrecision(12, 8);
                 e.Property(x => x.Longitude).HasPrecision(12, 8);
                 e.Property(x => x.Elevation).HasPrecision(12, 8);
@@ -199,30 +202,30 @@ namespace OptraxDAL
 
             builder.Entity<MapLine>(e =>
             {
-                e.ToTable("Lines", "Map");
                 e.HasBaseType<MapObject>();
-
-                e.Property(x => x.LineGeometry).HasColumnType("geography ");
+                e.ToTable("Lines", "Map");
+                e.Property(x => x.LineGeometry).HasColumnType("geometry");
+                e.Property(e => e.ColorBytes).HasConversion(rgbaConverter).HasColumnType("varbinary(4)");
+                e.Property(e => e.FillColorBytes).HasConversion(rgbaConverter).HasColumnType("varbinary(4)");
             });
 
             builder.Entity<MapCircle>(e =>
             {
-                e.ToTable("Circles", "Map");
                 e.HasBaseType<MapObject>();
-
+                e.ToTable("Circles", "Map");
                 e.Property(x => x.Radius).HasPrecision(12, 8);
-
-                e.Property(c => c.Area).HasComputedColumnSql(
-                        "geography::Point([Latitude], [Longitude], 4326).STBuffer([Radius])",
-                        stored: true);
+                e.Property(x => x.Area).HasColumnType("geometry");
+                e.Property(e => e.ColorBytes).HasConversion(rgbaConverter).HasColumnType("varbinary(4)");
+                e.Property(e => e.FillColorBytes).HasConversion(rgbaConverter).HasColumnType("varbinary(4)");
             });
 
             builder.Entity<MapPolygon>(e =>
             {
-                e.ToTable("Polygons", "Map");
                 e.HasBaseType<MapObject>();
-
-                e.Property(l => l.PolyGeometry).HasColumnType("geography ");
+                e.ToTable("Polygons", "Map");
+                e.Property(l => l.PolyGeometry).HasColumnType("geometry");
+                e.Property(e => e.ColorBytes).HasConversion(rgbaConverter).HasColumnType("varbinary(4)");
+                e.Property(e => e.FillColorBytes).HasConversion(rgbaConverter).HasColumnType("varbinary(4)");
             });
             #endregion
 

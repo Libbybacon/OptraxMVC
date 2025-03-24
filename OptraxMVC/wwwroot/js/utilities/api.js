@@ -42,8 +42,9 @@ const apiService = {
             const result = responseType.includes("application/json") ? await response.json() : await response.text();
 
             const data = result.data ?? result;
-
-            return { success: true, data: data };
+            const success = result.success ?? (result.data ? (result.data.success ?? true) : true);
+            const error = success ? '' : result.msg;
+            return { success: success, data: data, error: error };
         }
         catch (error) {
             clearTimeout(id);

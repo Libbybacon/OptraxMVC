@@ -32,7 +32,7 @@ namespace OptraxDAL.Models.Admin
         [MaxLength(1)]
         public int Level { get; set; }
 
-        public int IconID { get; set; }
+        public int? IconID { get; set; }
 
         public virtual Icon? Icon { get; set; }
         public virtual MapObject? MapObject { get; set; }
@@ -112,10 +112,7 @@ namespace OptraxDAL.Models.Admin
     [Table("Locations", Schema = "Admin")]
     public class GreenhouseLocation : Location
     {
-        public GreenhouseLocation()
-        {
-            Level = 1;
-        }
+        public GreenhouseLocation() { }
 
         public virtual ICollection<Crop>? Crops { get; set; } = [];
     }
@@ -123,10 +120,7 @@ namespace OptraxDAL.Models.Admin
     [Table("Locations", Schema = "Admin")]
     public class FieldLocation : Location
     {
-        public FieldLocation()
-        {
-            Level = 1;
-        }
+        public FieldLocation() { }
 
         public virtual ICollection<Crop>? Crops { get; set; } = [];
     }
@@ -134,10 +128,7 @@ namespace OptraxDAL.Models.Admin
     [Table("Locations", Schema = "Admin")]
     public class RowLocation : Location
     {
-        public RowLocation()
-        {
-            Level = 2;
-        }
+        public RowLocation() { }
 
         public virtual ICollection<Crop>? Crops { get; set; } = [];
     }
@@ -145,28 +136,19 @@ namespace OptraxDAL.Models.Admin
     [Table("Locations", Schema = "Admin")]
     public class BedLocation : Location
     {
-        public BedLocation()
-        {
-            Level = 3;
-        }
+        public BedLocation() { }
     }
 
     [Table("Locations", Schema = "Admin")]
     public class PlotLocation : Location
     {
-        public PlotLocation()
-        {
-            Level = 4;
-        }
+        public PlotLocation() { }
     }
 
     [Table("Locations", Schema = "Admin")]
     public class BuildingLocation : Location
     {
-        public BuildingLocation()
-        {
-            Level = 1;
-        }
+        public BuildingLocation() { }
 
         public int AddressID { get; set; }
         public int BusinessID { get; set; }
@@ -181,10 +163,7 @@ namespace OptraxDAL.Models.Admin
     [Table("Locations", Schema = "Admin")]
     public class RoomLocation : Location
     {
-        public RoomLocation()
-        {
-            Level = 2;
-        }
+        public RoomLocation() { }
 
         public virtual ICollection<Crop>? Crops { get; set; } = [];
     }
@@ -194,7 +173,10 @@ namespace OptraxDAL.Models.Admin
     [Table("Locations", Schema = "Admin")]
     public class OffsiteLocation : Location
     {
-        public OffsiteLocation() { }
+        public OffsiteLocation()
+        {
+            Level = 0;
+        }
 
         public int? AddressID { get; set; }
 

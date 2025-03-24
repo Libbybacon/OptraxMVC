@@ -1,14 +1,16 @@
-﻿using NetTopologySuite.Geometries;
-using System.ComponentModel.DataAnnotations;
+﻿using NetTopologySuite;
+using NetTopologySuite.Geometries;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Map
 {
     [Table("Circles", Schema = "Map")]
-    public class MapCircle : MapObject
+    public class MapCircle : MapShape
     {
         public MapCircle()
         {
+            Color = ColorBytes.ToString();
+            FillColor = FillColorBytes.ToString();
             Name = "New Circle";
         }
 
@@ -18,24 +20,43 @@ namespace OptraxDAL.Models.Map
 
         public double Radius { get; set; } = 0;
 
-        [Display(Name = "Border Width")]
-        public int Weight { get; set; } = 3;
+        public Polygon? Area { get; set; }
 
-        [MaxLength(9)]
-        public string Color { get; set; } = "#1d52d7";
+        public override object ToGeoJSON()
+        {
+            return new
+            {
+                type = "Feature",
+                properties = new
+                {
+                    id = ID,
+                    name = Name,
+                    color = ColorBytes.ToString(),
+                    weight = Weight,
+                    fillColor = FillColorBytes.ToString(),
+                    dashArray = DashArray,
+                    radius = Radius,
+                    center = new[] { Longitude, Latitude },
+                    objType = "Circle",
+                },
+                geometry = new
+                {
+                    type = "Point",
+                    coordinates = new[] { Longitude, Latitude }
+                }
+            };
+        }
 
-        [MaxLength(9)]
-        [Display(Name = "Border Color")]
-        public string FillColor { get; set; } = "#1d52d782I'";
+        public void SetArea()
+        {
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
 
-        [MaxLength(15)]
-        [Display(Name = "Dash Spacing")]
-        public string DashArray { get; set; } = "5 5";
+            var center = geometryFactory.CreatePoint(new Coordinate(Longitude, Latitude)); // X = lng, Y = lat
 
-        [MaxLength(20)]
-        public string Pattern { get; set; } = "dash";
+            const double EarthRadius = 6371000.0; // meters
+            double radiusDegrees = Radius / EarthRadius * (180.0 / Math.PI);
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public Polygon? Area { get; private set; }
+            Area = center.Buffer(radiusDegrees) as Polygon;
+        }
     }
 }

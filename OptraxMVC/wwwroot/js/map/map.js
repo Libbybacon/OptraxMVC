@@ -33,10 +33,10 @@ $(document).ready(function () {
     });
 })
 
-function initializeMap() {
+async function initializeMap() {
     map = L.map('map', {
-        center: [-1.28333, 36.81667],
-        zoom: 13
+        center: [39.8283, -98.5795],
+        zoom: 4
     });
 
     map.on('click', function (event) {
@@ -46,7 +46,9 @@ function initializeMap() {
     setMapHeight();
     initializeLayers();
     createControls();
-    loadFeatures();
+    await loadFeatures().then(() => {
+        zoomToAllLayers();
+    });
 
     map.on('popupclose', function () {
         $(document).find(".color-picker").spectrum("hide");
@@ -72,19 +74,31 @@ async function loadFeatures() {
     await util.loadObjects(pointsLayer, 'Point');
     await util.loadObjects(linesLayer, 'Line');
     await util.loadObjects(polysLayer, 'Polygon');
+    await util.loadObjects(circlesLayer, 'Circle');
 }
 
 function initializeLayers() {
 
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    var satellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        attribution: '© Google'
     }).addTo(map);
+
+    var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    });
+
+    var baseMaps = {
+        "Satellite": satellite,
+        "OpenStreetMap": osm,       
+    };
+
+    L.control.layers(baseMaps).addTo(map);
 
     pointsLayer = L.geoJSON(null, {
 
         pointToLayer: function (feature, latlng) {
-
-
             const props = feature.properties;
             props["objType"] = 'Point';
             const icon = util.iconUtil.createIcon(props.iconPath);
@@ -107,9 +121,11 @@ function initializeLayers() {
 
     circlesLayer = L.geoJSON(null, {
         pointToLayer: function (feature, latlng) {
-
+            console.log('circle pointToLayer feature', feature, 'properties', feature.properties)
+            feature.properties["fillOpacity"] = 1;
             if (feature.properties && feature.properties.radius) {
-                return L.circle(latlng, setStyle(feature.properties));
+
+                return L.circle(latlng, feature.properties);
             }
             return L.marker(latlng); // just render as marker if no radius
         },
@@ -121,7 +137,7 @@ function initializeLayers() {
 
     polysLayer = L.geoJSON(null, {
         style: function (feature) {
-            feature.properties['opacity'] = 1;
+            feature.properties["fillOpacity"] = 1;
             return setStyle(feature.properties);
         },
         onEachFeature: (feature, layer) => {
@@ -129,6 +145,33 @@ function initializeLayers() {
             setActions(feature.properties, layer);
         }
     }).addTo(map);
+}
+
+function zoomToAllLayers() {
+    const allBounds = [];
+
+    [pointsLayer, linesLayer, circlesLayer, polysLayer].forEach(layer => {
+        if (layer.getLayers().length > 0) {
+            const bounds = layer.getBounds();
+            if (bounds.isValid()) {
+                allBounds.push(bounds);
+            }
+        }
+        console.log('allBounds', allBounds)
+    });
+
+    if (allBounds.length > 0) {
+        let combinedBounds = allBounds[0];
+        for (let i = 1; i < allBounds.length; i++) {
+            combinedBounds = combinedBounds.extend(allBounds[i]);
+        }
+
+        map.fitBounds(combinedBounds, { padding: [40, 40] });
+    }
+    else {
+
+        map.setView([39.8283, -98.5795], 4); // lat/lng + zoom
+    }
 }
 
 function setActions(props, layer) {
@@ -160,8 +203,9 @@ function setStyle(props) {
         weight: props.weight,
         dashArray: props.dashArray,
         fillColor: props.fillColor,
+        fillOpacity: props.fillOpacity
     }
-    if (props.objType == 'circle') {
+    if (props.objType == 'Circle') {
         style["radius"] = props.radius;
     }
     return style;

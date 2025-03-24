@@ -28,11 +28,11 @@ namespace OptraxMVC.Services.Inventory
                 await db.Locations.AddAsync(loc);
                 await db.SaveChangesAsync();
 
-                return new ResponseVM { success = true, msg = "Location Added!", data = loc };
+                return new ResponseVM { Success = true, Msg = "Location Added!", Data = loc };
             }
             catch (Exception)
             {
-                return new ResponseVM { msg = "Error saving new location..." };
+                return new ResponseVM { Msg = "Error saving new location..." };
             }
         }
     }

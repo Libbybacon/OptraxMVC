@@ -32,11 +32,29 @@ namespace OptraxDAL.Models.Map
         [NotMapped]
         public string IconPath { get; set; } = string.Empty;
 
+        public override object ToGeoJSON()
+        {
+            return new
+            {
+                type = "Feature",
+                properties = new
+                {
+                    id = ID,
+                    name = Name,
+                    objType = "Point",
+                    iconPath = GetIconPath()
+                },
+                geometry = new
+                {
+                    type = "Point",
+                    coordinates = new[] { Longitude, Latitude }
+                }
+            };
+        }
         public string GetIconPath()
         {
             return Icon?.ImagePath ?? string.Empty;
         }
-
         public PointVM ToPointVM()
         {
             return new()

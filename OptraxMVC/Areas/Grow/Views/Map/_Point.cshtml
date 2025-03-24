@@ -5,70 +5,16 @@
 
 @{
     FormVM formVM = ViewBag.FormVM;
-    DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
-
-    int collID = 1;
 }
 
-<div class="popup-msg"></div>
-@using (Html.BeginForm(formVM.Action, "Map", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_obj = "Point" }))
-{
+<form asp-action="@formVM.Action" asp-controller="Map" method="post" id="modelForm" data-obj="Point">
     @Html.AntiForgeryToken()
 
-    <input id="changes" type="hidden" name="Changes" />
+    <input type="hidden" asp-for="IconID" />
+    <input type="hidden" asp-for="Latitude" />
+    <input type="hidden" asp-for="Longitude" />
+    <partial name="_MapObject.cshtml" model="Model" />
+</form>
 
-    @Html.HiddenFor(m => m.ID)
-    @Html.HiddenFor(m => m.IconID, new { @class = "attr" })
-    @Html.HiddenFor(m => m.Latitude)
-    @Html.HiddenFor(m => m.Longitude)
 
-    <div id="edit-content" class="">
-        <div class="w-100">
-            @Html.LabelFor(m => m.Name)
-            @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = "point-info attr form-control" } })
-            @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
-        </div>
-
-        <label class="mb-2">Select Icon</label>
-        <div class="w-100 d-flex">
-            <div class="icon-coll-list">
-                @foreach (var coll in drops.IconsList)
-                {
-                    bool hasIcon = coll.ID == collID;
-
-                    <div class="icon-coll-name  @($"coll-name-{coll.ID}")  @(hasIcon ? "selected" : "")" data-collid="@coll.ID">
-                        <div class="px-3">@coll.Name</div>
-                    </div>
-                }
-            </div>
-            <div class="icon-preview flex-fill">
-                @foreach (var coll in drops.IconsList)
-                {
-                    bool hasIcon = coll.ID == collID;
-
-                    <div class="preview-div d-flex flex-wrap @($"preview-coll-{coll.ID}")  @(hasIcon ? "" : "d-none")">
-                        @foreach (var icon in coll.Icons)
-                        {
-                            <div class="icon-div @(icon.ID == Model.IconID ? "selected" : "") flex-item mx-1 p-2 mb-2" data-iconid="@icon.ID">
-                                <img src="@icon.ImagePath" class="map-icon" />
-                            </div>
-                        }
-                    </div>
-                }
-            </div>
-        </div>
-
-        <div class="w-100">
-            <label>Details</label>
-            <br />
-            @Html.TextAreaFor(m => m.Notes, new { @class = "point-info attr form-control w-100", @rows = "3" })
-            @Html.ValidationMessageFor(m => m.Notes, "", new { @class = "val-msg" })
-        </div>
-    </div>
-    <div class="popup-btns d-flex w-100 justify-content-center">
-        <button type="submit" class="save-btn @(formVM.IsNew ? "" : "d-none")">Save New Point</button>
-        <button type="button" class="delete-btn me-2 @(formVM.IsNew ? "d-none" : "")" data-id="@Model.ID" data-type="point">Delete Point</button>
-        <button type="submit" class="update-btn @(formVM.IsNew ? "d-none" : "")" >Save Changes</button>
-    </div>
-}
 

@@ -27,7 +27,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, msg = ex.Message });
+                return Json(new { Success = false, Msg = ex.Message });
             }
         }
 
@@ -66,7 +66,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, msg = ex.Message });
+                return Json(new { Success = false, Msg = ex.Message });
             }
         }
 
@@ -75,7 +75,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
         public async Task<IActionResult> CreateBuildingAsync(BuildingLocation loc)
         {
             if (!ModelState.IsValid)
-                return Json(new { msg = "Invalid model" });
+                return Json(new { Msg = "Invalid model" });
             ResponseVM response = await CreateAsync(loc);
             return Json(response, ReferenceHandler.Preserve);
         }
@@ -85,7 +85,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
         public async Task<IActionResult> CreateRoomAsync(RoomLocation loc)
         {
             if (!ModelState.IsValid)
-                return Json(new { msg = "Invalid model" });
+                return Json(new { Msg = "Invalid model" });
 
             return Json(await CreateAsync(loc));
         }
@@ -95,7 +95,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
         public async Task<IActionResult> CreateVehicleAsync(VehicleLocation loc)
         {
             if (!ModelState.IsValid)
-                return Json(new { msg = "Invalid model" });
+                return Json(new { Msg = "Invalid model" });
 
             return Json(await CreateAsync(loc));
         }
@@ -105,7 +105,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
         public async Task<IActionResult> CreateOffsiteAsync(OffsiteLocation loc)
         {
             if (!ModelState.IsValid)
-                return Json(new { msg = "Invalid model" });
+                return Json(new { Msg = "Invalid model" });
 
             return Json(await CreateAsync(loc));
         }
@@ -119,7 +119,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
             catch (Exception)
             {
-                return new ResponseVM { success = false, msg = "Error saving location..." };
+                return new ResponseVM { Success = false, Msg = "Error saving location..." };
             }
         }
     }

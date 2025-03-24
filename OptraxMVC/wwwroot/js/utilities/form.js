@@ -12,26 +12,10 @@ export const formUtil = {
         if ($.validator && $.validator.unobtrusive) {
             $.validator.unobtrusive.parse($form);
         }
-        if ($form.data('func').includes('edit')) {
+        console.log('setListeners form', $form, 'action', $form.attr('action'));
+        if ($form.attr('action').includes('Edit')) {
             formUtil.setModelChanges();
         }
-        formUtil.setSelectDrops();
-    },
-    setSelectDrops: function () {
-        $('.select2').select2({
-            theme: "bootstrap-5", // Ensures it follows Bootstrap styles
-            width: "100%"
-        });
-
-        $('.select2').on("change", function () {
-            let val = $(this).val();
-            if (!val || val === "") {
-                $(this).val(null).trigger("change.select2");
-            }
-            if ($.validator && $.validator.unobtrusive) {
-                setTimeout(() => { $(this).valid(); }, 10);
-            }
-        });
     },
     setModelChanges: function () {
         Changes = [];
@@ -56,13 +40,26 @@ export const formUtil = {
     },
     submitForm: async function () {
         $form = $(`#modelForm`);
-        console.log('formUtil submitForm', Changes);
-        let proceed = $form.attr('action').includes('Create') || Changes.length > 0;
+
+        const action = $form.attr('action')
+        console.log('formUtil submitForm changes', Changes);
+
+        let proceed = action.includes('Create') || Changes.length > 0;
         console.log('formUtil submitForm', proceed);
+
         if ($form.valid() && proceed) {
 
-            return await apiService.postForm($form.attr("action"), $form.serialize())
-        };
+            return await apiService.postForm(action, $form.serialize())
+        }
+        else {
+            if (action.includes('Create') && !$form.valid()) {
+                return { success: false, error: 'Invalid form'}
+            }
+            else if (Changes.length == 0) {
+                return {success: true}
+            }
+            
+        }
     },
 
     arrayToModel: function (arr) {

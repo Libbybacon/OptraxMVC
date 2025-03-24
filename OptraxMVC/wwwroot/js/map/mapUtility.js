@@ -1,6 +1,7 @@
 ﻿import { map, layerIndex } from './map.js';
 import apiService from '../utilities/api.js';
 import { formUtil } from '../utilities/form.js';
+import dropdownOptions from '../utilities/dropdown.js';
 
 export var curLayer = { val: {} };
 
@@ -40,7 +41,7 @@ export async function loadObjects(mapLayer, layerType) {
         const response = await apiService.get('/Grow/Map/GetObjects', { objType: layerType });
         console.log('response', response);
 
-        if (response.success === false) { throw new Error(response.error || "Failed to load points"); }
+        if (response.success === false) { alert(`Failed to load ${layerType.toLowerCase()}s`); throw new Error(response.error || `Failed to load ${layerType.toLowerCase()}s`); }
 
         mapLayer.addData(response.data);
     }
@@ -62,7 +63,7 @@ export async function addObject(e, layerSet) {
         let latlng = l.getLatLng();
         layerProps["radius"] = l.getRadius();
         layerProps['latlng'] = latlng;
-
+        console.log('addObject circle props', layerProps);
         const feature = {
             type: "Feature",
             properties: layerProps,
@@ -115,7 +116,6 @@ async function showEditPopup(props) {
     }
 
     const view = await response.data;
-    console.log('showEditPopup response', view);
 
     const $editDiv = $('<div/>').addClass('edit-popup').html(view);
     L.DomEvent.disableClickPropagation($editDiv[0]);
@@ -125,7 +125,6 @@ async function showEditPopup(props) {
 
     $($editDiv).find('#Color.color-picker').spectrum(mapFormUtil.setColorPicker($editDiv, 'color'));
     $($editDiv).find('#FillColor.color-picker').spectrum(mapFormUtil.setColorPicker($editDiv, 'fillColor'));
-    //mapFormUtil.setColorPicker($editDiv);
 }
 
 
@@ -143,7 +142,7 @@ export function updateHiddenFields(type, props) {
         const coordString = latlngs.map(p => `${p.lng} ${p.lat}`).join(', ');
         const wkt = `LINESTRING(${coordString})`;
 
-        $('#LineGeometryWKT').val(wkt);
+        $('#GeometryWKT').val(wkt);
     }
 
     else if (type == 'Circle') {
@@ -163,7 +162,7 @@ export function updateHiddenFields(type, props) {
 
         const coordString = closed.map(p => `${p.lng} ${p.lat}`).join(', ');
         const wkt = `POLYGON((${coordString}))`;
-        $('#PolyGeometryWKT').val(wkt);
+        $('#GeometryWKT').val(wkt);
     }
 }
 
@@ -191,9 +190,10 @@ export async function getEdit(id, type, center) {
 // Delete
 export async function onDelete(id, type) {
     const response = await apiService.postForm(`${urlBase}DeleteObject/`, { id: id, objType: type })
-
+    console.log('onDelete response', response);
     if (response.success == true) {
-        curLayer.val.remove();
+        console.log('onDelete curLayer', curLayer.val);
+        styleUtil.removeLayer();
         map.closePopup();
         //window.showMessage({ msg: `${type} Deleted!`, css: 'success', msgdiv: $('.map-msg') });
     }
@@ -241,6 +241,7 @@ export const styleUtil = {
     },
     updateStyle: function (input, val) {
         let layer = curLayer.val;
+        console.log('updateStyle layer', layer, 'input', input, 'val', val);
         switch (input) {
             case 'name':
                 layer._tooltip.setContent(`<b>${val}</b>`);
@@ -303,9 +304,10 @@ export const styleUtil = {
     removeLayer: function () {
         let layer = curLayer.val;
         if (!layer) return;
+        const id = layer.feature.properties.id;
+        layerIndex.delete(id);
         layer.remove();
     },
-
 }
 
 export const mapFormUtil = {
@@ -324,18 +326,21 @@ export const mapFormUtil = {
         mapFormUtil.setStyleListeners();
     },
     setColorPicker(div, attr) {
+        console.log('setColorPicker div', div, 'attr', attr);
+        let divName = attr.replace('c', 'C').replace('f', 'F')
+        let $div = $(`#${divName}`);
         return {
             type: "component",
+            showInput: true,
             showPalette: true,
             showButtons: false,
+            preferredFormat: "rgb",
             togglePaletteOnly: true,
             showSelectionPalette: true,
             selectionPalette: [colorSwatches],
-            showInput: true,
-            //appendTo: div,
-            change: function (color) { color.toHexString(); styleUtil.updateStyle(attr, color) },
-            move: function (color) { color.toHexString(); styleUtil.updateStyle(attr, color) },
-            show: function (color) { color.toHexString(); styleUtil.updateStyle(attr, color) },
+            change: function (color) { styleUtil.updateStyle(attr, color.toRgbString()); console.log('hexchange', color.toRgbString(), attr); },
+            move: function (color) { styleUtil.updateStyle(attr, color.toRgbString()); console.log('hexmove', color.toRgbString()); },
+            show: function (color) { styleUtil.updateStyle(attr, color.toRgbString()); console.log('hexshow', color.toRgbString()); },
         }
     },
     setStyleListeners: function () {
@@ -367,7 +372,7 @@ export const mapFormUtil = {
             }, 50);
         })
         $('#Name').on('input', function () {
-            styleUtil.updateStyle('name', $('#Name').val());
+            styleUtil.updateStyle('name', $(this).val());
         });
         $('#DashArray').on('input', function () {
             styleUtil.updateStyle('dashArray', $(this).val())
@@ -381,6 +386,7 @@ export const mapFormUtil = {
 
         let response = await formUtil.submitForm();
         console.log('onSubmitForm response', response);
+
         if (response && response.success) {
 
             map.off('popupclose', styleUtil.restoreStyle);
@@ -392,7 +398,7 @@ export const mapFormUtil = {
             window.showMessage({ msg: `${objType} ${action}!`, css: 'success', msgdiv: $('.map-msg') });
         }
         else {
-            alert('Error! Invalid form...')
+            alert('Error! ' + response.error);
         }
     }
 }

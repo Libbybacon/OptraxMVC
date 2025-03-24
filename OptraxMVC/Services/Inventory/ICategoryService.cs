@@ -34,11 +34,11 @@ namespace OptraxMVC.Services.Inventory
                 db.Categories.Add(cat);
                 await db.SaveChangesAsync();
 
-                return new ResponseVM { success = true, msg = $"New {(!cat.ParentID.HasValue ? "top level " : "")}category '{cat.Name}' added!" };
+                return new ResponseVM { Success = true, Msg = $"New {(!cat.ParentID.HasValue ? "top level " : "")}category '{cat.Name}' added!" };
             }
             catch (Exception)
             {
-                return new ResponseVM { msg = "Error saving new category" };
+                return new ResponseVM { Msg = "Error saving new category" };
             }
         }
 
@@ -49,7 +49,7 @@ namespace OptraxMVC.Services.Inventory
                 var dbCat = await GetCategoryByIdAsync(cat.ID);
 
                 if (dbCat == null)
-                    return new ResponseVM { msg = "Category not found." };
+                    return new ResponseVM { Msg = "Category not found." };
 
                 List<string> changes = cat.Changes?.Split(",")?.ToList() ?? [];
 
@@ -61,11 +61,11 @@ namespace OptraxMVC.Services.Inventory
                 }
                 await db.SaveChangesAsync();
 
-                return new ResponseVM { success = true, msg = "Category changes saved!" };
+                return new ResponseVM { Success = true, Msg = "Category changes saved!" };
             }
             catch (Exception)
             {
-                return new ResponseVM { msg = "Error saving category :(" };
+                return new ResponseVM { Msg = "Error saving category :(" };
             }
         }
     }

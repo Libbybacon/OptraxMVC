@@ -1,0 +1,42 @@
+﻿@using OptraxDAL.Models.Map;
+@using OptraxMVC.Models
+
+@model MapObject
+
+@{
+    FormVM formVM = ViewBag.FormVM;
+}
+
+<div class="popup-msg"></div>
+
+<input type="hidden" asp-for="ID" />
+<input id="changes" type="hidden" name="Changes" />
+
+<div id="edit-content" class="px-2">
+    <div class="row col-12 w-100 px-0 m-0 pe-0">
+        <div class="col-12">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control attr" />
+            <span asp-validation-for="Name" class="val-msg"></span>
+        </div>
+        @if (Model is MapShape)
+        {
+            <partial name="_MapShapeInputs.cshtml" model="Model" />
+        }
+        else
+        {
+            <partial name="_IconSelect.cshtml" model="Model" />
+        }
+
+        <div class="col-12">
+            <label asp-for="Notes"></label>
+            <textarea asp-for="Notes" class="form-control attr" rows="3"></textarea>
+            <span asp-validation-for="Notes" class="val-msg"></span>
+        </div>
+    </div>
+</div>
+<div class="popup-btns d-flex w-100 justify-content-center">
+    <button type="submit" class="save-btn @(formVM.IsNew ? "" : "d-none")">Save @formVM.Type</button>
+    <button type="button" class="delete-btn me-3 @(formVM.IsNew ? "d-none" : "")" data-id="@Model.ID" data-type="Circle">Delete</button>
+    <button type="submit" class="update-btn ms-3 @(formVM.IsNew ? "d-none" : "")">Save Changes</button>
+</div>

@@ -19,5 +19,7 @@ namespace OptraxDAL.Models.Map
         public string? Category { get; set; }
 
         public bool Active { get; set; } = true;
+
+        public abstract object ToGeoJSON();
     }
 }

@@ -74,14 +74,14 @@ namespace OptraxMVC.Services.Inventory
             var strain = await db.Strains.FindAsync(plant.SpeciesID);
 
             if (strain == null)
-                return new ResponseVM() { msg = "Could not find Strain" };
+                return new ResponseVM() { Msg = "Could not find Strain" };
 
             try
             {
                 //Crop crop = await db.Crops.Where(c => c.BatchID == plant.Crop.BatchID).FirstOrDefaultAsync() ?? plant.Crop;
 
                 //if (crop.StrainID != plant.SpeciesID)
-                //    return new ResponseVM() { msg = "Plant Strain does not match Crop Strain" };
+                //    return new ResponseVM() { Msg = "Plant Strain does not match Crop Strain" };
 
                 //plant.Crop = crop;
                 ////crop.Strain = strain;
@@ -98,11 +98,11 @@ namespace OptraxMVC.Services.Inventory
 
                 //await db.SaveChangesAsync();
 
-                return new ResponseVM() { success = true, msg = "Plants Added!" };
+                return new ResponseVM() { Success = true, Msg = "Plants Added!" };
             }
             catch (Exception)
             {
-                return new ResponseVM() { msg = "Error adding plants..." };
+                return new ResponseVM() { Msg = "Error adding plants..." };
             }
         }
 
@@ -112,11 +112,11 @@ namespace OptraxMVC.Services.Inventory
             {
                 var mothers = await db.Plants.Where(p => p.SpeciesID == strainID).Select(p => new { p.ID, Name = p.Phase }).ToListAsync();
                 //var mothers = await db.Plants.Where(p => p.IsMother && p.StrainID == strainID).Select(p => new { p.ID, Name = p.MotherName }).ToListAsync();
-                return new ResponseVM() { success = true, data = mothers };
+                return new ResponseVM() { Success = true, Data = mothers };
             }
             catch (Exception)
             {
-                return new ResponseVM() { msg = "Error loading mothers" };
+                return new ResponseVM() { Msg = "Error loading mothers" };
             }
         }
     }

@@ -35,7 +35,7 @@ namespace OptraxMVC.Services.Inventory
             var rsrcCats = await GetResourceCategoriesAsync(rsrc.CategoryID);
 
             if (rsrcCats == null)
-                return new ResponseVM { success = true, msg = "Invalid category" };
+                return new ResponseVM { Success = true, Msg = "Invalid category" };
 
             try
             {
@@ -44,15 +44,15 @@ namespace OptraxMVC.Services.Inventory
             }
             catch (Exception)
             {
-                return new ResponseVM { success = false, msg = "Error saving Resource" };
+                return new ResponseVM { Success = false, Msg = "Error saving Resource" };
             }
 
             ResourceVM? rsrcVM = rsrc.ToResourceVM(rsrcCats[0], rsrcCats[1]);
 
             if (rsrcVM == null)
-                return new ResponseVM { success = false, msg = "Error converting Resource" };
+                return new ResponseVM { Success = false, Msg = "Error converting Resource" };
 
-            return new ResponseVM { success = false, msg = "Resource Saved!", data = rsrcVM };
+            return new ResponseVM { Success = false, Msg = "Resource Saved!", Data = rsrcVM };
         }
 
         public async Task<ResponseVM> UpdateAsync(Resource rsrc)
@@ -60,12 +60,12 @@ namespace OptraxMVC.Services.Inventory
             Resource? dbRsrc = await GetResourceByIdAsync(rsrc.ID);
 
             if (dbRsrc == null)
-                return new ResponseVM { msg = "Resource not found." };
+                return new ResponseVM { Msg = "Resource not found." };
 
             var rsrcCats = await GetResourceCategoriesAsync(dbRsrc.CategoryID);
 
             if (rsrcCats == null)
-                return new ResponseVM { msg = "Invalid category" };
+                return new ResponseVM { Msg = "Invalid category" };
 
             try
             {
@@ -81,12 +81,12 @@ namespace OptraxMVC.Services.Inventory
             }
             catch (Exception)
             {
-                return new ResponseVM { msg = "Error saving changes." };
+                return new ResponseVM { Msg = "Error saving changes." };
             }
 
             ResourceVM rsrcVM = rsrc.ToResourceVM(rsrcCats[0], rsrcCats[1]);
 
-            return new ResponseVM { success = false, msg = "Resource Updated!", data = rsrcVM };
+            return new ResponseVM { Success = false, Msg = "Resource Updated!", Data = rsrcVM };
         }
 
         public async Task<Category[]?> GetResourceCategoriesAsync(int categoryId)

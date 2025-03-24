@@ -386,80 +386,6 @@ input[type=checkbox]:hover, input[type=radio]:hover {
     cursor: pointer;
 }
 
-/* Select2 Dropdowns */
-.select2-container {
-    width: 100% !important;
-}
-
-    .select2-container .select2-selection--single {
-        color: #212529;
-        width: 100% !important;
-        min-height: 33px;
-        /*height: auto !important;*/
-        display: flex !important;
-        align-items: center !important;
-        border: var(--input-border);
-        border-radius: 0.375rem !important;
-        padding: 0.375rem 0.75rem !important;
-        font-size: var(--f-xs) !important;
-    }
-
-        .select2-container .select2-selection--single .select2-selection__rendered {
-            padding-left: 0 !important;
-            line-height: normal !important;
-            white-space: normal !important;
-        }
-
-        .select2-container .select2-selection--single::after {
-            top: 50%;
-            right: 10px;
-            content: "▾";
-            color: #6c757d;
-            font-size: 16px;
-            position: absolute;
-            pointer-events: none;
-            transform: translateY(-50%);
-        }
-
-.select2-container--disabled {
-    background-color: var(--gray-md);
-}
-
-    .select2-container--disabled .select2-selection--single {
-        color: var(--gray-lt) !important;
-    }
-
-.select2-dropdown {
-    scrollbar-width: thin;
-    overflow-y: auto !important;
-    max-height: 200px !important;
-}
-
-.select2-search__field {
-    outline: 1px solid var(--grn-md);
-    border-radius: var(--border-r);
-}
-
-.select2-results__option {
-    padding-top: 2px;
-    padding-bottom: 2px;
-    font-size: var(--f-xs);
-}
-
-    .select2-results__option:hover {
-        background-color: var(--blue-lt) !important;
-    }
-
-.select2-container .select2-results__option--selected {
-    color: white !important;
-    background-color: var(--blue-dk) !important;
-}
-
-.select2-container .select2-results__option--highlighted.select2-results__option--selectable {
-    color: black;
-    background-color: var(--blue-xlt);
-}
-
 /* Update Messages */
 .error-div {
     display: flex;
@@ -495,7 +421,9 @@ input[type=checkbox]:hover, input[type=radio]:hover {
 .field-validation-error span,
 .val-msg {
     color: red;
-    font-size: var(--f-xs);
+    padding-top: 1rem;
+    padding-left: 3px;
+    font-size: var(--f-xxs);
 }
 
 .form-note {
@@ -600,3 +528,12 @@ input[type=checkbox]:hover, input[type=radio]:hover {
         color: var(--grn-dk);
         background-color: var(--grn-xlt);
     }
+
+
+.choices,
+.choices__inner{
+    margin: 0;
+    font-size: inherit;
+    border: var(--input-border);
+    padding-bottom: 0 !important;
+}

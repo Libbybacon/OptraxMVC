@@ -5,63 +5,13 @@
 
 @{
     FormVM formVM = ViewBag.FormVM;
-    DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
 }
 
-<div class="popup-msg"></div>
-@using (Html.BeginForm(formVM.Action, "Map", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_obj = "line" }))
-{
+<form asp-action="@formVM.Action" asp-controller="Map" method="post" id="modelForm" data-obj="Line">
     @Html.AntiForgeryToken()
 
-    <input id="changes" type="hidden" name="Changes" />
+    <input type="hidden" asp-for="GeometryWKT" />
+    @await Html.PartialAsync("_MapObject", Model, ViewData)
+</form>
 
-    @Html.HiddenFor(m => m.ID)
-    @Html.HiddenFor(m => m.LineGeometryWKT)
 
-    <div id="edit-content" class="">
-        <div class="col-12 d-flex w-100 pe-1">
-            <div class="col-6">
-                @Html.LabelFor(m => m.Name)
-                @Html.EditorFor(m => m.Name, "Name", new { htmlAttributes = new { @class = "form-control attr" } })
-                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
-            </div>
-            <div class="col-6 ps-1">
-                @Html.LabelFor(m => m.Color)
-                <input type="text" id="Color" name="Color" class="color-picker form-control attr" data-coloris value="@Model.Color" />
-                @Html.ValidationMessageFor(m => m.Color, "", new { @class = "val-msg" })
-            </div>
-
-        </div>
-        <div class="col-12 d-flex w-100">
-            <div class="col-4 pe-1">
-                @Html.LabelFor(m => m.Weight)
-                @Html.EditorFor(m => m.Weight, new { htmlAttributes = new { @class = "form-control attr", @step = "1" } })
-                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "val-msg" })
-            </div>
-            <div class="col-4 px-1">
-                @Html.LabelFor(m => m.Pattern)
-                <select id="Pattern" name="Pattern" class="form-select attr">
-                    <option value="dash" @(Model.Pattern == "dash" ? "selected" : "")>Dash</option>
-                    <option value="solid" @(Model.Pattern == "solid" ? "selected" : "")>Solid</option>
-                </select>
-                @Html.ValidationMessageFor(m => m.Pattern, "", new { @class = "val-msg" })
-            </div>
-            <div class="col-4 ps-1">
-                @Html.LabelFor(m => m.DashArray)
-                @Html.EditorFor(m => m.DashArray, new { htmlAttributes = new { @class = "form-control attr" } })
-                @Html.ValidationMessageFor(m => m.DashArray, "", new { @class = "val-msg" })
-            </div>
-        </div>
-        <div class="w-100">
-            <label>Details</label>
-            <br />
-            @Html.TextAreaFor(m => m.Notes, new { @class = "form-control attr w-100", @rows = "3" })
-            @Html.ValidationMessageFor(m => m.Notes, "", new { @class = "val-msg" })
-        </div>
-    </div>
-    <div class="popup-btns d-flex w-100 justify-content-center">
-        <button type="submit" class="save-btn @(formVM.IsNew ? "" : "d-none")">Save New Line</button>
-        <button type="button" class="delete-btn me-2 @(formVM.IsNew ? "d-none" : "")" data-id="@Model.ID" data-type="point">Delete Line</button>
-        <button type="submit" class="update-btn" @(formVM.IsNew ? "d-none" : "")>Save Changes</button>
-    </div>
-}

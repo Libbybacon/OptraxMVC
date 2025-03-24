@@ -164,7 +164,7 @@ function loadParentList() {
             data: { strainID: strainID },
             success: function (response) {
 
-                if (response.success) {
+                if (response.Success) {
                     let $select = $('#ParentID');
                     $select.html('');
                     $.each(response.data, function (index, parent) {
