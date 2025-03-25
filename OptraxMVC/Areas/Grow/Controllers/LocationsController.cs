@@ -1,19 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
 using OptraxDAL.Models.Admin;
+using OptraxMVC.Areas.Grow.Models;
 using OptraxMVC.Controllers;
 using OptraxMVC.Models;
 using OptraxMVC.Services;
-using OptraxMVC.Services.Inventory;
 using System.Text.Json.Serialization;
 
 namespace OptraxMVC.Areas.Grow.Controllers
 {
     [Area("Grow")]
-    public class LocationsController(OptraxContext context, IDropdownService dropdownService, ILocationService locationService) : BaseController(context)
+    [Authorize]
+    public class LocationsController(OptraxContext context, IOptionsService optionsService, ILocationService locationService) : BaseController(context)
     {
         private readonly ILocationService _ILocation = locationService;
-        private readonly IDropdownService _IDropdowns = dropdownService;
+        private readonly IOptionsService _IOptions = optionsService;
 
         [HttpGet]
         [HttpPost]
@@ -21,6 +23,10 @@ namespace OptraxMVC.Areas.Grow.Controllers
         {
             try
             {
+                ViewData["LocTabs"] = new TabsVM()
+                {
+                    Area = "",
+                }
                 var data = await _ILocation.GetLocationsAsync();
 
                 return Json(data);
@@ -36,32 +42,32 @@ namespace OptraxMVC.Areas.Grow.Controllers
         {
             try
             {
+                ViewBag.IsFirst = type == "firstSite";
                 ViewBag.FormVM = new FormVM()
                 {
                     IsNew = true,
-                    JsFunc = "createLocation",
                     Action = $"Create{type}",
                     MsgDiv = "tableMsg"
                 };
 
-                object? model = null;
-                switch (type)
+                LocationVM model = type switch
                 {
-                    case "Building":
-                        ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["StateSelects"]);
-                        model = new BuildingLocation() { LocationType = type, Address = new Address() { } };
-                        break;
-                    case "Room":
-                        ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["BuildingSelects"]);
-                        model = new RoomLocation() { LocationType = type };
-                        break;
-                    case "Vehicle":
-                        model = new VehicleLocation() { LocationType = type };
-                        break;
-                    case "OffSite":
-                        model = new OffsiteLocation() { LocationType = type };
-                        break;
-                }
+
+                    "Site" => new LocationVM(new SiteLocation()),
+                    "Field" => new LocationVM(new FieldLocation()),
+                    "Row" => new LocationVM(new RowLocation()),
+                    "Bed" => new LocationVM(new BedLocation()),
+                    "Plot" => new LocationVM(new PlotLocation()),
+                    "Greenhouse" => new LocationVM(new GreenhouseLocation()),
+                    "Building" => new LocationVM(new BuildingLocation()),
+                    "Room" => new LocationVM(new RoomLocation()),
+                    "Offsite" => new LocationVM(new OffsiteLocation()),
+                    _ => new LocationVM(new SiteLocation()),
+                };
+
+                ViewData["Dropdowns"] = _IOptions.LoadOptions(["StateSelects"]);
+                ViewData["Dropdowns"] = _IOptions.LoadOptions(["BuildingSelects"]);
+
                 return PartialView("_Create", model);
             }
             catch (Exception ex)
@@ -72,10 +78,72 @@ namespace OptraxMVC.Areas.Grow.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(LocationVM model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    //model.AvailableParents = [.. db.Locations
+                    //    .Select(l => new SelectListItem
+                    //    {
+                    //        Value = l.ID.ToString(),
+                    //        Text = l.Name
+                    //    })];
+
+                    return Json(new ResponseVM() { Msg = "Invalid model" });
+                }
+
+                Location loc = model.LocationType.ToLower() switch
+                {
+                    "vehicle" => new VehicleLocation(),
+                    "site" => new SiteLocation(model.Address, model.Business),
+                    "greenhouse" => new GreenhouseLocation(),
+                    "field" => new FieldLocation(),
+                    "row" => new RowLocation(),
+                    "bed" => new BedLocation(),
+                    "plot" => new PlotLocation(),
+                    "building" => new BuildingLocation(),
+                    "room" => new RoomLocation(),
+                    "offsite" => new OffsiteLocation(),
+                    _ => new SiteLocation()
+                };
+
+                loc.Name = model.Name;
+                loc.Details = model.Details;
+                loc.ParentID = model.ParentID;
+
+                if (loc is SiteLocation site)
+                {
+                    site.BusinessID = model.BusinessID;
+                    site.AddressID = (int)model.AddressID!;
+                }
+
+                //loc.Level = model.ParentID.HasValue
+                //    ? db.Locations.Find(model.ParentID.Value)?.Level + 1 ?? 1
+                //: 0;
+
+                await db.Locations.AddAsync(loc);
+                await db.SaveChangesAsync();
+
+                return Json(new ResponseVM() { Success = true, Data = loc.ToTreeNode() });
+            }
+            catch (Exception ex)
+            {
+                return Json(new ResponseVM() { Msg = "Error creating location: " + ex.Message });
+            }
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateBuildingAsync(BuildingLocation loc)
         {
             if (!ModelState.IsValid)
-                return Json(new { Msg = "Invalid model" });
+            {
+                return Json(new ResponseVM() { Msg = "Invalid model" });
+            }
+
             ResponseVM response = await CreateAsync(loc);
             return Json(response, ReferenceHandler.Preserve);
         }

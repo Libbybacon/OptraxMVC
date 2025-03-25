@@ -1,27 +1,20 @@
-﻿using OptraxDAL.ViewModels;
+﻿using OptraxDAL.Models.BaseClasses;
+using OptraxDAL.ViewModels;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
     [Table("Categories", Schema = "Inventory")]
-    public class Category : TrackingBase
+    public class Category : BaseDetails
     {
         public Category() { }
-
-        public int ID { get; set; }
         public int? ParentID { get; set; }
 
-
-        [MaxLength(50)]
-        public string Name { get; set; } = string.Empty;
-        [MaxLength(150)]
-        public string? Description { get; set; }
         [MaxLength(10)]
         public string? HexColor { get; set; } = "#FFFFFF";
         [MaxLength(10)]
         public string? TextColor { get; set; } = "#00000000";
-        public bool Active { get; set; } = true;
 
         public virtual List<Resource> Resources { get; set; } = [];
         public virtual Category? Parent { get; set; } = null;

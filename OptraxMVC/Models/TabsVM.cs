@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-
-namespace OptraxMVC.Models
+﻿namespace OptraxMVC.Models
 {
     public class TabsVM
     {
@@ -16,9 +14,17 @@ namespace OptraxMVC.Models
 
     public class Tab
     {
-        public required string Name { get; set; }
+        public Tab() { }
 
-        public required string TabKey { get; set; }
+        public Tab(string name)
+        {
+            Name = name;
+            TabKey = GetTabKey();
+        }
+
+        public string Name { get; set; } = string.Empty;
+
+        public string TabKey { get; set; } = string.Empty;
 
         public string? ViewPath { get; set; }
 

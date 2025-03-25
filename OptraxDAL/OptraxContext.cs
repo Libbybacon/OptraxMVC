@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Caching.Memory;
 using OptraxDAL.Models;
 using OptraxDAL.Models.Admin;
+using OptraxDAL.Models.BaseClasses;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
 using OptraxDAL.Models.Map;
@@ -17,6 +18,7 @@ namespace OptraxDAL
     {
         private readonly IMemoryCache _Cache = cache;
         private readonly ICurrentUserService _userService = userService;
+
 
         #region Admin
         public DbSet<AppUser> AppUsers { get; set; }
@@ -235,7 +237,7 @@ namespace OptraxDAL
             builder.Entity<Species>().Property(x => x.WaterNeedsQty).HasPrecision(8, 2);
 
             builder.Entity<Crop>().HasIndex(x => x.Name).IsUnique();
-            builder.Entity<Batch>().HasIndex(x => x.BatchName).IsUnique();
+            builder.Entity<Batch>().HasIndex(x => x.Name).IsUnique();
             builder.Entity<Planting>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
 
             builder.Entity<Batch>().HasOne(c => c.Crop)
@@ -290,28 +292,27 @@ namespace OptraxDAL
             #endregion
 
             #region Products
-            builder.Entity<Product>().HasIndex(x => x.ProductName).IsUnique();
+            builder.Entity<Product>().HasIndex(x => x.Name).IsUnique();
             builder.Entity<ProductItem>().HasIndex(x => x.Barcode).IsUnique();
             #endregion
         }
 
         public override int SaveChanges()
         {
-            var hasCategoryChanges = ChangeTracker.Entries<Category>().Any(e => e.State == EntityState.Added ||
-                                                                                e.State == EntityState.Modified ||
-                                                                                e.State == EntityState.Deleted);
+            SetTracking();
 
-            var result = base.SaveChanges();
-
-            if (hasCategoryChanges)
-            {
-                _Cache.Remove("CategoriesSelect");
-            }
-
-            return result;
+            return base.SaveChanges();
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            SetTracking();
+
+            return await base.SaveChangesAsync(cancellationToken);
+
+        }
+
+        private void SetTracking()
         {
             var userID = _userService?.UserID;
 
@@ -328,19 +329,6 @@ namespace OptraxDAL
                     entry.Entity.LastModifiedUserID = userID;
                 }
             }
-
-            return await base.SaveChangesAsync(cancellationToken);
-
-            //var hasCategoryChanges = ChangeTracker.Entries<Category>()
-            //                          .Any(e => e.State == EntityState.Added ||
-            //                                    e.State == EntityState.Modified ||
-            //                                    e.State == EntityState.Deleted);
-
-
-            //if (hasCategoryChanges)
-            //{
-            //    _cache.Remove("CategoriesSelect");
-            //}
         }
     }
 }

@@ -9,11 +9,11 @@ using OptraxMVC.Services.Inventory;
 namespace OptraxMVC.Areas.Inventory.Controllers
 {
     [Area("Inventory")]
-    public class ResourcesController(OptraxContext context, IDropdownService dropdownService, IResourceService resourceService)
+    public class ResourcesController(OptraxContext context, IOptionsService optionsService, IResourceService resourceService)
     : BaseController(context)
     {
         private readonly IResourceService _IResource = resourceService;
-        private readonly IDropdownService _IDropdowns = dropdownService;
+        private readonly IOptionsService _IOptions = optionsService;
 
 
         [HttpPost]
@@ -23,7 +23,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
             {
                 var data = await _IResource.GetResourcesAsync();
 
-                LoadViewData();
+                await LoadViewDataAsync();
                 return Json(data);
             }
             catch (Exception ex)
@@ -33,11 +33,11 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             try
             {
-                ViewData["Dropdowns"] = LoadViewData();
+                ViewData["Dropdowns"] = await LoadViewDataAsync();
                 ViewBag.FormVM = new FormVM() { IsNew = true, JsFunc = "addResource", Action = "Create", MsgDiv = "tableMsg" };
                 return PartialView("_Edit", new Resource() { });
             }
@@ -78,7 +78,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                     return Json(new { success = false, msg = "Resource not found" });
                 }
 
-                ViewData["Dropdowns"] = LoadViewData();
+                ViewData["Dropdowns"] = await LoadViewDataAsync();
                 ViewBag.FormVM = new FormVM() { IsNew = false, JsFunc = "editResource", Action = "Edit", MsgDiv = "popupTopInner" };
 
                 return PartialView("_Edit", rsrc);
@@ -110,9 +110,9 @@ namespace OptraxMVC.Areas.Inventory.Controllers
             }
         }
 
-        private DropdownsVM LoadViewData()
+        private async Task<OptionsVM> LoadViewDataAsync()
         {
-            return _IDropdowns.LoadDropdowns(["UomSelects", "StockTypeSelects", "CategorySelects", "ContainerTypeSelects"]);
+            return await _IOptions.LoadOptions(["UomSelects", "StockTypeSelects", "CategorySelects", "ContainerTypeSelects"]);
 
         }
     }

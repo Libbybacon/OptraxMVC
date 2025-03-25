@@ -1,10 +1,7 @@
-﻿@using OptraxDAL.Models.Map
-@using OptraxMVC.Models
-
-@model MapPoint
+﻿@model MapPoint
 
 @{
-    DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
+    OptionsVM drops = (OptionsVM)(ViewData["Dropdowns"] ?? new());
     int collID = 1;
 }
 

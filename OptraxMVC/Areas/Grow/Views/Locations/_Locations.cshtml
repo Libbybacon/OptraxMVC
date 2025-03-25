@@ -2,9 +2,27 @@
 @model IEnumerable<Location>
 
 @{
+    TabsVM tabs = (TabsVM)(ViewData["LocTabs"] ?? new());
 }
 
+<div id="locations" class="loc-layout">
+    <div class="loc-tree">
+        <div id="locationTree"></div>
+    </div>
+
+    <div class="loc-content">
+        <partial name="_TabsTop" model="tabs" />
+        <div class="tab-content h-100 p-0">
+            <partial name="_TabsPanel" model="tabs" />
+        </div>
+    </div>
+</div>
+
+<div id="locations" data-hassite="@ViewBag.HasSite.ToString()">
+
+    <div id="locTree"></div>
+
+</div>
 
 
-<script src="/js/inventory/locations.js"></script>
-<script src="/js/inventory/inventory.js"></script>
+<script type="module" src="/js/grow/locations.js"></script>

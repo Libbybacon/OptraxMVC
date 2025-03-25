@@ -1,20 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OptraxDAL.Models.BaseClasses;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Grow
 {
     [Table("Strains", Schema = "Grow")]
-    public class Strain : TrackingBase
+    public class Strain : TrackingBaseDetails
     {
         public Strain() { }
-
-        public int ID { get; set; }
-        [Required]
-        [MaxLength(100)]
-        public string Name { get; set; } = string.Empty;
-
-        [MaxLength(250)]
-        public string? Description { get; set; }
 
         [Required]
         [MaxLength(10)]
@@ -24,7 +17,6 @@ namespace OptraxDAL.Models.Grow
 
         [MaxLength(50)]
         public string? OriginType { get; set; }
-        public bool Active { get; set; } = true;
 
         public virtual ICollection<Crop> Crops { get; set; } = [];
         public virtual ICollection<StrainRelationship> Parents { get; set; } = [];

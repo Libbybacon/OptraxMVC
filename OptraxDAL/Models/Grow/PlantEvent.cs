@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using OptraxDAL.Models.Admin;
+using OptraxDAL.Models.BaseClasses;
 using OptraxDAL.Models.Inventory;
 
 using System.ComponentModel.DataAnnotations;
@@ -10,10 +11,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace OptraxDAL.Models.Grow
 {
     [Table("PlantEvents", Schema = "Grow")]
-    public abstract class PlantEvent
+    public abstract class PlantEvent : BaseClass
     {
         public PlantEvent() { }
-        public int ID { get; set; }
         public int PlantID { get; set; }
 
         [Required]

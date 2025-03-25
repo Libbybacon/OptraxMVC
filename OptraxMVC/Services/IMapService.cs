@@ -210,7 +210,7 @@ namespace OptraxMVC.Services
             try
             {
                 dbMapObj.Name = mapObj.Name;
-                dbMapObj.Notes = mapObj.Notes;
+                dbMapObj.Details = mapObj.Details;
 
                 if (mapObj is MapShape mapPoly && dbMapObj is MapShape dbMapPoly)
                 {

@@ -1,10 +1,11 @@
-﻿using OptraxDAL.ViewModels;
+﻿using OptraxDAL.Models.BaseClasses;
+using OptraxDAL.ViewModels;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace OptraxDAL.Models.Inventory
 {
     [Table("Resources", Schema = "Inventory")]
-    public class Resource : TrackingBase
+    public class Resource : TrackingBaseDetails
     {
         public Resource() { }
 
@@ -13,8 +14,6 @@ namespace OptraxDAL.Models.Inventory
             CategoryID = category.ID;
             Category = category;
         }
-
-        public int ID { get; set; }
 
         [Display(Name = "Category")]
         [Required(ErrorMessage = "Please select a category.")]
@@ -27,13 +26,6 @@ namespace OptraxDAL.Models.Inventory
         [Display(Name = "Stock Type")]
         [Required(ErrorMessage = "Please select a stock type")]
         public string StockType { get; set; } = string.Empty;
-
-        [MaxLength(100)]
-        [Required(ErrorMessage = "Please enter a name")]
-        public string Name { get; set; } = string.Empty;
-
-        [MaxLength(250)]
-        public string? Description { get; set; } = string.Empty;
 
         [MaxLength(100)]
         [Display(Name = "Brand")]
@@ -54,8 +46,6 @@ namespace OptraxDAL.Models.Inventory
 
         public bool NeedsTransferApproval { get; set; } = false;
 
-        public bool Active { get; set; } = true;
-
         public virtual Category? Category { get; set; }
         public virtual ICollection<StockItem> StockItems { get; set; } = [];
 
@@ -74,7 +64,7 @@ namespace OptraxDAL.Models.Inventory
                 Cat1 = $"{cat1.Name}-{cat1.ID}-{cat1.HexColor}",
                 ResourceID = ID,
                 ResourceName = Name,
-                ResourceDesc = Description,
+                ResourceDesc = Details,
                 SKU = SKU,
                 Brand = Manufacturer,
                 StockType = StockType,

@@ -1,23 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OptraxDAL.Models.BaseClasses;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Grow
 {
     [Table("Crops", Schema = "Grow")]
-    public class Crop : TrackingBase
+    public class Crop : TrackingBaseDetails
     {
         public Crop() { }
 
-        public int ID { get; set; }
-
-        [Display(Name = "Crop Name")]
-        public string Name { get; set; } = string.Empty;
 
         [Display(Name = "Strain")]
         public int SpeciesID { get; set; }
         public int? VarietyID { get; set; }
         public int? CultivarID { get; set; }
-        public string? Notes { get; set; }
 
         public virtual Species? Species { get; set; }
         public virtual Variety? Variety { get; set; }

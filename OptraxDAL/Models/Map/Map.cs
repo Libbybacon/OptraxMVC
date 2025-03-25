@@ -1,19 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OptraxDAL.Models.BaseClasses;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Map
 {
-    public class Map
+    [Table("Maps", Schema = "Map")]
+    public class Map : TrackingBaseDetails
     {
         public Map() { }
-
-        public int ID { get; set; }
-
-        [Required]
-        [MaxLength(50)]
-        public string Name { get; set; } = string.Empty;
-
-        [MaxLength(500)]
-        public string? Description { get; set; }
 
         public int? CollectionID { get; set; }
 

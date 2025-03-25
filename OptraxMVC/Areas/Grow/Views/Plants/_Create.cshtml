@@ -7,7 +7,7 @@
 
 @{
     FormVM formVM = ViewBag.FormVM;
-    DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
+    OptionsVM drops = (OptionsVM)(ViewData["Dropdowns"] ?? new());
 }
 
 @using (Html.BeginForm(formVM.Action, "Plants", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv, data_modelname = "plant" }))
@@ -22,7 +22,7 @@
             <div class="row col-12 d-flex w-100">
                 <div class="col-xl-4 col-6">
                     @Html.LabelFor(m => m.SpeciesID)
-                    @Html.DropDownListFor(m => m.SpeciesID, drops.StrainSelects, "Select Strain", new { @class = $"form-control select2 attr" })
+                    @Html.DropDownListFor(m => m.SpeciesID, drops.CropSelects, "Select Strain", new { @class = $"form-control select2 attr" })
                     @Html.ValidationMessageFor(m => m.SpeciesID, "", new { @class = "val-msg" })
                 </div>
 @*                 <div class="col-xl-4 col-6">

@@ -1,14 +1,13 @@
-﻿using OptraxDAL.Models.Inventory;
+﻿using OptraxDAL.Models.BaseClasses;
+using OptraxDAL.Models.Inventory;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Products
 {
     [Table("PurchaseOrder", Schema = "Products")]
-    public class PurchaseOrder
+    public class PurchaseOrder : BaseClass
     {
         public PurchaseOrder() { }
-
-        public int ID { get; set; }
 
         public DateTimeOffset OrderDate { get; set; }
         public DateTimeOffset? FulfillmentDate { get; set; }

@@ -1,15 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OptraxDAL.Models.BaseClasses;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Admin
 {
     [Table("Address", Schema = "Admin")]
-    public class Address : TrackingBase
+    public class Address : TrackingBaseDetails
     {
         public Address() { }
-
-        [Key]
-        public int ID { get; set; }
 
         [Required]
         [MaxLength(100)]

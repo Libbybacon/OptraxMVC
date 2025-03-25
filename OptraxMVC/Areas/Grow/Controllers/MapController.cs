@@ -10,10 +10,10 @@ namespace OptraxMVC.Areas.Grow.Controllers
 {
     [Area("Grow")]
     [Authorize]
-    public class MapController(OptraxContext context, IDropdownService dropdownService, IMapService mapService) : BaseController(context)
+    public class MapController(OptraxContext context, IOptionsService optionsService, IMapService mapService) : BaseController(context)
     {
         private readonly IMapService _IMap = mapService;
-        private readonly IDropdownService _IDropdowns = dropdownService;
+        private readonly IOptionsService _IOptions = optionsService;
 
         [HttpGet]
         public async Task<JsonResult> GetObjectsAsync(string objType)
@@ -247,7 +247,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
 
             ViewBag.IconCollID = 1;
 
-            ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["LocationSelects", "IconsList"]);
+            ViewData["Dropdowns"] = _IOptions.LoadOptions(["LocationSelects", "IconsList"]);
         }
     }
 }

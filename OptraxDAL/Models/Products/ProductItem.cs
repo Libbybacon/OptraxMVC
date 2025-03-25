@@ -1,13 +1,13 @@
 ﻿using OptraxDAL.Models.Admin;
+using OptraxDAL.Models.BaseClasses;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Products
 {
     [Table("ProductItems", Schema = "Products")]
-    public class ProductItem : TrackingBase
+    public class ProductItem : BaseClass
     {
         public ProductItem() { }
-        public int ID { get; set; }
         public int ProductID { get; set; }
         public int? BatchID { get; set; }
         public string? Status { get; set; }

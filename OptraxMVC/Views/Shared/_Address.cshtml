@@ -5,7 +5,7 @@
 @model Address
 
 @{
-    DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
+    OptionsVM drops = (OptionsVM)(ViewData["Dropdowns"] ?? new());
     var states = (IEnumerable<SelectListItem>)(ViewData["States"] ?? new List<SelectListItem>());
 }
 <div class="row col-12 d-flex w-100">

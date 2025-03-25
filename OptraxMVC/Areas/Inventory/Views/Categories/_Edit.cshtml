@@ -5,7 +5,7 @@
 
 @{
     FormVM formVM = ViewBag.FormVM;
-    DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
+    OptionsVM drops = (OptionsVM)(ViewData["Dropdowns"] ?? new());
 }
 
 @using (Html.BeginForm(formVM.Action, "Categories", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv, data_modelname = "cat" }))
@@ -14,7 +14,7 @@
 
     <input id="ID" type="hidden" name="ID" value="@Model.ID" />
     <input id="changes" type="hidden" name="Changes" />
-    <input id="Description" type="hidden" name="Description" value="@Model.Description" />
+    <input id="Details" type="hidden" name="Details" value="@Model.Details" />
     <div class="d-flex justify-content-center">
         <div class="row col-12 d-flex w-100">
             <div class="col-4">

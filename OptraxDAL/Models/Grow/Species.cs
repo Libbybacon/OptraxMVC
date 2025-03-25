@@ -1,13 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using OptraxDAL.Models.BaseClasses;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Grow
 {
     [Table("Species", Schema = "Grow")]
-    public class Species : TrackingBase
+    public class Species : TrackingBaseDetails
     {
         public Species() { }
-
-        public int ID { get; set; }
         public string Family { get; set; } = string.Empty;
         public string Genus { get; set; } = string.Empty;
         public string SpeciesName { get; set; } = string.Empty;

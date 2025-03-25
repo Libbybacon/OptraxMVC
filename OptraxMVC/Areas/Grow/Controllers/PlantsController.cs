@@ -13,10 +13,10 @@ namespace OptraxMVC.Areas.Grow.Controllers
 {
     [Area("Grow")]
     [Authorize]
-    public class PlantsController(OptraxContext context, IDropdownService dropdownService, IPlantService plantService) : BaseController(context)
+    public class PlantsController(OptraxContext context, IOptionsService optionsService, IPlantService plantService) : BaseController(context)
     {
         private readonly IPlantService _IPlants = plantService;
-        private readonly IDropdownService _IDropdowns = dropdownService;
+        private readonly IOptionsService _IOptions = optionsService;
 
         [HttpGet]
         public async Task<IActionResult> GetPlants()
@@ -46,7 +46,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                     MsgDiv = "tableMsg"
                 };
 
-                ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["StrainSelects", "PhaseSelects", "OriginTypeSelects", "LocationSelects", "UomSelects"]);
+                ViewData["Dropdowns"] = _IOptions.LoadOptions(["StrainSelects", "PhaseSelects", "OriginTypeSelects", "LocationSelects", "UomSelects"]);
 
                 Plant plant = await _IPlants.LoadNewPlant(UserID);
 

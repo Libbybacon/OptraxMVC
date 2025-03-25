@@ -4,7 +4,7 @@
 
 @{
     FormVM formVM = ViewBag.FormVM;
-    DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
+    OptionsVM drops = (OptionsVM)(ViewData["Dropdowns"] ?? new());
     string showView = formVM.IsNew ? "d-none" : "";
     string showEdit = formVM.IsNew ? "" : "d-none";
     string showSelect = formVM.IsNew ? "" : "d-none";
@@ -25,49 +25,49 @@
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.Name)
                         <span class="view @showView">@Html.DisplayFor(m => m.Name)</span>
-                        @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = $"form-control attr {showEdit}", data_ival = Model.Name } })
+                        @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = $"form-control attr {showEdit}"} })
                         @Html.ValidationMessageFor(m => m.Name, "", new { @class = $"val-msg {showEdit}" })
                     </div>
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.Manufacturer)
                         <span class="view @showView">@Html.DisplayFor(m => m.Manufacturer)</span>
-                        @Html.EditorFor(m => m.Manufacturer, new { htmlAttributes = new { @class = $"form-control attr {showEdit}", data_ival = Model.Manufacturer } })
+                        @Html.EditorFor(m => m.Manufacturer, new { htmlAttributes = new { @class = $"form-control attr {showEdit}" } })
                         @Html.ValidationMessageFor(m => m.Manufacturer, "", new { htmlAttributes = new { @class = $"val-msg {showEdit}" } })
                     </div>
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.SKU)
                         <span class="view @showView">@Html.DisplayFor(m => m.SKU)</span>
-                        @Html.EditorFor(m => m.SKU, new { htmlAttributes = new { @class = $"form-control form-txt attr {showEdit}", data_ival = Model.SKU } })
+                        @Html.EditorFor(m => m.SKU, new { htmlAttributes = new { @class = $"form-control form-txt attr {showEdit}"} })
                         @Html.ValidationMessageFor(m => m.SKU, "", new { htmlAttributes = new { @class = $"val-msg {showEdit}" } })
                     </div>
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.CategoryID)
                         <span class="view @showView">@Html.DisplayFor(m => m.CategoryID)</span>
-                        @Html.DropDownListFor(m => m.CategoryID, drops.TopCategorySelects, "Select Category", new { @class = $"form-select attr {showSelect}", data_ival = Model.CategoryID })
+                        @Html.DropDownListFor(m => m.CategoryID, drops.TopCategorySelects, "Select Category", new { @class = $"form-select attr {showSelect}"})
                         @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = $"val-msg {showEdit}" })
                     </div>
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.DefaultUoM)
                         <span class="view @showView">@Html.DisplayFor(m => m.DefaultUoM)</span>
-                        @Html.DropDownListFor(m => m.DefaultUoM, drops.UomSelects, "Select UoM", new { @class = $"form-select attr {showSelect}", data_ival = Model.DefaultUoM })
+                        @Html.DropDownListFor(m => m.DefaultUoM, drops.UomSelects, "Select UoM", new { @class = $"form-select attr {showSelect}"})
                         @Html.ValidationMessageFor(m => m.DefaultUoM, "", new { @class = $"val-msg {showEdit}" })
                     </div>
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.StockType)
                         <span class="view @showView">@Html.DisplayFor(m => m.StockType)</span>
-                        @Html.DropDownListFor(m => m.StockType, drops.StockTypeSelects, "Select Stock Type", new { @class = $"form-select attr {showSelect}", data_ival = Model.StockType })
+                        @Html.DropDownListFor(m => m.StockType, drops.StockTypeSelects, "Select Stock Type", new { @class = $"form-select attr {showSelect}" })
                         @Html.ValidationMessageFor(m => m.StockType, "", new { @class = $"val-msg {showEdit}" })
                     </div>
                     <div class="col-xl-4 col-6">
-                        @Html.LabelFor(m => m.Description)
-                        <span class="view @showView">@Html.DisplayFor(m => m.Description)</span>
-                        @Html.EditorFor(m => m.Description, new { htmlAttributes = new { @class = $"form-control attr {showEdit}", data_ival = Model.Description } })
-                        @Html.ValidationMessageFor(m => m.Description, "", new { htmlAttributes = new { @class = $"val-msg {showEdit}" } })
+                        @Html.LabelFor(m => m.Details)
+                        <span class="view @showView">@Html.DisplayFor(m => m.Details)</span>
+                        @Html.EditorFor(m => m.Details, new { htmlAttributes = new { @class = $"form-control attr {showEdit}"} })
+                        @Html.ValidationMessageFor(m => m.Details, "", new { htmlAttributes = new { @class = $"val-msg {showEdit}" } })
                     </div>
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.Tags)
                         <span class="view @showView">@Html.DisplayFor(m => m.Tags)</span>
-                        @Html.EditorFor(m => m.Tags, new { htmlAttributes = new { @class = $"form-control attr {showEdit}", data_ival = Model.Tags } })
+                        @Html.EditorFor(m => m.Tags, new { htmlAttributes = new { @class = $"form-control attr {showEdit}" } })
                         @Html.ValidationMessageFor(m => m.Tags, "", new { htmlAttributes = new { @class = $"val-msg {showEdit}" } })
                     </div>
                 </div>

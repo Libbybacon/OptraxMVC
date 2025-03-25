@@ -2,7 +2,7 @@
 var curPage;
 
 $(document).ready(function () {
-    $(".nav-link").on("click", function () {
+    $(".top-tabs .nav-link").on("click", function () {
         loadTab($(this));
     });
 

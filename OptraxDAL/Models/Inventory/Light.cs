@@ -8,7 +8,6 @@ namespace OptraxDAL.Models.Inventory
     {
         public DateTimeOffset? FirstInstallDate { get; set; }
         public DateTimeOffset? LastMaintenanceCheck { get; set; }
-        public bool Active { get; set; } = true;
 
         public virtual ICollection<PlantEvent> PlantLightEvents { get; set; } = [];
     }

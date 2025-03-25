@@ -22,11 +22,16 @@ namespace OptraxMVC.Controllers
         [Authorize]
         public IActionResult LoadTabs(string navarea)
         {
+            //TabsVM tabsVM = new()
+            //{
+            //    Area = navarea,
+            //    Tabs = [.. TabViews[navarea].Select(tab =>
+            //    new Tab() { Name = tab, TabKey = $"{tab[..3].ToLower()}-{tab.ToLower()}" })]
+            //};
             TabsVM tabsVM = new()
             {
                 Area = navarea,
-                Tabs = [.. TabViews[navarea].Select(tab =>
-                new Tab() { Name = tab, TabKey = $"{tab[..3].ToLower()}-{tab.ToLower()}" })]
+                Tabs = [.. TabViews[navarea].Select(tab => new Tab(tab) { })]
             };
 
             return View("Tabs", tabsVM);

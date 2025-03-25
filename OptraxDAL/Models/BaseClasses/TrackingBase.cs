@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace OptraxDAL.Models
+namespace OptraxDAL.Models.BaseClasses
 {
-    public abstract class TrackingBase
+    public abstract class TrackingBase : BaseClass
     {
         public DateTimeOffset? DateCreated { get; set; }
 
@@ -13,8 +13,5 @@ namespace OptraxDAL.Models
 
         [ForeignKey("LastModifier")]
         public string? LastModifiedUserID { get; set; }
-
-        [NotMapped]
-        public string? Changes { get; set; }
     }
 }

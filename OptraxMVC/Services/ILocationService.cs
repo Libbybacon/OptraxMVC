@@ -3,7 +3,7 @@ using OptraxDAL;
 using OptraxDAL.Models.Admin;
 using OptraxMVC.Models;
 
-namespace OptraxMVC.Services.Inventory
+namespace OptraxMVC.Services
 {
     public interface ILocationService
     {

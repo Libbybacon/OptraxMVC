@@ -1,4 +1,5 @@
 ﻿using OptraxDAL.Models.Admin;
+using OptraxDAL.Models.BaseClasses;
 using OptraxDAL.Models.Products;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,11 +7,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace OptraxDAL.Models.Inventory
 {
     [Table("StockItems", Schema = "Inventory")]
-    public abstract class StockItem : TrackingBase
+    public abstract class StockItem : TrackingBaseDetails
     {
         public StockItem() { }
 
-        public int ID { get; set; }
         public int ResourceID { get; set; }
 
         [Display(Name = "Date Acquired")]
