@@ -1,0 +1,29 @@
+﻿@media only screen and (max-width: 576px) {
+}
+
+
+@media only screen and (min-width: 576) {
+}
+
+@media only screen and (min-width: 768px) {
+    .inner-layout {
+        height: calc(100vh - 45px);
+        margin-top: 45px;
+    }
+}
+
+
+.loc-tree {
+    width: auto;
+    max-width: 300px;
+    overflow-y: auto;
+    border-right: 1px solid #ccc;
+    padding: 1rem;
+}
+
+/* Right Column (Content Panel) */
+.loc-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+}

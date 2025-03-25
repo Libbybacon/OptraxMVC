@@ -1,16 +1,17 @@
-﻿@using OptraxDAL.Models.Admin
-@model IEnumerable<Location>
+﻿<link rel="stylesheet" href="~/css/locations.css" />
 
+@model Location?
 @{
-    TabsVM tabs = (TabsVM)(ViewData["LocTabs"] ?? new());
+    TabsVM tabs = /* (TabsVM)(ViewData["LocTabs"] ??  */ new TabsVM() { Area = "Grow" };
 }
 
-<div id="locations" class="loc-layout">
-    <div class="loc-tree">
+<div id="locations" class="loc-layout d-flex" data-hassite="@(Model != null)">
+    <div class="loc-tree inner-layout">
+        <h4>All Locations</h4>
         <div id="locationTree"></div>
     </div>
 
-    <div class="loc-content">
+    <div class="loc-content inner-layout">
         <partial name="_TabsTop" model="tabs" />
         <div class="tab-content h-100 p-0">
             <partial name="_TabsPanel" model="tabs" />
@@ -18,11 +19,6 @@
     </div>
 </div>
 
-<div id="locations" data-hassite="@ViewBag.HasSite.ToString()">
-
-    <div id="locTree"></div>
-
-</div>
-
 
 <script type="module" src="/js/grow/locations.js"></script>
+

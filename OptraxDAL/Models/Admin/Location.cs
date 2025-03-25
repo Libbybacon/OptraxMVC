@@ -53,7 +53,14 @@ namespace OptraxDAL.Models.Admin
 
         public object ToTreeNode()
         {
-            return new { id = ID, parent = ParentID ?? '#', text = Name, type = LocationType.ToLower() };
+            return new
+            {
+                id = ID,
+                parent = ParentID?.ToString() ?? "#",
+                text = Name,
+                type = LocationType.ToLower(),
+                children = Children?.Count > 0
+            };
         }
 
         public string GetParentNamesString()
@@ -97,7 +104,11 @@ namespace OptraxDAL.Models.Admin
     [Table("Locations", Schema = "Admin")]
     public class VehicleLocation : Location
     {
-        public VehicleLocation() { Level = 0; }
+        public VehicleLocation()
+        {
+            Level = 0;
+            LocationType = "Vehicle";
+        }
     }
 
     [Table("Locations", Schema = "Admin")]
@@ -107,11 +118,13 @@ namespace OptraxDAL.Models.Admin
         {
             Level = 0;
             HasAddress = true;
+            LocationType = "Site";
         }
 
         public SiteLocation(int addressID, int? businessID)
         {
             Level = 0;
+            LocationType = "Site";
             HasAddress = true;
             AddressID = addressID;
             BusinessID = businessID;
@@ -119,20 +132,24 @@ namespace OptraxDAL.Models.Admin
 
         public SiteLocation(Address? address, Business? business)
         {
+            Level = 0;
+            LocationType = "Site";
             Address = address;
             Business = business;
         }
 
         public bool IsPrimary { get; set; } = false;
-
-
     }
 
 
     [Table("Locations", Schema = "Admin")]
     public class GreenhouseLocation : Location
     {
-        public GreenhouseLocation() { Level = 1; }
+        public GreenhouseLocation()
+        {
+            Level = 1;
+            LocationType = "Greenhouse";
+        }
 
         public virtual ICollection<Crop>? Crops { get; set; } = [];
     }
@@ -140,7 +157,11 @@ namespace OptraxDAL.Models.Admin
     [Table("Locations", Schema = "Admin")]
     public class FieldLocation : Location
     {
-        public FieldLocation() { Level = 1; }
+        public FieldLocation()
+        {
+            Level = 1;
+            LocationType = "Field";
+        }
 
         public virtual ICollection<Crop>? Crops { get; set; } = [];
     }

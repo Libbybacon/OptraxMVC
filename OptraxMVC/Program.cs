@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<OptraxContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("OptraxConnection"), x => x.UseNetTopologySuite());
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING"), x => x.UseNetTopologySuite());
 });
 
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<OptraxContext>()
@@ -37,7 +37,7 @@ builder.Services.AddControllersWithViews(options =>
 
 builder.Services.AddRazorPages();
 builder.Services.AddMemoryCache();
-builder.Services.AddScoped<IDropdownService, DropdownService>();
+builder.Services.AddScoped<IOptionsService, OptionsService>();
 builder.Services.AddScoped<IResourceService, ResourceService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IPlantService, PlantService>();

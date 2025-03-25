@@ -7,8 +7,6 @@ using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
 using OptraxMVC.Models;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 
 namespace OptraxMVC.Services
 {
@@ -57,16 +55,27 @@ namespace OptraxMVC.Services
 
         private static List<SelectListItem> GetEnumSelects(Type enumType)
         {
+            //if (!enumType.IsEnum)
+            //    throw new ArgumentException("Provided type must be an enum.", nameof(enumType));
+
+            //return _cache.GetOrCreate($"{enumType.Name}EnumSelect", entry =>
+            //{
+            //    entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+
+
+            //    return Enum.GetNames(enumType).Select(e => new SelectListItem { Value = e.ToString(), Text = e.ToString() }).ToList() ?? [];
+            //}) ?? [];
+
             if (!enumType.IsEnum)
             {
                 throw new ArgumentException("Provided type must be an enum.", nameof(enumType));
             }
-
-            return [.. Enum.GetValues(enumType).Cast<Enum>().Select(e => new SelectListItem
-            {
-                Value = e.ToString(),
-                Text = e.GetType().GetMember(e.ToString()).First().GetCustomAttribute<DisplayAttribute>()?.Name ?? e.ToString()
-            })];
+            return Enum.GetNames(enumType).Select(e => new SelectListItem { Value = e.ToString(), Text = e.ToString() }).ToList() ?? [];
+            //return [.. Enum.GetValues(enumType).Cast<Enum>().Select(e => new SelectListItem
+            //{
+            //    Value = e.ToString(),
+            //    Text = e.GetType().GetMember(e.ToString()).First().GetCustomAttribute<DisplayAttribute>()?.Name ?? e.ToString()
+            //})];
         }
 
         private List<SelectListItem> GetUomSelects()

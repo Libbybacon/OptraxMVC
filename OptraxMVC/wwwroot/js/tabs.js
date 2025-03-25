@@ -20,21 +20,22 @@ $(document).ready(function () {
 });
 
 function loadTab(tab) {
-    let tabKey = $(tab).data("key");
+    const tabKey = $(tab).data("key");
 
     sessionStorage.setItem(`${curPage}-active`, tabKey);
 
-    let $innerTab = $(`#${tabKey}`);
+    const $innerTab = $(`#${tabKey}`);
 
     if ($innerTab.hasClass("loaded")) return;
 
-    let area = $(tab).attr("data-area");
-    let name = $(tab).attr("data-name");
-
+    const area = $(tab).attr("data-area");
+    const path = $(tab).attr("data-path");
+    const name = $(tab).attr("data-name");
+    console.log('loadTab', path)
     $.ajax({
-        url: '/Tabs/LoadTabContent/',
+        //url: `./${name}/Load${name}`,
+        url: `.${path}`,
         type: "GET",
-        data: { area: area, name: name },
         success: function (view) {
             $innerTab.html(view);
             $innerTab.hasClass("loaded");

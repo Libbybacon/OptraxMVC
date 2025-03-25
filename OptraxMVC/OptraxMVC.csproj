@@ -10,7 +10,6 @@
     <Compile Remove="Areas\Admin\**" />
     <Compile Remove="Areas\Grow\Data\**" />
     <Compile Remove="Areas\Grow\Views\Plants\EditorTemplates\**" />
-    <Compile Remove="Areas\Grow\Views\Shared\**" />
     <Compile Remove="Areas\Inventory\Views\Shared\**" />
     <Compile Remove="Views\Account\**" />
     <Compile Remove="Views\Shared\EditorTemplates\Inventory\**" />
@@ -19,7 +18,6 @@
     <Content Remove="Areas\Admin\**" />
     <Content Remove="Areas\Grow\Data\**" />
     <Content Remove="Areas\Grow\Views\Plants\EditorTemplates\**" />
-    <Content Remove="Areas\Grow\Views\Shared\**" />
     <Content Remove="Areas\Inventory\Views\Shared\**" />
     <Content Remove="Views\Account\**" />
     <Content Remove="Views\Shared\EditorTemplates\Inventory\**" />
@@ -28,7 +26,6 @@
     <EmbeddedResource Remove="Areas\Admin\**" />
     <EmbeddedResource Remove="Areas\Grow\Data\**" />
     <EmbeddedResource Remove="Areas\Grow\Views\Plants\EditorTemplates\**" />
-    <EmbeddedResource Remove="Areas\Grow\Views\Shared\**" />
     <EmbeddedResource Remove="Areas\Inventory\Views\Shared\**" />
     <EmbeddedResource Remove="Views\Account\**" />
     <EmbeddedResource Remove="Views\Shared\EditorTemplates\Inventory\**" />
@@ -37,7 +34,6 @@
     <None Remove="Areas\Admin\**" />
     <None Remove="Areas\Grow\Data\**" />
     <None Remove="Areas\Grow\Views\Plants\EditorTemplates\**" />
-    <None Remove="Areas\Grow\Views\Shared\**" />
     <None Remove="Areas\Inventory\Views\Shared\**" />
     <None Remove="Views\Account\**" />
     <None Remove="Views\Shared\EditorTemplates\Inventory\**" />

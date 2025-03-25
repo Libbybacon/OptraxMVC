@@ -7,7 +7,7 @@ namespace OptraxMVC.Services
 {
     public interface ILocationService
     {
-        Task<List<Location>> GetLocationsAsync();
+        Task<List<object>> GetLocationsAsync();
         Task<ResponseVM> CreateAsync(Location loc);
     }
 
@@ -15,10 +15,10 @@ namespace OptraxMVC.Services
     {
         private readonly OptraxContext db = context;
 
-        public async Task<List<Location>> GetLocationsAsync()
+        public async Task<List<object>> GetLocationsAsync()
         {
 
-            return await db.Locations.ToListAsync();
+            return [.. (await db.Locations.ToListAsync()).Select(l => l.ToTreeNode())];
         }
 
         public async Task<ResponseVM> CreateAsync(Location loc)

@@ -40,7 +40,7 @@ namespace OptraxMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> LoadTabContent(string area, string name)
         {
-            var tabVM = new TabsVM() { Area = area, Tabs = [new Tab() { Name = name, TabKey = "" }] };
+            var tabVM = new TabsVM() { Area = area, Tabs = [new Tab(name)] };
             var tab = tabVM.Tabs[0];
             tabVM.SetTabViewPath(tab);
 

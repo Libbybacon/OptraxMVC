@@ -7,7 +7,7 @@ const popupHandler = {
         try {
             const response = await apiService.get(props.url, props.data);
 
-            if (!response.Success == true) {
+            if (!response.success == true) {
                 throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
             }
             const view = response.data;

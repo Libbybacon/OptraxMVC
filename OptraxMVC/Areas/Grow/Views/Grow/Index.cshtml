@@ -2,18 +2,14 @@
 
 <link rel="stylesheet" href="~/css/tabs.css" asp-append-version="true" />
 
-@if (Model.Area == "Inventory" || Model.Tabs.Select(t => t.Name).ToList().Contains("Plants"))
-{
-    <link rel="stylesheet" href="~/css/inventory.css" />
-}
-
 @{
-    ViewData["Page"] = Model.Area;
+    ViewData["Page"] = "Grow";
 }
 
-<input type="hidden" id="tab-page" value="@Model.Area.ToLower()" />
+<input type="hidden" id="tab-page" value="grow" />
 
 <partial name="_Tabs" model="Model" />
+
 @* <div class="top-tabs max-w-100 box-shadow">
     <partial name="_TabsTop" model="Model" />
 </div>

@@ -16,6 +16,12 @@ namespace OptraxMVC.Areas.Grow.Controllers
         private readonly IOptionsService _IOptions = optionsService;
 
         [HttpGet]
+        public IActionResult LoadMap()
+        {
+            return PartialView("_Map");
+        }
+
+        [HttpGet]
         public async Task<JsonResult> GetObjectsAsync(string objType)
         {
             try
@@ -61,6 +67,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
             if (model == null) { return Json(new ResponseVM() { Msg = "Object not found" }); }
 
             LoadFormVM(objType, "Edit");
+            ViewData["Dropdowns"] = await _IOptions.LoadOptions(["LocationSelects", "IconsList"]);
 
             return PartialView($"_{objType}", model);
         }
@@ -247,7 +254,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
 
             ViewBag.IconCollID = 1;
 
-            ViewData["Dropdowns"] = _IOptions.LoadOptions(["LocationSelects", "IconsList"]);
+
         }
     }
 }

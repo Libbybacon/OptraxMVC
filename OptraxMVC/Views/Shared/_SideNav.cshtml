@@ -32,10 +32,15 @@
             var key = item.Key.Replace("-d", "");
             bool disabled =  item.Key.Contains("-d");
             <li class="nav-item ms-0 me-0 mt-md-2 mt-0" @(item.Key.Contains("-d") ? "disabled" : "")>
-                <a asp-controller="Tabs" asp-action="LoadTabs" asp-route-navarea="@key"
+@*                 <a asp-controller="Tabs" asp-action="LoadTabs" asp-route-navarea="@key"
                    class="nav-link d-flex @(disabled ? "disabled-link" : "") @(page == key ? "active" : "")">
                     <i class="nav-bi bi text-tan bi-@(item.Value) me-lg-3 me-0"></i>
                     <span class="nav-text d-lg-block d-none pt-2">@key</span>                   
+                </a> *@
+                <a asp-controller="@key" asp-action="Index" asp-route-navarea="@key"
+                   class="nav-link d-flex @(disabled ? "disabled-link" : "") @(page == key ? "active" : "")">
+                    <i class="nav-bi bi text-tan bi-@(item.Value) me-lg-3 me-0"></i>
+                    <span class="nav-text d-lg-block d-none pt-2">@key</span>
                 </a>
             </li>
         }

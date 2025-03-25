@@ -1,25 +1,26 @@
 ﻿import apiService from '../utilities/api.js';
 import { formUtil } from '../utilities/form.js';
-import { popupHandler } from '../utilities/popup.js';
+import popupHandler from '../utilities/popup.js';
 
 $(document).ready(function () {
 
-    if ($('#locations').data('hassite') === 'false') {
+    if ($('#locations').data('hassite') === false) {
         showNewSite();
     }
 
     initializeTree();
+
 });
 
-function showNewSite() {
+async function showNewSite() {
 
     const props = {
         title: 'Add Your First Site',
-        url: '/Locations/Create/',
+        url: '/Grow/Locations/LoadCreate',
         data: {type: 'firstSite'}
     }
 
-    popupHandler.loadPopup(props);
+    await popupHandler.loadPopup(props).then(() => locFormUtil.setFormListeners());
 }
 export const locFormUtil = {
     setFormListeners: function () {
@@ -34,13 +35,15 @@ export const locFormUtil = {
             onDelete(id, type);
         })
         formUtil.setListeners();
-        locFormUtil.setStyleListeners();
+        locFormUtil.setListeners();
     },
     setColorPicker(div, attr) {
 
     },
     setListeners: function () {
-
+        $('#Name').on('input', function () {
+            $('#Address_Name').val($(this).val()).change();
+        })
     },
     onSubmitForm: async function ($form) {
 
@@ -63,10 +66,10 @@ export const locFormUtil = {
 }
 
 function initializeTree() {
-        $('#locTree').jstree({
+    $('#locationTree').jstree({
         'core': {
             'data': {
-                'url': '/Locations/GetLocations',
+                'url': './Locations/GetLocations',
                 'dataType': 'json'
             }
         },
@@ -83,7 +86,7 @@ function initializeTree() {
         'plugins': ['types']
     });
 
-    $('#locationTree').on("select_node.jstree", function (e, response) {
+    $('#locationTree').on("select_node.jstree", function (e, data) {
         var locationId = data.node.id;
         // do something with selected location
     });

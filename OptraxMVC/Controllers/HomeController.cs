@@ -14,7 +14,7 @@ public class HomeController(OptraxContext context) : TabsController(context)
     public IActionResult Index()
     {
 
-        return LoadTabs("Grow");
+        return RedirectToAction("Index", "Grow", new { area = "Grow" });
     }
 
     public IActionResult Privacy()

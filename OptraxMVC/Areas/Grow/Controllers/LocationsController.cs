@@ -18,15 +18,25 @@ namespace OptraxMVC.Areas.Grow.Controllers
         private readonly IOptionsService _IOptions = optionsService;
 
         [HttpGet]
+        public IActionResult LoadLocations()
+        {
+            ViewData["LocTabs"] = new TabsVM()
+            {
+                Area = "",
+                Tabs = [new Tab("Site Details"), new Tab("Inventory")]
+            };
+
+            SiteLocation? model = db.SiteLocations.Where(l => l.IsPrimary).FirstOrDefault();
+
+            return PartialView("_Locations", model);
+        }
+
+        [HttpGet]
         [HttpPost]
         public async Task<IActionResult> GetLocations()
         {
             try
             {
-                ViewData["LocTabs"] = new TabsVM()
-                {
-                    Area = "",
-                }
                 var data = await _ILocation.GetLocationsAsync();
 
                 return Json(data);
@@ -38,15 +48,16 @@ namespace OptraxMVC.Areas.Grow.Controllers
         }
 
         [HttpGet]
-        public IActionResult LoadCreate(string type)
+        public async Task<IActionResult> LoadCreate(string type)
         {
             try
             {
                 ViewBag.IsFirst = type == "firstSite";
+
                 ViewBag.FormVM = new FormVM()
                 {
                     IsNew = true,
-                    Action = $"Create{type}",
+                    Action = $"Create",
                     MsgDiv = "tableMsg"
                 };
 
@@ -65,8 +76,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                     _ => new LocationVM(new SiteLocation()),
                 };
 
-                ViewData["Dropdowns"] = _IOptions.LoadOptions(["StateSelects"]);
-                ViewData["Dropdowns"] = _IOptions.LoadOptions(["BuildingSelects"]);
+                ViewData["Dropdowns"] = await _IOptions.LoadOptions(["StateSelects"]);
 
                 return PartialView("_Create", model);
             }
@@ -78,7 +88,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(LocationVM model)
+        public async Task<IActionResult> CreateAsync(LocationVM model)
         {
             try
             {
@@ -116,7 +126,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                 if (loc is SiteLocation site)
                 {
                     site.BusinessID = model.BusinessID;
-                    site.AddressID = (int)model.AddressID!;
+                    site.AddressID = model.AddressID;
                 }
 
                 //loc.Level = model.ParentID.HasValue
