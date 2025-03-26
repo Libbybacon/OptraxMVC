@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-
-namespace OptraxMVC.Models
+﻿namespace OptraxMVC.Models
 {
     public class TabsVM
     {
@@ -16,16 +14,45 @@ namespace OptraxMVC.Models
 
     public class Tab
     {
-        public required string Name { get; set; }
+        //public Tab() { }
 
-        public required string TabKey { get; set; }
+        //public Tab(string name)
+        //{
+        //    Name = name;
+        //    TabKey = GetTabKey(name);
+        //}
 
-        public string? ViewPath { get; set; }
+        //public string Name { get; set; } = string.Empty;
 
-        public string GetTabKey()
+        //public string TabKey { get; set; } = string.Empty;
+
+        //public string? ViewPath { get; set; }
+
+        //public string GetTabKey(string name)
+        //{
+        //    return name[..3].ToLower() + "-" + name.ToLower();
+        //}
+
+        public Tab(string name, bool setPath = true)
         {
-            return Name[..3].ToLower() + "-" + Name.ToLower();
+            Name = name;
+
+            TabKey = SetTabKey(name);
+            if (setPath) { ViewPath = SetViewPath(name); }
         }
 
+        public string Name { get; set; }
+        public string TabKey { get; set; }
+        public string? ViewPath { get; set; }
+
+        public string SetTabKey(string name)
+        {
+            return name[..3].ToLower() + "-" + name.ToLower();
+        }
+
+        public string SetViewPath(string name)
+        {
+            return $"/{name}/Load{name}/";
+        }
     }
 }

@@ -1,72 +1,112 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Caching.Memory;
+using OptraxDAL.Models;
 using OptraxDAL.Models.Admin;
+using OptraxDAL.Models.BaseClasses;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
+using OptraxDAL.Models.Map;
 using OptraxDAL.Models.Products;
 
 
 namespace OptraxDAL
 {
-    public class OptraxContext(DbContextOptions<OptraxContext> options, IMemoryCache cache) : IdentityDbContext<AppUser>(options)
+    public class OptraxContext(DbContextOptions<OptraxContext> options, IMemoryCache cache, ICurrentUserService userService) : IdentityDbContext<AppUser>(options)
     {
-        private readonly IMemoryCache _cache = cache;
+        private readonly IMemoryCache _Cache = cache;
+        private readonly ICurrentUserService _userService = userService;
+
 
         #region Admin
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Business> Businesses { get; set; }
+
         public DbSet<UoM> UoMs { get; set; }
-        #endregion
-
-        #region Inventory
-        public DbSet<InventoryCategory> InventoryCategories { get; set; }
-        public DbSet<InventoryItem> InventoryItems { get; set; }
-
-        public DbSet<StockItem> StockItems { get; set; }
-        public DbSet<Plant> Plants { get; set; }
-        public DbSet<Light> Lights { get; set; }
-        public DbSet<DurableItem> DurableItems { get; set; }
-        public DbSet<ConsumableItem> ConsumableItems { get; set; }
-
-        public DbSet<LightType> LightTypes { get; set; }
+        public DbSet<Input> Inputs { get; set; }
         public DbSet<ContainerType> ContainerTypes { get; set; }
 
-        public DbSet<InventoryLocation> InventoryLocations { get; set; }
-        public DbSet<ContainerLocation> ContainerLocations { get; set; }
-        public DbSet<RoomLocation> RoomLocations { get; set; }
+        public DbSet<Icon> Icons { get; set; }
+        public DbSet<IconCollection> IconCollections { get; set; }
+
+
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<SiteLocation> SiteLocations { get; set; }
+        public DbSet<FieldLocation> FieldLocations { get; set; }
+        public DbSet<RowLocation> RowLocations { get; set; }
+        public DbSet<BedLocation> BedLocations { get; set; }
+        public DbSet<PlotLocation> PlotLocations { get; set; }
+        public DbSet<GreenhouseLocation> GreenhouseLocations { get; set; }
         public DbSet<BuildingLocation> BuildingLocations { get; set; }
+        public DbSet<RoomLocation> RoomLocations { get; set; }
+        public DbSet<VehicleLocation> VehicleLocation { get; set; }
         public DbSet<OffsiteLocation> OffsiteLocations { get; set; }
-        public DbSet<InventoryTransfer> InventoryTransfers { get; set; }
-        public DbSet<TransferApproval> TransferApprovals { get; set; }
         #endregion
 
+
         #region Grow
+        public DbSet<Species> Species { get; set; }
+        public DbSet<Variety> Varieties { get; set; }
+        public DbSet<Cultivar> Cultivars { get; set; }
+
+        public DbSet<Crop> Crops { get; set; }
+        public DbSet<Batch> Batches { get; set; }
+        public DbSet<Planting> Plantings { get; set; }
+
         public DbSet<Strain> Strains { get; set; }
         public DbSet<StrainRelationship> StrainRelationships { get; set; }
 
-        public DbSet<Crop> Crops { get; set; }
-
         public DbSet<PlantEvent> PlantEvents { get; set; }
         public DbSet<PruneEvent> PruneEvents { get; set; }
-        public DbSet<LightEvent> LightEvents { get; set; }
         public DbSet<GrowthEvent> GrowthEvents { get; set; }
         public DbSet<TransferEvent> TransferEvents { get; set; }
         public DbSet<TreatmentEvent> TreatmentEvents { get; set; }
         public DbSet<TransplantEvent> TransplantEvents { get; set; }
         #endregion
 
+
+        #region Inventory
+        public DbSet<Resource> Resources { get; set; }
+        public DbSet<Category> Categories { get; set; }
+
+        public DbSet<StockItem> StockItems { get; set; }
+        public DbSet<Plant> Plants { get; set; }
+        public DbSet<Light> Lights { get; set; }
+        public DbSet<Durable> Durables { get; set; }
+        public DbSet<Consumable> Consumables { get; set; }
+
+        public DbSet<InventoryTransfer> Transfers { get; set; }
+        public DbSet<TransferApproval> TransferApprovals { get; set; }
+
+        public DbSet<SalesOrder> SalesOrders { get; set; }
+        #endregion
+
+
+        #region Map
+        public DbSet<MapObject> MapObjects { get; set; }
+        public DbSet<MapPoint> MapPoints { get; set; }
+        public DbSet<MapLine> MapLines { get; set; }
+        public DbSet<MapCircle> MapCircles { get; set; }
+        public DbSet<MapPolygon> MapPolygons { get; set; }
+        #endregion
+
+
         #region Product
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductItem> ProductItems { get; set; }
         public DbSet<ProductBatch> ProductBatches { get; set; }
+        public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            var rgbaConverter = new ValueConverter<ColorRgba, byte[]>(v => v.ToBytes(), v => ColorRgba.FromBytes(v));
+
 
             #region Admin
             builder.Entity<AppUser>().ToTable("AspNetUsers", "Identity");
@@ -78,67 +118,66 @@ namespace OptraxDAL
             builder.Entity<IdentityUserToken<string>>().ToTable("AspNetUserTokens", "Identity");
 
             builder.Entity<Business>().HasIndex(x => x.Name).IsUnique();
+            builder.Entity<Input>().HasIndex(x => x.InputName).IsUnique();
             builder.Entity<UoM>().Property(x => x.PerQuantity).HasPrecision(6, 2);
             #endregion
 
             #region Inventory
-            builder.Entity<InventoryCategory>().HasIndex(x => x.Name).IsUnique();
+            builder.Entity<Category>().HasIndex(x => x.Name).IsUnique();
 
-            builder.Entity<InventoryItem>().HasIndex(x => x.SKU).IsUnique();
-            builder.Entity<InventoryItem>().HasIndex(x => x.Name).IsUnique();
-            builder.Entity<InventoryItem>().Property(x => x.Active).HasDefaultValue(true);
-
-            builder.Entity<InventoryItem>().HasOne(i => i.ContainerType)
-                                           .WithMany(ct => ct.InventoryItems)
-                                           .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<InventoryItem>().HasOne(i => i.LightType)
-                                           .WithMany(lt => lt.InventoryItems)
-                                           .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<LightType>().Property(x => x.PPF).HasPrecision(6, 2);
-            builder.Entity<LightType>().Property(x => x.PPFD).HasPrecision(6, 2);
-            builder.Entity<LightType>().Property(x => x.ColorSpectrum).HasMaxLength(50);
-            builder.Entity<LightType>().Property(x => x.CoverageAreaSF).HasPrecision(6, 2);
+            builder.Entity<Resource>().HasIndex(x => x.SKU).IsUnique();
+            builder.Entity<Resource>().HasIndex(x => x.Name).IsUnique();
+            builder.Entity<Resource>().Property(x => x.Active).HasDefaultValue(true);
 
             builder.Entity<ContainerType>().Property(x => x.Capacity).HasPrecision(8, 2);
             builder.Entity<ContainerType>().Property(x => x.Active).HasDefaultValue(true);
 
             #region Stock Items TPT
-            builder.Entity<Plant>().ToTable("Plants");
-            builder.Entity<Light>().ToTable("Lights");
-            builder.Entity<DurableItem>().ToTable("DurableItems");
-            builder.Entity<ConsumableItem>().ToTable("Consumables");
+            builder.Entity<Plant>().ToTable("Plants", "Inventory");
+            builder.Entity<Light>().ToTable("Lights", "Inventory");
+            builder.Entity<Durable>().ToTable("Durables", "Inventory");
+            builder.Entity<Consumable>().ToTable("Consumables", "Inventory");
 
             builder.Entity<Plant>().HasBaseType<StockItem>();
             builder.Entity<Light>().HasBaseType<StockItem>();
-            builder.Entity<DurableItem>().HasBaseType<StockItem>();
-            builder.Entity<ConsumableItem>().HasBaseType<StockItem>();
+            builder.Entity<Durable>().HasBaseType<StockItem>();
+            builder.Entity<Consumable>().HasBaseType<StockItem>();
 
             builder.Entity<StockItem>().Property(x => x.PurchasePrice).HasPrecision(8, 2);
-            builder.Entity<ConsumableItem>().Property(x => x.UnitCount).HasPrecision(8, 2);
+            builder.Entity<Consumable>().Property(x => x.UnitCount).HasPrecision(8, 2);
             #endregion
 
-            #region Locations TPH
-            builder.Entity<InventoryLocation>().HasIndex(x => x.Name).IsUnique();
-            builder.Entity<InventoryLocation>().Property(x => x.Active).HasDefaultValue(true);
 
-            builder.Entity<InventoryLocation>().HasDiscriminator<string>("LocationType")
-                                               .HasValue<RoomLocation>("Room")
-                                               .HasValue<OffsiteLocation>("Offsite")
-                                               .HasValue<BuildingLocation>("Building")
-                                               .HasValue<ContainerLocation>("Container");
+            #region Locations TPH
+            builder.Entity<Location>().HasIndex(x => x.Name).IsUnique();
+            builder.Entity<Location>().Property(x => x.Active).HasDefaultValue(true);
+
+            builder.Entity<Location>().HasDiscriminator<string>("LocationType")
+                                      .HasValue<SiteLocation>("Site")
+                                      .HasValue<FieldLocation>("Field")
+                                      .HasValue<RowLocation>("Row")
+                                      .HasValue<BedLocation>("Bed")
+                                      .HasValue<PlotLocation>("Plot")
+                                      .HasValue<GreenhouseLocation>("Greenhouse")
+                                      .HasValue<BuildingLocation>("Building")
+                                      .HasValue<RoomLocation>("Room")
+                                      .HasValue<OffsiteLocation>("Offsite")
+                                      .HasValue<VehicleLocation>("Vehicle");
 
             builder.Entity<BuildingLocation>().HasOne(bl => bl.Address)
                                               .WithOne(a => a.Building)
                                               .HasForeignKey<BuildingLocation>(bl => bl.AddressID)
                                               .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<ContainerLocation>().HasOne(cl => cl.ContainerType)
-                                               .WithMany(ct => ct.ContainerLocations)
-                                               .HasForeignKey(cl => cl.ContainerTypeID)
-                                               .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<SiteLocation>().HasOne(sl => sl.Business)
+                                          .WithMany(b => b.Sites)
+                                          .HasForeignKey(sl => sl.BusinessID)
+                                          .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<BuildingLocation>().HasOne(bl => bl.Business)
+                                              .WithMany(b => b.Buildings)
+                                              .HasForeignKey(bl => bl.BusinessID)
+                                              .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<InventoryTransfer>().Property(x => x.UnitCount).HasPrecision(8, 2);
             builder.Entity<InventoryTransfer>().HasOne(it => it.Origin)
@@ -153,19 +192,57 @@ namespace OptraxDAL
             #endregion
             #endregion
 
+            #region Map
+            builder.Entity<MapPoint>(e =>
+            {
+                e.HasBaseType<MapObject>();
+                e.ToTable("Points", "Map");
+                e.Property(x => x.Latitude).HasPrecision(12, 8);
+                e.Property(x => x.Longitude).HasPrecision(12, 8);
+                e.Property(x => x.Elevation).HasPrecision(12, 8);
+            });
+
+            builder.Entity<MapLine>(e =>
+            {
+                e.HasBaseType<MapObject>();
+                e.ToTable("Lines", "Map");
+                e.Property(x => x.LineGeometry).HasColumnType("geometry");
+                e.Property(e => e.ColorBytes).HasConversion(rgbaConverter).HasColumnType("varbinary(4)");
+                e.Property(e => e.FillColorBytes).HasConversion(rgbaConverter).HasColumnType("varbinary(4)");
+            });
+
+            builder.Entity<MapCircle>(e =>
+            {
+                e.HasBaseType<MapObject>();
+                e.ToTable("Circles", "Map");
+                e.Property(x => x.Radius).HasPrecision(12, 8);
+                e.Property(x => x.Area).HasColumnType("geometry");
+                e.Property(e => e.ColorBytes).HasConversion(rgbaConverter).HasColumnType("varbinary(4)");
+                e.Property(e => e.FillColorBytes).HasConversion(rgbaConverter).HasColumnType("varbinary(4)");
+            });
+
+            builder.Entity<MapPolygon>(e =>
+            {
+                e.HasBaseType<MapObject>();
+                e.ToTable("Polygons", "Map");
+                e.Property(l => l.PolyGeometry).HasColumnType("geometry");
+                e.Property(e => e.ColorBytes).HasConversion(rgbaConverter).HasColumnType("varbinary(4)");
+                e.Property(e => e.FillColorBytes).HasConversion(rgbaConverter).HasColumnType("varbinary(4)");
+            });
+            #endregion
+
+
             #region Grow
+            builder.Entity<Species>().HasIndex(x => x.SpeciesName).IsUnique();
+            builder.Entity<Species>().Property(x => x.WaterNeedsQty).HasPrecision(8, 2);
+
             builder.Entity<Crop>().HasIndex(x => x.Name).IsUnique();
-            builder.Entity<Crop>().HasIndex(x => x.BatchID).IsUnique();
-            builder.Entity<Crop>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
+            builder.Entity<Batch>().HasIndex(x => x.Name).IsUnique();
+            builder.Entity<Planting>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
 
-            builder.Entity<Crop>().HasOne(c => c.Location)
-                                  .WithMany(r => r.Crops)
-                                  .HasForeignKey(c => c.LocationID)
-                                  .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<Crop>().HasOne(c => c.Strain)
-                                  .WithMany(s => s.Crops)
-                                  .HasForeignKey(c => c.StrainID)
+            builder.Entity<Batch>().HasOne(c => c.Crop)
+                                  .WithMany(s => s.Batches)
+                                  .HasForeignKey(c => c.CropID)
                                   .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Strain>().HasIndex(x => x.Name).IsUnique();
@@ -191,7 +268,6 @@ namespace OptraxDAL
             // TPH
             builder.Entity<PlantEvent>().HasDiscriminator<string>("EventType")
                                         .HasValue<PruneEvent>("Prune")
-                                        .HasValue<LightEvent>("Light")
                                         .HasValue<GrowthEvent>("Growth")
                                         .HasValue<TransferEvent>("Transfer")
                                         .HasValue<TreatmentEvent>("Treatment")
@@ -216,42 +292,43 @@ namespace OptraxDAL
             #endregion
 
             #region Products
-            builder.Entity<Product>().HasIndex(x => x.ProductName).IsUnique();
+            builder.Entity<Product>().HasIndex(x => x.Name).IsUnique();
             builder.Entity<ProductItem>().HasIndex(x => x.Barcode).IsUnique();
             #endregion
         }
 
         public override int SaveChanges()
         {
-            var hasCategoryChanges = ChangeTracker.Entries<InventoryCategory>().Any(e => e.State == EntityState.Added ||
-                                                                                         e.State == EntityState.Modified ||
-                                                                                         e.State == EntityState.Deleted);
+            SetTracking();
 
-            var result = base.SaveChanges();
-
-            if (hasCategoryChanges)
-            {
-                _cache.Remove("CategoriesSelect");
-            }
-
-            return result;
+            return base.SaveChanges();
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var hasCategoryChanges = ChangeTracker.Entries<InventoryCategory>()
-                                                  .Any(e => e.State == EntityState.Added ||
-                                                            e.State == EntityState.Modified ||
-                                                            e.State == EntityState.Deleted);
+            SetTracking();
 
-            var result = await base.SaveChangesAsync(cancellationToken);
+            return await base.SaveChangesAsync(cancellationToken);
 
-            if (hasCategoryChanges)
+        }
+
+        private void SetTracking()
+        {
+            var userID = _userService?.UserID;
+
+            foreach (var entry in ChangeTracker.Entries<TrackingBase>())
             {
-                _cache.Remove("CategoriesSelect");
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.DateCreated = DateTime.Now;
+                    entry.Entity.CreatedUserID = userID;
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.DateLastModified = DateTime.Now;
+                    entry.Entity.LastModifiedUserID = userID;
+                }
             }
-
-            return result;
         }
     }
 }

@@ -6,5 +6,7 @@
         public string? JsFunc { get; set; }
         public string? Action { get; set; }
         public string? MsgDiv { get; set; }
+
+        public string? Type { get; set; }
     }
 }

@@ -9,10 +9,10 @@ using OptraxMVC.Services.Inventory;
 namespace OptraxMVC.Areas.Inventory.Controllers
 {
     [Area("Inventory")]
-    public class CategoriesController(OptraxContext context, IDropdownService dropdownService, ICategoryService categoryService) : BaseController(context)
+    public class CategoriesController(OptraxContext context, IOptionsService optionsService, ICategoryService categoryService) : BaseController(context)
     {
         private readonly ICategoryService _ICategory = categoryService;
-        private readonly IDropdownService _IDropdowns = dropdownService;
+        private readonly IOptionsService _IOptions = optionsService;
 
         [HttpGet]
         public IActionResult Create()
@@ -27,9 +27,9 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                     MsgDiv = "tableMsg"
                 };
 
-                ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["TopCategorySelects"]);
+                ViewData["Dropdowns"] = _IOptions.LoadOptions(["TopCategorySelects"]);
 
-                return PartialView("_Edit", new InventoryCategory() { });
+                return PartialView("_Edit", new Category() { });
             }
             catch (Exception ex)
             {
@@ -39,7 +39,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAsync(InventoryCategory cat)
+        public async Task<IActionResult> CreateAsync(Category cat)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         {
             try
             {
-                InventoryCategory? category = await _ICategory.GetCategoryByIdAsync(catID);
+                Category? category = await _ICategory.GetCategoryByIdAsync(catID);
 
                 if (category == null)
                 {
@@ -76,12 +76,12 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                 ViewBag.FormVM = new FormVM()
                 {
                     IsNew = false,
-                    JsFunc = "updateCategory",
+                    JsFunc = "editCategory",
                     Action = "Edit",
                     MsgDiv = "popupTopInner"
                 };
 
-                ViewData["Dropdowns"] = _IDropdowns.LoadDropdowns(["TopCategorySelects"]);
+                ViewData["Dropdowns"] = _IOptions.LoadOptions(["TopCategorySelects"]);
 
                 return PartialView("_Edit", category);
             }
@@ -93,7 +93,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditAsync(InventoryCategory cat)
+        public async Task<IActionResult> EditAsync(Category cat)
         {
             try
             {

@@ -9,51 +9,44 @@
   <ItemGroup>
     <Compile Remove="Areas\Admin\**" />
     <Compile Remove="Areas\Grow\Data\**" />
-    <Compile Remove="Areas\Grow\Models\**" />
     <Compile Remove="Areas\Grow\Views\Plants\EditorTemplates\**" />
-    <Compile Remove="Areas\Grow\Views\Shared\**" />
     <Compile Remove="Areas\Inventory\Views\Shared\**" />
     <Compile Remove="Views\Account\**" />
-    <Compile Remove="Views\Shared\EditorTemplates\Inventory\**" />
-    <Compile Remove="Views\Shared\EditorTemplates\Plants\**" />
+    <Compile Remove="Views\Shared\EditorTemplates\**" />
     <Compile Remove="wwwroot\css\site\**" />
     <Content Remove="Areas\Admin\**" />
     <Content Remove="Areas\Grow\Data\**" />
-    <Content Remove="Areas\Grow\Models\**" />
     <Content Remove="Areas\Grow\Views\Plants\EditorTemplates\**" />
-    <Content Remove="Areas\Grow\Views\Shared\**" />
     <Content Remove="Areas\Inventory\Views\Shared\**" />
     <Content Remove="Views\Account\**" />
-    <Content Remove="Views\Shared\EditorTemplates\Inventory\**" />
-    <Content Remove="Views\Shared\EditorTemplates\Plants\**" />
+    <Content Remove="Views\Shared\EditorTemplates\**" />
     <Content Remove="wwwroot\css\site\**" />
     <EmbeddedResource Remove="Areas\Admin\**" />
     <EmbeddedResource Remove="Areas\Grow\Data\**" />
-    <EmbeddedResource Remove="Areas\Grow\Models\**" />
     <EmbeddedResource Remove="Areas\Grow\Views\Plants\EditorTemplates\**" />
-    <EmbeddedResource Remove="Areas\Grow\Views\Shared\**" />
     <EmbeddedResource Remove="Areas\Inventory\Views\Shared\**" />
     <EmbeddedResource Remove="Views\Account\**" />
-    <EmbeddedResource Remove="Views\Shared\EditorTemplates\Inventory\**" />
-    <EmbeddedResource Remove="Views\Shared\EditorTemplates\Plants\**" />
+    <EmbeddedResource Remove="Views\Shared\EditorTemplates\**" />
     <EmbeddedResource Remove="wwwroot\css\site\**" />
     <None Remove="Areas\Admin\**" />
     <None Remove="Areas\Grow\Data\**" />
-    <None Remove="Areas\Grow\Models\**" />
     <None Remove="Areas\Grow\Views\Plants\EditorTemplates\**" />
-    <None Remove="Areas\Grow\Views\Shared\**" />
     <None Remove="Areas\Inventory\Views\Shared\**" />
     <None Remove="Views\Account\**" />
-    <None Remove="Views\Shared\EditorTemplates\Inventory\**" />
-    <None Remove="Views\Shared\EditorTemplates\Plants\**" />
+    <None Remove="Views\Shared\EditorTemplates\**" />
     <None Remove="wwwroot\css\site\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Areas\Inventory\Views\Items\_Categories.cshtml" />
-    <Content Remove="Views\Shared\EditorTemplates\PlantEvent.cshtml" />
-    <Content Remove="Views\Shared\EditorTemplates\PlantEvents.cshtml" />
+    <Content Remove="Areas\Inventory\Views\Resources\_Categories.cshtml" />
     <Content Remove="Views\Shared\_TreeNode.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Areas\Admin\Views\_ViewImports.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -64,12 +57,15 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite" Version="8.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.13">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
     <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
+    <PackageReference Include="NetTopologySuite" Version="2.6.0" />
+    <PackageReference Include="protobuf-net.Core" Version="3.2.46" />
   </ItemGroup>
 
   <ItemGroup>
@@ -78,9 +74,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Controllers\" />
-    <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Views\Shared\EditorTemplates\Building\" />
+    <Folder Include="wwwroot\css\NewFolder\" />
   </ItemGroup>
 
   <ItemGroup>

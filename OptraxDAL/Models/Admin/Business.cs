@@ -1,31 +1,28 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OptraxDAL.Models.BaseClasses;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Admin
 {
-    [Table("Businesses")]
-    public class Business
+    [Table("Businesses", Schema = "Admin")]
+    public class Business : TrackingBaseDetails
     {
         public Business() { }
-        public int ID { get; set; }
-
-        [MaxLength(100)]
-        public string Name { get; set; } = string.Empty;
 
         [MaxLength(50)]
-        public string? BusinessType { get; set; }
+        public string BusinessType { get; set; } = "Grower";
 
-        [MaxLength(250)]
-        public string? Description { get; set; }
 
         public virtual List<Address> Addresses { get; set; } = [];
+        public virtual List<SiteLocation>? Sites { get; set; } = [];
+        public virtual List<BuildingLocation>? Buildings { get; set; } = [];
+
     }
     public enum BusinessTypes
     {
-        Source,        
-        Retailer,
-        Wholesaler,
-        Distributor,
+        Grower,
+        Vendor,
+        Customer,
     }
 
 

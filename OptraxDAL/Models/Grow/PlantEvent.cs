@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using OptraxDAL.Models.Admin;
+using OptraxDAL.Models.BaseClasses;
 using OptraxDAL.Models.Inventory;
 
 using System.ComponentModel.DataAnnotations;
@@ -9,11 +10,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Grow
 {
-    [Table("PlantEvents")]
-    public abstract class PlantEvent
+    [Table("PlantEvents", Schema = "Grow")]
+    public abstract class PlantEvent : BaseClass
     {
         public PlantEvent() { }
-        public int ID { get; set; }
         public int PlantID { get; set; }
 
         [Required]
@@ -64,17 +64,6 @@ namespace OptraxDAL.Models.Grow
     }
 
     [Table("PlantEvents")]
-    public class LightEvent : PlantEvent
-    {
-        public LightEvent()
-        {
-            EventType = "Light";
-        }
-        public int NewLightID { get; set; }
-        public virtual required Light NewLight { get; set; }
-    }
-
-    [Table("PlantEvents")]
     public class TreatmentEvent : PlantEvent
     {
         public TreatmentEvent()
@@ -89,7 +78,7 @@ namespace OptraxDAL.Models.Grow
 
         [MaxLength(20)]
         public string? QuantityUoM { get; set; }
-        public virtual ConsumableItem? Product { get; set; }
+        public virtual Consumable? Product { get; set; }
     }
 
     [Table("PlantEvents")]
@@ -117,19 +106,18 @@ namespace OptraxDAL.Models.Grow
     public enum TreatmentType
     {
         Water,
-        Feed,
+        Fertilize,
         Flush,
         PestControl,
-        MoldControl
+        MoldControl,
+        WeedControl
     }
 
     public enum PruneType
     {
-        Top,
+        Deadhead,
         Defoliate,
-        FIM,
-        LST1,
-        LST2,
-        LST3,
+        Dethorn,
+        Trellis,
     }
 }

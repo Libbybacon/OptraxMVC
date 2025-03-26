@@ -1,19 +1,21 @@
-﻿using OptraxDAL.Models.Inventory;
+﻿using OptraxDAL.Models.Admin;
+using OptraxDAL.Models.BaseClasses;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Products
 {
-    public class ProductItem
+    [Table("ProductItems", Schema = "Products")]
+    public class ProductItem : BaseClass
     {
         public ProductItem() { }
-        public int ID { get; set; }
         public int ProductID { get; set; }
         public int? BatchID { get; set; }
         public string? Status { get; set; }
         public string? Barcode { get; set; }
-        public int? InventoryLocationID { get; set; }
+        public int? LocationID { get; set; }
 
         public virtual Product Product { get; set; } = new();
         public virtual ProductBatch? Batch { get; set; }
-        public virtual InventoryLocation? CurrentLocation { get; set; }
+        public virtual Location? CurrentLocation { get; set; }
     }
 }

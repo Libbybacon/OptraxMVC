@@ -1,10 +1,12 @@
-﻿namespace OptraxDAL.Models.Products
+﻿using OptraxDAL.Models.BaseClasses;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace OptraxDAL.Models.Products
 {
-    public class ProductBatch
+    [Table("ProductBatches", Schema = "Products")]
+    public class ProductBatch : TrackingBaseDetails
     {
         public ProductBatch() { }
-
-        public int ID { get; set; }
 
         public int ProductID { get; set; }
 

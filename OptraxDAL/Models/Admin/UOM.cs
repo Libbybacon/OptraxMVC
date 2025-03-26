@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Admin
 {
+    [Table("UoMs", Schema = "Admin")]
     public class UoM
     {
         public UoM() { }

@@ -41,47 +41,56 @@
     }
 }
 
+
 .top-tabs {
-    height: 50px;
+    width: 100%;
+    height: 45px;
     display: flex;
+    z-index: 1001;
+    position: absolute;
     align-items: center;
     justify-content: center;
-    background: var(--blue-xdk);
+    background: var(--grn-xlt);
 }
 
-.nav-tabs {
-    border-bottom: none;
-    background: var(--blue-xdk);
-}
-
-    .nav-tabs .nav-link {
-        border: none;
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
-        margin-bottom: 0;
-        font-size: var(--f-lg);
+    .top-tabs .nav-tabs {
+        border-bottom: none;
+        background: var(--grn-xlt);
     }
 
-        .nav-tabs .nav-link.active {
-            border: none;
-        }
 
-        .nav-tabs .nav-link:hover {
-            border: none;
-            color: var(--blue-xdk);
-            background: var(--tan-lt);
-        }
 
-        .nav-tabs .nav-link.active,
-        .nav-tabs .nav-link.active:hover,
-        .nav-tabs .nav-item.show .nav-link,
-        .nav-tabs .nav-item.show .nav-link:hover {
-            background: linear-gradient(var(--tan-md), var(--tan-dk));
-            color: white;
-        }
+.top-tabs .nav-tabs .nav-link {
+    border: none;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    margin-bottom: 0;
+    font-size: var(--f-md);
+}
 
-.divider {
-    border-right: 2px ridge var(--tan-lt) !important;
+    .nav-tabs .nav-link.active {
+        border: none;
+    }
+
+.top-tabs .nav-tabs .nav-link:hover {
+    border: none;
+    color: var(--grn-xlt);
+    background: var(--grn-lt);
+}
+
+
+
+.top-tabs .nav-tabs .nav-link.active,
+.top-tabs .nav-tabs .nav-link.active:hover,
+.top-tabs .nav-tabs .nav-item.show .nav-link,
+.top-tabs .nav-tabs .nav-item.show .nav-link:hover {
+    /*background: linear-gradient(var(--tan-md), var(--tan-dk));*/
+    background: var(--grn-dk);
+    color: white;
+}
+
+.top-tabs .divider {
+    border-right: 2px ridge var(--grn-dk) !important;
 }
 
 .inner-tab {
@@ -99,7 +108,7 @@
     margin-right: auto;
     width: 99%;
     background-color: white;
-    box-shadow: 2px .25rem .75rem rgba(0, 0, 0, .4);
+    /*box-shadow: 2px .25rem .75rem rgba(0, 0, 0, .4);*/
     padding: 0;
     padding-top: 1rem;
     min-height: calc(100vh - 80px) !important;

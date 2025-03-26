@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using NetTopologySuite.Geometries;
 using OptraxDAL;
 
 #nullable disable
@@ -22,7 +23,22 @@ namespace OptraxDAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("InventoryLocationStockItem", b =>
+            modelBuilder.Entity("IconIconCollection", b =>
+                {
+                    b.Property<int>("CollectionsID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IconsID")
+                        .HasColumnType("int");
+
+                    b.HasKey("CollectionsID", "IconsID");
+
+                    b.HasIndex("IconsID");
+
+                    b.ToTable("IconIconCollection", "Admin");
+                });
+
+            modelBuilder.Entity("LocationStockItem", b =>
                 {
                     b.Property<int>("LocationsID")
                         .HasColumnType("int");
@@ -34,7 +50,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("StockItemsID");
 
-                    b.ToTable("InventoryLocationStockItem");
+                    b.ToTable("LocationStockItem");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -184,7 +200,6 @@ namespace OptraxDAL.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Address2")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -211,6 +226,18 @@ namespace OptraxDAL.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("State")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -225,7 +252,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("BusinessID");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Address", "Admin");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Admin.AppUser", b =>
@@ -310,12 +337,25 @@ namespace OptraxDAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("BusinessType")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -327,7 +367,215 @@ namespace OptraxDAL.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Businesses");
+                    b.ToTable("Businesses", "Admin");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.ContainerType", b =>
+                {
+                    b.Property<int>("ContainerTypeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContainerTypeID"));
+
+                    b.Property<bool>("Active")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<decimal>("Capacity")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("decimal(8,2)");
+
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("UoMName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ContainerTypeID");
+
+                    b.HasIndex("UoMName");
+
+                    b.ToTable("ContainerTypes", "Admin");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.Icon", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Icons", "Admin");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.IconCollection", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ParentID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ParentID");
+
+                    b.ToTable("IconCollections", "Admin");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.Input", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("InputName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("InputName")
+                        .IsUnique();
+
+                    b.ToTable("Inputs", "Admin");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.Location", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<bool>("Active")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int>("IconID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Level")
+                        .HasMaxLength(1)
+                        .HasColumnType("int");
+
+                    b.Property<string>("LocationType")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
+
+                    b.Property<int?>("MapObjectID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("ParentID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("IconID");
+
+                    b.HasIndex("MapObjectID");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("ParentID");
+
+                    b.ToTable("Locations", "Admin");
+
+                    b.HasDiscriminator<string>("LocationType").HasValue("Location");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Admin.UoM", b =>
@@ -340,10 +588,22 @@ namespace OptraxDAL.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("PerQuantity")
                         .HasPrecision(6, 2)
@@ -356,7 +616,63 @@ namespace OptraxDAL.Migrations
 
                     b.HasKey("UnitName");
 
-                    b.ToTable("UoMs");
+                    b.ToTable("UoMs", "Admin");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Grow.Batch", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("BatchName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CropID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("OriginType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PropagationType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SalesOrderID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("BatchName")
+                        .IsUnique();
+
+                    b.HasIndex("CropID");
+
+                    b.ToTable("Batches", "Grow");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.Crop", b =>
@@ -367,72 +683,111 @@ namespace OptraxDAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<string>("BatchID")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("CurrentPhase")
-                        .IsRequired()
+                    b.Property<string>("CreatedUserID")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset?>("EndDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int?>("ExpectedFlowerDays")
+                    b.Property<int?>("CultivarID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ExpectedVegDays")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("FlowerEnd")
+                    b.Property<DateTimeOffset?>("DateCreated")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset?>("FlowerStart")
+                    b.Property<DateTimeOffset?>("DateLastModified")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int?>("LocationID")
+                    b.Property<int?>("FieldLocationID")
                         .HasColumnType("int");
+
+                    b.Property<int?>("GreenhouseLocationID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset?>("StartDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("StrainID")
+                    b.Property<int?>("RoomLocationID")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset?>("VegEnd")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int?>("RowLocationID")
+                        .HasColumnType("int");
 
-                    b.Property<DateTimeOffset?>("VegStart")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int>("SpeciesID")
+                        .HasColumnType("int");
 
-                    b.Property<decimal?>("WasteQuantity")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
+                    b.Property<int?>("StrainID")
+                        .HasColumnType("int");
 
-                    b.Property<string>("WasteQuantityUoM")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("VarietyID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("BatchID")
-                        .IsUnique()
-                        .HasFilter("[BatchID] IS NOT NULL");
+                    b.HasIndex("CultivarID");
 
-                    b.HasIndex("LocationID");
+                    b.HasIndex("FieldLocationID");
+
+                    b.HasIndex("GreenhouseLocationID");
 
                     b.HasIndex("Name")
-                        .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL");
+                        .IsUnique();
+
+                    b.HasIndex("RoomLocationID");
+
+                    b.HasIndex("RowLocationID");
+
+                    b.HasIndex("SpeciesID");
 
                     b.HasIndex("StrainID");
 
-                    b.ToTable("Crops");
+                    b.HasIndex("VarietyID");
+
+                    b.ToTable("Crops", "Grow");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Grow.Cultivar", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PatentNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Patented")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("SpeciesID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("SpeciesID");
+
+                    b.ToTable("Cultivars", "Grow");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.PlantEvent", b =>
@@ -482,11 +837,285 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("PlantEvents");
+                    b.ToTable("PlantEvents", "Grow");
 
                     b.HasDiscriminator<string>("EventType").HasValue("PlantEvent");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Grow.Planting", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int?>("BatchID")
+                        .HasMaxLength(50)
+                        .HasColumnType("int");
+
+                    b.Property<int>("CropID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CurrentStage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LocationID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("WasteQuantity")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("WasteQuantityUoM")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("BatchID");
+
+                    b.HasIndex("CropID");
+
+                    b.HasIndex("LocationID");
+
+                    b.ToTable("Plantings", "Grow");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Grow.Species", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Abbreviation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Attracts")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AvoidPlants")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BestPlantingMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BloomPeriod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BloomShape")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BloomSizeDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Branching")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("ColdStratify")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ColdStratifyDetails")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CommonDiseases")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CommonName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CommonPests")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanionPlants")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CropRotationDetails")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DaysToMaturity")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DrainageNeeds")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Family")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FloralCategory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Genus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GerminationDetails")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GerminationTime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("HardenOff")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("HardenOffDetails")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HardinessZone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HarvestDetails")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HarvestPeriod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HarvestSignifiers")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HeatZone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdealDayTemp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdealHumidity")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdealLightHours")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdealNightTemp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdealSoilTemp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdealpH")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsInvasive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LeafCategory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MainPropagationMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("MaxStorageDays")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Pinch")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PlantHeight")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PlantSpacing")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PlantType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PropagationTypes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Repels")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Resistances")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RiskFactors")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RowSpacing")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Seasons")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SeedDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SeedLifespan")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SeedOrBulbDepth")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SeedStorageDetails")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Site")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SoilType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SpeciesName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Spread")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StemLength")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StorageTemperature")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Uses")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VaseLife")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WaterNeedsFrequency")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("WaterNeedsQty")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("decimal(8,2)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("SpeciesName")
+                        .IsUnique();
+
+                    b.ToTable("Species", "Grow");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.Strain", b =>
@@ -500,12 +1129,24 @@ namespace OptraxDAL.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("Description")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<int?>("Generation")
                         .HasColumnType("int");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -529,7 +1170,7 @@ namespace OptraxDAL.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Strains");
+                    b.ToTable("Strains", "Grow");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.StrainRelationship", b =>
@@ -547,45 +1188,35 @@ namespace OptraxDAL.Migrations
                     b.ToTable("StrainRelationships");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.ContainerType", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Grow.Variety", b =>
                 {
-                    b.Property<int>("ContainerTypeID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContainerTypeID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<bool>("Active")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Capacity")
-                        .HasPrecision(8, 2)
-                        .HasColumnType("decimal(8,2)");
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UoMName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int>("SpeciesID")
+                        .HasColumnType("int");
 
-                    b.HasKey("ContainerTypeID");
+                    b.HasKey("ID");
 
-                    b.HasIndex("UoMName");
-
-                    b.ToTable("ContainerTypes");
+                    b.ToTable("Varieties", "Grow");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.InventoryCategory", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Inventory.Category", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -596,6 +1227,15 @@ namespace OptraxDAL.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("Description")
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
@@ -603,6 +1243,9 @@ namespace OptraxDAL.Migrations
                     b.Property<string>("HexColor")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -623,131 +1266,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("ParentID");
 
-                    b.ToTable("InventoryCategories");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.InventoryItem", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<bool>("Active")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<int>("CategoryID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ContainerTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DefaultUoM")
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<int?>("LightTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Manufacturer")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("NeedsTransferApproval")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SKU")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int?>("SellerID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StockType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("StockUoM")
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
-
-                    b.Property<string>("Tags")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("CategoryID");
-
-                    b.HasIndex("ContainerTypeID");
-
-                    b.HasIndex("LightTypeID");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("SKU")
-                        .IsUnique()
-                        .HasFilter("[SKU] IS NOT NULL");
-
-                    b.ToTable("InventoryItems");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.InventoryLocation", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<bool>("Active")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("LocationType")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int?>("ParentID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("ParentID");
-
-                    b.ToTable("InventoryLocations");
-
-                    b.HasDiscriminator<string>("LocationType").HasValue("InventoryLocation");
-
-                    b.UseTphMappingStrategy();
+                    b.ToTable("Categories", "Inventory");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Inventory.InventoryTransfer", b =>
@@ -809,10 +1328,10 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("InventoryTransfers");
+                    b.ToTable("Transfers", "Inventory");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.LightType", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Inventory.Resource", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -820,35 +1339,106 @@ namespace OptraxDAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<string>("BulbType")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                    b.Property<bool>("Active")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
-                    b.Property<string>("ColorSpectrum")
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DefaultUoM")
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Manufacturer")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("NeedsTransferApproval")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SKU")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<decimal?>("CoverageAreaSF")
-                        .HasPrecision(6, 2)
-                        .HasColumnType("decimal(6,2)");
-
-                    b.Property<int?>("LifespanHours")
+                    b.Property<int?>("SellerID")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("PPF")
-                        .HasPrecision(6, 2)
-                        .HasColumnType("decimal(6,2)");
+                    b.Property<string>("StockType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.Property<decimal?>("PPFD")
-                        .HasPrecision(6, 2)
-                        .HasColumnType("decimal(6,2)");
+                    b.Property<string>("StockUoM")
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
-                    b.Property<int?>("Voltage")
-                        .HasColumnType("int");
+                    b.Property<string>("Tags")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("ID");
 
-                    b.ToTable("LightTypes");
+                    b.HasIndex("CategoryID");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("SKU")
+                        .IsUnique()
+                        .HasFilter("[SKU] IS NOT NULL");
+
+                    b.ToTable("Resources", "Inventory");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Inventory.SalesOrder", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("Date")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("SalesOrders", "Inventory");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Inventory.StockItem", b =>
@@ -859,11 +1449,20 @@ namespace OptraxDAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<DateTimeOffset?>("ExpirationDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("InventoryItemID")
-                        .HasColumnType("int");
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LotNumber")
                         .HasMaxLength(50)
@@ -879,15 +1478,18 @@ namespace OptraxDAL.Migrations
                         .HasPrecision(8, 2)
                         .HasColumnType("decimal(8,2)");
 
+                    b.Property<int>("ResourceID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Status")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("InventoryItemID");
+                    b.HasIndex("ResourceID");
 
-                    b.ToTable("StockItems");
+                    b.ToTable("StockItems", "Inventory");
 
                     b.UseTptMappingStrategy();
                 });
@@ -921,7 +1523,87 @@ namespace OptraxDAL.Migrations
                     b.HasIndex("TransferID")
                         .IsUnique();
 
-                    b.ToTable("TransferApprovals");
+                    b.ToTable("TransferApprovals", "Inventory");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Map.MapObject", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Category")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("MapObjects", "Map");
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Map.MapObjectPoint", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<decimal?>("Elevation")
+                        .HasPrecision(12, 8)
+                        .HasColumnType("decimal(12,8)");
+
+                    b.Property<decimal>("Latitude")
+                        .HasPrecision(12, 8)
+                        .HasColumnType("decimal(12,8)");
+
+                    b.Property<decimal>("Longitude")
+                        .HasPrecision(12, 8)
+                        .HasColumnType("decimal(12,8)");
+
+                    b.Property<int?>("MapLineID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MapObjectID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MapPolygonID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("MapLineID");
+
+                    b.HasIndex("MapPolygonID");
+
+                    b.ToTable("MapObjectPoints", "Map");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Products.Product", b =>
@@ -934,6 +1616,18 @@ namespace OptraxDAL.Migrations
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
+
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductDescription")
                         .HasColumnType("nvarchar(max)");
@@ -953,7 +1647,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("UnitUoMName");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", "Products");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Products.ProductBatch", b =>
@@ -967,6 +1661,18 @@ namespace OptraxDAL.Migrations
                     b.Property<int>("BatchNumber")
                         .HasColumnType("int");
 
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
 
@@ -977,7 +1683,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("ProductBatches");
+                    b.ToTable("ProductBatches", "Products");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Products.ProductItem", b =>
@@ -994,13 +1700,28 @@ namespace OptraxDAL.Migrations
                     b.Property<int?>("BatchID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CropID")
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LocationID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("InventoryLocationID")
+                    b.Property<int?>("PlantingID")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SalesOrderID")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
@@ -1014,13 +1735,189 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("BatchID");
 
-                    b.HasIndex("CropID");
+                    b.HasIndex("LocationID");
 
-                    b.HasIndex("InventoryLocationID");
+                    b.HasIndex("PlantingID");
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("ProductItems");
+                    b.HasIndex("SalesOrderID");
+
+                    b.ToTable("ProductItems", "Products");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Products.PurchaseOrder", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("CustomerID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("FulfillmentDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("OrderDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("ShipDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("VerifiedReceivedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("PurchaseOrder", "Products");
+                });
+
+            modelBuilder.Entity("PurchaseOrderStockItem", b =>
+                {
+                    b.Property<int>("ItemsID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PurchaseOrdersID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ItemsID", "PurchaseOrdersID");
+
+                    b.HasIndex("PurchaseOrdersID");
+
+                    b.ToTable("PurchaseOrderStockItem");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.BedLocation", b =>
+                {
+                    b.HasBaseType("OptraxDAL.Models.Admin.Location");
+
+                    b.ToTable("Locations", "Admin");
+
+                    b.HasDiscriminator().HasValue("Bed");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.BuildingLocation", b =>
+                {
+                    b.HasBaseType("OptraxDAL.Models.Admin.Location");
+
+                    b.Property<int>("AddressID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BusinessID")
+                        .HasColumnType("int");
+
+                    b.HasIndex("AddressID")
+                        .IsUnique()
+                        .HasFilter("[AddressID] IS NOT NULL");
+
+                    b.HasIndex("BusinessID");
+
+                    b.ToTable("Locations", "Admin");
+
+                    b.HasDiscriminator().HasValue("Building");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.FieldLocation", b =>
+                {
+                    b.HasBaseType("OptraxDAL.Models.Admin.Location");
+
+                    b.ToTable("Locations", "Admin");
+
+                    b.HasDiscriminator().HasValue("Field");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.GreenhouseLocation", b =>
+                {
+                    b.HasBaseType("OptraxDAL.Models.Admin.Location");
+
+                    b.ToTable("Locations", "Admin");
+
+                    b.HasDiscriminator().HasValue("Greenhouse");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.OffsiteLocation", b =>
+                {
+                    b.HasBaseType("OptraxDAL.Models.Admin.Location");
+
+                    b.Property<int?>("AddressID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BusinessID")
+                        .HasColumnType("int");
+
+                    b.HasIndex("AddressID");
+
+                    b.HasIndex("BusinessID");
+
+                    b.ToTable("Locations", "Admin", t =>
+                        {
+                            t.Property("AddressID")
+                                .HasColumnName("OffsiteLocation_AddressID");
+
+                            t.Property("BusinessID")
+                                .HasColumnName("OffsiteLocation_BusinessID");
+                        });
+
+                    b.HasDiscriminator().HasValue("Offsite");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.PlotLocation", b =>
+                {
+                    b.HasBaseType("OptraxDAL.Models.Admin.Location");
+
+                    b.ToTable("Locations", "Admin");
+
+                    b.HasDiscriminator().HasValue("Plot");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.RoomLocation", b =>
+                {
+                    b.HasBaseType("OptraxDAL.Models.Admin.Location");
+
+                    b.ToTable("Locations", "Admin");
+
+                    b.HasDiscriminator().HasValue("Room");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.RowLocation", b =>
+                {
+                    b.HasBaseType("OptraxDAL.Models.Admin.Location");
+
+                    b.ToTable("Locations", "Admin");
+
+                    b.HasDiscriminator().HasValue("Row");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.SiteLocation", b =>
+                {
+                    b.HasBaseType("OptraxDAL.Models.Admin.Location");
+
+                    b.Property<int?>("BusinessID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("bit");
+
+                    b.HasIndex("BusinessID");
+
+                    b.ToTable("Locations", "Admin", t =>
+                        {
+                            t.Property("BusinessID")
+                                .HasColumnName("SiteLocation_BusinessID");
+                        });
+
+                    b.HasDiscriminator().HasValue("Site");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.VehicleLocation", b =>
+                {
+                    b.HasBaseType("OptraxDAL.Models.Admin.Location");
+
+                    b.ToTable("Locations", "Admin");
+
+                    b.HasDiscriminator().HasValue("Vehicle");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.GrowthEvent", b =>
@@ -1031,23 +1928,9 @@ namespace OptraxDAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("PlantEvents");
+                    b.ToTable("PlantEvents", "Grow");
 
                     b.HasDiscriminator().HasValue("Growth");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Grow.LightEvent", b =>
-                {
-                    b.HasBaseType("OptraxDAL.Models.Grow.PlantEvent");
-
-                    b.Property<int>("NewLightID")
-                        .HasColumnType("int");
-
-                    b.HasIndex("NewLightID");
-
-                    b.ToTable("PlantEvents");
-
-                    b.HasDiscriminator().HasValue("Light");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.PruneEvent", b =>
@@ -1065,7 +1948,7 @@ namespace OptraxDAL.Migrations
                     b.Property<string>("WasteQuantityUOM")
                         .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("PlantEvents");
+                    b.ToTable("PlantEvents", "Grow");
 
                     b.HasDiscriminator().HasValue("Prune");
                 });
@@ -1081,7 +1964,7 @@ namespace OptraxDAL.Migrations
                         .IsUnique()
                         .HasFilter("[TransferID] IS NOT NULL");
 
-                    b.ToTable("PlantEvents");
+                    b.ToTable("PlantEvents", "Grow");
 
                     b.HasDiscriminator().HasValue("Transfer");
                 });
@@ -1095,7 +1978,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("NewContainerID");
 
-                    b.ToTable("PlantEvents");
+                    b.ToTable("PlantEvents", "Grow");
 
                     b.HasDiscriminator().HasValue("Transplant");
                 });
@@ -1122,60 +2005,12 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("PlantEvents");
+                    b.ToTable("PlantEvents", "Grow");
 
                     b.HasDiscriminator().HasValue("Treatment");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.BuildingLocation", b =>
-                {
-                    b.HasBaseType("OptraxDAL.Models.Inventory.InventoryLocation");
-
-                    b.Property<int>("AddressID")
-                        .HasColumnType("int");
-
-                    b.HasIndex("AddressID")
-                        .IsUnique()
-                        .HasFilter("[AddressID] IS NOT NULL");
-
-                    b.ToTable("InventoryLocations");
-
-                    b.HasDiscriminator().HasValue("Building");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.ContainerLocation", b =>
-                {
-                    b.HasBaseType("OptraxDAL.Models.Inventory.InventoryLocation");
-
-                    b.Property<int>("ContainerTypeID")
-                        .HasColumnType("int");
-
-                    b.HasIndex("ContainerTypeID");
-
-                    b.ToTable("InventoryLocations");
-
-                    b.HasDiscriminator().HasValue("Container");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.OffsiteLocation", b =>
-                {
-                    b.HasBaseType("OptraxDAL.Models.Inventory.InventoryLocation");
-
-                    b.ToTable("InventoryLocations");
-
-                    b.HasDiscriminator().HasValue("Offsite");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.RoomLocation", b =>
-                {
-                    b.HasBaseType("OptraxDAL.Models.Inventory.InventoryLocation");
-
-                    b.ToTable("InventoryLocations");
-
-                    b.HasDiscriminator().HasValue("Room");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.ConsumableItem", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Inventory.Consumable", b =>
                 {
                     b.HasBaseType("OptraxDAL.Models.Inventory.StockItem");
 
@@ -1198,10 +2033,10 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("UoMName");
 
-                    b.ToTable("Consumables", (string)null);
+                    b.ToTable("Consumables", "Inventory");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.DurableItem", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Inventory.Durable", b =>
                 {
                     b.HasBaseType("OptraxDAL.Models.Inventory.StockItem");
 
@@ -1215,7 +2050,7 @@ namespace OptraxDAL.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.ToTable("DurableItems", (string)null);
+                    b.ToTable("Durables", "Inventory");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Inventory.Light", b =>
@@ -1231,7 +2066,7 @@ namespace OptraxDAL.Migrations
                     b.Property<DateTimeOffset?>("LastMaintenanceCheck")
                         .HasColumnType("datetimeoffset");
 
-                    b.ToTable("Lights", (string)null);
+                    b.ToTable("Lights", "Inventory");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Inventory.Plant", b =>
@@ -1241,16 +2076,8 @@ namespace OptraxDAL.Migrations
                     b.Property<int?>("CropID")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsMother")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("MotherName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("OriginType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("CultivarID")
+                        .HasColumnType("int");
 
                     b.Property<int?>("ParentID")
                         .HasColumnType("int");
@@ -1260,7 +2087,14 @@ namespace OptraxDAL.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<int>("StrainID")
+                    b.Property<string>("PropagationType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SpeciesID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StrainID")
                         .HasColumnType("int");
 
                     b.Property<string>("TrackingID")
@@ -1268,18 +2102,123 @@ namespace OptraxDAL.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int?>("VarietyID")
+                        .HasColumnType("int");
+
                     b.HasIndex("CropID");
 
                     b.HasIndex("ParentID");
 
                     b.HasIndex("StrainID");
 
-                    b.ToTable("Plants", (string)null);
+                    b.ToTable("Plants", "Inventory");
                 });
 
-            modelBuilder.Entity("InventoryLocationStockItem", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Map.MapLine", b =>
                 {
-                    b.HasOne("OptraxDAL.Models.Inventory.InventoryLocation", null)
+                    b.HasBaseType("OptraxDAL.Models.Map.MapObject");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(9)
+                        .HasColumnType("nvarchar(9)");
+
+                    b.Property<LineString>("LineGeometry")
+                        .IsRequired()
+                        .HasColumnType("geometry");
+
+                    b.Property<string>("Pattern")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("int");
+
+                    b.ToTable("Lines", "Map");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Map.MapPoint", b =>
+                {
+                    b.HasBaseType("OptraxDAL.Models.Map.MapObject");
+
+                    b.Property<decimal>("Elevation")
+                        .HasPrecision(12, 8)
+                        .HasColumnType("decimal(12,8)");
+
+                    b.Property<int>("IconID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Latitude")
+                        .HasPrecision(12, 8)
+                        .HasColumnType("decimal(12,8)");
+
+                    b.Property<int?>("LocationID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Longitude")
+                        .HasPrecision(12, 8)
+                        .HasColumnType("decimal(12,8)");
+
+                    b.HasIndex("IconID");
+
+                    b.HasIndex("LocationID");
+
+                    b.ToTable("Points", "Map");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Map.MapPolygon", b =>
+                {
+                    b.HasBaseType("OptraxDAL.Models.Map.MapObject");
+
+                    b.Property<string>("BorderColor")
+                        .IsRequired()
+                        .HasMaxLength(9)
+                        .HasColumnType("nvarchar(9)");
+
+                    b.Property<int>("BorderWidth")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FillColor")
+                        .IsRequired()
+                        .HasMaxLength(9)
+                        .HasColumnType("nvarchar(9)");
+
+                    b.Property<int?>("LocationID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Pattern")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<Polygon>("PolyGeometry")
+                        .IsRequired()
+                        .HasColumnType("geometry");
+
+                    b.HasIndex("LocationID");
+
+                    b.ToTable("Polygons", "Map");
+                });
+
+            modelBuilder.Entity("IconIconCollection", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Admin.IconCollection", null)
+                        .WithMany()
+                        .HasForeignKey("CollectionsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OptraxDAL.Models.Admin.Icon", null)
+                        .WithMany()
+                        .HasForeignKey("IconsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("LocationStockItem", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Admin.Location", null)
                         .WithMany()
                         .HasForeignKey("LocationsID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1352,27 +2291,117 @@ namespace OptraxDAL.Migrations
                     b.Navigation("Business");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Grow.Crop", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Admin.ContainerType", b =>
                 {
-                    b.HasOne("OptraxDAL.Models.Inventory.RoomLocation", "Location")
-                        .WithMany("Crops")
-                        .HasForeignKey("LocationID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.HasOne("OptraxDAL.Models.Admin.UoM", "CapacityUoM")
+                        .WithMany()
+                        .HasForeignKey("UoMName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("OptraxDAL.Models.Grow.Strain", "Strain")
-                        .WithMany("Crops")
-                        .HasForeignKey("StrainID")
+                    b.Navigation("CapacityUoM");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.IconCollection", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Admin.IconCollection", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentID");
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.Location", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Admin.Icon", "Icon")
+                        .WithMany()
+                        .HasForeignKey("IconID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OptraxDAL.Models.Map.MapObject", "MapObject")
+                        .WithMany()
+                        .HasForeignKey("MapObjectID");
+
+                    b.HasOne("OptraxDAL.Models.Admin.Location", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentID");
+
+                    b.Navigation("Icon");
+
+                    b.Navigation("MapObject");
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Grow.Batch", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Grow.Crop", "Crop")
+                        .WithMany("Batches")
+                        .HasForeignKey("CropID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Location");
+                    b.Navigation("Crop");
+                });
 
-                    b.Navigation("Strain");
+            modelBuilder.Entity("OptraxDAL.Models.Grow.Crop", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Grow.Cultivar", "Cultivar")
+                        .WithMany()
+                        .HasForeignKey("CultivarID");
+
+                    b.HasOne("OptraxDAL.Models.Admin.FieldLocation", null)
+                        .WithMany("Crops")
+                        .HasForeignKey("FieldLocationID");
+
+                    b.HasOne("OptraxDAL.Models.Admin.GreenhouseLocation", null)
+                        .WithMany("Crops")
+                        .HasForeignKey("GreenhouseLocationID");
+
+                    b.HasOne("OptraxDAL.Models.Admin.RoomLocation", null)
+                        .WithMany("Crops")
+                        .HasForeignKey("RoomLocationID");
+
+                    b.HasOne("OptraxDAL.Models.Admin.RowLocation", null)
+                        .WithMany("Crops")
+                        .HasForeignKey("RowLocationID");
+
+                    b.HasOne("OptraxDAL.Models.Grow.Species", "Species")
+                        .WithMany()
+                        .HasForeignKey("SpeciesID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OptraxDAL.Models.Grow.Strain", null)
+                        .WithMany("Crops")
+                        .HasForeignKey("StrainID");
+
+                    b.HasOne("OptraxDAL.Models.Grow.Variety", "Variety")
+                        .WithMany()
+                        .HasForeignKey("VarietyID");
+
+                    b.Navigation("Cultivar");
+
+                    b.Navigation("Species");
+
+                    b.Navigation("Variety");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Grow.Cultivar", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Grow.Species", "Species")
+                        .WithMany()
+                        .HasForeignKey("SpeciesID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Species");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.PlantEvent", b =>
                 {
-                    b.HasOne("OptraxDAL.Models.Inventory.ContainerType", null)
+                    b.HasOne("OptraxDAL.Models.Admin.ContainerType", null)
                         .WithMany("Transplants")
                         .HasForeignKey("ContainerTypeID");
 
@@ -1397,6 +2426,31 @@ namespace OptraxDAL.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("OptraxDAL.Models.Grow.Planting", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Grow.Batch", "Batch")
+                        .WithMany("Plantings")
+                        .HasForeignKey("BatchID");
+
+                    b.HasOne("OptraxDAL.Models.Grow.Crop", "Crop")
+                        .WithMany()
+                        .HasForeignKey("CropID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OptraxDAL.Models.Admin.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Batch");
+
+                    b.Navigation("Crop");
+
+                    b.Navigation("Location");
+                });
+
             modelBuilder.Entity("OptraxDAL.Models.Grow.StrainRelationship", b =>
                 {
                     b.HasOne("OptraxDAL.Models.Grow.Strain", "ChildStrain")
@@ -1416,54 +2470,9 @@ namespace OptraxDAL.Migrations
                     b.Navigation("ParentStrain");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.ContainerType", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Inventory.Category", b =>
                 {
-                    b.HasOne("OptraxDAL.Models.Admin.UoM", "CapacityUoM")
-                        .WithMany()
-                        .HasForeignKey("UoMName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CapacityUoM");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.InventoryCategory", b =>
-                {
-                    b.HasOne("OptraxDAL.Models.Inventory.InventoryCategory", "Parent")
-                        .WithMany("Children")
-                        .HasForeignKey("ParentID");
-
-                    b.Navigation("Parent");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.InventoryItem", b =>
-                {
-                    b.HasOne("OptraxDAL.Models.Inventory.InventoryCategory", "Category")
-                        .WithMany("Items")
-                        .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OptraxDAL.Models.Inventory.ContainerType", "ContainerType")
-                        .WithMany("InventoryItems")
-                        .HasForeignKey("ContainerTypeID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("OptraxDAL.Models.Inventory.LightType", "LightType")
-                        .WithMany("InventoryItems")
-                        .HasForeignKey("LightTypeID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Category");
-
-                    b.Navigation("ContainerType");
-
-                    b.Navigation("LightType");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.InventoryLocation", b =>
-                {
-                    b.HasOne("OptraxDAL.Models.Inventory.InventoryLocation", "Parent")
+                    b.HasOne("OptraxDAL.Models.Inventory.Category", "Parent")
                         .WithMany("Children")
                         .HasForeignKey("ParentID");
 
@@ -1472,13 +2481,13 @@ namespace OptraxDAL.Migrations
 
             modelBuilder.Entity("OptraxDAL.Models.Inventory.InventoryTransfer", b =>
                 {
-                    b.HasOne("OptraxDAL.Models.Inventory.InventoryLocation", "Destination")
+                    b.HasOne("OptraxDAL.Models.Admin.Location", "Destination")
                         .WithMany("TransfersIn")
                         .HasForeignKey("DestinationID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("OptraxDAL.Models.Inventory.InventoryLocation", "Origin")
+                    b.HasOne("OptraxDAL.Models.Admin.Location", "Origin")
                         .WithMany("TransfersOut")
                         .HasForeignKey("OriginID")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1505,15 +2514,26 @@ namespace OptraxDAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.StockItem", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Inventory.Resource", b =>
                 {
-                    b.HasOne("OptraxDAL.Models.Inventory.InventoryItem", "InventoryItem")
-                        .WithMany("StockItems")
-                        .HasForeignKey("InventoryItemID")
+                    b.HasOne("OptraxDAL.Models.Inventory.Category", "Category")
+                        .WithMany("Resources")
+                        .HasForeignKey("CategoryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("InventoryItem");
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Inventory.StockItem", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Inventory.Resource", "Resource")
+                        .WithMany("StockItems")
+                        .HasForeignKey("ResourceID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Resource");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Inventory.TransferApproval", b =>
@@ -1533,6 +2553,17 @@ namespace OptraxDAL.Migrations
                     b.Navigation("Manager");
 
                     b.Navigation("Transfer");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Map.MapObjectPoint", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Map.MapLine", null)
+                        .WithMany("LinePoints")
+                        .HasForeignKey("MapLineID");
+
+                    b.HasOne("OptraxDAL.Models.Map.MapPolygon", null)
+                        .WithMany("PolyPoints")
+                        .HasForeignKey("MapPolygonID");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Products.Product", b =>
@@ -1561,19 +2592,23 @@ namespace OptraxDAL.Migrations
                         .WithMany("Units")
                         .HasForeignKey("BatchID");
 
-                    b.HasOne("OptraxDAL.Models.Grow.Crop", null)
-                        .WithMany("ProductItems")
-                        .HasForeignKey("CropID");
-
-                    b.HasOne("OptraxDAL.Models.Inventory.InventoryLocation", "CurrentLocation")
+                    b.HasOne("OptraxDAL.Models.Admin.Location", "CurrentLocation")
                         .WithMany()
-                        .HasForeignKey("InventoryLocationID");
+                        .HasForeignKey("LocationID");
+
+                    b.HasOne("OptraxDAL.Models.Grow.Planting", null)
+                        .WithMany("ProductItems")
+                        .HasForeignKey("PlantingID");
 
                     b.HasOne("OptraxDAL.Models.Products.Product", "Product")
                         .WithMany("Units")
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("OptraxDAL.Models.Inventory.SalesOrder", null)
+                        .WithMany("Items")
+                        .HasForeignKey("SalesOrderID");
 
                     b.Navigation("Batch");
 
@@ -1582,15 +2617,63 @@ namespace OptraxDAL.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Grow.LightEvent", b =>
+            modelBuilder.Entity("PurchaseOrderStockItem", b =>
                 {
-                    b.HasOne("OptraxDAL.Models.Inventory.Light", "NewLight")
+                    b.HasOne("OptraxDAL.Models.Inventory.StockItem", null)
                         .WithMany()
-                        .HasForeignKey("NewLightID")
+                        .HasForeignKey("ItemsID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("NewLight");
+                    b.HasOne("OptraxDAL.Models.Products.PurchaseOrder", null)
+                        .WithMany()
+                        .HasForeignKey("PurchaseOrdersID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.BuildingLocation", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Admin.Address", "Address")
+                        .WithOne("Building")
+                        .HasForeignKey("OptraxDAL.Models.Admin.BuildingLocation", "AddressID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("OptraxDAL.Models.Admin.Business", "Business")
+                        .WithMany("Buildings")
+                        .HasForeignKey("BusinessID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("Business");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.OffsiteLocation", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Admin.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressID");
+
+                    b.HasOne("OptraxDAL.Models.Admin.Business", "Business")
+                        .WithMany()
+                        .HasForeignKey("BusinessID");
+
+                    b.Navigation("Address");
+
+                    b.Navigation("Business");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.SiteLocation", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Admin.Business", "Business")
+                        .WithMany("Sites")
+                        .HasForeignKey("BusinessID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Business");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.TransferEvent", b =>
@@ -1606,7 +2689,7 @@ namespace OptraxDAL.Migrations
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.TransplantEvent", b =>
                 {
-                    b.HasOne("OptraxDAL.Models.Inventory.ContainerType", "NewContainer")
+                    b.HasOne("OptraxDAL.Models.Admin.ContainerType", "NewContainer")
                         .WithMany()
                         .HasForeignKey("NewContainerID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1617,7 +2700,7 @@ namespace OptraxDAL.Migrations
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.TreatmentEvent", b =>
                 {
-                    b.HasOne("OptraxDAL.Models.Inventory.ConsumableItem", "Product")
+                    b.HasOne("OptraxDAL.Models.Inventory.Consumable", "Product")
                         .WithMany("PlantTreatments")
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1625,33 +2708,11 @@ namespace OptraxDAL.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.BuildingLocation", b =>
-                {
-                    b.HasOne("OptraxDAL.Models.Admin.Address", "Address")
-                        .WithOne("Building")
-                        .HasForeignKey("OptraxDAL.Models.Inventory.BuildingLocation", "AddressID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.ContainerLocation", b =>
-                {
-                    b.HasOne("OptraxDAL.Models.Inventory.ContainerType", "ContainerType")
-                        .WithMany("ContainerLocations")
-                        .HasForeignKey("ContainerTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ContainerType");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.ConsumableItem", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Inventory.Consumable", b =>
                 {
                     b.HasOne("OptraxDAL.Models.Inventory.StockItem", null)
                         .WithOne()
-                        .HasForeignKey("OptraxDAL.Models.Inventory.ConsumableItem", "ID")
+                        .HasForeignKey("OptraxDAL.Models.Inventory.Consumable", "ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1664,11 +2725,11 @@ namespace OptraxDAL.Migrations
                     b.Navigation("UnitUoM");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.DurableItem", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Inventory.Durable", b =>
                 {
                     b.HasOne("OptraxDAL.Models.Inventory.StockItem", null)
                         .WithOne()
-                        .HasForeignKey("OptraxDAL.Models.Inventory.DurableItem", "ID")
+                        .HasForeignKey("OptraxDAL.Models.Inventory.Durable", "ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1685,7 +2746,7 @@ namespace OptraxDAL.Migrations
             modelBuilder.Entity("OptraxDAL.Models.Inventory.Plant", b =>
                 {
                     b.HasOne("OptraxDAL.Models.Grow.Crop", "Crop")
-                        .WithMany("Plants")
+                        .WithMany()
                         .HasForeignKey("CropID");
 
                     b.HasOne("OptraxDAL.Models.Inventory.StockItem", null)
@@ -1700,15 +2761,60 @@ namespace OptraxDAL.Migrations
 
                     b.HasOne("OptraxDAL.Models.Grow.Strain", "Strain")
                         .WithMany()
-                        .HasForeignKey("StrainID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StrainID");
 
                     b.Navigation("Crop");
 
                     b.Navigation("Parent");
 
                     b.Navigation("Strain");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Map.MapLine", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Map.MapObject", null)
+                        .WithOne()
+                        .HasForeignKey("OptraxDAL.Models.Map.MapLine", "ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Map.MapPoint", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Map.MapObject", null)
+                        .WithOne()
+                        .HasForeignKey("OptraxDAL.Models.Map.MapPoint", "ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OptraxDAL.Models.Admin.Icon", "Icon")
+                        .WithMany("Points")
+                        .HasForeignKey("IconID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OptraxDAL.Models.Admin.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationID");
+
+                    b.Navigation("Icon");
+
+                    b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Map.MapPolygon", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Map.MapObject", null)
+                        .WithOne()
+                        .HasForeignKey("OptraxDAL.Models.Map.MapPolygon", "ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OptraxDAL.Models.Admin.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationID");
+
+                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Admin.Address", b =>
@@ -1728,12 +2834,48 @@ namespace OptraxDAL.Migrations
             modelBuilder.Entity("OptraxDAL.Models.Admin.Business", b =>
                 {
                     b.Navigation("Addresses");
+
+                    b.Navigation("Buildings");
+
+                    b.Navigation("Sites");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.ContainerType", b =>
+                {
+                    b.Navigation("Transplants");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.Icon", b =>
+                {
+                    b.Navigation("Points");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.IconCollection", b =>
+                {
+                    b.Navigation("Children");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.Location", b =>
+                {
+                    b.Navigation("Children");
+
+                    b.Navigation("TransfersIn");
+
+                    b.Navigation("TransfersOut");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Grow.Batch", b =>
+                {
+                    b.Navigation("Plantings");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.Crop", b =>
                 {
-                    b.Navigation("Plants");
+                    b.Navigation("Batches");
+                });
 
+            modelBuilder.Entity("OptraxDAL.Models.Grow.Planting", b =>
+                {
                     b.Navigation("ProductItems");
                 });
 
@@ -1746,34 +2888,11 @@ namespace OptraxDAL.Migrations
                     b.Navigation("Parents");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.ContainerType", b =>
-                {
-                    b.Navigation("ContainerLocations");
-
-                    b.Navigation("InventoryItems");
-
-                    b.Navigation("Transplants");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.InventoryCategory", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Inventory.Category", b =>
                 {
                     b.Navigation("Children");
 
-                    b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.InventoryItem", b =>
-                {
-                    b.Navigation("StockItems");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.InventoryLocation", b =>
-                {
-                    b.Navigation("Children");
-
-                    b.Navigation("TransfersIn");
-
-                    b.Navigation("TransfersOut");
+                    b.Navigation("Resources");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Inventory.InventoryTransfer", b =>
@@ -1783,9 +2902,14 @@ namespace OptraxDAL.Migrations
                     b.Navigation("PlantTransfer");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.LightType", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Inventory.Resource", b =>
                 {
-                    b.Navigation("InventoryItems");
+                    b.Navigation("StockItems");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Inventory.SalesOrder", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Inventory.StockItem", b =>
@@ -1803,12 +2927,27 @@ namespace OptraxDAL.Migrations
                     b.Navigation("Units");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.RoomLocation", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Admin.FieldLocation", b =>
                 {
                     b.Navigation("Crops");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Inventory.ConsumableItem", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Admin.GreenhouseLocation", b =>
+                {
+                    b.Navigation("Crops");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.RoomLocation", b =>
+                {
+                    b.Navigation("Crops");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.RowLocation", b =>
+                {
+                    b.Navigation("Crops");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Inventory.Consumable", b =>
                 {
                     b.Navigation("PlantTreatments");
                 });
@@ -1823,6 +2962,16 @@ namespace OptraxDAL.Migrations
                     b.Navigation("Children");
 
                     b.Navigation("PlantEvents");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Map.MapLine", b =>
+                {
+                    b.Navigation("LinePoints");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Map.MapPolygon", b =>
+                {
+                    b.Navigation("PolyPoints");
                 });
 #pragma warning restore 612, 618
         }

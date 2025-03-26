@@ -1,11 +1,11 @@
 ﻿@using OptraxDAL.Models.Inventory
 @using OptraxMVC.Models
 
-@model InventoryCategory
+@model Category
 
 @{
     FormVM formVM = ViewBag.FormVM;
-    DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
+    OptionsVM drops = (OptionsVM)(ViewData["Dropdowns"] ?? new());
 }
 
 @using (Html.BeginForm(formVM.Action, "Categories", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv, data_modelname = "cat" }))
@@ -14,7 +14,7 @@
 
     <input id="ID" type="hidden" name="ID" value="@Model.ID" />
     <input id="changes" type="hidden" name="Changes" />
-    <input id="Description" type="hidden" name="Description" value="@Model.Description" />
+    <input id="Details" type="hidden" name="Details" value="@Model.Details" />
     <div class="d-flex justify-content-center">
         <div class="row col-12 d-flex w-100">
             <div class="col-4">
@@ -38,12 +38,12 @@
             </div>
             <div class="col-4">
                 @Html.LabelFor(m => m.HexColor)
-                @Html.EditorFor(m => m.HexColor, "HexColor", new { htmlAttributes = new { @class = "form-control attr hex-pick", data_coloris = "" } })
+                @Html.EditorFor(m => m.HexColor, "HexColor", new { htmlAttributes = new { @class = "form-control attr color-picker", data_coloris = "" } })
                 @Html.ValidationMessageFor(m => m.HexColor, "", new { htmlAttributes = new { @class = "val-msg" } })
             </div>
             <div class="col-4">
                 @Html.LabelFor(m => m.TextColor)
-                @Html.EditorFor(m => m.TextColor, "TextColor", new { htmlAttributes = new { @class = "form-control attr hex-pick-bw", data_coloris = "" } })
+                @Html.EditorFor(m => m.TextColor, "TextColor", new { htmlAttributes = new { @class = "form-control attr color-picker-bw", data_coloris = "" } })
                 @Html.ValidationMessageFor(m => m.TextColor, "", new { htmlAttributes = new { @class = "val-msg" } })
             </div>
             <div class="hex-prev-div col-4">
@@ -53,7 +53,7 @@
         </div>
     </div>
     <div class="row d-flex w-100">
-        <div class="mx-auto form-note">**Note: New categories will not be visible in table until items have been assigned.</div>
+        <div class="mx-auto form-note">**Note: New categories will not be visible in table until resources have been assigned.</div>
     </div>
     <div class="popup-btns d-flex w-100 justify-content-center">
         <button type="submit" class="save-btn form-btn @(formVM.IsNew ? "" : "d-none")">Save New Category</button>

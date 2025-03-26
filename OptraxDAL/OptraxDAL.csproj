@@ -17,6 +17,9 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+		<PackageReference Include="NetTopologySuite" Version="2.6.0" />
+		<PackageReference Include="protobuf-net.Core" Version="3.2.46" />
+		<PackageReference Include="System.Spatial" Version="5.8.5" />
 	</ItemGroup>
 
 </Project>

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using OptraxDAL.Models.Admin;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OptraxDAL.Models.Admin;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
+    [Table("TransferApprovals", Schema = "Inventory")]
     public class TransferApproval
     {
         public int ID { get; set; }

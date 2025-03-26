@@ -3,7 +3,7 @@
 @model InventoryTransfer
 
 @{
-    DropdownsVM drops = (DropdownsVM)(ViewData["Dropdowns"] ?? new());
+    OptionsVM drops = (OptionsVM)(ViewData["Dropdowns"] ?? new());
 }
 
 @Html.HiddenFor(m => m.UserID)

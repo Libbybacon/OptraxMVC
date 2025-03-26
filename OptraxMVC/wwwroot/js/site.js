@@ -1,4 +1,5 @@
-﻿
+﻿import popupHandler from "./utilities/popup.js";
+
 var hideNav;
 
 $(document).ready(function () {
@@ -38,6 +39,9 @@ $(document).ready(function () {
     $(window).on('resize', function () {
         let $nav = $('.side-nav');
         let viewW = $(window).width();
+        let viewH = $(window).height();
+
+/*        $('#map').css('height', `${viewH - 50}px`);*/
 
         if (viewW < 768 && $nav.hasClass('collapsed')) {
             expandNav(false);
@@ -47,6 +51,10 @@ $(document).ready(function () {
         }
     });
 })
+
+window.loadPopup = popupHandler.loadPopup;
+window.closePopup = popupHandler.closePopup;
+window.showMessage = showMessage;
 
 function collapseNav(saveToSession = true) {
     $('.logo').removeClass('d-lg-block');
@@ -78,46 +86,7 @@ function expandNav(saveToSession = true) {
     }
 }
 
-function loadPopup(props) {
-    let ajaxOptions = {
-        url: props.url,
-        type: props.type,
-        success: function (view) {
-            $('#overlay').show();
-            $('#popupContent').html(view);
-            $('#popupTitle').html(props.title);
-            $('#popup').show();
-
-            setPopupHeight();
-            window.addEventListener("resize", setPopupHeight);
-        },
-        error: function (xhr, status, error) {
-            console.error('Error loading popup:', xhr.responseText);
-        }
-    };
-
-    if (props.data && Object.keys(props.data).length > 0) {
-        ajaxOptions.data = props.data;
-    }
-    $.ajax(ajaxOptions);
-}
-
-function setPopupHeight() {
-    const popup = $('#popupContent');
-    const winHeight = window.innerHeight;
-    const maxPopHeight = winHeight * 0.8;
-    popup.css('max-height', `${maxPopHeight}px`);
-}
-
-
-function closePopup() {
-    window.removeEventListener("resize", setPopupHeight);
-    $('#popup').hide();
-    $('#overlay').hide();
-    $('#popupContent').html('');
-}
-
-function showUpdateMessage(props) {
+function showMessage(props) {
 
     let $div = $('<div>').text(props.msg).addClass('msg-div').addClass(props.css);
 
@@ -133,12 +102,49 @@ function showUpdateMessage(props) {
 }
 
 
-function arrayToModel(arr) {
-    var model = {};
 
-    for (var i = 0; i < arr.length; i++) {
 
-        model[arr[i]['name']] = arr[i]['value'];
-    }
-    return model;
-}
+
+
+
+
+//function loadPopup(props) {
+//    let ajaxOptions = {
+//        url: props.url,
+//        type: props.type,
+//        success: function (view) {
+
+//            $('#popupContent').html(view);
+//            $('#popupTitle').html(props.title);
+
+//            if (props.isDialog && props.isDialog == true) {
+//                $('#popup').draggable({
+//                    appendTo: "#map",
+//                    iframeFix: true,
+//                    refreshPositions: true,
+//                    containment: "parent"
+//                });
+//                $('#popup').removeClass('transform-50');
+//                window.addEventListener("resizeDraggable", resizeDraggable);
+//            }
+//            else
+//            {
+//                $('#popup').addClass('transform-50');
+//                window.addEventListener("resizeHeight", setPopupHeight);
+
+//                $('#overlay').show();
+//            }
+//            $('#popup').show();
+//            setPopupHeight();
+//        },
+//        error: function (xhr, status, error) {
+//            console.error('Error loading popup:', xhr.responseText);
+//        }
+//    };
+
+//    if (props.data && Object.keys(props.data).length > 0) {
+//        ajaxOptions.data = props.data;
+//    }
+
+//    $.ajax(ajaxOptions);
+//}

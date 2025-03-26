@@ -12,8 +12,9 @@ namespace OptraxMVC.Controllers
         // TODO: Move to db table, allow users to customize display orders by rearraging tabs in view 
         private readonly Dictionary<string, List<string>> TabViews = new()
         {
-            ["Grow"] = ["Rooms", "Plants", "Genetics"],
-            ["Inventory"] = ["Locations", "Items", "Transfers"],
+            ["Grow"] = ["Map", "Locations", "Plants", "Genetics"],
+            ["Inventory"] = ["Resources", "Transfers"],
+            ["Settings"] = ["Collections", "Network", "User Management"],
             ["Sales"] = ["Products"],
             ["Reports"] = [],
         };
@@ -21,11 +22,16 @@ namespace OptraxMVC.Controllers
         [Authorize]
         public IActionResult LoadTabs(string navarea)
         {
+            //TabsVM tabsVM = new()
+            //{
+            //    Area = navarea,
+            //    Tabs = [.. TabViews[navarea].Select(tab =>
+            //    new Tab() { Name = tab, TabKey = $"{tab[..3].ToLower()}-{tab.ToLower()}" })]
+            //};
             TabsVM tabsVM = new()
             {
                 Area = navarea,
-                Tabs = [.. TabViews[navarea].Select(tab =>
-                new Tab() { Name = tab, TabKey = $"{tab[..3].ToLower()}-{tab.ToLower()}" })]
+                Tabs = [.. TabViews[navarea].Select(tab => new Tab(tab) { })]
             };
 
             return View("Tabs", tabsVM);
@@ -34,7 +40,7 @@ namespace OptraxMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> LoadTabContent(string area, string name)
         {
-            var tabVM = new TabsVM() { Area = area, Tabs = [new Tab() { Name = name, TabKey = "" }] };
+            var tabVM = new TabsVM() { Area = area, Tabs = [new Tab(name)] };
             var tab = tabVM.Tabs[0];
             tabVM.SetTabViewPath(tab);
 
@@ -59,7 +65,8 @@ namespace OptraxMVC.Controllers
 
             switch (tab.Name)
             {
-                case "Items":
+                case "Map":
+                case "Resources":
                 case "Plants":
                 case "Locations":
                     tab.ViewPath = $"~/Areas/{area}/Views/{tab.Name}/_{tab.Name}.cshtml";

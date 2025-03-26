@@ -1,17 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
 using OptraxDAL.Models.Inventory;
-using OptraxDAL.ViewModels;
 using OptraxMVC.Models;
 
 namespace OptraxMVC.Services.Inventory
 {
     public interface ICategoryService
     {
-        Task<bool> CheckNameAsync(string name); 
-        Task<InventoryCategory?> GetCategoryByIdAsync(int id);
-        Task<ResponseVM> CreateAsync(InventoryCategory cat);
-        Task<ResponseVM> UpdateAsync(InventoryCategory cat);
+        Task<bool> CheckNameAsync(string name);
+        Task<Category?> GetCategoryByIdAsync(int id);
+        Task<ResponseVM> CreateAsync(Category cat);
+        Task<ResponseVM> UpdateAsync(Category cat);
     }
     public class CategoryService(OptraxContext context) : ICategoryService
     {
@@ -20,53 +19,53 @@ namespace OptraxMVC.Services.Inventory
 
         public async Task<bool> CheckNameAsync(string name)
         {
-            return await db.InventoryCategories.Where(c => c.Name == name).FirstOrDefaultAsync() != null;
+            return await db.Categories.Where(c => c.Name == name).FirstOrDefaultAsync() != null;
         }
 
-        public async Task<InventoryCategory?> GetCategoryByIdAsync(int id)
+        public async Task<Category?> GetCategoryByIdAsync(int id)
         {
-            return await db.InventoryCategories.FindAsync(id);
+            return await db.Categories.FindAsync(id);
         }
 
-        public async Task<ResponseVM> CreateAsync(InventoryCategory cat)
+        public async Task<ResponseVM> CreateAsync(Category cat)
         {
             try
             {
-                db.InventoryCategories.Add(cat);
+                db.Categories.Add(cat);
                 await db.SaveChangesAsync();
 
-                return new ResponseVM { success = true, msg = $"New {(!cat.ParentID.HasValue ? "top level " : "")}category '{cat.Name}' added!" };
+                return new ResponseVM { Success = true, Msg = $"New {(!cat.ParentID.HasValue ? "top level " : "")}category '{cat.Name}' added!" };
             }
             catch (Exception)
             {
-                return new ResponseVM { msg = "Error saving new category" };
+                return new ResponseVM { Msg = "Error saving new category" };
             }
         }
 
-        public async Task<ResponseVM> UpdateAsync(InventoryCategory cat)
+        public async Task<ResponseVM> UpdateAsync(Category cat)
         {
             try
             {
                 var dbCat = await GetCategoryByIdAsync(cat.ID);
 
                 if (dbCat == null)
-                    return new ResponseVM { msg = "Category not found." };
+                    return new ResponseVM { Msg = "Category not found." };
 
                 List<string> changes = cat.Changes?.Split(",")?.ToList() ?? [];
 
                 foreach (string attrName in changes)
                 {
-                    var prop = typeof(InventoryCategory).GetProperty(attrName) ?? throw new InvalidOperationException($"Property '{attrName}' not found in InventoryCategory.");
+                    var prop = typeof(Category).GetProperty(attrName) ?? throw new InvalidOperationException($"Property '{attrName}' not found in InventoryCategory.");
 
                     prop.SetValue(dbCat, prop.GetValue(cat));
                 }
                 await db.SaveChangesAsync();
 
-                return new ResponseVM { success = true, msg = "Category changes saved!" };
+                return new ResponseVM { Success = true, Msg = "Category changes saved!" };
             }
             catch (Exception)
             {
-                return new ResponseVM { msg = "Error saving category :(" };
+                return new ResponseVM { Msg = "Error saving category :(" };
             }
         }
     }

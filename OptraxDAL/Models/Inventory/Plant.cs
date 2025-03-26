@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
-    [Table("Plants")]
+    [Table("Plants", Schema = "Inventory")]
     public class Plant : StockItem
     {
         public Plant() { }
@@ -14,20 +14,14 @@ namespace OptraxDAL.Models.Inventory
         public string TrackingID { get; set; } = string.Empty;
 
         [Required]
-        public int StrainID { get; set; }
+        public int SpeciesID { get; set; }
 
-        [Display(Name = "Parent")]
-        public int? ParentID { get; set; } = null;
+        public int? VarietyID { get; set; }
 
-        [Required]
-        public bool IsMother { get; set; } = false;
-
-        [MaxLength(50)]
-        [Display(Name = "Mother Name")]
-        public string? MotherName { get; set; }
+        public int? CultivarID { get; set; }
 
         [Required]
-        public string OriginType { get; set; } = string.Empty;
+        public string PropagationType { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(10)]
@@ -53,71 +47,34 @@ namespace OptraxDAL.Models.Inventory
         [Display(Name = "Create Crop?")]
         public bool CreateCrop { get; set; } = false;
 
-
-        public Plant NewPlant()
-        {
-            var newPlant = new Plant()
-            {
-                ID = ID,
-                InventoryItemID = InventoryItemID,
-                PurchaseDate = PurchaseDate,
-                ExpirationDate = ExpirationDate,
-                LotNumber = LotNumber,
-                Status = Status,
-                PurchasePrice = PurchasePrice,
-                TrackingID = TrackingID,
-                StrainID = StrainID,
-                ParentID = ParentID,
-                IsMother = IsMother,
-                MotherName = MotherName,
-                OriginType = OriginType,
-                Phase = Phase,
-                CropID = CropID,
-                NeedsTransferApproval = true,
-
-                Crop = Crop,
-                Strain = Strain,
-                InventoryItem = InventoryItem,
-                Parent = Parent,
-            };
-
-            if (PlantEvents.First() is TransferEvent transEvent)
-            {
-                TransferEvent newEvent = new()
-                {
-                    Date = transEvent.Date,
-                    EventType = transEvent.EventType,
-                    UserID = transEvent.UserID,
-                    Notes = transEvent.Notes,
-                    Transfer = transEvent.Transfer.NewPlantTransfer(newPlant),
-                };
-
-                newPlant.PlantEvents.Add(newEvent);
-            }
-
-            return newPlant;
-        }
         public PlantVM ToPlantVM()
         {
             return new PlantVM()
             {
                 PlantID = ID,
                 TrackingID = TrackingID,
-                StrainID = StrainID,
-                CropID = Crop?.BatchID ?? "",
-                IsMother = IsMother,
-                OriginType = OriginType,
+                StrainID = SpeciesID,
+                PropagationType = PropagationType,
                 Phase = Phase,
-                CurrentPhase = Crop?.CurrentPhase ?? "",
-                LocationName = Crop?.Location?.Name ?? "",
             };
         }
+
+        public enum PropagationTypes
+        {
+            Seed,
+            Bulb,
+            Leaf_Cutting,
+            Root_Cutting,
+            Stem_Cutting,
+        }
+
         public enum PlantPhases
         {
             Seed,
             Seedling,
             Start,
             Veg,
+            Hardening,
             Flower,
             Harvested,
             Processing,

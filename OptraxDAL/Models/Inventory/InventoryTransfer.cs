@@ -1,11 +1,13 @@
 ﻿using OptraxDAL.Models.Admin;
+using OptraxDAL.Models.BaseClasses;
 using OptraxDAL.Models.Grow;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Inventory
 {
-    public class InventoryTransfer
+    [Table("Transfers", Schema = "Inventory")]
+    public class InventoryTransfer : TrackingBaseDetails
     {
         public InventoryTransfer() { }
 
@@ -14,7 +16,6 @@ namespace OptraxDAL.Models.Inventory
             NeedsApproval = needsApproval;
         }
 
-        public int ID { get; set; }
         public int StockItemID { get; set; }
 
         [Required]
@@ -59,13 +60,14 @@ namespace OptraxDAL.Models.Inventory
         public virtual TransferEvent? PlantTransfer { get; set; }
 
 
-        [InverseProperty(nameof(InventoryLocation.TransfersOut))]
-        public virtual InventoryLocation? Origin { get; set; }
+        [InverseProperty(nameof(Location.TransfersOut))]
+        public virtual Location? Origin { get; set; }
 
-        [InverseProperty(nameof(InventoryLocation.TransfersIn))]
-        public virtual InventoryLocation? Destination { get; set; }
+        [InverseProperty(nameof(Location.TransfersIn))]
+        public virtual Location? Destination { get; set; }
 
-        public InventoryTransfer NewPlantTransfer(Plant plant)
+
+        public InventoryTransfer NewTransfer()
         {
             return new InventoryTransfer()
             {
@@ -79,8 +81,15 @@ namespace OptraxDAL.Models.Inventory
                 Status = Status,
                 Notes = Notes,
                 NeedsApproval = NeedsApproval,
-                StockItem = plant,
+                StockItemID = StockItemID,
             };
+        }
+
+        public InventoryTransfer NewTransfer(Plant plant)
+        {
+            var newTransfer = NewTransfer();
+            newTransfer.StockItem = plant;
+            return newTransfer;
         }
     }
 }

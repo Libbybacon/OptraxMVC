@@ -1,0 +1,74 @@
+﻿@model Address
+
+@{
+    var states = (IEnumerable<SelectListItem>)(ViewData["States"] ?? new());
+    var editable = ViewData["Editable"] as bool? ?? false;
+
+    string dispClass = editable ? "d-none" : "";
+    string editClass = editable ? "" : "d-none";
+}
+
+<div class="addy-component m-0 p-0">
+
+    <!-- Display -->
+    <div class="addy-display @dispClass">
+        <div class="addy-name">@Model.Name</div>
+        @if (!string.IsNullOrEmpty(Model.Details))
+        {
+            <div class="addy-details">@Model.Details</div>
+        }
+        <div class="addy-info">@Model.Address1</div>
+        @if (!string.IsNullOrEmpty(Model.Address2))
+        {
+            <div class="addy-info">@Model.Address2</div>
+        }
+        <div class="addy-info">  @Model.City, @Model.State @Model.ZipCode</div>
+        <div class="addy-contact"><span>Phone: </span> @Model.ContactPhone <span>Email: </span>@Model.ContactEmail</div>
+        <div class="addy-contact"><span>Contact: </span> @Model.ContactName </div>
+    </div>
+
+    <!-- Edit-->
+    <div class="addy-edit row col-12 w-100 px-0 m-0 @editClass">
+        <div class="col-6">
+            <label asp-for="Address1"></label>
+            <input asp-for="Address1" class="form-control attr" />
+            <span asp-validation-for="Address1" class="val-msg"></span>
+        </div>
+        <div class="col-6">
+            <label asp-for="Address2"></label>
+            <input asp-for="Address2" class="form-control attr" />
+            <span asp-validation-for="Address2" class="val-msg"></span>
+        </div>
+        <div class="col-6">
+            <label asp-for="City"></label>
+            <input asp-for="City" class="form-control attr" />
+            <span asp-validation-for="City" class="val-msg"></span>
+        </div>
+        <div class="col-6">
+            <label asp-for="State"></label>
+            <select asp-for="State" asp-items="@states" class="form-select attr"></select>
+            <span asp-validation-for="State" class="val-msg"></span>
+        </div>
+        <div class="col-6">
+            <label asp-for="ZipCode"></label>
+            <input asp-for="ZipCode" class="form-control attr" />
+            <span asp-validation-for="ZipCode" class="val-msg"></span>
+        </div>
+        <div class="col-6">
+            <label asp-for="ContactName"></label>
+            <input asp-for="ContactName" class="form-control attr" />
+            <span asp-validation-for="ContactName" class="val-msg"></span>
+        </div>
+        <div class="col-6">
+            <label asp-for="ContactPhone"></label>
+            <input asp-for="ContactPhone" class="form-control attr" />
+            <span asp-validation-for="ContactPhone" class="val-msg"></span>
+        </div>
+        <div class="col-6">
+            <label asp-for="ContactEmail"></label>
+            <input asp-for="ContactEmail" class="form-control attr" />
+            <span asp-validation-for="ContactEmail" class="val-msg"></span>
+        </div>
+    </div>
+</div>
+

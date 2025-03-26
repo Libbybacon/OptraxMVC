@@ -1,0 +1,55 @@
+﻿<link rel="stylesheet" href="~/css/locations.css" />
+<link rel="stylesheet" href="~/css/map.css" />
+@model LocationVM
+
+@{
+    // var states = (IEnumerable<SelectListItem>)(ViewData["States"] ?? new());
+    TabsVM tabs = (TabsVM)(ViewData["LocTabs"] ?? new TabsVM() { Area = "Grow", Tabs = [] });
+}
+
+<div id="locations" class="loc-layout d-flex" data-hassite="@(Model != null)">
+    <div class="loc-tree inner-layout">
+        <div class="loc-title">All Locations</div>
+        <div id="locationTree"></div>
+    </div>
+
+    <div id="loc-details" class="inner-layout view-tabs">
+        <partial name="_TabsTop" model="tabs" />
+        <div class="tab-content h-100 p-0">
+@*             @foreach (var tab in tabs.Tabs)
+            {
+                bool active = tab.Name == "Locations";
+                string key = tab.TabKey;
+
+                <div id="@key" class="tab-pane fade h-100 @(active ? "show active" : "")" role="tabpanel" aria-labelledby="@key-tab">
+
+                    @if (active)
+                    {
+                        <partial name="_Details" model="Model" />
+                    }
+
+                </div>
+            } *@
+@*             <partial name="_TabsPanel" model="tabs" /> *@
+        </div>
+    </div>
+    <div class="resizer" id="resizer">
+        <svg class="resize-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" stroke-linecap="butt" stroke-linejoin="miter">
+            <circle cx="12" cy="12" r="10" fill="#378874" stroke="#378874" stroke-width="2" /> <!-- Circle -->            
+            <line x1="5" y1="12" x2="19" y2="12" stroke="#FAF8F2" stroke-width="1.1" /><!-- Center line -->            
+            <path d="M9 8 L5 12 L9 16" stroke="#FAF8F2" stroke-width="1.3" fill="none" /><!-- Left chevron -->            
+            <path d="M15 8 L19 12 L15 16" stroke="#FAF8F2" stroke-width="1.3" fill="none" /><!-- Right chevron -->
+        </svg>
+    </div>
+    <div class="loc-map">
+        <div id="map-container">
+            <div id="map-div">
+                <div class="map-msg"></div>
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="/js/map/map.js"></script>
+<script type="module" src="/js/grow/locations.js"></script>

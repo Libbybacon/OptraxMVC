@@ -1,0 +1,20 @@
+﻿@using OptraxDAL.Models.Map
+@using OptraxMVC.Models
+
+@model MapPoint
+
+@{
+    FormVM formVM = ViewBag.FormVM;
+}
+
+<form asp-action="@formVM.Action" asp-controller="Map" method="post" id="modelForm" data-id="@Model.ID" data-obj="Point">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="IconID" />
+    <input type="hidden" asp-for="Latitude" />
+    <input type="hidden" asp-for="Longitude" />
+    <partial name="_MapObject.cshtml" model="Model" />
+</form>
+
+
+
