@@ -3,12 +3,11 @@
 
 export var map;
 
-var pointsLayer;
-var linesLayer;
-var polysLayer;
-var circlesLayer;
+var pointsL;
+var linesL;
+var polysL;
+var circlesL;
 
-const module = { path: '/js/map/mapObjects.js', method: 'init' };
 const urlBase = '/Grow/Map/';
 const typeMap = {
     marker: 'Point',
@@ -19,10 +18,9 @@ const typeMap = {
 const viewProps = {
     type: 'GET',
     isDialog: true,
-    mod: module
 }
-export const layerIndex = new Map();
 
+export const layerIndex = new Map();
 
 $(document).ready(function () {
 
@@ -71,10 +69,10 @@ async function loadFeatures() {
     //    await this.loadLines();
     //    await this.loadPolygons();
     //}, 30000);
-    await util.loadObjects(pointsLayer, 'Point');
-    await util.loadObjects(linesLayer, 'Line');
-    await util.loadObjects(polysLayer, 'Polygon');
-    await util.loadObjects(circlesLayer, 'Circle');
+    await util.loadObjects(pointsL, 'Point');
+    await util.loadObjects(linesL, 'Line');
+    await util.loadObjects(polysL, 'Polygon');
+    await util.loadObjects(circlesL, 'Circle');
 }
 
 function initializeLayers() {
@@ -91,12 +89,12 @@ function initializeLayers() {
 
     var baseMaps = {
         "Satellite": satellite,
-        "OpenStreetMap": osm,       
+        "OpenStreetMap": osm,
     };
 
     L.control.layers(baseMaps).addTo(map);
 
-    pointsLayer = L.geoJSON(null, {
+    pointsL = L.geoJSON(null, {
 
         pointToLayer: function (feature, latlng) {
             const props = feature.properties;
@@ -109,7 +107,7 @@ function initializeLayers() {
         }
     }).addTo(map);
 
-    linesLayer = L.geoJSON(null, {
+    linesL = L.geoJSON(null, {
         style: function (feature) {
             return setStyle(feature.properties,);
         },
@@ -119,7 +117,7 @@ function initializeLayers() {
         }
     }).addTo(map);
 
-    circlesLayer = L.geoJSON(null, {
+    circlesL = L.geoJSON(null, {
         pointToLayer: function (feature, latlng) {
             console.log('circle pointToLayer feature', feature, 'properties', feature.properties)
             feature.properties["fillOpacity"] = 1;
@@ -135,7 +133,7 @@ function initializeLayers() {
         }
     }).addTo(map);
 
-    polysLayer = L.geoJSON(null, {
+    polysL = L.geoJSON(null, {
         style: function (feature) {
             feature.properties["fillOpacity"] = 1;
             return setStyle(feature.properties);
@@ -148,30 +146,25 @@ function initializeLayers() {
 }
 
 function zoomToAllLayers() {
-    const allBounds = [];
+    let ctr = null;
+    const bounds = [];
 
-    [pointsLayer, linesLayer, circlesLayer, polysLayer].forEach(layer => {
-        if (layer.getLayers().length > 0) {
-            const bounds = layer.getBounds();
-            if (bounds.isValid()) {
-                allBounds.push(bounds);
+    [pointsL, linesL, circlesL, polysL].forEach(l => {
+        if (l.getLayers().length > 0) {
+            const b = l.getBounds();
+            if (b.isValid()) {
+                bounds.push(b);
             }
         }
-        console.log('allBounds', allBounds)
     });
 
-    if (allBounds.length > 0) {
-        let combinedBounds = allBounds[0];
-        for (let i = 1; i < allBounds.length; i++) {
-            combinedBounds = combinedBounds.extend(allBounds[i]);
+    if (bounds.length > 0) {
+        ctr = bounds[0];
+        for (let i = 1; i < bounds.length; i++) {
+            ctr = ctr.extend(bounds[i]);
         }
-
-        map.fitBounds(combinedBounds, { padding: [40, 40] });
     }
-    else {
-
-        map.setView([39.8283, -98.5795], 4); // lat/lng + zoom
-    }
+    ctr ? map.fitBounds(ctr, { padding: [40, 40] }) : map.setView([39.8283, -98.5795], 4);
 }
 
 function setActions(props, layer) {
@@ -186,7 +179,6 @@ function setActions(props, layer) {
         util.curLayer.val = layer;
 
         const center = (type == 'Point' || type == 'Circle') ? e.latlng : layer.getBounds().getCenter();
-        const point = map.setView(center, map.getZoom());
 
         util.getEdit(props.id, type, center)
     })
@@ -194,6 +186,7 @@ function setActions(props, layer) {
     layer.on('remove', function () {
         layerIndex.delete(props.id);
         map.removeLayer(layer);
+        map.closePopup();
     });
 }
 
@@ -230,11 +223,11 @@ function createControls() {
         console.log('draw type', e.layerType);
         console.log('e', e);
         const layersetMap = {
-            marker: pointsLayer,
-            polyline: linesLayer,
-            circle: circlesLayer
+            marker: pointsL,
+            polyline: linesL,
+            circle: circlesL
         };
-        let layerset = layersetMap[e.layerType] ?? polysLayer;
+        let layerset = layersetMap[e.layerType] ?? polysL;
         util.addObject(e, layerset);
 
     });

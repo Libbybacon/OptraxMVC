@@ -1,23 +1,66 @@
 ﻿import apiService from '../utilities/api.js';
 import { formUtil } from '../utilities/form.js';
 import popupHandler from '../utilities/popup.js';
+import { map } from '../map/map.js';
+
 
 $(document).ready(function () {
 
     if ($('#locations').data('hassite') === false) {
         showNewSite();
     }
-
     initializeTree();
-
+    setResizer();
+    setLocListeners();
 });
+
+function setLocListeners() {
+    $(document).on('click', '.toggle-edit', function () {
+        const addyComp = $(this).closest('.addy-component');
+        addyComp.find('.addy-display').toggle();
+        addyComp.find('.addy-edit').toggle();
+    });
+}
+
+function setResizer() {
+    const resizer = document.getElementById('resizer');
+    const col2 = document.getElementById('loc-details');
+    const col3 = document.querySelector('.loc-map');
+    let isResizing = false;
+
+    resizer.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        isResizing = true;
+        document.body.style.cursor = 'col-resize';
+        col3.style.pointerEvents = 'none';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isResizing) return;
+        e.preventDefault();
+        const newWidth = e.clientX - col2.getBoundingClientRect().left;
+
+        $('#loc-details').css('width', newWidth + 'px');
+        map.invalidateSize();
+    });
+
+    document.addEventListener('mouseup', (e) => {
+        console.log('mouseup', e);
+
+
+        isResizing = false;
+        document.body.style.cursor = 'default';
+        col3.style.pointerEvents = 'auto'; // re-enable Leaflet
+        map.invalidateSize(); // fix Leaflet map rendering after resize
+    });
+}
 
 async function showNewSite() {
 
     const props = {
         title: 'Add Your First Site',
         url: '/Grow/Locations/LoadCreate',
-        data: {type: 'firstSite'}
+        data: { type: 'firstSite' }
     }
 
     await popupHandler.loadPopup(props).then(() => locFormUtil.setFormListeners());
@@ -74,14 +117,14 @@ function initializeTree() {
             }
         },
         'types': {
-            'site': { 'icon': 'fas fa-building' },
+            'site': { 'icon': 'fa-regular fa-font-awesome' },
             'field': { 'icon': 'fas fa-tractor' },
-            'row': { 'icon': 'fas fa-tractor' },
-            'bed': { 'icon': 'fas fa-tractor' },
-            'plot': { 'icon': 'fas fa-tractor' },
+            'row': { 'icon': 'bi bi-layout-split' },
+            'bed': { 'icon': 'bi bi-grid-3x2-gap' },
+            'plot': { 'icon': 'bi bi-grip-horizontal' },
             'greenhouse': { 'icon': 'fas fa-tractor' },
-            'building': { 'icon': 'fas fa-tractor' },
-            'room': { 'icon': 'fas fa-door-open' },
+            'building': { 'icon': 'fas fa-building' },
+            'room': { 'icon': 'bi bi-door-open' },
         },
         'plugins': ['types']
     });

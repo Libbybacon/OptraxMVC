@@ -2,11 +2,12 @@
 
 @{
     FormVM formVM = ViewBag.FormVM;
+    bool isNew = formVM.IsNew;
     var subViewData = new ViewDataDictionary(ViewData);
     subViewData.TemplateInfo.HtmlFieldPrefix = "Address";
 }
 
-<form asp-action="Create" asp-controller="Locations" method="post" id="modelForm" data-obj="Location">
+<form asp-action="@formVM.Action" asp-controller="Locations" method="post" id="modelForm" data-obj="Location">
     @Html.AntiForgeryToken()
 
     <input type="hidden" asp-for="ID" />
@@ -31,8 +32,8 @@
         }
     </div>
     <div class="popup-btns d-flex w-100 justify-content-center">
-        <button type="submit" class="save-btn form-btn @(formVM.IsNew ? "" : "d-none")">Save Location</button>
-        <button type="button" class="delete-btn form-btn me-3 @(formVM.IsNew ? "d-none" : "")" data-id="@Model.ID" data-type="Circle">Delete</button>
-        <button type="submit" class="update-btn form-btn ms-3 @(formVM.IsNew ? "d-none" : "")">Save Changes</button>
+        <button type="submit" class="save-btn form-btn @(isNew ? "" : "d-none")">Save Location</button>
+        <button type="button" class="delete-btn form-btn me-3 @(isNew ? "d-none" : "")">Delete</button>
+        <button type="submit" class="update-btn form-btn ms-3 @(isNew ? "d-none" : "")">Save Changes</button>
     </div>
 </form>

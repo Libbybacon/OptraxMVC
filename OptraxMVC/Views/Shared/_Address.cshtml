@@ -4,6 +4,22 @@
     OptionsVM drops = (OptionsVM)(ViewData["Dropdowns"] ?? new());
 }
 
+<div class="addy-display">
+    <div class="addy-name">@Model.Name</div>
+    @if (!string.IsNullOrEmpty(Model.Details))
+    {
+        <div class="addy-details">@Model.Details</div>
+    }
+    <div class="addy-info">@Model.Address1</div>
+    @if (!string.IsNullOrEmpty(Model.Address2))
+    {
+        <div class="addy-info">@Model.Address2</div>
+    }
+    <div class="addy-info">  @Model.City, @Model.State @Model.ZipCode</div>
+
+    <button type="button" class="btn btn-sm btn-outline-primary toggle-edit">Edit</button>
+</div>
+
 <div class="col-6">
     <label asp-for="Address1"></label>
     <input asp-for="Address1" class="form-control attr" />
@@ -44,6 +60,3 @@
     <input asp-for="ContactEmail" class="form-control attr" />
     <span asp-validation-for="ContactEmail" class="val-msg"></span>
 </div>
-
-
-@* @pattern = $"\\(\\d{3}\\)\\d{3}-\\d{4}", *@

@@ -4,7 +4,7 @@
     FormVM formVM = ViewBag.FormVM;
 }
 
-<form asp-action="@formVM.Action" asp-controller="Map" method="post" id="modelForm" data-obj="Line">
+<form asp-action="@formVM.Action" asp-controller="Map" method="post" id="modelForm" data-id="@Model.ID" data-obj="Line">
     @Html.AntiForgeryToken()
 
     <input type="hidden" asp-for="GeometryWKT" />

@@ -318,17 +318,16 @@ export const mapFormUtil = {
         });
 
         $(document).off('click', '.delete-btn').on('click', '.delete-btn', function () {
-            let id = $(this).data('id');
-            let type = $(this).data('type')
+            let id = $('#modelForm').data('id');
+            let type = $('#modelForm').data('obj')
             onDelete(id, type);
         })
+
         formUtil.setListeners();
         mapFormUtil.setStyleListeners();
     },
     setColorPicker(div, attr) {
-        console.log('setColorPicker div', div, 'attr', attr);
         let divName = attr.replace('c', 'C').replace('f', 'F')
-        let $div = $(`#${divName}`);
         return {
             type: "component",
             showInput: true,
@@ -338,9 +337,9 @@ export const mapFormUtil = {
             togglePaletteOnly: true,
             showSelectionPalette: true,
             selectionPalette: [colorSwatches],
-            change: function (color) { styleUtil.updateStyle(attr, color.toRgbString()); console.log('hexchange', color.toRgbString(), attr); },
-            move: function (color) { styleUtil.updateStyle(attr, color.toRgbString()); console.log('hexmove', color.toRgbString()); },
-            show: function (color) { styleUtil.updateStyle(attr, color.toRgbString()); console.log('hexshow', color.toRgbString()); },
+            change: function (color) { styleUtil.updateStyle(attr, color.toRgbString()); },
+            move: function (color) { styleUtil.updateStyle(attr, color.toRgbString()); },
+            show: function (color) { styleUtil.updateStyle(attr, color.toRgbString()); },
         }
     },
     setStyleListeners: function () {
