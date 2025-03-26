@@ -8,33 +8,35 @@
     subViewData.TemplateInfo.HtmlFieldPrefix = "Address";
 }
 
-<form asp-action="@formVM.Action" asp-controller="Locations" method="post" id="modelForm" data-obj="Location">
-    @Html.AntiForgeryToken()
+<div class="p-3">
+    <form asp-action="@formVM.Action" asp-controller="Locations" method="post" id="modelForm" data-obj="Location">
+        @Html.AntiForgeryToken()
 
-    <input type="hidden" asp-for="ID" />
-    <input type="hidden" asp-for="Level" />
-    <input type="hidden" asp-for="LocationType" />
-    <input type="hidden" asp-for="Address.Name" />
+        <input type="hidden" asp-for="ID" />
+        <input type="hidden" asp-for="Level" />
+        <input type="hidden" asp-for="LocationType" />
+        <input type="hidden" asp-for="Address.Name" />
 
-    <div class="row col-12 w-100 px-0 m-0 pe-0">
-        <div class="col-12 mt-2">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control attr" />
-            <span asp-validation-for="Name" class="val-msg"></span>
+        <div class="row col-12 w-100 px-0 m-0 pe-0">
+            <div class="col-12 mt-2">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control attr" />
+                <span asp-validation-for="Name" class="val-msg"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="Details"></label>
+                <textarea asp-for="Details" class="form-control attr" rows="3"></textarea>
+                <span asp-validation-for="Details" class="val-msg"></span>
+            </div>
+            @if (Model.HasAddress)
+            {
+                <partial name="~/Views/Shared/_Address.cshtml" model="Model.Address" view-data="@subViewData" />
+            }
         </div>
-        <div class="col-12">
-            <label asp-for="Details"></label>
-            <textarea asp-for="Details" class="form-control attr" rows="3"></textarea>
-            <span asp-validation-for="Details" class="val-msg"></span>
+        <div class="popup-btns d-flex w-100 justify-content-center">
+            <button type="submit" class="save-btn form-btn @(isNew ? "" : "d-none")">Save Location</button>
+            <button type="button" class="delete-btn form-btn me-3 @(isNew ? "d-none" : "")">Delete</button>
+            <button type="submit" class="update-btn form-btn ms-3 @(isNew ? "d-none" : "")">Save Changes</button>
         </div>
-        @if (Model.HasAddress)
-        {
-            <partial name="~/Views/Shared/_Address.cshtml" model="Model.Address" view-data="@subViewData" />
-        }
-    </div>
-    <div class="popup-btns d-flex w-100 justify-content-center">
-        <button type="submit" class="save-btn form-btn @(isNew ? "" : "d-none")">Save Location</button>
-        <button type="button" class="delete-btn form-btn me-3 @(isNew ? "d-none" : "")">Delete</button>
-        <button type="submit" class="update-btn form-btn ms-3 @(isNew ? "d-none" : "")">Save Changes</button>
-    </div>
-</form>
+    </form>
+</div>

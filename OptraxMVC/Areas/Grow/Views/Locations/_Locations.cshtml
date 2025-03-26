@@ -16,21 +16,21 @@
     <div id="loc-details" class="inner-layout view-tabs">
         <partial name="_TabsTop" model="tabs" />
         <div class="tab-content h-100 p-0">
-@*             @foreach (var tab in tabs.Tabs)
-            {
-                bool active = tab.Name == "Locations";
-                string key = tab.TabKey;
+        @*@foreach (var tab in tabs.Tabs)
+        {
+            bool active = tab.Name == "Locations";
+            string key = tab.TabKey;
 
-                <div id="@key" class="tab-pane fade h-100 @(active ? "show active" : "")" role="tabpanel" aria-labelledby="@key-tab">
+            <div id="@key" class="tab-pane fade h-100 @(active ? "show active" : "")" role="tabpanel" aria-labelledby="@key-tab">
 
-                    @if (active)
-                    {
-                        <partial name="_Details" model="Model" />
-                    }
+                @if (active)
+                {
+                    <partial name="_Details" model="Model" />
+                }
 
-                </div>
-            } *@
-@*             <partial name="_TabsPanel" model="tabs" /> *@
+            </div>
+         }
+         <partial name="_TabsPanel" model="tabs" /> *@
         </div>
     </div>
     <div class="resizer" id="resizer">

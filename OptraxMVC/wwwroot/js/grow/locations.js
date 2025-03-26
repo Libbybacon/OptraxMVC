@@ -6,7 +6,8 @@ import { map } from '../map/map.js';
 
 $(document).ready(function () {
 
-    if ($('#locations').data('hassite') === false) {
+    console.log('hassite', $('#locations').data('hassite'))
+    if ($('#locations').data('hassite') === 'False') {
         showNewSite();
     }
     initializeTree();

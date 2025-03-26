@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using OptraxDAL;
@@ -12,9 +13,11 @@ using OptraxDAL;
 namespace OptraxDAL.Migrations
 {
     [DbContext(typeof(OptraxContext))]
-    partial class OptraxContextModelSnapshot : ModelSnapshot
+    [Migration("20250322214218_ChangeGeogToGeom")]
+    partial class ChangeGeogToGeom
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,9 +197,6 @@ namespace OptraxDAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Address1")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -238,17 +238,8 @@ namespace OptraxDAL.Migrations
                     b.Property<DateTimeOffset?>("DateLastModified")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
                     b.Property<string>("LastModifiedUserID")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("State")
                         .IsRequired()
@@ -348,9 +339,6 @@ namespace OptraxDAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<string>("BusinessType")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -365,7 +353,7 @@ namespace OptraxDAL.Migrations
                     b.Property<DateTimeOffset?>("DateLastModified")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Details")
+                    b.Property<string>("Description")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
@@ -374,8 +362,8 @@ namespace OptraxDAL.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("ID");
 
@@ -387,11 +375,11 @@ namespace OptraxDAL.Migrations
 
             modelBuilder.Entity("OptraxDAL.Models.Admin.ContainerType", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("ContainerTypeID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContainerTypeID"));
 
                     b.Property<bool>("Active")
                         .ValueGeneratedOnAdd()
@@ -402,21 +390,33 @@ namespace OptraxDAL.Migrations
                         .HasPrecision(8, 2)
                         .HasColumnType("decimal(8,2)");
 
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UoMName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("ID");
+                    b.HasKey("ContainerTypeID");
 
                     b.HasIndex("UoMName");
 
@@ -434,9 +434,8 @@ namespace OptraxDAL.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImagePath")
                         .IsRequired()
@@ -444,8 +443,7 @@ namespace OptraxDAL.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -460,17 +458,12 @@ namespace OptraxDAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ParentID")
                         .HasColumnType("int");
@@ -490,12 +483,21 @@ namespace OptraxDAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("InputName")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Value")
                         .IsRequired()
@@ -531,11 +533,11 @@ namespace OptraxDAL.Migrations
                     b.Property<DateTimeOffset?>("DateLastModified")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Details")
+                    b.Property<string>("Description")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int?>("IconID")
+                    b.Property<int>("IconID")
                         .HasColumnType("int");
 
                     b.Property<string>("LastModifiedUserID")
@@ -589,10 +591,22 @@ namespace OptraxDAL.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("PerQuantity")
                         .HasPrecision(6, 2)
@@ -619,6 +633,11 @@ namespace OptraxDAL.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
+                    b.Property<string>("BatchName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("CreatedUserID")
                         .HasColumnType("nvarchar(max)");
 
@@ -631,17 +650,12 @@ namespace OptraxDAL.Migrations
                     b.Property<DateTimeOffset?>("DateLastModified")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
                     b.Property<string>("LastModifiedUserID")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("OriginType")
                         .HasMaxLength(50)
@@ -656,10 +670,10 @@ namespace OptraxDAL.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("CropID");
-
-                    b.HasIndex("Name")
+                    b.HasIndex("BatchName")
                         .IsUnique();
+
+                    b.HasIndex("CropID");
 
                     b.ToTable("Batches", "Grow");
                 });
@@ -671,9 +685,6 @@ namespace OptraxDAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
 
                     b.Property<string>("CreatedUserID")
                         .HasColumnType("nvarchar(max)");
@@ -687,10 +698,6 @@ namespace OptraxDAL.Migrations
                     b.Property<DateTimeOffset?>("DateLastModified")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
                     b.Property<int?>("FieldLocationID")
                         .HasColumnType("int");
 
@@ -702,8 +709,10 @@ namespace OptraxDAL.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("RoomLocationID")
                         .HasColumnType("int");
@@ -752,9 +761,6 @@ namespace OptraxDAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<string>("CreatedUserID")
                         .HasColumnType("nvarchar(max)");
 
@@ -764,17 +770,12 @@ namespace OptraxDAL.Migrations
                     b.Property<DateTimeOffset?>("DateLastModified")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
                     b.Property<string>("LastModifiedUserID")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PatentNumber")
                         .HasColumnType("nvarchar(max)");
@@ -799,9 +800,6 @@ namespace OptraxDAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
 
                     b.Property<int?>("ContainerTypeID")
                         .HasColumnType("int");
@@ -857,15 +855,9 @@ namespace OptraxDAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("BatchID")
                         .HasMaxLength(50)
                         .HasColumnType("int");
-
-                    b.Property<string>("CreatedUserID")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CropID")
                         .HasColumnType("int");
@@ -874,26 +866,12 @@ namespace OptraxDAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset?>("DateCreated")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset?>("DateLastModified")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("LastModifiedUserID")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("LocationID")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("WasteQuantity")
                         .HasPrecision(10, 2)
@@ -923,9 +901,6 @@ namespace OptraxDAL.Migrations
 
                     b.Property<string>("Abbreviation")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Attracts")
                         .HasColumnType("nvarchar(max)");
@@ -986,10 +961,6 @@ namespace OptraxDAL.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("DrainageNeeds")
                         .HasColumnType("nvarchar(max)");
@@ -1064,11 +1035,6 @@ namespace OptraxDAL.Migrations
 
                     b.Property<int?>("MaxStorageDays")
                         .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
@@ -1175,7 +1141,7 @@ namespace OptraxDAL.Migrations
                     b.Property<DateTimeOffset?>("DateLastModified")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Details")
+                    b.Property<string>("Description")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
@@ -1187,8 +1153,8 @@ namespace OptraxDAL.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("OriginID")
                         .HasColumnType("int");
@@ -1233,9 +1199,6 @@ namespace OptraxDAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<string>("CreatedUserID")
                         .HasColumnType("nvarchar(max)");
 
@@ -1245,17 +1208,8 @@ namespace OptraxDAL.Migrations
                     b.Property<DateTimeOffset?>("DateLastModified")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
                     b.Property<string>("LastModifiedUserID")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("SpeciesID")
                         .HasColumnType("int");
@@ -1276,13 +1230,25 @@ namespace OptraxDAL.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("HexColor")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1314,41 +1280,17 @@ namespace OptraxDAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("ApprovalID")
                         .HasColumnType("int");
 
-                    b.Property<string>("CreatedUserID")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTimeOffset>("Date")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset?>("DateCreated")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset?>("DateLastModified")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<int>("DestinationID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
                     b.Property<bool>("IsPartial")
                         .HasColumnType("bit");
-
-                    b.Property<string>("LastModifiedUserID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("NeedsApproval")
                         .HasColumnType("bit");
@@ -1421,7 +1363,7 @@ namespace OptraxDAL.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
-                    b.Property<string>("Details")
+                    b.Property<string>("Description")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
@@ -1434,8 +1376,8 @@ namespace OptraxDAL.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("NeedsTransferApproval")
                         .HasColumnType("bit");
@@ -1482,9 +1424,6 @@ namespace OptraxDAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<string>("CreatedUserID")
                         .HasColumnType("nvarchar(max)");
 
@@ -1497,17 +1436,8 @@ namespace OptraxDAL.Migrations
                     b.Property<DateTimeOffset?>("DateLastModified")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
                     b.Property<string>("LastModifiedUserID")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("ID");
 
@@ -1522,9 +1452,6 @@ namespace OptraxDAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<string>("CreatedUserID")
                         .HasColumnType("nvarchar(max)");
 
@@ -1534,10 +1461,6 @@ namespace OptraxDAL.Migrations
                     b.Property<DateTimeOffset?>("DateLastModified")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
                     b.Property<DateTimeOffset?>("ExpirationDate")
                         .HasColumnType("datetimeoffset");
 
@@ -1545,11 +1468,6 @@ namespace OptraxDAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LotNumber")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -1635,10 +1553,6 @@ namespace OptraxDAL.Migrations
                     b.Property<DateTimeOffset?>("DateLastModified")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
                     b.Property<string>("LastModifiedUserID")
                         .HasColumnType("nvarchar(max)");
 
@@ -1646,6 +1560,9 @@ namespace OptraxDAL.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -1674,17 +1591,15 @@ namespace OptraxDAL.Migrations
                     b.Property<DateTimeOffset?>("DateLastModified")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
                     b.Property<string>("LastModifiedUserID")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("ProductDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProductName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UnitUoMName")
                         .HasMaxLength(50)
@@ -1692,7 +1607,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("ProductName")
                         .IsUnique();
 
                     b.HasIndex("UnitUoMName");
@@ -1708,9 +1623,6 @@ namespace OptraxDAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<int>("BatchNumber")
                         .HasColumnType("int");
 
@@ -1723,17 +1635,8 @@ namespace OptraxDAL.Migrations
                     b.Property<DateTimeOffset?>("DateLastModified")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Details")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
                     b.Property<string>("LastModifiedUserID")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
@@ -1756,14 +1659,23 @@ namespace OptraxDAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Barcode")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("BatchID")
                         .HasColumnType("int");
+
+                    b.Property<string>("CreatedUserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedUserID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("LocationID")
                         .HasColumnType("int");
@@ -1806,9 +1718,6 @@ namespace OptraxDAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
 
                     b.Property<int>("CustomerID")
                         .HasColumnType("int");
@@ -1858,12 +1767,10 @@ namespace OptraxDAL.Migrations
                 {
                     b.HasBaseType("OptraxDAL.Models.Admin.Location");
 
-                    b.Property<int?>("AddressID")
-                        .ValueGeneratedOnUpdateSometimes()
+                    b.Property<int>("AddressID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("BusinessID")
-                        .ValueGeneratedOnUpdateSometimes()
+                    b.Property<int>("BusinessID")
                         .HasColumnType("int");
 
                     b.HasIndex("AddressID")
@@ -1900,19 +1807,23 @@ namespace OptraxDAL.Migrations
                     b.HasBaseType("OptraxDAL.Models.Admin.Location");
 
                     b.Property<int?>("AddressID")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("int");
 
                     b.Property<int?>("BusinessID")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("int");
 
-                    b.HasIndex("AddressID")
-                        .HasDatabaseName("IX_Locations_AddressID1");
+                    b.HasIndex("AddressID");
 
                     b.HasIndex("BusinessID");
 
-                    b.ToTable("Locations", "Admin");
+                    b.ToTable("Locations", "Admin", t =>
+                        {
+                            t.Property("AddressID")
+                                .HasColumnName("OffsiteLocation_AddressID");
+
+                            t.Property("BusinessID")
+                                .HasColumnName("OffsiteLocation_BusinessID");
+                        });
 
                     b.HasDiscriminator().HasValue("Offsite");
                 });
@@ -1948,23 +1859,19 @@ namespace OptraxDAL.Migrations
                 {
                     b.HasBaseType("OptraxDAL.Models.Admin.Location");
 
-                    b.Property<int?>("AddressID")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("int");
-
                     b.Property<int?>("BusinessID")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("int");
 
                     b.Property<bool>("IsPrimary")
                         .HasColumnType("bit");
 
-                    b.HasIndex("AddressID")
-                        .HasDatabaseName("IX_Locations_AddressID2");
-
                     b.HasIndex("BusinessID");
 
-                    b.ToTable("Locations", "Admin");
+                    b.ToTable("Locations", "Admin", t =>
+                        {
+                            t.Property("BusinessID")
+                                .HasColumnName("SiteLocation_BusinessID");
+                        });
 
                     b.HasDiscriminator().HasValue("Site");
                 });
@@ -2115,6 +2022,9 @@ namespace OptraxDAL.Migrations
                 {
                     b.HasBaseType("OptraxDAL.Models.Inventory.StockItem");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<DateTimeOffset?>("FirstInstallDate")
                         .HasColumnType("datetimeoffset");
 
@@ -2174,20 +2084,24 @@ namespace OptraxDAL.Migrations
                     b.HasBaseType("OptraxDAL.Models.Map.MapObject");
 
                     b.Property<Polygon>("Area")
-                        .HasColumnType("geometry");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("geography")
+                        .HasComputedColumnSql("geometry::Point([Longitude], [Latitude],  4326).STBuffer([Radius])", true);
 
-                    b.Property<byte[]>("ColorBytes")
+                    b.Property<string>("Color")
                         .IsRequired()
-                        .HasColumnType("varbinary(4)");
+                        .HasMaxLength(9)
+                        .HasColumnType("nvarchar(9)");
 
                     b.Property<string>("DashArray")
                         .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<byte[]>("FillColorBytes")
+                    b.Property<string>("FillColor")
                         .IsRequired()
-                        .HasColumnType("varbinary(4)");
+                        .HasMaxLength(9)
+                        .HasColumnType("nvarchar(9)");
 
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
@@ -2214,18 +2128,15 @@ namespace OptraxDAL.Migrations
                 {
                     b.HasBaseType("OptraxDAL.Models.Map.MapObject");
 
-                    b.Property<byte[]>("ColorBytes")
+                    b.Property<string>("Color")
                         .IsRequired()
-                        .HasColumnType("varbinary(4)");
+                        .HasMaxLength(9)
+                        .HasColumnType("nvarchar(9)");
 
                     b.Property<string>("DashArray")
                         .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
-
-                    b.Property<byte[]>("FillColorBytes")
-                        .IsRequired()
-                        .HasColumnType("varbinary(4)");
 
                     b.Property<LineString>("LineGeometry")
                         .HasColumnType("geometry");
@@ -2277,18 +2188,20 @@ namespace OptraxDAL.Migrations
                 {
                     b.HasBaseType("OptraxDAL.Models.Map.MapObject");
 
-                    b.Property<byte[]>("ColorBytes")
+                    b.Property<string>("Color")
                         .IsRequired()
-                        .HasColumnType("varbinary(4)");
+                        .HasMaxLength(9)
+                        .HasColumnType("nvarchar(9)");
 
                     b.Property<string>("DashArray")
                         .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<byte[]>("FillColorBytes")
+                    b.Property<string>("FillColor")
                         .IsRequired()
-                        .HasColumnType("varbinary(4)");
+                        .HasMaxLength(9)
+                        .HasColumnType("nvarchar(9)");
 
                     b.Property<int?>("LocationID")
                         .HasColumnType("int");
@@ -2299,6 +2212,7 @@ namespace OptraxDAL.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<Polygon>("PolyGeometry")
+                        .IsRequired()
                         .HasColumnType("geometry");
 
                     b.Property<int>("Weight")
@@ -2423,7 +2337,9 @@ namespace OptraxDAL.Migrations
                 {
                     b.HasOne("OptraxDAL.Models.Admin.Icon", "Icon")
                         .WithMany()
-                        .HasForeignKey("IconID");
+                        .HasForeignKey("IconID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("OptraxDAL.Models.Map.MapObject", "MapObject")
                         .WithMany()
@@ -2732,12 +2648,14 @@ namespace OptraxDAL.Migrations
                     b.HasOne("OptraxDAL.Models.Admin.Address", "Address")
                         .WithOne("Building")
                         .HasForeignKey("OptraxDAL.Models.Admin.BuildingLocation", "AddressID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("OptraxDAL.Models.Admin.Business", "Business")
                         .WithMany("Buildings")
                         .HasForeignKey("BusinessID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Address");
 
@@ -2748,13 +2666,11 @@ namespace OptraxDAL.Migrations
                 {
                     b.HasOne("OptraxDAL.Models.Admin.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressID")
-                        .HasConstraintName("FK_Locations_Address_AddressID1");
+                        .HasForeignKey("AddressID");
 
                     b.HasOne("OptraxDAL.Models.Admin.Business", "Business")
                         .WithMany()
-                        .HasForeignKey("BusinessID")
-                        .HasConstraintName("FK_Locations_Businesses_BusinessID1");
+                        .HasForeignKey("BusinessID");
 
                     b.Navigation("Address");
 
@@ -2763,17 +2679,10 @@ namespace OptraxDAL.Migrations
 
             modelBuilder.Entity("OptraxDAL.Models.Admin.SiteLocation", b =>
                 {
-                    b.HasOne("OptraxDAL.Models.Admin.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressID")
-                        .HasConstraintName("FK_Locations_Address_AddressID2");
-
                     b.HasOne("OptraxDAL.Models.Admin.Business", "Business")
                         .WithMany("Sites")
                         .HasForeignKey("BusinessID")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Address");
 
                     b.Navigation("Business");
                 });
