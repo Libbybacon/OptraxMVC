@@ -112,7 +112,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
 
         private async Task<OptionsVM> LoadViewDataAsync()
         {
-            return await _IOptions.LoadOptions(["UomSelects", "StockTypeSelects", "CategorySelects", "ContainerTypeSelects"]);
+            return await _IOptions.LoadOptions(["UomSelects", "StockTypeSelects", "CatSelects", "ContainerTypeSelects"]);
 
         }
     }

@@ -71,7 +71,7 @@
     font-size: var(--f-md);
     box-shadow: var(--box-shdw-sm);
     border: 1px solid var(--grn-dk);
-    background-color: white;
+    background-color: var(--bg-t);
 }
 
     .add-map-obj:hover {
@@ -184,6 +184,7 @@
 
 .leaflet-popup-content-wrapper {
     border-radius: 4px;
+    background: var(--bg-t);
 }
 
 .leaflet-container a.leaflet-popup-close-button {

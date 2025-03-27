@@ -20,19 +20,15 @@ namespace OptraxMVC.Models
         public List<SelectListItem> CropSelects { get; set; } = [];
         public List<SelectListItem> OriginTypeSelects { get; set; } = [];
 
-        public List<SelectListItem> CategorySelects { get; set; } = [];
-        public List<SelectListItem> TopCategorySelects { get; set; } = [];
+        public List<SelectListItem> CatSelects { get; set; } = [];
+        public List<SelectListItem> TopCatSelects { get; set; } = [];
         public List<SelectListItem> StockTypeSelects { get; set; } = [];
 
 
-        public List<SelectListItem> LocationSelects { get; set; } = [];
-        public List<SelectListItem> LocSelectsByMultiTypes { get; set; } = [];
-        public List<SelectListItem> RoomSelects { get; set; } = [];
-        public List<SelectListItem> BuildingSelects { get; set; } = [];
-        public List<SelectListItem> OffSiteSelects { get; set; } = [];
-        public List<SelectListItem> ContainerLocSelects { get; set; } = [];
-        public List<SelectListItem> AllLocationSelects { get; set; } = [];
-        public List<SelectListItem> LocationTypeSelects { get; set; } = [];
+        public List<SelectListItem> LocTypeSelects { get; set; } = [];
+        public List<SelectListItem> LocSelectsAll { get; set; } = [];
+        public List<SelectListItem> LocSelectsByType { get; set; } = [];
+        public List<SelectListItem> LocSelectsByLevel { get; set; } = [];
 
     }
 }

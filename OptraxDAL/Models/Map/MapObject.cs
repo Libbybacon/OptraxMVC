@@ -1,5 +1,4 @@
-﻿//using Azure.Core.GeoJson;
-using OptraxDAL.Models.BaseClasses;
+﻿using OptraxDAL.Models.BaseClasses;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,6 +10,10 @@ namespace OptraxDAL.Models.Map
         [MaxLength(50)]
         public string? Category { get; set; }
 
+        public int MapID { get; set; }
+
         public abstract object ToGeoJSON();
+
+        public virtual Map? Map { get; set; }
     }
 }

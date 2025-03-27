@@ -1,14 +1,14 @@
 ﻿@model MapPoint
 
 @{
-    OptionsVM drops = (OptionsVM)(ViewData["Dropdowns"] ?? new());
+    OptionsVM opts = (OptionsVM)(ViewData["Options"] ?? new());
     int collID = 1;
 }
 
 <label class="mb-2">Select Icon</label>
 <div class="w-100 d-flex">
     <div class="icon-coll-list">
-        @foreach (var coll in drops.IconsList)
+        @foreach (var coll in opts.IconsList)
         {
             bool hasIcon = coll.ID == collID;
             <div class="icon-coll-name  @($"coll-name-{coll.ID}")  @(hasIcon ? "selected" : "")" data-collid="@coll.ID">
@@ -17,7 +17,7 @@
         }
     </div>
     <div class="icon-preview flex-fill">
-        @foreach (var coll in drops.IconsList)
+        @foreach (var coll in opts.IconsList)
         {
             bool hasIcon = coll.ID == collID;
             <div class="preview-div d-flex flex-wrap @($"preview-coll-{coll.ID}")  @(hasIcon ? "" : "d-none")">

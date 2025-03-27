@@ -3,6 +3,8 @@
 @{
     FormVM formVM = ViewBag.FormVM;
     bool isNew = formVM.IsNew;
+
+    ViewData["ShowEdit"] = true;
     var subViewData = new ViewDataDictionary(ViewData);
     subViewData.TemplateInfo.HtmlFieldPrefix = "Address";
 }

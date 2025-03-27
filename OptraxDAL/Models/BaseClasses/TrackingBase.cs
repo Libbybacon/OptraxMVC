@@ -1,17 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using OptraxDAL.Models.Admin;
 
 namespace OptraxDAL.Models.BaseClasses
 {
     public abstract class TrackingBase : BaseClass
     {
-        public DateTimeOffset? DateCreated { get; set; }
+        public string UserID { get; set; } = string.Empty;
 
-        [ForeignKey("Creator")]
-        public string? CreatedUserID { get; set; }
+        public DateTimeOffset? DateCreated { get; set; }
 
         public DateTimeOffset? DateLastModified { get; set; }
 
-        [ForeignKey("LastModifier")]
-        public string? LastModifiedUserID { get; set; }
+        public virtual AppUser? User { get; set; }
     }
 }

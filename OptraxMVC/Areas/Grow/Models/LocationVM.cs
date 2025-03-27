@@ -30,7 +30,8 @@ namespace OptraxMVC.Areas.Grow.Models
             }
         }
         public int ID { get; set; }
-        public bool? IsPrimary { get; set; }
+        public bool IsPrimary { get; set; } = false;
+        public bool IsFirstSite { get; set; } = false;
 
         [Required]
         [MaxLength(50)]
@@ -48,5 +49,24 @@ namespace OptraxMVC.Areas.Grow.Models
         public virtual Business? Business { get; set; }
 
         public List<SelectListItem> AvailableParents { get; set; } = [];
+
+        public LocationVM LoadVM(string type)
+        {
+            return type.ToLower() switch
+            {
+
+                "site" => new LocationVM(new SiteLocation()),
+                "field" => new LocationVM(new FieldLocation()),
+                "row" => new LocationVM(new RowLocation()),
+                "bed" => new LocationVM(new BedLocation()),
+                "plot" => new LocationVM(new PlotLocation()),
+                "greenhouse" => new LocationVM(new GreenhouseLocation()),
+                "building" => new LocationVM(new BuildingLocation()),
+                "room" => new LocationVM(new RoomLocation()),
+                "offsite" => new LocationVM(new OffsiteLocation()),
+                "firstsite" => new LocationVM(new SiteLocation()) { IsFirstSite = true, IsPrimary = true },
+                _ => new LocationVM(new SiteLocation()),
+            };
+        }
     }
 }

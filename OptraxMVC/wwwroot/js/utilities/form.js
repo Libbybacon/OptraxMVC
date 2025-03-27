@@ -7,8 +7,8 @@ export let Changes = [];
 var $form;
 
 export const formUtil = {
-    setListeners: function () {
-        $form = $(document).find($('#modelForm'));
+    setListeners: function (formID) {
+        $form = $(document).find($(formID));
         if ($.validator && $.validator.unobtrusive) {
             $.validator.unobtrusive.parse($form);
         }
@@ -21,7 +21,7 @@ export const formUtil = {
         Changes = [];
         $('#changes').val(null);
 
-        OrigModel = this.arrayToModel($form.serializeArray());
+        OrigModel = formUtil.arrayToModel($form.serializeArray());
 
         $('.attr').off('change').on('change', function () {
             let attrName = $(this).attr('Name');
@@ -38,11 +38,11 @@ export const formUtil = {
             $('#changes').val(changed > 0 ? Changes.toString() : null);
         });
     },
-    submitForm: async function () {
-        $form = $(`#modelForm`);
+    submitForm: async function (formID) {
+        $form = $(formID);
 
         const action = $form.attr('action')
-        console.log('formUtil submitForm changes', Changes);
+        console.log('formUtil submitForm changes', Changes, 'action', action);
 
         let proceed = action.includes('Create') || Changes.length > 0;
         console.log('formUtil submitForm', proceed);
@@ -61,7 +61,20 @@ export const formUtil = {
             
         }
     },
-
+    showHideBtns: function ($form) {
+        $form.on('click', '.edit-btn', function () {
+            $form.find('.view').addClass('d-none');
+            $form.find('.show-ed').removeClass('d-none');
+            $form.find('.attr').removeClass('d-none');
+            $form.find('.cancel-btn').removeClass('d-none');
+        });
+        $form.on('click', '.cancel-btn', function () {
+            $form.find('.view').removeClass('d-none');
+            $form.find('.show-ed').addClass('d-none');
+            $form.find('.attr').addClass('d-none');
+            $form.find('.cancel-btn').addClass('d-none');
+        });
+    },
     arrayToModel: function (arr) {
         var model = {};
 

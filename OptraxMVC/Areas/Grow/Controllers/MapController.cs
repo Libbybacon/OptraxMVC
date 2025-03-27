@@ -35,7 +35,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddNewObject(string objType)
+        public async Task<IActionResult> AddNewObject(string objType)
         {
             try
             {
@@ -48,6 +48,11 @@ namespace OptraxMVC.Areas.Grow.Controllers
                 };
 
                 LoadFormVM(objType, "Create");
+
+                if (model is MapPoint point)
+                {
+                    ViewData["Options"] = await _IOptions.LoadOptions(["IconsList"]);
+                }
 
                 return PartialView($"_{objType}", model);
             }
@@ -250,11 +255,10 @@ namespace OptraxMVC.Areas.Grow.Controllers
                 IsNew = funcType == ("Create"),
                 JsFunc = $"{funcType.ToLower()}{objType}",
                 Action = $"{funcType}{objType}",
+                Type = objType
             };
 
             ViewBag.IconCollID = 1;
-
-
         }
     }
 }

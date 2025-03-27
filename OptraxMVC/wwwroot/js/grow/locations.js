@@ -17,9 +17,8 @@ $(document).ready(function () {
 
 function setLocListeners() {
     $(document).on('click', '.toggle-edit', function () {
-        const addyComp = $(this).closest('.addy-component');
-        addyComp.find('.addy-display').toggle();
-        addyComp.find('.addy-edit').toggle();
+        const model = $(this).closest('.model');
+        model.find('.m-toggle').toggleClass('d-none');
     });
 }
 
@@ -60,7 +59,7 @@ async function showNewSite() {
 
     const props = {
         title: 'Add Your First Site',
-        url: '/Grow/Locations/LoadCreate',
+        url: '/Grow/Locations/LoadLocation',
         data: { type: 'firstSite' }
     }
 
@@ -68,9 +67,9 @@ async function showNewSite() {
 }
 export const locFormUtil = {
     setFormListeners: function () {
-        $(document).off('submit').on('submit', $(`#modelForm`), function (event) {
+        $(document).off('submit').on('submit', $(`#locForm`), function (event) {
             event.preventDefault();
-            locFormUtil.onSubmitForm($('#modelForm')) // submit form
+            locFormUtil.onSubmitForm($('#locForm')) // submit form
         });
 
         $(document).off('click', '.delete-btn').on('click', '.delete-btn', function () {
@@ -78,7 +77,7 @@ export const locFormUtil = {
             const type = $(this).data('type')
             onDelete(id, type);
         })
-        formUtil.setListeners();
+        formUtil.setListeners('#locForm');
         locFormUtil.setListeners();
     },
     setColorPicker(div, attr) {
@@ -91,12 +90,13 @@ export const locFormUtil = {
     },
     onSubmitForm: async function ($form) {
 
-        let response = await formUtil.submitForm();
+        let response = await formUtil.submitForm('#locForm');
 
+        console.log('loc onSubmitForm response', response);
         if (response && response.success) {
 
             if (response.data) {
-                addSiteNode(data)
+                addSiteNode(response.data)
             }
 
             let objType = $form.data('obj');
@@ -113,7 +113,7 @@ function initializeTree() {
     $('#locationTree').jstree({
         'core': {
             'data': {
-                'url': './Locations/GetLocations',
+                'url': './Locations/GetLocationTreeData',
                 'dataType': 'json'
             }
         },

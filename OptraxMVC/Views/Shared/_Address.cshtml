@@ -1,11 +1,16 @@
 ﻿@model Address
 
 @{
-    OptionsVM drops = (OptionsVM)(ViewData["Dropdowns"] ?? new());
+    OptionsVM drops = (OptionsVM)(ViewData["Options"] ?? new());
+
+    var showEdit = ViewData["showEdit"] as bool? ?? false;
+
+    string display= showEdit ? "d-none" : "";
+    string edit = showEdit ? "" : "d-none";
 }
 
-@* <div class="addy-display d-none">
-    <div class="addy-name">@Model.Name</div>
+<div class="m-toggle @display">
+    @* <div class="addy-name">@Model.Name</div> *@
     @if (!string.IsNullOrEmpty(Model.Details))
     {
         <div class="addy-details">@Model.Details</div>
@@ -15,9 +20,12 @@
     {
         <div class="addy-info">@Model.Address2</div>
     }
-    <div class="addy-info">  @Model.City, @Model.State @Model.ZipCode</div>
-</div> *@
-<div class="row col-12 w-100 px-0 m-0 pe-0">
+    <div class="addy-info"> @Model.City, @Model.State @Model.ZipCode</div>
+    <div class="addy-contact"><span>Phone: </span> @Model.ContactPhone <span>Email: </span>@Model.ContactEmail</div>
+    <div class="addy-contact"><span>Contact: </span> @Model.ContactName </div>
+</div>
+
+<div class="edit-div m-toggle row col-12 w-100 px-0 m-0 pe-0 @edit">
     <div class="col-6 pe-2">
         <label asp-for="Address1"></label>
         <input asp-for="Address1" class="form-control attr" />

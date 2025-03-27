@@ -6,5 +6,18 @@
     <partial name="_TabsTop" model="Model" />
 </div>
 <div class="tab-content h-100 p-0">
-    <partial name="_TabsPanel" model="Model" />
+    @*<partial name="_TabsPanel" model="Model" />*@
+
+    @for (int i = 0; i < Model.Tabs.Count; i++)
+    {
+        var tab = Model.Tabs[i];
+        bool active = i == 0;
+        string key = tab.TabKey;
+
+        <div id="@key" class="tab-pane fade h-100 @(active ? "show active" : "")" role="tabpanel" aria-labelledby="@key-tab">
+
+            <!-- Content loads here-->
+
+        </div>
+    }
 </div>

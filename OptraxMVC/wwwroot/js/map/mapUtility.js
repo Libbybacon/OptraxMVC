@@ -312,18 +312,18 @@ export const styleUtil = {
 
 export const mapFormUtil = {
     setFormListeners: function () {
-        $(document).off('submit').on('submit', $(`#modelForm`), function (event) {
+        $(document).off('submit').on('submit', $(`#mapForm`), function (event) {
             event.preventDefault();
-            mapFormUtil.onSubmitForm($('#modelForm')) // submit form
+            mapFormUtil.onSubmitForm($('#mapForm')) // submit form
         });
 
         $(document).off('click', '.delete-btn').on('click', '.delete-btn', function () {
-            let id = $('#modelForm').data('id');
-            let type = $('#modelForm').data('obj')
+            let id = $('#mapForm').data('id');
+            let type = $('#mapForm').data('obj')
             onDelete(id, type);
         })
 
-        formUtil.setListeners();
+        formUtil.setListeners('#mapForm');
         mapFormUtil.setStyleListeners();
     },
     setColorPicker(div, attr) {
@@ -382,8 +382,9 @@ export const mapFormUtil = {
 
     },
     onSubmitForm: async function ($form) {
+        const isCreate = $form.attr('action').includes('Create')
 
-        let response = await formUtil.submitForm();
+        let response = await formUtil.submitForm($('#mapForm'));
         console.log('onSubmitForm response', response);
 
         if (response && response.success) {
@@ -393,12 +394,27 @@ export const mapFormUtil = {
             map.closePopup();
 
             let objType = $form.data('obj');
-            let action = $form.attr('action').includes('Create') ? 'Created' : 'Updated';
+            let action = isCreate ? 'Created' : 'Updated';
+
+            if (isCreate && response.data) {
+                mapFormUtil.updateID(response.data, $form.data('obj'));
+            }
+
             window.showMessage({ msg: `${objType} ${action}!`, css: 'success', msgdiv: $('.map-msg') });
         }
         else {
             alert('Error! ' + response.error);
         }
+    },
+    updateID(data, type) {
+        let layer = curLayer.val;
+        let id = data.properties.id;
+
+        layer.feature.properties.id = id;
+        console.log('updateID layer', layer, 'id', id, 'data', data)
+        layerIndex.delete(-1)
+        layerIndex.set(id, layer);
+
     }
 }
 

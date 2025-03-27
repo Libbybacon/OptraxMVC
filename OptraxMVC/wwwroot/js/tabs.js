@@ -6,6 +6,7 @@ $(document).ready(function () {
         loadTab($(this));
     });
 
+
     curPage = $('#tab-page').val();
     let storedTab = sessionStorage.getItem(`${curPage}-active`);
 
@@ -25,15 +26,17 @@ function loadTab(tab) {
     sessionStorage.setItem(`${curPage}-active`, tabKey);
 
     const $innerTab = $(`#${tabKey}`);
+
     if ($innerTab.hasClass("loaded")) return;
+
     $innerTab.addClass('loaded');
-    const area = $(tab).attr("data-area");
+
     const path = $(tab).attr("data-path");
-    const name = $(tab).attr("data-name");
     console.log('loadTab', path)
+
     $.ajax({
         //url: `../Areas/${area}/${name}/Load${name}/`,
-        url: `.${path}`,
+        url: path,
         type: "GET",
         success: function (view) {
             $innerTab.html(view);

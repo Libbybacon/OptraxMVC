@@ -3,26 +3,9 @@
 @model LocationVM
 
 @{
-    var states = (IEnumerable<SelectListItem>)(ViewData["States"] ?? new());
-
-    var editable = ViewData["Editable"] as bool? ?? false;
-
-    string dispClass = editable ? "d-none" : "";
-    string editClass = editable ? "" : "d-none";
-
-    var subViewData = new ViewDataDictionary(ViewData);
-    subViewData.TemplateInfo.HtmlFieldPrefix = "Address";
+    ViewData["ShowEdit"] = false;
 }
 
 <div class="loc-details">
-    
-    <form asp-action="Edit" asp-controller="Locations" method="post" class="model-form" data-id="@Model.ID" data-obj="Location">
-        @Html.AntiForgeryToken()
-
-        @if (Model.HasAddress)
-        {
-            <partial name="~/Views/Shared/_Address.cshtml" model="Model.Address" view-data="@subViewData" />
-            @* @await Component.InvokeAsync("Address", new  { address = Model.Address }) *@
-        }
-    </form>
+    <partial name="_Edit.cshtml" model="Model"/>
 </div>

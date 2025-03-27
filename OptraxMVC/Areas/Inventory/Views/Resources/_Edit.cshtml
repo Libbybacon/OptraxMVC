@@ -43,7 +43,7 @@
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.CategoryID)
                         <span class="view @showView">@Html.DisplayFor(m => m.CategoryID)</span>
-                        @Html.DropDownListFor(m => m.CategoryID, drops.TopCategorySelects, "Select Category", new { @class = $"form-select attr {showSelect}"})
+                        @Html.DropDownListFor(m => m.CategoryID, drops.TopCatSelects, "Select Category", new { @class = $"form-select attr {showSelect}"})
                         @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = $"val-msg {showEdit}" })
                     </div>
                     <div class="col-xl-4 col-6">

@@ -27,7 +27,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                     MsgDiv = "tableMsg"
                 };
 
-                ViewData["Dropdowns"] = _IOptions.LoadOptions(["TopCategorySelects"]);
+                ViewData["Dropdowns"] = _IOptions.LoadOptions(["TopCatSelects"]);
 
                 return PartialView("_Edit", new Category() { });
             }
@@ -81,7 +81,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                     MsgDiv = "popupTopInner"
                 };
 
-                ViewData["Dropdowns"] = _IOptions.LoadOptions(["TopCategorySelects"]);
+                ViewData["Dropdowns"] = _IOptions.LoadOptions(["TopCatSelects"]);
 
                 return PartialView("_Edit", category);
             }

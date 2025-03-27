@@ -33,7 +33,7 @@
             </div>
             <div class="col-4">
                 @Html.LabelFor(m => m.ParentID)
-                @Html.DropDownListFor(m => m.ParentID, drops.TopCategorySelects, "Parent Category", new { @class = "form-select attr select2" })
+                @Html.DropDownListFor(m => m.ParentID, drops.TopCatSelects, "Parent Category", new { @class = "form-select attr select2" })
                 @Html.ValidationMessageFor(m => m.ParentID, "", new { @class = "val-msg" })
             </div>
             <div class="col-4">

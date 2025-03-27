@@ -12,7 +12,7 @@ namespace OptraxMVC.Services
 {
     public interface IOptionsService
     {
-        Task<OptionsVM> LoadOptions(List<string> drops, List<string>? types = null);
+        Task<OptionsVM> LoadOptions(List<string> drops, int? level = 0, List<string>? types = null);
     }
 
     public class OptionsService(OptraxContext context, IMemoryCache cache) : IOptionsService
@@ -21,11 +21,11 @@ namespace OptraxMVC.Services
         private readonly IMemoryCache _cache = cache;
         private readonly List<SelectListItem> EmptyList = [new SelectListItem() { Text = "No options available", Value = null }];
 
-        public async Task<OptionsVM> LoadOptions(List<string> drops, List<string>? types)
+        public async Task<OptionsVM> LoadOptions(List<string> drops, int? level, List<string>? types)
         {
             OptionsVM dropdownsVM = new()
             {
-                UomSelects = drops.Contains("UomSelects") ? GetUomSelects() : [],
+                UomSelects = drops.Contains("UomSelects") ? await GetUomSelects() : [],
                 StateSelects = drops.Contains("StateSelects") ? GetEnumSelects(typeof(Enums.States)) : [],
                 ContainerTypeList = drops.Contains("ContainerTypeList") ? await GetContainerTypesList() : [],
 
@@ -37,17 +37,14 @@ namespace OptraxMVC.Services
                 CropSelects = drops.Contains("StrainSelects") ? await GetCropSelects() : [],
                 OriginTypeSelects = drops.Contains("OriginTypeSelects") ? GetEnumSelects(typeof(Plant.OriginTypes)) : [],
 
-                CategorySelects = drops.Contains("CategorySelects") ? await GetCategorySelects() : [],
-                TopCategorySelects = drops.Contains("TopCategorySelects") ? await GetTopCatSelects() : [],
+                CatSelects = drops.Contains("CatSelects") ? await GetCatSelects() : [],
+                TopCatSelects = drops.Contains("TopCatSelects") ? await GetTopCatSelects() : [],
                 StockTypeSelects = drops.Contains("StockTypeSelects") ? GetEnumSelects(typeof(Enums.StockType)) : [],
 
-                LocationSelects = drops.Contains("LocationSelects") ? await GetAllLocSelects() : [],
-                LocSelectsByMultiTypes = drops.Contains("LocByTypeSelects") ? await GetLocSelectsByMultiTypes(types) : [],
-                RoomSelects = drops.Contains("RoomSelects") ? await GetLocSelectsByType("Room") : [],
-                BuildingSelects = drops.Contains("BuildingSelects") ? await GetLocSelectsByType("Building") : [],
-                OffSiteSelects = drops.Contains("OffSiteSelects") ? await GetLocSelectsByType("Offsite") : [],
-                ContainerLocSelects = drops.Contains("ContainerLocSelects") ? await GetLocSelectsByType("Container") : [],
-                LocationTypeSelects = drops.Contains("LocationTypeSelects") ? GetEnumSelects(typeof(Enums.LocationType)) : [],
+                LocSelectsAll = drops.Contains("LocSelectsAll") ? await GetLocSelectsAll() : [],
+                LocSelectsByType = drops.Contains("LocSelectsByType") ? await GetLocSelectsByType(types) : [],
+                LocSelectsByLevel = drops.Contains("LocSelectsByLevel") ? await GetLocSelectsByLevel(level) : [],
+                LocTypeSelects = drops.Contains("LocTypeSelects") ? GetEnumSelects(typeof(Enums.LocationType)) : [],
             };
 
             return dropdownsVM;
@@ -55,17 +52,6 @@ namespace OptraxMVC.Services
 
         private static List<SelectListItem> GetEnumSelects(Type enumType)
         {
-            //if (!enumType.IsEnum)
-            //    throw new ArgumentException("Provided type must be an enum.", nameof(enumType));
-
-            //return _cache.GetOrCreate($"{enumType.Name}EnumSelect", entry =>
-            //{
-            //    entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
-
-
-            //    return Enum.GetNames(enumType).Select(e => new SelectListItem { Value = e.ToString(), Text = e.ToString() }).ToList() ?? [];
-            //}) ?? [];
-
             if (!enumType.IsEnum)
             {
                 throw new ArgumentException("Provided type must be an enum.", nameof(enumType));
@@ -78,18 +64,13 @@ namespace OptraxMVC.Services
             //})];
         }
 
-        private List<SelectListItem> GetUomSelects()
+        private async Task<List<SelectListItem>> GetUomSelects()
         {
-            return _cache.GetOrCreate("UomsSelect", entry =>
+            return (await db.UoMs.OrderBy(c => c.UnitName).ToListAsync()).Select(c => new SelectListItem
             {
-                entry!.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
-
-                return db.UoMs?.Select(u => new SelectListItem
-                {
-                    Value = u.UnitName,
-                    Text = u.ListName
-                }).ToList();
-            }) ?? [];
+                Value = c.UnitName,
+                Text = c.ListName
+            }).ToList() ?? EmptyList;
         }
 
         private async Task<List<ContainerType>> GetContainerTypesList()
@@ -120,7 +101,7 @@ namespace OptraxMVC.Services
 
 
         // Inventory
-        private async Task<List<SelectListItem>> GetCategorySelects()
+        private async Task<List<SelectListItem>> GetCatSelects()
         {
             return (await db.Categories.Where(c => c.ParentID != null)
                                        .Include(c => c.Parent)
@@ -145,7 +126,7 @@ namespace OptraxMVC.Services
         }
 
         // Locations
-        private async Task<List<SelectListItem>> GetAllLocSelects()
+        private async Task<List<SelectListItem>> GetLocSelectsAll()
         {
             return (await db.Locations.Where(c => c.Active).OrderBy(c => c.Name).ToListAsync()).Select(c => new SelectListItem
             {
@@ -154,16 +135,7 @@ namespace OptraxMVC.Services
             }).ToList() ?? EmptyList;
         }
 
-        private async Task<List<SelectListItem>> GetLocSelectsByType(string type)
-        {
-            return (await db.Locations.Where(c => c.Active && c.LocationType == type).OrderBy(c => c.Name).ToListAsync()).Select(c => new SelectListItem
-            {
-                Value = c.ID.ToString(),
-                Text = c.Name
-            }).ToList() ?? EmptyList;
-        }
-
-        private async Task<List<SelectListItem>> GetLocSelectsByMultiTypes(List<string>? types)
+        private async Task<List<SelectListItem>> GetLocSelectsByType(List<string>? types)
         {
             if (types == null)
                 return EmptyList;
@@ -172,6 +144,19 @@ namespace OptraxMVC.Services
             {
                 Value = c.ID.ToString(),
                 Text = c.Name
+            }).ToList() ?? EmptyList;
+        }
+
+        private async Task<List<SelectListItem>> GetLocSelectsByLevel(int? level)
+        {
+            if (level == null || level == 0)
+                return EmptyList;
+
+            int parentLevel = (int)level - 1;
+            return (await db.Locations.Where(c => c.Active && c.Level == parentLevel).OrderBy(c => c.Name).ToListAsync()).Select(c => new SelectListItem
+            {
+                Value = c.ID.ToString(),
+                Text = string.Format("{0} - {1}", c.Name, c.LocationType)
             }).ToList() ?? EmptyList;
         }
     }

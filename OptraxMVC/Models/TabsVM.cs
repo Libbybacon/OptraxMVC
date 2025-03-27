@@ -14,45 +14,31 @@
 
     public class Tab
     {
-        //public Tab() { }
-
-        //public Tab(string name)
-        //{
-        //    Name = name;
-        //    TabKey = GetTabKey(name);
-        //}
-
-        //public string Name { get; set; } = string.Empty;
-
-        //public string TabKey { get; set; } = string.Empty;
-
-        //public string? ViewPath { get; set; }
-
-        //public string GetTabKey(string name)
-        //{
-        //    return name[..3].ToLower() + "-" + name.ToLower();
-        //}
-
-        public Tab(string name, bool setPath = true)
+        public Tab(string name, string? path = null, bool isViewTab = false)
         {
             Name = name;
-
-            TabKey = SetTabKey(name);
-            if (setPath) { ViewPath = SetViewPath(name); }
+            TabKey = isViewTab ? SetViewTabKey(name) : SetTabKey(name);
+            ViewPath = !string.IsNullOrEmpty(path) ? path : SetViewPath(name);
         }
 
+        public int? ID { get; set; }
         public string Name { get; set; }
         public string TabKey { get; set; }
         public string? ViewPath { get; set; }
 
         public string SetTabKey(string name)
         {
-            return name[..3].ToLower() + "-" + name.ToLower();
+            return name[..3].ToLower() + "-" + name.Replace(" ", "").ToLower();
+        }
+
+        public string SetViewTabKey(string name)
+        {
+            return $"view-${name.Replace(" ", "").ToLower()}";
         }
 
         public string SetViewPath(string name)
         {
-            return $"/{name}/Load{name}/";
+            return $"/{name}/Get{name}View/";
         }
     }
 }

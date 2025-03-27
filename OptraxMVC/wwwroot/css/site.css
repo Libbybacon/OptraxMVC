@@ -19,6 +19,7 @@
     --gray-dk: #DADADA;
     --gray-xdk: #BABABA;
     --gray-xxdk: #AAAAAA;
+    --bg-t: #FAF8F2;
     --highlight: #FFFFC2;
     --border-r: 4px;
     --box-shdw: 0px 1px 6px rgba(0,0,0,0.4);
@@ -128,7 +129,7 @@
     z-index: 2000;
     display: none;
     position: fixed;
-    background: white;
+    background: var(--bg-t);
     color: var(--grn-xdk);
     box-shadow: var(--box-shdw);
     border-radius: var(--border-r);
@@ -143,7 +144,7 @@
 }
 
 #popupDialog {
-    background: white;
+    background: var(--bg-t);
     color: var(--grn-xdk);
     border-radius: var(--border-r);
 }
@@ -169,7 +170,7 @@
 .popup-close {
     right: 0;
     border: none;
-    background: white;
+    background: var(--bg-t);
     color: var(--grn-xdk);
     display: flex;
     width: max-content;

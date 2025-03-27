@@ -13,6 +13,7 @@ namespace OptraxDAL.Models.Admin
     {
         public Location() { }
 
+        public int? UserID { get; set; }
         public int? MapObjectID { get; set; }
 
         [Display(Name = "Parent Location")]
