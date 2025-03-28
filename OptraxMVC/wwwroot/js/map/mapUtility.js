@@ -37,9 +37,9 @@ let colorSwatches = [
 ]
 export async function loadObjects(mapLayer, layerType) {
     try {
-        console.log('mapLayer', mapLayer, 'layerType', layerType);
+        //console.log('mapLayer', mapLayer, 'layerType', layerType);
         const response = await apiService.get('/Grow/Map/GetObjects', { objType: layerType });
-        console.log('response', response);
+        //console.log('response', response);
 
         if (response.success === false) { alert(`Failed to load ${layerType.toLowerCase()}s`); throw new Error(response.error || `Failed to load ${layerType.toLowerCase()}s`); }
 
@@ -97,7 +97,7 @@ export async function addObject(e, layerSet) {
     styleUtil.saveStyle();
 
     await showEditPopup(props).then(() => {
-        mapFormUtil.setFormListeners();
+        mapFormUtil.setFormListeners('#mapObjForm');
 
         updateHiddenFields(type, layerProps);
         map.on('popupclose', styleUtil.removeLayer);
@@ -115,6 +115,8 @@ async function showEditPopup(props) {
         throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
     }
 
+    $('#map-title').hide();
+
     const view = await response.data;
 
     const $editDiv = $('<div/>').addClass('edit-popup').html(view);
@@ -123,21 +125,28 @@ async function showEditPopup(props) {
 
     L.popup({ offset: L.point(0, -30) }).setLatLng(props.center).setContent($editDiv[0]).openOn(map);
 
-    $($editDiv).find('#Color.color-picker').spectrum(mapFormUtil.setColorPicker($editDiv, 'color'));
-    $($editDiv).find('#FillColor.color-picker').spectrum(mapFormUtil.setColorPicker($editDiv, 'fillColor'));
+    $($editDiv).find('#Color.color-picker').spectrum(mapFormUtil.setColorPicker('color'));
+    $($editDiv).find('#FillColor.color-picker').spectrum(mapFormUtil.setColorPicker('fillColor'));
 }
-
 
 export function updateHiddenFields(type, props) {
     let layer = curLayer.val;
+    const mapID = $("#mapForm").find("#ID").val();
+    $('#MapID').val(mapID)
 
-    if (type == 'Point') {
+    if (type.toLowerCase() == 'point') {
         const latlng = layer.getLatLng();
         $('#Latitude').val(latlng.lat);
         $('#Longitude').val(latlng.lng);
     }
 
-    if (type === 'Line') {
+    else if (type.toLowerCase() == 'circle') {
+        $('#Latitude').val(props.latlng.lat);
+        $('#Longitude').val(props.latlng.lng);
+        $('#Radius').val(props.radius);
+    }
+
+    else if (type.toLowerCase() === 'line') {
         const latlngs = layer.getLatLngs();
         const coordString = latlngs.map(p => `${p.lng} ${p.lat}`).join(', ');
         const wkt = `LINESTRING(${coordString})`;
@@ -145,13 +154,7 @@ export function updateHiddenFields(type, props) {
         $('#GeometryWKT').val(wkt);
     }
 
-    else if (type == 'Circle') {
-        $('#Latitude').val(props.latlng.lat);
-        $('#Longitude').val(props.latlng.lng);
-        $('#Radius').val(props.radius);
-    }
-
-    else if (type == 'Polygon') {
+    else if (type.toLowerCase() == 'polygon') {
         const latlngs = layer.getLatLngs();
         const or = latlngs[0] ?? latlngs; // outer ring
         const closed = [...or];
@@ -180,7 +183,7 @@ export async function getEdit(id, type, center) {
     styleUtil.saveStyle();
 
     await showEditPopup(props).then(() => {
-        mapFormUtil.setFormListeners();
+        mapFormUtil.setFormListeners('#mapObjForm');
 
         map.on('popupclose', styleUtil.restoreStyle);
     });
@@ -191,14 +194,11 @@ export async function getEdit(id, type, center) {
 export async function onDelete(id, type) {
     const response = await apiService.postForm(`${urlBase}DeleteObject/`, { id: id, objType: type })
     console.log('onDelete response', response);
+
     if (response.success == true) {
         console.log('onDelete curLayer', curLayer.val);
         styleUtil.removeLayer();
         map.closePopup();
-        //window.showMessage({ msg: `${type} Deleted!`, css: 'success', msgdiv: $('.map-msg') });
-    }
-    else {
-        //window.showMessage({ msg: `Error deleting ${type}!`, css: 'error', msgdiv: $('.map-msg') });
     }
 }
 
@@ -311,23 +311,33 @@ export const styleUtil = {
 }
 
 export const mapFormUtil = {
-    setFormListeners: function () {
-        $(document).off('submit').on('submit', $(`#mapForm`), function (event) {
+    setFormListeners: function (formID) {
+        console.log('mapFormUtil setFormListeners formID', formID);
+
+        $(formID).on('submit', function (event) {
             event.preventDefault();
-            mapFormUtil.onSubmitForm($('#mapForm')) // submit form
+            mapFormUtil.onSubmitForm(formID) // submit form
         });
 
-        $(document).off('click', '.delete-btn').on('click', '.delete-btn', function () {
-            let id = $('#mapForm').data('id');
-            let type = $('#mapForm').data('obj')
+        $(document).on('click', '.map-toggle', function (e) {
+            console.log('click')
+            $('.map-info').toggleClass('d-none');
+            e.stopPropagation()
+        })
+
+        //mapFormUtil.setFormListeners('#mapForm');
+        $(document).off('click', formID + ' .delete-btn').on('click', formID + ' .delete-btn', function () {
+            let id = $(formID).data('id');
+            let type = $(formID).data('obj')
             onDelete(id, type);
         })
 
-        formUtil.setListeners('#mapForm');
-        mapFormUtil.setStyleListeners();
+        formUtil.setListeners(formID);
+        if (formID == '#mapObjForm') {
+            mapFormUtil.setStyleListeners('#mapObjForm');
+        }
     },
     setColorPicker(div, attr) {
-        let divName = attr.replace('c', 'C').replace('f', 'F')
         return {
             type: "component",
             showInput: true,
@@ -342,7 +352,7 @@ export const mapFormUtil = {
             show: function (color) { styleUtil.updateStyle(attr, color.toRgbString()); },
         }
     },
-    setStyleListeners: function () {
+    setStyleListeners: function (formID) {
         // Points
         $('.icon-coll-name').on('click', function () {
             styleUtil.onSelectIconCollection($(this)); // change icon collection display
@@ -356,51 +366,63 @@ export const mapFormUtil = {
         });
 
         // Not Points
-        $('#Pattern').on('change', function () {
+        $(formID + ' #Pattern').on('change', function () {
             var pattern = $(this).val();
             if (pattern == 'solid') {
-                $('#DashArray').val(0).change();
-                $('#DashArray').attr('readonly', 'readonly');
+                $(formID + ' #DashArray').val(0).change();
+                $(formID + ' #DashArray').attr('readonly', 'readonly');
             }
             else {
-                $('#DashArray').val('5 5').change();
-                $('#DashArray').removeAttr('readonly');
+                $(formID + ' #DashArray').val('5 5').change();
+                $(formID + ' #DashArray').removeAttr('readonly');
             }
             setTimeout(() => {
-                styleUtil.updateStyle('dashArray', $('#DashArray').val());
+                styleUtil.updateStyle('dashArray', $(formID + ' #DashArray').val());
             }, 50);
         })
-        $('#Name').on('input', function () {
+        $(formID + ' #Name').on('input', function () {
             styleUtil.updateStyle('name', $(this).val());
         });
-        $('#DashArray').on('input', function () {
+        $(formID + ' #DashArray').on('input', function () {
             styleUtil.updateStyle('dashArray', $(this).val())
         });
-        $('#Weight').on('change', function () {
+        $(formID + ' #Weight').on('change', function () {
             styleUtil.updateStyle('weight', $(this).val())
         });
 
     },
-    onSubmitForm: async function ($form) {
+    onSubmitForm: async function (formID) {
+        let $form = $(formID);
+
+        console.log('mapUtil onSubmitForm $form', $form);
+
         const isCreate = $form.attr('action').includes('Create')
 
-        let response = await formUtil.submitForm($('#mapForm'));
-        console.log('onSubmitForm response', response);
+        let response = await formUtil.submitForm(formID);
+        console.log('mapUtil onSubmitForm response', response);
 
         if (response && response.success) {
 
-            map.off('popupclose', styleUtil.restoreStyle);
-            map.off('popupclose', styleUtil.removeLayer);
-            map.closePopup();
+            if (formID == '#mapForm') {
+                const newName = $('#mapForm #Name').val();
 
-            let objType = $form.data('obj');
-            let action = isCreate ? 'Created' : 'Updated';
-
-            if (isCreate && response.data) {
-                mapFormUtil.updateID(response.data, $form.data('obj'));
+                $('.map-info').toggleClass('d-none');
+                $('.map-title').text(newName);
             }
+            else {
+                map.off('popupclose', styleUtil.restoreStyle);
+                map.off('popupclose', styleUtil.removeLayer);
+                map.closePopup();
 
-            window.showMessage({ msg: `${objType} ${action}!`, css: 'success', msgdiv: $('.map-msg') });
+                let objType = $form.data('obj');
+                let action = isCreate ? 'Created' : 'Updated';
+
+                if (isCreate && response.data) {
+                    mapFormUtil.updateID(response.data, $form.data('obj'));
+                }
+
+                window.showMessage({ msg: `${objType} ${action}!`, css: 'success', msgdiv: $('.map-msg') });
+            }
         }
         else {
             alert('Error! ' + response.error);

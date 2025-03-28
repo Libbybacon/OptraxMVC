@@ -1427,7 +1427,7 @@ namespace OptraxDAL.Migrations
                     b.ToTable("TransferApprovals");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Map.IconCollection", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Maps.IconCollection", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -1452,7 +1452,7 @@ namespace OptraxDAL.Migrations
                     b.ToTable("IconCollections", "Map");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Map.MapIcon", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Maps.MapIcon", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -1479,7 +1479,7 @@ namespace OptraxDAL.Migrations
                     b.ToTable("Icons", "Map");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Map.MapObject", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Maps.MapObject", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -1990,9 +1990,9 @@ namespace OptraxDAL.Migrations
                     b.ToTable("Plants", (string)null);
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Map.MapLine", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Maps.MapLine", b =>
                 {
-                    b.HasBaseType("OptraxDAL.Models.Map.MapObject");
+                    b.HasBaseType("OptraxDAL.Models.Maps.MapObject");
 
                     b.Property<string>("Color")
                         .IsRequired()
@@ -2012,9 +2012,9 @@ namespace OptraxDAL.Migrations
                     b.ToTable("Lines", "Map");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Map.MapPoint", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Maps.MapPoint", b =>
                 {
-                    b.HasBaseType("OptraxDAL.Models.Map.MapObject");
+                    b.HasBaseType("OptraxDAL.Models.Maps.MapObject");
 
                     b.Property<int>("IconID")
                         .HasColumnType("int");
@@ -2047,9 +2047,9 @@ namespace OptraxDAL.Migrations
                     b.ToTable("Points", "Map");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Map.MapPolygon", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Maps.MapPolygon", b =>
                 {
-                    b.HasBaseType("OptraxDAL.Models.Map.MapObject");
+                    b.HasBaseType("OptraxDAL.Models.Maps.MapObject");
 
                     b.Property<string>("BorderColor")
                         .IsRequired()
@@ -2080,13 +2080,13 @@ namespace OptraxDAL.Migrations
 
             modelBuilder.Entity("IconCollectionMapIcon", b =>
                 {
-                    b.HasOne("OptraxDAL.Models.Map.IconCollection", null)
+                    b.HasOne("OptraxDAL.Models.Maps.IconCollection", null)
                         .WithMany()
                         .HasForeignKey("CollectionsID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OptraxDAL.Models.Map.MapIcon", null)
+                    b.HasOne("OptraxDAL.Models.Maps.MapIcon", null)
                         .WithMany()
                         .HasForeignKey("IconsID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2170,7 +2170,7 @@ namespace OptraxDAL.Migrations
 
             modelBuilder.Entity("OptraxDAL.Models.Admin.Location", b =>
                 {
-                    b.HasOne("OptraxDAL.Models.Map.MapObject", "MapObject")
+                    b.HasOne("OptraxDAL.Models.Maps.MapObject", "MapObject")
                         .WithMany()
                         .HasForeignKey("MapObjectID");
 
@@ -2378,9 +2378,9 @@ namespace OptraxDAL.Migrations
                     b.Navigation("Transfer");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Map.IconCollection", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Maps.IconCollection", b =>
                 {
-                    b.HasOne("OptraxDAL.Models.Map.IconCollection", "Parent")
+                    b.HasOne("OptraxDAL.Models.Maps.IconCollection", "Parent")
                         .WithMany("Children")
                         .HasForeignKey("ParentID");
 
@@ -2572,24 +2572,24 @@ namespace OptraxDAL.Migrations
                     b.Navigation("Strain");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Map.MapLine", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Maps.MapLine", b =>
                 {
-                    b.HasOne("OptraxDAL.Models.Map.MapObject", null)
+                    b.HasOne("OptraxDAL.Models.Maps.MapObject", null)
                         .WithOne()
-                        .HasForeignKey("OptraxDAL.Models.Map.MapLine", "ID")
+                        .HasForeignKey("OptraxDAL.Models.Maps.MapLine", "ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Map.MapPoint", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Maps.MapPoint", b =>
                 {
-                    b.HasOne("OptraxDAL.Models.Map.MapObject", null)
+                    b.HasOne("OptraxDAL.Models.Maps.MapObject", null)
                         .WithOne()
-                        .HasForeignKey("OptraxDAL.Models.Map.MapPoint", "ID")
+                        .HasForeignKey("OptraxDAL.Models.Maps.MapPoint", "ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OptraxDAL.Models.Map.MapIcon", "Icon")
+                    b.HasOne("OptraxDAL.Models.Maps.MapIcon", "Icon")
                         .WithMany("Points")
                         .HasForeignKey("IconID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2599,11 +2599,11 @@ namespace OptraxDAL.Migrations
                         .WithMany()
                         .HasForeignKey("LocationID");
 
-                    b.HasOne("OptraxDAL.Models.Map.MapLine", null)
+                    b.HasOne("OptraxDAL.Models.Maps.MapLine", null)
                         .WithMany("Points")
                         .HasForeignKey("MapLineID");
 
-                    b.HasOne("OptraxDAL.Models.Map.MapPolygon", null)
+                    b.HasOne("OptraxDAL.Models.Maps.MapPolygon", null)
                         .WithMany("Points")
                         .HasForeignKey("MapPolygonID");
 
@@ -2612,11 +2612,11 @@ namespace OptraxDAL.Migrations
                     b.Navigation("Location");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Map.MapPolygon", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Maps.MapPolygon", b =>
                 {
-                    b.HasOne("OptraxDAL.Models.Map.MapObject", null)
+                    b.HasOne("OptraxDAL.Models.Maps.MapObject", null)
                         .WithOne()
-                        .HasForeignKey("OptraxDAL.Models.Map.MapPolygon", "ID")
+                        .HasForeignKey("OptraxDAL.Models.Maps.MapPolygon", "ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2704,12 +2704,12 @@ namespace OptraxDAL.Migrations
                     b.Navigation("Transfers");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Map.IconCollection", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Maps.IconCollection", b =>
                 {
                     b.Navigation("Children");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Map.MapIcon", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Maps.MapIcon", b =>
                 {
                     b.Navigation("Points");
                 });
@@ -2761,12 +2761,12 @@ namespace OptraxDAL.Migrations
                     b.Navigation("PlantEvents");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Map.MapLine", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Maps.MapLine", b =>
                 {
                     b.Navigation("Points");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Map.MapPolygon", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Maps.MapPolygon", b =>
                 {
                     b.Navigation("Points");
                 });

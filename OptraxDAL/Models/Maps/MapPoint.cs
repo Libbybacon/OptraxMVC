@@ -1,7 +1,7 @@
 ﻿using OptraxDAL.Models.Admin;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace OptraxDAL.Models.Map
+namespace OptraxDAL.Models.Maps
 {
     [Table("Points", Schema = "Map")]
     public class MapPoint : MapObject

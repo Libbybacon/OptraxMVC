@@ -1,4 +1,4 @@
-﻿@using OptraxDAL.Models.Map;
+﻿@using OptraxDAL.Models.Maps;
 @using OptraxMVC.Models
 
 @model MapObject
@@ -10,6 +10,7 @@
 <div class="popup-msg"></div>
 
 <input type="hidden" asp-for="ID" />
+<input type="hidden" asp-for="MapID" />
 <input id="changes" type="hidden" name="Changes" />
 
 <div id="edit-content" class="px-2">

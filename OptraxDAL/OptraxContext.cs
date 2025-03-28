@@ -8,7 +8,7 @@ using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.BaseClasses;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
-using OptraxDAL.Models.Map;
+using OptraxDAL.Models.Maps;
 using OptraxDAL.Models.Products;
 
 
@@ -86,6 +86,7 @@ namespace OptraxDAL
 
 
         #region Map
+        public DbSet<Map> Maps { get; set; }
         public DbSet<MapObject> MapObjects { get; set; }
         public DbSet<MapPoint> MapPoints { get; set; }
         public DbSet<MapLine> MapLines { get; set; }
@@ -320,13 +321,12 @@ namespace OptraxDAL
             {
                 if (entry.State == EntityState.Added)
                 {
+                    entry.Entity.UserID = userID;
                     entry.Entity.DateCreated = DateTime.Now;
-                    entry.Entity.CreatedUserID = userID;
                 }
                 else if (entry.State == EntityState.Modified)
                 {
                     entry.Entity.DateLastModified = DateTime.Now;
-                    entry.Entity.LastModifiedUserID = userID;
                 }
             }
         }

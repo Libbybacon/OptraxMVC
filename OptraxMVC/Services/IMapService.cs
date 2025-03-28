@@ -5,13 +5,16 @@ using NetTopologySuite.IO;
 using NetTopologySuite.Operation.Valid;
 using OptraxDAL;
 using OptraxDAL.Models;
-using OptraxDAL.Models.Map;
+using OptraxDAL.Models.Maps;
 using OptraxMVC.Models;
 
 namespace OptraxMVC.Services
 {
     public interface IMapService
     {
+        Task<Map?> GetMapAsync();
+        Task<Map?> CreateMapAsync(Map map);
+        Task<ResponseVM> EditMapAsync(Map map);
         Task<ResponseVM> GetObjectsAsync(string objType);
         Task<object?> GetObjectAsync(int id, string objType);
         Task<ResponseVM> CreateObjectAsync(MapObject obj);
@@ -19,9 +22,56 @@ namespace OptraxMVC.Services
         Task<ResponseVM> DeleteObjectAsync(int id, string objType);
     }
 
-    public class MapService(OptraxContext context) : IMapService
+    public class MapService(OptraxContext context, ICurrentUserService user) : IMapService
     {
         private readonly OptraxContext db = context;
+        private readonly string UserID = user.UserID;
+
+        public async Task<Map?> CreateMapAsync(Map map)
+        {
+            try
+            {
+                await db.Maps.AddAsync(map);
+                await db.SaveChangesAsync();
+
+                return map;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<Map?> GetMapAsync()
+        {
+            Map? dbMap = await db.Maps.Where(m => m.Active && m.UserID == UserID).FirstOrDefaultAsync();
+
+            return dbMap ?? await CreateMapAsync(new Map("Default Map"));
+        }
+
+        public async Task<ResponseVM> EditMapAsync(Map map)
+        {
+            try
+            {
+                Map? dbMap = await db.Maps.Where(m => m.ID == map.ID && m.UserID == UserID).FirstOrDefaultAsync();
+
+                if (dbMap == null)
+                {
+                    return new ResponseVM("Map not found");
+                }
+
+                dbMap.Name = map.Name;
+                dbMap.Details = map.Details;
+
+                await db.SaveChangesAsync();
+
+                return new ResponseVM(true);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseVM("Error saving map: " + ex.Message);
+            }
+        }
 
         public async Task<ResponseVM> GetObjectsAsync(string objType)
         {
@@ -29,10 +79,10 @@ namespace OptraxMVC.Services
             {
                 var features = objType switch
                 {
-                    "Point" => (await db.MapPoints.Where(p => p.Active).Include(p => p.Icon).ToListAsync()).Select(p => p.ToGeoJSON()).ToList(),
-                    "Line" => [.. (await db.MapLines.Where(p => p.Active).ToListAsync()).Select(p => p.ToGeoJSON())],
-                    "Circle" => [.. (await db.MapCircles.Where(p => p.Active).ToListAsync()).Select(p => p.ToGeoJSON())],
-                    "Polygon" => [.. (await db.MapPolygons.Where(p => p.Active).ToListAsync()).Select(p => p.ToGeoJSON())],
+                    "Point" => (await db.MapPoints.Where(p => p.Active && (p.UserID == UserID)).Include(p => p.Icon).ToListAsync()).Select(p => p.ToGeoJSON()).ToList(),
+                    "Line" => [.. (await db.MapLines.Where(p => p.Active && (p.UserID == UserID)).ToListAsync()).Select(p => p.ToGeoJSON())],
+                    "Circle" => [.. (await db.MapCircles.Where(p => p.Active && (p.UserID == UserID)).ToListAsync()).Select(p => p.ToGeoJSON())],
+                    "Polygon" => [.. (await db.MapPolygons.Where(p => p.Active && (p.UserID == UserID)).ToListAsync()).Select(p => p.ToGeoJSON())],
                     _ => throw new NotImplementedException()
                 };
                 var geoJson = new
@@ -41,11 +91,11 @@ namespace OptraxMVC.Services
                     features
                 };
 
-                return new ResponseVM() { Success = true, Data = geoJson };
+                return new ResponseVM(geoJson);
             }
             catch (Exception ex)
             {
-                return new ResponseVM() { Msg = "Error getting map objects: " + ex.Message };
+                return new ResponseVM("Error getting map objects: " + ex.Message);
             }
         }
 

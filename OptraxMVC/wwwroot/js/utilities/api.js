@@ -27,7 +27,7 @@ const apiService = {
         }
 
         try {
-            console.log('api url', url, 'options', options)
+            //console.log('api url', url, 'options', options)
             const response = await fetch(url, options);
             clearTimeout(id);
 

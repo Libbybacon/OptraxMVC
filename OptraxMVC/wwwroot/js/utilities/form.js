@@ -7,11 +7,14 @@ export let Changes = [];
 var $form;
 
 export const formUtil = {
+
     setListeners: function (formID) {
         $form = $(document).find($(formID));
+        
         if ($.validator && $.validator.unobtrusive) {
             $.validator.unobtrusive.parse($form);
         }
+        
         console.log('setListeners form', $form, 'action', $form.attr('action'));
         if ($form.attr('action').includes('Edit')) {
             formUtil.setModelChanges();
@@ -40,11 +43,12 @@ export const formUtil = {
     },
     submitForm: async function (formID) {
         $form = $(formID);
-
+        console.log('formUtil submitForm $form', $form);
         const action = $form.attr('action')
         console.log('formUtil submitForm changes', Changes, 'action', action);
 
-        let proceed = action.includes('Create') || Changes.length > 0;
+        /*        let proceed = action.includes('Create') || Changes.length > 0;*/
+        let proceed = true;
         console.log('formUtil submitForm', proceed);
 
         if ($form.valid() && proceed) {
@@ -61,7 +65,9 @@ export const formUtil = {
             
         }
     },
-    showHideBtns: function ($form) {
+    showHideBtns: function (formID) {
+        $form = $(formID);
+
         $form.on('click', '.edit-btn', function () {
             $form.find('.view').addClass('d-none');
             $form.find('.show-ed').removeClass('d-none');
@@ -86,59 +92,4 @@ export const formUtil = {
     }
 }
 
-//function submitForm() {
-
-//    let $form = $(`#modelForm`);
-//    let msgdiv = $(`#${$form.data('msgdiv')}`);
-//    let proceed = $form.attr('action').includes('Create') || Changes.length > 0;
-
-//    if ($form.valid() && proceed) {
-
-//        return await apiService.postWithJsonParams({ url: $form.attr("action"), data: $form.serialize() })
-
-//        //$.ajax({
-//        //    url: $form.attr("action"),
-//        //    type: $form.attr("method"),
-//        //    data: $form.serialize(),
-//        //    success: function (response) {
-//        //        if (response.success) {
-//        //            $.fn[response.function].call(response);
-//        //            switch ($form.data('func')) {
-//        //                case "addResource":
-//        //                    addResourceSuccess(response);
-//        //                    break;
-//        //                case "editResource":
-//        //                    setSelectDrops();
-//        //                    setModelChanges();
-//        //                    editResourceSuccess(response);
-//        //                    break;
-//        //                case "editCategory":
-//        //                    setSelectDrops();
-//        //                    setModelChanges();
-//        //                    editCategorySuccess();
-//        //                    break;
-//        //                case "addPlants":
-//        //                    addPlantsSuccess(response);
-//        //                    break;
-//        //                case "createLocation":
-//        //                    createLocationSuccess(response);
-//        //                default:
-//        //                    closePopup();
-//        //            }
-//        //            showUpdateMessage({ css: 'success', msg: response.msg, msgdiv: msgdiv })
-//        //        }
-//        //        else {
-//        //            console.log('fail')
-//        //            showUpdateMessage({ css: 'error', msg: response.msg, msgdiv: msgdiv })
-//        //        }
-//        //    },
-//        //    error: function () {
-//        //        showUpdateMessage({ css: 'error', msg: 'An error occurred while saving.', msgdiv: msgdiv })
-//        //    }
-//        //});
-//    }
-//    else {
-//        console.log('Error! Invalid form...')
-//    }
-//}
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using OptraxDAL.Models.Admin;
+using OptraxDAL.Models.Maps;
 using System.ComponentModel.DataAnnotations;
 
 namespace OptraxMVC.Areas.Grow.Models
@@ -41,13 +42,14 @@ namespace OptraxMVC.Areas.Grow.Models
         public int? ParentID { get; set; }
         public int Level { get; set; }
         public string LocationType { get; set; } = string.Empty;
-
+        public int? MapObjectID { get; set; }
         public bool HasAddress { get; set; } = false;
         public int? AddressID { get; set; }
         public int? BusinessID { get; set; }
         public virtual Address? Address { get; set; }
         public virtual Business? Business { get; set; }
 
+        public Map? Map { get; set; }
         public List<SelectListItem> AvailableParents { get; set; } = [];
 
         public LocationVM LoadVM(string type)

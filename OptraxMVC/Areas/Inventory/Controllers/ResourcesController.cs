@@ -37,7 +37,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         {
             try
             {
-                ViewData["Dropdowns"] = await LoadViewDataAsync();
+                ViewData["Options"] = await LoadViewDataAsync();
                 ViewBag.FormVM = new FormVM() { IsNew = true, JsFunc = "addResource", Action = "Create", MsgDiv = "tableMsg" };
                 return PartialView("_Edit", new Resource() { });
             }
@@ -78,7 +78,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                     return Json(new { success = false, msg = "Resource not found" });
                 }
 
-                ViewData["Dropdowns"] = await LoadViewDataAsync();
+                ViewData["Options"] = await LoadViewDataAsync();
                 ViewBag.FormVM = new FormVM() { IsNew = false, JsFunc = "editResource", Action = "Edit", MsgDiv = "popupTopInner" };
 
                 return PartialView("_Edit", rsrc);

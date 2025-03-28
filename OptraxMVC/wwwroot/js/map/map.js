@@ -29,6 +29,11 @@ $(document).ready(function () {
     $(window).on('resize', function () {
         setMapHeight();
     });
+
+    const $title = document.getElementById('map-title');
+    if ($title) {
+        map.getContainer().appendChild($title);
+    }
 })
 
 async function initializeMap() {
@@ -50,6 +55,7 @@ async function initializeMap() {
 
     map.on('popupclose', function () {
         $(document).find(".color-picker").spectrum("hide");
+        $('#map-title').show();
     });
 }
 
@@ -207,7 +213,7 @@ function setStyle(props) {
 function createControls() {
     L.Marker.prototype.options.icon = util.iconUtil.createIcon('https://img.icons8.com/?size=100&id=43731&format=png&color=263EDE')
 
-    var drawControl = new L.Control.Draw({
+    const drawControl = new L.Control.Draw({
         draw: {
             polyline: true, // enable polyline drawing
             polygon: true,

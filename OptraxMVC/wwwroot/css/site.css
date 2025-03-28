@@ -16,8 +16,8 @@
     --red: #B60D0D;
     --tan-xlt: #FAF8F2;
     --gray-md: #E0E0E0;
-    --gray-dk: #DADADA;
-    --gray-xdk: #BABABA;
+    --gray-dk: #999999;
+    --gray-xdk: #525252;
     --gray-xxdk: #AAAAAA;
     --bg-t: #FAF8F2;
     --highlight: #FFFFC2;
@@ -286,7 +286,7 @@ button {
     letter-spacing: .5px;
     white-space: nowrap;
     padding: .25rem 1.5rem .25rem 1.5rem;
-    font-size: var(--f-md) !important;
+    font-size: var(--f-md);
     box-shadow: var(--box-shdw-sm);
 }
 
@@ -303,6 +303,15 @@ button {
         box-shadow: var(--box-shdw-hov);
     }
 
+.cancel-btn {
+    color: var(--gray-xdk);
+    border: 1px solid var(--gray-xdk);
+    background: white;
+}
+    .cancel-btn:hover {
+        color: white;
+        background: var(--gray-dk);
+    }
 .save-btn,
 .update-btn,
 .edit-btn {

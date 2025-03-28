@@ -5,7 +5,7 @@
 
 @{
     FormVM formVM = ViewBag.FormVM;
-    OptionsVM drops = (OptionsVM)(ViewData["Dropdowns"] ?? new());
+    OptionsVM drops = (OptionsVM)(ViewData["Options"] ?? new());
 }
 
 @using (Html.BeginForm(formVM.Action, "Categories", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv, data_modelname = "cat" }))

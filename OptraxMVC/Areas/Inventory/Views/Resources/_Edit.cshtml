@@ -4,7 +4,7 @@
 
 @{
     FormVM formVM = ViewBag.FormVM;
-    OptionsVM drops = (OptionsVM)(ViewData["Dropdowns"] ?? new());
+    OptionsVM drops = (OptionsVM)(ViewData["Options"] ?? new());
     string showView = formVM.IsNew ? "d-none" : "";
     string showEdit = formVM.IsNew ? "" : "d-none";
     string showSelect = formVM.IsNew ? "" : "d-none";

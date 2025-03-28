@@ -26,10 +26,8 @@
 
                     @if (active)
                     {
-
                         <partial name="_Location" model="Model" />
                     }
-
                 </div>
             }
         </div>
@@ -42,10 +40,13 @@
             <path d="M15 8 L19 12 L15 16" stroke="#FAF8F2" stroke-width="1.3" fill="none" /><!-- Right chevron -->
         </svg>
     </div>
-    <div class="loc-map">
+    <div id="loc-map" class="loc-map">
         <div id="map-container">
             <div id="map-div">
                 <div class="map-msg"></div>
+                <div id="map-title" >
+                    <partial name="_Map" model="Model.Map" />
+                </div>
                 <div id="map"></div>
             </div>
         </div>

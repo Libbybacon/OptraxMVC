@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace OptraxDAL.Models.Map
+namespace OptraxDAL.Models.Maps
 {
     [Table("MapObjects", Schema = "Map")]
     public abstract class MapObject : TrackingBaseDetails
@@ -10,7 +10,7 @@ namespace OptraxDAL.Models.Map
         [MaxLength(50)]
         public string? Category { get; set; }
 
-        public int MapID { get; set; }
+        public int? MapID { get; set; }
 
         public abstract object ToGeoJSON();
 

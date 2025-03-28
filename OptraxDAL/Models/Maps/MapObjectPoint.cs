@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 
-namespace OptraxDAL.Models.Map
+namespace OptraxDAL.Models.Maps
 {
     [Table("MapObjectPoints", Schema = "Map")]
     public class MapObjectPoint

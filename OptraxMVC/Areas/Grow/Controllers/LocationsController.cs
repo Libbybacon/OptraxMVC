@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
 using OptraxDAL.Models.Admin;
+using OptraxDAL.Models.Maps;
 using OptraxMVC.Areas.Grow.Models;
 using OptraxMVC.Controllers;
 using OptraxMVC.Models;
@@ -11,8 +12,9 @@ namespace OptraxMVC.Areas.Grow.Controllers
 {
     [Area("Grow")]
     [Authorize]
-    public class LocationsController(OptraxContext context, IOptionsService optionsService, ILocationService locationService) : BaseController(context)
+    public class LocationsController(OptraxContext context, ILocationService locationService, IMapService mapService, IOptionsService optionsService) : BaseController(context)
     {
+        private readonly IMapService _Map = mapService;
         private readonly ILocationService _Location = locationService;
         private readonly IOptionsService _Options = optionsService;
 
@@ -20,9 +22,11 @@ namespace OptraxMVC.Areas.Grow.Controllers
         [HttpGet]
         public async Task<IActionResult> LoadLocations()
         {
-            SiteLocation? loc = db.SiteLocations.Where(l => l.IsPrimary).FirstOrDefault();
+            SiteLocation? loc = await _Location.GetSiteLocationAsync();
+            Map? map = await _Map.GetMapAsync() ?? new("Default Map");
 
             LocationVM model = loc != null ? new(loc) : new LocationVM().LoadVM("firstSite");
+            model.Map = map;
 
             ViewData["LocTabs"] = new TabsVM()
             {

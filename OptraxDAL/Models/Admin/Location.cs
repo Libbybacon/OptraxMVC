@@ -1,7 +1,7 @@
 ﻿using OptraxDAL.Models.BaseClasses;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
-using OptraxDAL.Models.Map;
+using OptraxDAL.Models.Maps;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -13,7 +13,6 @@ namespace OptraxDAL.Models.Admin
     {
         public Location() { }
 
-        public int? UserID { get; set; }
         public int? MapObjectID { get; set; }
 
         [Display(Name = "Parent Location")]

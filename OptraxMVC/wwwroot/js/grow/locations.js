@@ -5,92 +5,106 @@ import { map } from '../map/map.js';
 
 
 $(document).ready(function () {
-
-    console.log('hassite', $('#locations').data('hassite'))
-    if ($('#locations').data('hassite') === 'False') {
-        showNewSite();
-    }
-    initializeTree();
     setResizer();
+    initializeTree();
     setLocListeners();
 });
 
 function setLocListeners() {
-    $(document).on('click', '.toggle-edit', function () {
+    $('#locForm .toggle-edit').on('click', function () {
         const model = $(this).closest('.model');
         model.find('.m-toggle').toggleClass('d-none');
     });
+
+    locFormUtil.setFormListeners('#locForm')
 }
 
 function setResizer() {
-    const resizer = document.getElementById('resizer');
+    const $resizer = $('#resizer');
     const col2 = document.getElementById('loc-details');
-    const col3 = document.querySelector('.loc-map');
+    const col3 = document.getElementById('loc-map');
     let isResizing = false;
 
-    resizer.addEventListener('mousedown', (e) => {
+    $resizer.on('mousedown', function (e) {
         e.preventDefault();
-        isResizing = true;
+
         document.body.style.cursor = 'col-resize';
         col3.style.pointerEvents = 'none';
+
+        // Mousemove
+        const resize = (e) => {
+            const newWidth = e.clientX - col2.getBoundingClientRect().left;
+            //col2.style.width = newWidth + 'px';
+            $('#loc-details').css('width', newWidth + 'px');
+            map.invalidateSize();
+        };
+
+        // Mouseup
+        const stopResize = () => {
+            document.body.style.cursor = 'default';
+            col3.style.pointerEvents = 'auto';
+            map.invalidateSize();
+
+            // Cleanup
+            document.removeEventListener('mousemove', resize);
+            document.removeEventListener('mouseup', stopResize);
+        };
+
+        document.addEventListener('mousemove', resize);
+        document.addEventListener('mouseup', stopResize);
     });
 
-    document.addEventListener('mousemove', (e) => {
-        if (!isResizing) return;
-        e.preventDefault();
-        const newWidth = e.clientX - col2.getBoundingClientRect().left;
+    //resizer.on('mousedown', function (e) {
+    //    e.preventDefault();
+    //    isResizing = true;
+    //    document.body.style.cursor = 'col-resize';
+    //    col3.style.pointerEvents = 'none';
+    //});
 
-        $('#loc-details').css('width', newWidth + 'px');
-        map.invalidateSize();
-    });
+    //document.addEventListener('mousemove', (e) => {
+    //    if (!isResizing) return;
+    //    e.preventDefault();
+    //    const newWidth = e.clientX - col2.getBoundingClientRect().left;
 
-    document.addEventListener('mouseup', (e) => {
-        console.log('mouseup', e);
+    //    $('#loc-details').css('width', newWidth + 'px');
+    //    map.invalidateSize();
+    //});
 
-
-        isResizing = false;
-        document.body.style.cursor = 'default';
-        col3.style.pointerEvents = 'auto'; // re-enable Leaflet
-        map.invalidateSize(); // fix Leaflet map rendering after resize
-    });
+    //document.addEventListener('mouseup', (e) => {
+    //    console.log('mouseup', e);
+    //    if (!isResizing) return;
+    //    isResizing = false;
+    //    document.body.style.cursor = 'default';
+    //    col3.style.pointerEvents = 'auto'; // re-enable Leaflet
+    //    map.invalidateSize(); // fix Leaflet map rendering after resize
+    //});
 }
 
-async function showNewSite() {
 
-    const props = {
-        title: 'Add Your First Site',
-        url: '/Grow/Locations/LoadLocation',
-        data: { type: 'firstSite' }
-    }
-
-    await popupHandler.loadPopup(props).then(() => locFormUtil.setFormListeners());
-}
 export const locFormUtil = {
-    setFormListeners: function () {
-        $(document).off('submit').on('submit', $(`#locForm`), function (event) {
+    setFormListeners: function (formID) {
+        console.log('locFormUtil setFormListeners formID', formID);
+        $(formID).on('submit', function (event) {
             event.preventDefault();
-            locFormUtil.onSubmitForm($('#locForm')) // submit form
+            locFormUtil.onSubmitForm(formID) // submit form
         });
 
-        $(document).off('click', '.delete-btn').on('click', '.delete-btn', function () {
-            const id = $(this).data('id');
-            const type = $(this).data('type')
+        $(formID + ' .delete-btn').on('click', function () {
+            const id = $(formID).data('id');
+            const type = $(formID).data('type')
             onDelete(id, type);
         })
-        formUtil.setListeners('#locForm');
+        formUtil.setListeners(formID);
         locFormUtil.setListeners();
-    },
-    setColorPicker(div, attr) {
-
     },
     setListeners: function () {
         $('#Name').on('input', function () {
             $('#Address_Name').val($(this).val()).change();
         })
     },
-    onSubmitForm: async function ($form) {
-
-        let response = await formUtil.submitForm('#locForm');
+    onSubmitForm: async function (formID) {
+        console.log('loc onSubmitForm formID', formID);
+        let response = await formUtil.submitForm(formID);
 
         console.log('loc onSubmitForm response', response);
         if (response && response.success) {
@@ -99,8 +113,8 @@ export const locFormUtil = {
                 addSiteNode(response.data)
             }
 
-            let objType = $form.data('obj');
-            let action = $form.attr('action').includes('Create') ? 'Created' : 'Updated';
+            let objType = $(formID).data('obj');
+            let action = $(formID).attr('action').includes('Create') ? 'Created' : 'Updated';
             window.showMessage({ msg: `${objType} ${action}!`, css: 'success', msgdiv: $('.msg-div') });
         }
         else {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace OptraxDAL.Models.Map
+namespace OptraxDAL.Models.Maps
 {
     public abstract class MapShape : MapObject
     {

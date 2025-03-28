@@ -23,7 +23,7 @@ namespace OptraxMVC.Services
 
         public async Task<OptionsVM> LoadOptions(List<string> drops, int? level, List<string>? types)
         {
-            OptionsVM dropdownsVM = new()
+            OptionsVM optionsVM = new()
             {
                 UomSelects = drops.Contains("UomSelects") ? await GetUomSelects() : [],
                 StateSelects = drops.Contains("StateSelects") ? GetEnumSelects(typeof(Enums.States)) : [],
@@ -47,7 +47,7 @@ namespace OptraxMVC.Services
                 LocTypeSelects = drops.Contains("LocTypeSelects") ? GetEnumSelects(typeof(Enums.LocationType)) : [],
             };
 
-            return dropdownsVM;
+            return optionsVM;
         }
 
         private static List<SelectListItem> GetEnumSelects(Type enumType)

@@ -2,7 +2,7 @@
 using NetTopologySuite.Geometries;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace OptraxDAL.Models.Map
+namespace OptraxDAL.Models.Maps
 {
     [Table("Circles", Schema = "Map")]
     public class MapCircle : MapShape

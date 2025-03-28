@@ -10,9 +10,9 @@ namespace OptraxMVC.Components
     {
         private readonly IOptionsService _Options = options;
 
-        public IViewComponentResult Invoke(Location location, OptionsVM dropdowns)
+        public IViewComponentResult Invoke(Location location, OptionsVM optionsVM)
         {
-            ViewData["Dropdowns"] = dropdowns;
+            ViewData["Options"] = optionsVM;
             return View(location);
         }
     }
