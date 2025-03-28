@@ -45,6 +45,101 @@ namespace OptraxMVC.Areas.Grow.Controllers
             return PartialView("_Locations", model);
         }
 
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> LoadCreate(string type)
+        {
+            try
+            {
+                LocationVM model = new LocationVM().LoadVM(type);
+
+                return await GetLocationView(model, "Create");
+            }
+            catch (Exception ex)
+            {
+                return Json(ResponseVM(ex.Message));
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateAsync(LocationVM model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return Json(new ResponseVM() { Msg = "Invalid model" });
+                }
+
+                return Json(await _Location.CreateAsync(model));
+            }
+            catch (Exception ex)
+            {
+                return Json(new ResponseVM() { Msg = "Error creating location: " + ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDetails(int? id)
+        {
+            try
+            {
+                if (id == null)
+                {
+                    return Json(ResponseVM("Error loading location - null ID"));
+                }
+
+                LocationVM? model = await _Location.GetLocationAsync((int)id);
+
+                if (model == null)
+                    return Json(ResponseVM("Error loading location: not found"));
+
+                return await GetLocationView(model, "Details");
+            }
+            catch (Exception ex)
+            {
+                return Json(ResponseVM(ex.Message));
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditAsync(LocationVM locVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(ResponseVM("Error editing location - invalid model"));
+            }
+            try
+            {
+                return Json(await _Location.EditAsync(locVM));
+            }
+            catch (Exception ex)
+            {
+                return Json(ResponseVM("Error deleting location - " + ex.Message));
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteAsync(int? id)
+        {
+            try
+            {
+                if (id == null)
+                {
+                    return Json(ResponseVM("Error deleting location - null ID"));
+                }
+
+                return Json(await _Location.DeleteAsync((int)id));
+            }
+            catch (Exception ex)
+            {
+                return Json(ResponseVM("Error deleting location - " + ex.Message));
+            }
+        }
+
         [HttpGet]
         [HttpPost]
         public async Task<IActionResult> GetLocationTreeData()
@@ -75,82 +170,6 @@ namespace OptraxMVC.Areas.Grow.Controllers
             catch (Exception ex)
             {
                 return Json(ResponseVM(ex.Message));
-            }
-        }
-
-
-        [HttpGet]
-        public async Task<IActionResult> LoadCreate(string type)
-        {
-            try
-            {
-                LocationVM model = new LocationVM().LoadVM(type);
-
-                return await GetLocationView(model, "Create");
-            }
-            catch (Exception ex)
-            {
-                return Json(ResponseVM(ex.Message));
-            }
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetDetails(int? id)
-        {
-            try
-            {
-                if (id == null)
-                {
-                    return Json(ResponseVM("Error loading location - null ID"));
-                }
-
-                LocationVM? model = await _Location.GetLocationAsync((int)id);
-
-                if (model == null)
-                    return Json(ResponseVM("Error loading location: not found"));
-
-                return await GetLocationView(model, "Details");
-            }
-            catch (Exception ex)
-            {
-                return Json(ResponseVM(ex.Message));
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> DeleteAsync(int? id)
-        {
-            try
-            {
-                if (id == null)
-                {
-                    return Json(ResponseVM("Error deleting location - null ID"));
-                }
-
-                return Json(await _Location.DeleteAsync((int)id));
-            }
-            catch (Exception ex)
-            {
-                return Json(ResponseVM("Error deleting location - " + ex.Message));
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAsync(LocationVM model)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return Json(new ResponseVM() { Msg = "Invalid model" });
-                }
-
-                return Json(await _Location.CreateAsync(model));
-            }
-            catch (Exception ex)
-            {
-                return Json(new ResponseVM() { Msg = "Error creating location: " + ex.Message });
             }
         }
     }

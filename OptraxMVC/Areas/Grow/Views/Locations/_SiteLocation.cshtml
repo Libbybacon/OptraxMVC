@@ -1,4 +1,6 @@
-﻿@model LocationVM
+﻿@model SiteLocation
+
+<partial name="_Location" model="Model" />
 
 @{
     OptionsVM options = (OptionsVM)(ViewData["Options"] ?? new());
@@ -12,13 +14,13 @@
 }
 
 <div class="edit-div p-3 model" data-isFirst="@Model.IsFirstSite.ToString().ToLower()">
-    <form asp-action="@action" asp-controller="Locations" method="post" class="px-1" id="locForm" data-obj="Location">
+    <form asp-action="@action" asp-controller="Locations" method="post" id="locForm" data-obj="Location">
         @Html.AntiForgeryToken()
 
         <input type="hidden" asp-for="ID" />
         <input type="hidden" asp-for="Level" />
         <input type="hidden" asp-for="IsPrimary" />
-
+        <input type="hidden" asp-for="Address.Name" />
 
         <div class="m-toggle @display">
             <div class="loc-name">@Model.Name</div>
@@ -41,20 +43,16 @@
             }
             else
             {
-                <div class="col-6 text-center pe-2">
-                    <label>LocationType</label><br />
-                    <label>@Model.LocationType</label>
+                <div class="col-6 pe-2">
+                    <label asp-for="LocationType"></label><br />
+                    <label class="ps-4">@Model.LocationType</label>
                     @* <input asp-for="LocationType" class="form-control" readonly /> *@
                 </div>
-
-                @if (Model.Level > 0)
-                {
-                    <div class="col-6 ps-2">
-                        <label>Parent Location</label>
+                <div class="col-6 ps-2">
+                    <label>Parent Location</label>
                     <select asp-for="ParentID" asp-items="@options.LocSelectsByLevel" class="form-select attr"></select>
                     <span asp-validation-for="ParentID" class="val-msg"></span>
                 </div>
-                }
             }
             <div class="col-12 mt-2">
                 <label asp-for="Name"></label>

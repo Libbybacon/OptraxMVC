@@ -1,8 +1,9 @@
 ﻿import apiService from '../utilities/api.js';
 import { formUtil } from '../utilities/form.js';
-import popupHandler from '../utilities/popup.js';
 import { map } from '../map/map.js';
 
+const urlBase = '/Grow/Locations/';
+const locFormID = '#locForm';
 
 $(document).ready(function () {
     setResizer();
@@ -16,7 +17,7 @@ function setLocListeners() {
         model.find('.m-toggle').toggleClass('d-none');
     });
 
-    locFormUtil.setFormListeners('#locForm')
+    locFormUtil.setFormListeners(locFormID)
 }
 
 function setResizer() {
@@ -84,29 +85,34 @@ function setResizer() {
 export const locFormUtil = {
     setFormListeners: function (formID) {
         console.log('locFormUtil setFormListeners formID', formID);
-        $(formID).on('submit', function (event) {
-            event.preventDefault();
+
+        $(formID).off('submit').on('submit', function (e) {
+            e.preventDefault();
             locFormUtil.onSubmitForm(formID) // submit form
         });
 
-        $(formID + ' .delete-btn').on('click', function () {
+        $(formID + ' .delete-btn').off('click').on('click', function () {
             const id = $(formID).data('id');
             const type = $(formID).data('type')
             onDelete(id, type);
         })
+
         formUtil.setListeners(formID);
+        formUtil.showHideBtns(formID);
+
         locFormUtil.setListeners();
     },
     setListeners: function () {
-        $('#Name').on('input', function () {
-            $('#Address_Name').val($(this).val()).change();
+        $(locFormID + ' #Name').on('input', function () {
+            $(locFormID + ' #Address_Name').val($(this).val()).change();
         })
     },
     onSubmitForm: async function (formID) {
         console.log('loc onSubmitForm formID', formID);
-        let response = await formUtil.submitForm(formID);
 
+        let response = await formUtil.submitForm(formID);
         console.log('loc onSubmitForm response', response);
+
         if (response && response.success) {
 
             if (response.data) {
@@ -145,11 +151,30 @@ function initializeTree() {
     });
 
     $('#locationTree').on("select_node.jstree", function (e, data) {
-        var locationId = data.node.id;
-        // do something with selected location
+        var locID = data.node.id;
+        loadDetails(locID)
     });
 }
+
+async function loadDetails(id) {
+    const response = await apiService.get(`${urlBase}GetDetails/`, { id: id });
+    console.log('locjs loadAddNew response', response);
+
+    if (!response.success == true) {
+        window.showMesage({ msg: 'Error loading new Location', msgdiv: $('.loc-msg'), css: 'error' });
+        throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+    }
+
+    const view = await response.data;
+
+    $('#loc-details-partial').html(view);
+
+    locFormUtil.setFormListeners(locFormID);
+}
+
 function addSiteNode(data) {
+    console.log('addSiteNode');
+
     $('#locationTree').jstree().create_node(
         '#', // root
         {
@@ -159,4 +184,26 @@ function addSiteNode(data) {
         },
         'last'
     );
+}
+
+$('#add-new-loc').on('click', function () {
+    loadAddNew('Field');
+    //loadPartial
+
+})
+
+async function loadAddNew(type) {
+
+    const response = await apiService.get(`${urlBase}LoadCreate/`, {type: type});
+    console.log('locjs loadAddNew response', response);
+
+    if (!response.success == true) {
+        window.showMesage({ msg: 'Error loading new Location', msgdiv: $('.loc-msg'), css: 'error' });
+        throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+    }
+
+    const view = await response.data;
+
+    $('#loc-details-partial').html(view);
+    locFormUtil.setFormListeners(locFormID);
 }

@@ -303,12 +303,12 @@ button {
         box-shadow: var(--box-shdw-hov);
     }
 
-.cancel-btn {
+.gray-btn {
     color: var(--gray-xdk);
     border: 1px solid var(--gray-xdk);
     background: white;
 }
-    .cancel-btn:hover {
+    .gray-btn:hover {
         color: white;
         background: var(--gray-dk);
     }

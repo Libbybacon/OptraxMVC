@@ -136,7 +136,10 @@
     color: white;
 }
 
-.edit-div{
+.edit-div {
+    overflow-x: hidden;
+    white-space: nowrap;
+    min-width: 500px;
     max-width: 600px;
 }
 

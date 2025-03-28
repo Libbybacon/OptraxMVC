@@ -13,11 +13,14 @@ namespace OptraxMVC.Areas.Grow.Models
         {
             ID = loc.ID;
             Name = loc.Name;
-            Details = loc.Details;
-            IconID = loc.IconID;
-            ParentID = loc.ParentID;
             Level = loc.Level;
+            Details = loc.Details;
+            ParentID = loc.ParentID;
             LocationType = loc.LocationType;
+
+            IconID = loc.IconID;
+            MapObjectID = loc.MapObjectID;
+
             HasAddress = loc.HasAddress;
             IsPrimary = loc is SiteLocation site && site.IsPrimary;
 
@@ -30,27 +33,37 @@ namespace OptraxMVC.Areas.Grow.Models
                 Business = addLoc.Business;
             }
         }
+
         public int ID { get; set; }
-        public bool IsPrimary { get; set; } = false;
-        public bool IsFirstSite { get; set; } = false;
 
         [Required]
         [MaxLength(50)]
         public string Name { get; set; } = string.Empty;
-        public string? Details { get; set; }
-        public int? IconID { get; set; }
-        public int? ParentID { get; set; }
         public int Level { get; set; }
+        public string? Details { get; set; }
+        public int? ParentID { get; set; }
         public string LocationType { get; set; } = string.Empty;
+
+        public int? IconID { get; set; }
         public int? MapObjectID { get; set; }
+
         public bool HasAddress { get; set; } = false;
         public int? AddressID { get; set; }
         public int? BusinessID { get; set; }
+
+        public bool IsPrimary { get; set; } = false;
+        public bool IsFirstSite { get; set; } = false;
+
+
+        public Map? Map { get; set; }
         public virtual Address? Address { get; set; }
         public virtual Business? Business { get; set; }
 
-        public Map? Map { get; set; }
+
+        public string? Changes { get; set; }
         public List<SelectListItem> AvailableParents { get; set; } = [];
+
+
 
         public LocationVM LoadVM(string type)
         {

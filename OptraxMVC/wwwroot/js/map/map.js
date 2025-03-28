@@ -29,11 +29,6 @@ $(document).ready(function () {
     $(window).on('resize', function () {
         setMapHeight();
     });
-
-    const $title = document.getElementById('map-title');
-    if ($title) {
-        map.getContainer().appendChild($title);
-    }
 })
 
 async function initializeMap() {
@@ -55,7 +50,6 @@ async function initializeMap() {
 
     map.on('popupclose', function () {
         $(document).find(".color-picker").spectrum("hide");
-        $('#map-title').show();
     });
 }
 
@@ -237,4 +231,56 @@ function createControls() {
         util.addObject(e, layerset);
 
     });
+
+    addTopCenterPosition();
+
+    const TitleControl = L.Control.extend({
+        onAdd: function () {
+            const mapTitle = L.DomUtil.create('div', 'leaflet-control title-control');
+
+            const $title = document.getElementById('map-title');
+            if ($title) {
+                mapTitle.innerHTML = $title.innerHTML;
+            }
+
+            L.DomEvent.disableClickPropagation(mapTitle);
+
+            $(document).on('click', '.map-toggle', function (e) {
+                console.log('click')
+                $('.map-info').toggleClass('d-none');
+                e.stopPropagation()
+            })
+
+            util.mapFormUtil.setFormListeners('#mapForm');
+
+
+            return mapTitle;
+        }
+    });
+
+    map.addControl(new TitleControl({ position: 'topcenter' }));
+
+}
+
+function addTopCenterPosition() {
+    L.Control.Position = Object.assign(L.Control.Position || {}, {
+        TOPCENTER: 'topcenter'
+    });
+    L.Map.mergeOptions({
+        controlPositions: {
+            topcenter: L.Control.Position.TOPCENTER
+        }
+    });
+    L.Control.include({
+        _setPosition: function (position) {
+            const map = this._map;
+            const pos = map._controlCorners[position];
+
+            if (!pos) return;
+
+            L.DomUtil.addClass(this._container, 'leaflet-control');
+            pos.appendChild(this._container);
+        }
+    });
+    map._controlCorners.topcenter = L.DomUtil.create('div', 'leaflet-top leaflet-center', map._controlContainer);
 }

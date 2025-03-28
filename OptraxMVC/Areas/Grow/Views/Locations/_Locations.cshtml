@@ -9,6 +9,7 @@
 <div id="locations" class="loc-layout d-flex" data-hassite="@(Model.IsFirstSite.ToString().ToLower())">
     <div class="loc-tree inner-layout">
         <div class="loc-title">All Locations</div>
+        <button id="add-new-loc" class="tree-btn save-btn">Add New</button>
         <div id="locationTree"></div>
     </div>
 
@@ -26,7 +27,9 @@
 
                     @if (active)
                     {
-                        <partial name="_Location" model="Model" />
+                        <div id="loc-details-partial">
+                            <partial name="_Location" model="Model" />
+                        </div>
                     }
                 </div>
             }
@@ -44,11 +47,11 @@
         <div id="map-container">
             <div id="map-div">
                 <div class="map-msg"></div>
-                <div id="map-title" >
-                    <partial name="_Map" model="Model.Map" />
-                </div>
                 <div id="map"></div>
             </div>
+        </div>
+        <div id="map-title" class="d-none">
+            <partial name="_Map" model="Model.Map" />
         </div>
     </div>
 </div>

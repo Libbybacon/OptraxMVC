@@ -24,7 +24,9 @@
     <div class="addy-contact"><span>Phone: </span> @Model.ContactPhone <span>Email: </span>@Model.ContactEmail</div>
     <div class="addy-contact"><span>Contact: </span> @Model.ContactName </div>
 </div>
-
+<input type="hidden" asp-for="ID" />
+<input type="hidden" asp-for="Name" />
+<input type="hidden" asp-for="UserID" />
 <div class="edit-div m-toggle row col-12 w-100 px-0 m-0 pe-0 @edit">
     <div class="col-6 pe-2">
         <label asp-for="Address1"></label>

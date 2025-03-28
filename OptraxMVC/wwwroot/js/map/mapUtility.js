@@ -35,6 +35,7 @@ let colorSwatches = [
     '#9BB2E3',
     '#C4ADCA'
 ]
+
 export async function loadObjects(mapLayer, layerType) {
     try {
         //console.log('mapLayer', mapLayer, 'layerType', layerType);
@@ -115,7 +116,7 @@ async function showEditPopup(props) {
         throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
     }
 
-    $('#map-title').hide();
+    $('#map-title').hide()
 
     const view = await response.data;
 
@@ -223,7 +224,6 @@ export const iconUtil = {
     },
 }
 
-
 export const styleUtil = {
     getLastLayer: function (layerSet) {
         let layers = layerSet.getLayers();
@@ -319,13 +319,6 @@ export const mapFormUtil = {
             mapFormUtil.onSubmitForm(formID) // submit form
         });
 
-        $(document).on('click', '.map-toggle', function (e) {
-            console.log('click')
-            $('.map-info').toggleClass('d-none');
-            e.stopPropagation()
-        })
-
-        //mapFormUtil.setFormListeners('#mapForm');
         $(document).off('click', formID + ' .delete-btn').on('click', formID + ' .delete-btn', function () {
             let id = $(formID).data('id');
             let type = $(formID).data('obj')

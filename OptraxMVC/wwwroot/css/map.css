@@ -44,59 +44,12 @@
     }
 }
 
-.leaflet-draw-toolbar {
-}
 
-    .leaflet-draw-toolbar a {
-        color: var(--grn-dk);
-        width: 25px !important;
-        height: 25px !important;
-        line-height: 1;
-        background-position-y: -3px !important;
-    }
 
-/*.leaflet-top.leaflet-center {
-    left: 50%;
-    transform: translateX(-50%);
-    position: absolute;
-    z-index: 400;
-}
-    .leaflet-top.leaflet-center .leaflet-control.title-control{
-        z-index: 300 !important;
-    }
-    .leaflet-control.title-control {
-        position: relative !important;
-        font-family: 'poppins';
-        background: var(--tan-xlt);
-        border: 1px solid var(--grn-xdk);
-        padding: 0;
-        border-radius: var(--border-r);
-        box-shadow: var(--box-shdw);
-        z-index: 300 !important;*/
-        /*opacity: .8;*/
-        /*font-size: var(--f-sm);*/
-    /*}*/
-
-/*.map-title {
+.map-title {
     font-weight: 600;
     font-size: var(--f-sm);
     color: var(--grn-xdk);
-}*/
-
-#map-title {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    font-size: var(--f-sm);
-    transform: translateX(-50%);
-    z-index: 410;
-    background: var(--tan-xlt);
-    border: 1px solid var(--grn-xdk);
-    /*padding: 0.5rem 1rem;*/
-    border-radius: var(--border-r);
-    box-shadow: var(--box-shdw);
-    font-family: 'Poppins';
-    pointer-events: auto;
 }
 
 #mapForm label {
@@ -112,12 +65,7 @@
 #mapForm .form-btn.map-btn {
     font-size: var(--f-sm);
 }
-/*.leaflet-draw-draw-marker {
-    background-size: 20px 20px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW1hcC1waW4iPjxwYXRoIGQ9Ik0yMCAxMGMwIDQuOTkzLTUuNTM5IDEwLjE5My03LjM5OSAxMS43OTlhMSAxIDAgMCAxLTEuMjAyIDBDOS41MzkgMjAuMTkzIDQgMTQuOTkzIDQgMTBhOCA4IDAgMCAxIDE2IDAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSIzIi8+PC9zdmc+') !important;
-}*/
+
 #map-div {
     position: relative;
 }
@@ -137,6 +85,31 @@
         box-shadow: var(--box-shdw-sm-hov);
     }
 
+.leaflet-draw-toolbar {
+}
+
+    .leaflet-draw-toolbar a {
+        color: var(--grn-dk);
+        width: 25px !important;
+        height: 25px !important;
+        line-height: 1;
+        background-position-y: -3px !important;
+    }
+
+.leaflet-top.leaflet-center {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.leaflet-control.title-control {
+    padding: 0;
+    font-family: 'poppins';
+    font-size: var(--f-sm);
+    background: var(--tan-xlt);
+    box-shadow: var(--box-shdw);
+    border-radius: var(--border-r);
+    border: 1px solid var(--grn-xdk);
+}
 
 /* Edit Map Object */
 #edit-content label {
@@ -206,10 +179,6 @@
 
     .icon-div.selected {
     }
-
-/*.map-icon {
-    height: 25px;
-}*/
 
 .icon-label {
     font-size: var(--f-xxxs)

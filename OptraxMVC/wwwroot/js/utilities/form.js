@@ -68,17 +68,9 @@ export const formUtil = {
     showHideBtns: function (formID) {
         $form = $(formID);
 
-        $form.on('click', '.edit-btn', function () {
-            $form.find('.view').addClass('d-none');
-            $form.find('.show-ed').removeClass('d-none');
-            $form.find('.attr').removeClass('d-none');
-            $form.find('.cancel-btn').removeClass('d-none');
-        });
-        $form.on('click', '.cancel-btn', function () {
-            $form.find('.view').removeClass('d-none');
-            $form.find('.show-ed').addClass('d-none');
-            $form.find('.attr').addClass('d-none');
-            $form.find('.cancel-btn').addClass('d-none');
+        $(formID + ' button.toggle-edit').on('click', function () {
+            console.log('formjs showHideBtns click')
+            $(formID + ' button.form-btn').toggleClass('d-none');
         });
     },
     arrayToModel: function (arr) {

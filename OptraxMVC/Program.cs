@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
 using OptraxDAL.Models.Admin;
+using OptraxMVC.Models;
 using OptraxMVC.Models.ModelBinders;
 using OptraxMVC.Services;
 using OptraxMVC.Services.Inventory;
@@ -11,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<OptraxContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING"), x => x.UseNetTopologySuite());
+    options.UseSqlServer(builder.Configuration.GetConnectionString("OptraxConnection"), x => x.UseNetTopologySuite());
 });
 
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<OptraxContext>()
@@ -44,6 +45,8 @@ builder.Services.AddScoped<IPlantService, PlantService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IMapService, MapService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 
 
 var app = builder.Build();
