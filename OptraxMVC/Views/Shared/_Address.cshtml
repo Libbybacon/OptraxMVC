@@ -1,36 +1,64 @@
-﻿@model Address
+﻿@inject IPhoneFormatter PhoneFormatter
+
+@model Address
 
 @{
     OptionsVM drops = (OptionsVM)(ViewData["Options"] ?? new());
 
     var showEdit = ViewData["showEdit"] as bool? ?? false;
-
-    string display= showEdit ? "d-none" : "";
+    string display = showEdit ? "d-none" : "";
     string edit = showEdit ? "" : "d-none";
+
+    bool hasPhone = !string.IsNullOrEmpty(Model.ContactPhone);
+    bool hasEmail = !string.IsNullOrEmpty(Model.ContactEmail);
+
+    string phoneNum = hasPhone ? PhoneFormatter.Format(Model.ContactPhone!) : "";
 }
 
-<div class="m-toggle @display">
-    @* <div class="addy-name">@Model.Name</div> *@
-    @if (!string.IsNullOrEmpty(Model.Details))
-    {
-        <div class="addy-details">@Model.Details</div>
-    }
-    <div class="addy-info">@Model.Address1</div>
-    @if (!string.IsNullOrEmpty(Model.Address2))
-    {
-        <div class="addy-info">@Model.Address2</div>
-    }
-    <div class="addy-info"> @Model.City, @Model.State @Model.ZipCode</div>
-    <div class="addy-contact"><span>Phone: </span> @Model.ContactPhone <span>Email: </span>@Model.ContactEmail</div>
-    <div class="addy-contact"><span>Contact: </span> @Model.ContactName </div>
+<div class="m-toggle loc-disp display @display">
+    <div class="w-100">
+        @{
+            // if (!string.IsNullOrEmpty(Model.Address2))
+            // {
+            //     <div class="addy-name">@Model.Name</div>
+            // }
+            if (!string.IsNullOrEmpty(Model.Details))
+            {
+                <div class="addy-details">@Model.Details</div>
+            }
+
+            <div class="addy-info text-center">@Model.Address1</div>
+
+            if (!string.IsNullOrEmpty(Model.Address2))
+            {
+                <div class="addy-info text-center">@Model.Address2</div>
+            }
+
+            <div class="addy-info"><center>@Model.City, @Model.State @Model.ZipCode</center> </div>
+            <div class="addy-contact d-flex w-100">
+                @if (hasPhone && hasEmail)
+                {
+                    <div class="w-50 text-end"> @phoneNum <span class="ps-2">|</span></div>
+                    <div class="w-50 text-start ps-2"> @Model.ContactEmail</div>
+                }
+                else if (hasPhone || hasEmail)
+                {
+                    <div class="text-center">@(hasPhone ? phoneNum : Model.ContactEmail) </div>
+                }
+            </div>
+        }
+    </div>
 </div>
-<input type="hidden" asp-for="ID" />
-<input type="hidden" asp-for="Name" />
-<input type="hidden" asp-for="UserID" />
+
+
 <div class="edit-div m-toggle row col-12 w-100 px-0 m-0 pe-0 @edit">
+    <input type="hidden" asp-for="ID" />
+    <input type="hidden" asp-for="Name" />
+    <input type="hidden" asp-for="UserID" />
+
     <div class="col-6 pe-2">
         <label asp-for="Address1"></label>
-        <input asp-for="Address1" class="form-control attr" />
+        <input asp-for="Address1" class="form-control attr" required />
         <span asp-validation-for="Address1" class="val-msg"></span>
     </div>
     <div class="col-6 ps-2">
@@ -40,17 +68,17 @@
     </div>
     <div class="col-6 pe-2">
         <label asp-for="City"></label>
-        <input asp-for="City" class="form-control attr" />
+        <input asp-for="City" class="form-control attr" required />
         <span asp-validation-for="City" class="val-msg"></span>
     </div>
     <div class="col-6 ps-2">
         <label asp-for="State"></label>
-        <select asp-for="State" asp-items="@drops.StateSelects" class="form-select attr"></select>
+        <select asp-for="State" asp-items="@drops.StateSelects" class="form-select attr" required></select>
         <span asp-validation-for="State" class="val-msg"></span>
     </div>
     <div class="col-6 pe-2">
         <label asp-for="ZipCode"></label>
-        <input asp-for="ZipCode" class="form-control attr" />
+        <input asp-for="ZipCode" class="form-control attr" pattern="\d{5}" maxlength="5" required />
         <span asp-validation-for="ZipCode" class="val-msg"></span>
     </div>
     <div class="col-6 ps-2">
@@ -60,12 +88,14 @@
     </div>
     <div class="col-6 pe-2">
         <label asp-for="ContactPhone"></label>
-        <input asp-for="ContactPhone" class="form-control attr" />
-        <span asp-validation-for="ContactPhone" class="val-msg"></span>
+        <input asp-for="ContactPhone" class="phone form-control attr" />
+        <span asp-validation-for="ContactPhone" class="val-msg" value="@phoneNum"></span>
     </div>
     <div class="col-6 ps-2">
         <label asp-for="ContactEmail"></label>
-        <input asp-for="ContactEmail" class="form-control attr" />
+        <input asp-for="ContactEmail" type="email" class="form-control attr" />
         <span asp-validation-for="ContactEmail" class="val-msg"></span>
     </div>
 </div>
+
+<script src="/js/utilities/address.js" type="text/javascript"></script>

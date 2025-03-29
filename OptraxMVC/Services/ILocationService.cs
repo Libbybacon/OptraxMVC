@@ -4,12 +4,13 @@ using OptraxDAL;
 using OptraxDAL.Models.Admin;
 using OptraxMVC.Areas.Grow.Models;
 using OptraxMVC.Models;
+using OptraxMVC.Models.Formatters;
 
 namespace OptraxMVC.Services
 {
     public interface ILocationService
     {
-        Task<List<object>> GetLocationsAsync();
+        Task<List<object>> GetTreeNodesAsync();
         Task<SiteLocation?> GetSiteLocationAsync();
         Task<LocationVM?> GetLocationAsync(int id);
         Task<ResponseVM> CreateAsync(LocationVM loc);
@@ -17,12 +18,14 @@ namespace OptraxMVC.Services
         Task<ResponseVM> DeleteAsync(int id);
     }
 
-    public class LocationService(OptraxContext context, ICurrentUserService user, IMapper mapper) : ILocationService
+    public class LocationService(OptraxContext context, ICurrentUserService user, IMapper mapper, IPhoneFormatter phoneFormatter) : ILocationService
     {
         private readonly OptraxContext db = context;
         private readonly string UserID = user.UserID;
 
-        private readonly IMapper _mapper = mapper;
+        private readonly IMapper _Mapper = mapper;
+        private readonly IPhoneFormatter _Phone = phoneFormatter;
+
 
         public async Task<SiteLocation?> GetSiteLocationAsync()
         {
@@ -30,14 +33,20 @@ namespace OptraxMVC.Services
             return (await db.SiteLocations.Where(l => l.IsPrimary && l.UserID == UserID).Include(l => l.Address).FirstOrDefaultAsync()) ?? null;
         }
 
-        public async Task<List<object>> GetLocationsAsync()
+        public async Task<List<object>> GetTreeNodesAsync()
         {
 
             return [.. (await db.Locations.Where(l => l.Active && l.UserID == UserID).ToListAsync()).Select(l => l.ToTreeNode())];
         }
+
         public async Task<LocationVM?> GetLocationAsync(int id)
         {
             Location? dbLoc = await db.Locations.FindAsync(id);
+
+            if (dbLoc is AddressLocation addLoc)
+            {
+                addLoc.Address = await db.Addresses.FindAsync(addLoc.AddressID);
+            }
 
             return (dbLoc == null || dbLoc.UserID != UserID) ? null : new LocationVM(dbLoc);
         }
@@ -64,6 +73,11 @@ namespace OptraxMVC.Services
 
                 if (loc is AddressLocation addLoc && vm.Address != null)
                 {
+                    if (vm.Address.ContactPhone != null)
+                    {
+                        vm.Address.ContactPhone = _Phone.Normalize(vm.Address.ContactPhone);
+                    }
+
                     addLoc.AddressID = vm.AddressID;
                     addLoc.Address = vm.Address;
 
@@ -105,7 +119,12 @@ namespace OptraxMVC.Services
 
                         if (dbAdd != null)
                         {
-                            _mapper.Map(vm.Address, dbAdd);
+                            if (vm.Address.ContactPhone != null)
+                            {
+                                vm.Address.ContactPhone = _Phone.Normalize(vm.Address.ContactPhone);
+                            }
+
+                            _Mapper.Map(vm.Address, dbAdd);
                         }
                     }
                     else if (addLoc.AddressID == null && vm.Address.ID == 0)
@@ -132,6 +151,7 @@ namespace OptraxMVC.Services
             loc.Level = vm.Level;
             loc.Details = vm.Details;
             loc.ParentID = vm.ParentID;
+            loc.LocationType = vm.LocationType;
 
             loc.IconID = vm.IconID;
             loc.MapObjectID = vm.MapObjectID;

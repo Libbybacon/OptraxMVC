@@ -6,8 +6,8 @@
 #filterCard {
     width: 100%;
     background-color: white;
-    box-shadow: var(--box-shdw);
-    border-radius: var(--border-r);
+    box-shadow: var(--shdw);
+    border-radius: var(--br);
 }
 
 #filterDrop {
@@ -16,7 +16,7 @@
     text-align: center;
     color: var(--blue-dk);
     font-size: var(--f-lg);
-    border-radius: var(--border-r);
+    border-radius: var(--br);
 }
 
 .tag-list {
@@ -27,8 +27,8 @@
     margin-right: 1rem;
     background-color: white;
     max-width: 250px !important;
-    border-radius: var(--border-r);
-    border: 1px solid var(--gray-xdk);
+    border-radius: var(--br);
+    border: 1px solid var(--gray-dk);
 }
 
 .tag-div {
@@ -38,7 +38,7 @@
 
 .tag-btn {
     padding: 6px;
-    border-radius: var(--border-r);
+    border-radius: var(--br);
     border: 1px solid var(--gray-xxdk);
 }
 
@@ -54,7 +54,7 @@ button {
 }
 
 .btn-group button {
-    border-radius: var(--border-r) !important;
+    border-radius: var(--br) !important;
 }
 .table-btn {
     border-radius: 4px;
@@ -65,13 +65,13 @@ button {
     margin-right: 1rem;
     color: var(--blue-dk);
     font-size: var(--f-sm);
-    box-shadow: var(--box-shdw-sm);
+    box-shadow: var(--shdw-sm);
     border: 1px solid var(--blue-dk);
 }
 
     .add-btn:hover {
         color: white;
-        /*box-shadow: var(--box-shdw);*/
+        /*box-shadow: var(--shdw);*/
         border: 1px solid var(--blue-dk);
         background-color: var(--blue-dk);
     }
@@ -91,7 +91,7 @@ button {
     margin-top: 1rem;
     max-width: 100vw;
     background: white;
-    border-radius: var(--border-r);
+    border-radius: var(--br);
 }
 
 #plant-table_wrapper,
@@ -160,7 +160,7 @@ table.dataTable td.dt-control:before {
 
     .cat0-head th i,
     .cat1-head th i {
-        font-size: var(--f-xxxs) !important;
+        font-size: var(--f-tiny) !important;
     }
 
         .cat1-head th i.bi-square-fill {
@@ -224,7 +224,7 @@ table.dataTable td.dt-control:before {
     color: var(--blue-dk);
     font-size: var(--f-md);
     border-radius: 0 !important;
-    border-bottom: 1px solid var(--gray-xdk);
+    border-bottom: 1px solid var(--gray-dk);
 }
 
 #histDrop {

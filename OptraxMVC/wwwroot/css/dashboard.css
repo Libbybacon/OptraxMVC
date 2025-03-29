@@ -1,0 +1,55 @@
+﻿
+.dash-container {
+    max-height: 100vh;
+    overflow-y: auto;
+}
+
+.dash-card {
+    height: 100%;
+    background-color: var(--blue-lt);
+    box-shadow: var(--shdw)
+}
+
+    .dash-card .card-title {
+        padding: 0;
+        margin: 0;
+        padding-top: 5px;
+        font-weight: 600;
+        text-align: center;
+        color: var(--blue-dk);
+        font-size: var(--f-xxl);
+    }
+
+    .dash-card .card-info {
+        height: 100%;
+        font-weight: 500;
+        padding-left: .5rem;
+        padding-right: .5rem;
+        font-size: var(--f-xxxl);
+    }
+
+        .dash-card .card-info .card-info-inner {
+            border-radius: var(--br);
+            margin-top: .5rem;
+            text-align: center;
+            width: 100%;
+            background-color: var(--blue-md);
+            color: var(--wht-blue);
+        }
+
+    .dash-card .card-chart-div {
+        height: 100%;
+        width: 100%;
+        padding: .5rem;
+        min-height: 200px;
+    }
+
+        .dash-card .card-chart-div .card-chart {
+            height: 100%;
+            border-radius: var(--br);
+            background-color: var(--blue-xlt);
+        }
+
+.dash-bottom .card {
+    height: 300px;
+}

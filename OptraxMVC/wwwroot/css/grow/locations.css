@@ -13,7 +13,7 @@
 }
 
 .inner-layout {
-    background: var(--tan-xlt);
+    /*background: var(--tan);*/
 }
 
 .view-tabs {
@@ -29,9 +29,9 @@
         flex-wrap: nowrap;
         white-space: nowrap;
         padding-top: 10px;
-        background: var(--tan-xlt);
+        background: var(--tan);
         padding-bottom: 0;
-        border-bottom: solid 1px var(--grn-md);
+        border-bottom: 2px ridge var(--grn-md);
         padding-left: 3px
     }
 
@@ -58,6 +58,8 @@
                     /*border: none;*/
                     color: white;
                     background: var(--grn-lt);
+                    border: solid 1px var(--grn-lt);
+                    border-bottom: none;
                 }
 
         .view-tabs .nav-tabs .nav-link.active,
@@ -75,7 +77,7 @@
     padding: 1rem;
     max-width: 300px;
     overflow-y: auto;
-    border-right: 1px solid var(--grn-xdk);
+    border-right: 2px ridge var(--grn-md);
     padding: 1rem;
 }
 
@@ -106,6 +108,58 @@
         position: relative;
     }
 
+
+
+.jstree-default .jstree-clicked {
+    background: var(--grn-lt);
+    color: white;
+}
+
+.edit-div {
+    overflow-x: hidden;
+    white-space: nowrap;
+    min-width: 400px;
+    max-width: 600px;
+
+}
+.display {
+    width: 100%;
+/*    display: flex;
+    justify-content: center;*/
+    color: var(--grn-xdk);
+    font-size: var(--f-md);
+}
+
+.loc-name{
+    text-align: center;
+    font-weight: 500;
+    letter-spacing: .8px;
+    font-size: var(--f-xl);
+}
+
+.loc-details{
+    text-align: center;
+    font-size: var(--f-sm);
+    margin-bottom: .3rem;
+}
+
+#locForm label {
+    color: var(--grn-xdk);
+}
+
+.first-site {
+    color: var(--grn-xdk);
+}
+.first-site center{
+    font-size: var(--f-xl);
+    font-weight: 500;
+}
+
+.first-site p{
+    text-align: center;
+    font-size: var(--f-sm);
+}
+
 .resizer {
     width: 8px;
     z-index: 100;
@@ -129,28 +183,4 @@
     pointer-events: none;
     filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.3));
     /*opacity: 0.9;*/
-}
-
-.jstree-default .jstree-clicked {
-    background: var(--grn-lt);
-    color: white;
-}
-
-.edit-div {
-    overflow-x: hidden;
-    white-space: nowrap;
-    min-width: 500px;
-    max-width: 600px;
-}
-
-#locForm label{
-    color: var(--grn-xdk);
-}
-
-.first-site {
-    color: var(--grn-xdk);
-}
-.first-site center{
-    font-size: var(--f-xl);
-    font-weight: 500;
 }

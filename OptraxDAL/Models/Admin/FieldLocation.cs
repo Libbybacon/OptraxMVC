@@ -10,6 +10,7 @@ namespace OptraxDAL.Models.Admin
         {
             Level = 1;
             LocationType = "Field";
+            HasAddress = false;
         }
 
         public virtual ICollection<Crop>? Crops { get; set; } = [];

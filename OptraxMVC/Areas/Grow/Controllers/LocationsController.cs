@@ -46,6 +46,21 @@ namespace OptraxMVC.Areas.Grow.Controllers
         }
 
 
+        [HttpGet]
+        [HttpPost]
+        public async Task<IActionResult> GetLocationTreeData()
+        {
+            try
+            {
+                var data = await _Location.GetTreeNodesAsync();
+
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                return Json(ResponseVM(ex.Message));
+            }
+        }
 
 
         [HttpGet]
@@ -122,6 +137,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                 return Json(ResponseVM("Error deleting location - " + ex.Message));
             }
         }
+
         [HttpPost]
         public async Task<IActionResult> DeleteAsync(int? id)
         {
@@ -140,21 +156,6 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
         }
 
-        [HttpGet]
-        [HttpPost]
-        public async Task<IActionResult> GetLocationTreeData()
-        {
-            try
-            {
-                var data = await _Location.GetLocationsAsync();
-
-                return Json(data);
-            }
-            catch (Exception ex)
-            {
-                return Json(ResponseVM(ex.Message));
-            }
-        }
 
 
         private async Task<IActionResult> GetLocationView(LocationVM model, string action)

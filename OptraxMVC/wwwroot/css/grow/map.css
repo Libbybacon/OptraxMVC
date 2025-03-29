@@ -62,7 +62,7 @@
     font-size: var(--f-xs);
 }
 
-#mapForm .form-btn.map-btn {
+#mapForm button {
     font-size: var(--f-sm);
 }
 
@@ -74,15 +74,15 @@
     padding: .5rem;
     color: var(--grn-dk);
     font-size: var(--f-md);
-    box-shadow: var(--box-shdw-sm);
+    box-shadow: var(--shdw-sm);
     border: 1px solid var(--grn-dk);
-    background-color: var(--bg-t);
+    background-color: var(--tan);
 }
 
     .add-map-obj:hover {
         color: var(--grn-xlt);
         background-color: var(--grn-dk);
-        box-shadow: var(--box-shdw-sm-hov);
+        box-shadow: var(--shdw-sm-hov);
     }
 
 .leaflet-draw-toolbar {
@@ -103,17 +103,11 @@
 
 .leaflet-control.title-control {
     padding: 0;
-    font-family: 'poppins';
     font-size: var(--f-sm);
-    background: var(--tan-xlt);
-    box-shadow: var(--box-shdw);
-    border-radius: var(--border-r);
+    background: var(--tan);
+    box-shadow: var(--shdw);
+    border-radius: var(--br);
     border: 1px solid var(--grn-xdk);
-}
-
-/* Edit Map Object */
-#edit-content label {
-    margin-top: 1rem !important;
 }
 
 /* Point Edit */
@@ -126,8 +120,8 @@
     white-space: nowrap;
     min-width: max-content;
     border: 1px inset var(--grn-xdk);
-    border-top-left-radius: var(--border-r);
-    border-bottom-left-radius: var(--border-r);
+    border-top-left-radius: var(--br);
+    border-bottom-left-radius: var(--br);
 }
 
 .icon-preview {
@@ -137,8 +131,8 @@
     scrollbar-width: thin;
     border: 1px inset var(--grn-dk);
     background-color: var(--wht-grn);
-    border-top-right-radius: var(--border-r);
-    border-bottom-right-radius: var(--border-r);
+    border-top-right-radius: var(--br);
+    border-bottom-right-radius: var(--br);
 }
 
 .icon-coll-name {
@@ -146,7 +140,7 @@
     padding-top: .15rem;
     padding-right: 1rem;
     padding-bottom: .15rem;
-    border-bottom: 1px solid var(--gray-xdk);
+    border-bottom: 1px solid var(--gray-dk);
 }
 
     .icon-coll-name:hover {
@@ -171,24 +165,24 @@
     .icon-div.selected,
     .icon-div:hover {
         cursor: pointer;
-        border-radius: var(--border-r);
+        box-shadow: var(--shdw-sm);
+        border-radius: var(--br);
         border: 1px solid var(--grn-dk);
         background-color: var(--wht-blue);
-        box-shadow: var(--box-shdw-sm);
     }
 
     .icon-div.selected {
     }
 
 .icon-label {
-    font-size: var(--f-xxxs)
+    font-size: var(--f-tiny)
 }
 
 /* Leaflet */
 
 .leaflet-touch .leaflet-bar {
+    box-shadow: var(--shdw-sm);
     border: 1px solid var(--grn-dk);
-    box-shadow: var(--box-shdw-sm);
 }
 
     .leaflet-touch .leaflet-bar a {
@@ -198,8 +192,8 @@
     }
 
         .leaflet-touch .leaflet-bar a span {
-            font-size: var(--f-xl);
             color: var(--grn-dk);
+            font-size: var(--f-xl);
         }
 
 .leaflet-popup-content {
@@ -211,88 +205,71 @@
 .leaflet-popup-content-wrapper {
     position: relative;
     border-radius: 4px;
-    background: var(--bg-t);
-    /*z-index: 700;*/
+    background: var(--tan);
 }
 
 .leaflet-container a.leaflet-popup-close-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: var(--f-xl);
-    color: var(--grn-xdk);
-    right: 3px;
     top: 3px;
-}
+    right: 3px;
 
-    .leaflet-container a.leaflet-popup-close-button:hover {
-        color: white;
-        background: var(--grn-xdk);
-        border-radius: var(--border-r);
-        box-shadow: var(--box-shdw-sm);
+}
+    .leaflet-container a.leaflet-popup-close-button span {
+        padding: 5px;
+        padding-top: 0;
+        padding-bottom: 2px;
+        padding-right: 3px;
+        color: var(--grn-xdk);
+        font-size: var(--f-xl);
     }
+
+        .leaflet-container a.leaflet-popup-close-button span:hover {
+            color: white;
+            background: var(--grn-xdk);
+            border-radius: var(--br);
+            box-shadow: var(--shdw-sm);
+        }
+
 .leaflet-tooltip{
     padding: 0 4px 0 4px;
 }
 .leaflet-tooltip-top{
     margin-top: 0;
+    font-weight: 450;
 }
 
-#clr-picker {
-    pointer-events: auto !important; /* Allow Coloris to remain clickable */
-    z-index: 100000; /* Ensure it's on top */
-}
 
 .row > * {
     padding: 0;
 }
 
-.edit-popup {
-    font-family: 'Poppins';
+.mapObj-popup {
     color: var(--grn-xdk);
     padding: .3rem;
-    /*z-index: 10000;*/
 }
 
-    .edit-popup .ed-col {
-        /*width: max-content;*/
-        /*white-space: nowrap;*/
-    }
-
-    .edit-popup .form-select,
-    .edit-popup .form-control {
+    .mapObj-popup .form-select,
+    .mapObj-popup .form-control {
         height: 24px;
         width: 100%;
-        font-size: var(--f-xxs);
-        border-radius: var(--border-r);
+        font-size: var(--f-xs);
+        border-radius: var(--br);
     }
 
-    .edit-popup .form-select {
+    .mapObj-popup .form-select {
         padding: .175rem 1rem .075rem .5rem;
     }
 
-        .edit-popup .form-select option {
+        .mapObj-popup .form-select option {
+            line-height: 1;
             padding: .1rem;
             padding-inline: .1rem;
             min-block-size: .8rem;
-            line-height: 1;
         }
 
-    .edit-popup label {
-        white-space: nowrap;
-        font-weight: 500;
-        /*padding-left: 3px;*/
+    .mapObj-popup label {
+        /*white-space: nowrap;*/
+        /*font-weight: 500;*/
         padding-bottom: 3px;
         letter-spacing: .5px;
-        font-size: var(--f-xxs)
-    }
-
-    .edit-popup button {
-        white-space: nowrap;
-        letter-spacing: .5px;
-        white-space: nowrap;
-        padding: .2rem 1rem .2rem 1rem;
-        box-shadow: var(--box-shdw-sm);
-        box-shadow: var(--box-shdw-sm);
-        font-size: var(--f-sm)
+        font-size: var(--f-xs)
     }

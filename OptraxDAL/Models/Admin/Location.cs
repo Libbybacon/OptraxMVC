@@ -6,11 +6,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Admin
 {
+    public abstract class AddressLocation : Location
+    {
+        public int? AddressID { get; set; }
+        public int? BusinessID { get; set; }
+
+        public virtual Address? Address { get; set; } = new();
+        public virtual Business? Business { get; set; }
+    }
 
     [Table("Locations", Schema = "Admin")]
     public abstract class Location : TrackingBaseDetails
     {
         public Location() { }
+
+        public string LocationType { get; set; } = string.Empty;
 
         public int? MapObjectID { get; set; }
 
@@ -22,12 +32,15 @@ namespace OptraxDAL.Models.Admin
 
         public int? IconID { get; set; }
 
+
         public virtual Icon? Icon { get; set; }
         public virtual MapObject? MapObject { get; set; }
         public virtual Location? Parent { get; set; } = null;
 
+
         public virtual ICollection<Location>? Children { get; set; } = [];
         public virtual ICollection<StockItem>? StockItems { get; set; } = [];
+
 
 
         [InverseProperty(nameof(InventoryTransfer.Origin))]
@@ -36,12 +49,13 @@ namespace OptraxDAL.Models.Admin
         [InverseProperty(nameof(InventoryTransfer.Destination))]
         public virtual ICollection<InventoryTransfer>? TransfersIn { get; set; } = [];
 
+
         [NotMapped]
         public bool HasAddress { get; set; } = false;
-        [NotMapped]
-        public string LocationType { get; set; } = string.Empty;
+
         [NotMapped]
         public string NameWithType { get => $"{LocationType}: {Name}"; }
+
 
         public object ToTreeNode()
         {
@@ -51,9 +65,14 @@ namespace OptraxDAL.Models.Admin
                 parent = ParentID?.ToString() ?? "#",
                 text = Name,
                 type = LocationType.ToLower(),
-                children = false
+                state = new
+                {
+                    opened = Level < 2,
+                    selected = this is SiteLocation site && site.IsPrimary
+                }
             };
         }
+
 
         public string GetParentNamesString()
         {
@@ -84,14 +103,6 @@ namespace OptraxDAL.Models.Admin
         }
     }
 
-    public abstract class AddressLocation : Location
-    {
-        public int? AddressID { get; set; }
-        public int? BusinessID { get; set; }
-
-        public virtual Address? Address { get; set; } = new();
-        public virtual Business? Business { get; set; }
-    }
 
     public enum LocationType
     {

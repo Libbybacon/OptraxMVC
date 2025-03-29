@@ -1,5 +1,19 @@
-﻿:root {
-    --f-xxxs: .7rem;
+﻿@font-face {
+    font-family: 'Poppins';
+    src: url('/fonts/Poppins-VariableFont_wght.otf') format('opentype');
+    font-weight: 100 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('/fonts/Poppins-Italic-VariableFont_wght.otf') format('opentype');
+    font-weight: 100 900;
+    font-style: italic;
+}
+
+:root {
+    --f-tiny: .7rem;
     --f-xxs: .8rem;
     --f-xs: .9rem;
     --f-sm: 1rem;
@@ -12,7 +26,7 @@
 
 @media only screen and (max-width: 576px) {
     html {
-        font-size: 12px !important;
+        font-size: 11px !important;
     }
 }
 
@@ -39,20 +53,25 @@
         font-size: 14px !important;
     }
 }
-
-/*@media only screen and (min-width: 2400px) {
+@media only screen and (min-width: 1400px) {
     html {
-        font-size: 15px !important;
+        font-size: 14px !important;
     }
-}*/
-
-.ui-widget,
-.ui-widget select {
-    font-family: 'Poppins' !important;
 }
 
-.f-xxxs {
-    font-size: var(--f-xxxs) !important;
+body,
+/*button,*/
+.ui-widget,
+.mapObj-popup,
+button.nav-link,
+.ui-widget select,
+.leaflet-tooltip-top,
+.leaflet-control.title-control {
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.f-tiny {
+    font-size: var(--f-tiny) !important;
 }
 
 .f-xxs {

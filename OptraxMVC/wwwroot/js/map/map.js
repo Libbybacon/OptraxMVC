@@ -1,27 +1,10 @@
-﻿import * as util from './mapUtility.js';
+﻿import * as _obj from './objectManager.js';
+import { setMap } from './mapState.js';
+import { initializeLayers, loadFeatures, getLayerset, getAllLayers } from './layerManager.js';
+import { createIcon } from './objStyleUtil.js';
 
-
-export var map;
-
-var pointsL;
-var linesL;
-var polysL;
-var circlesL;
-
-const urlBase = '/Grow/Map/';
-const typeMap = {
-    marker: 'Point',
-    polyline: 'Line',
-    circle: 'Circle'
-};
-
-const viewProps = {
-    type: 'GET',
-    isDialog: true,
-}
-
-export const layerIndex = new Map();
-
+let map = null;
+let layersets = [];
 $(document).ready(function () {
 
     initializeMap();
@@ -36,21 +19,29 @@ async function initializeMap() {
         center: [39.8283, -98.5795],
         zoom: 4
     });
+    setMap(map);
 
-    map.on('click', function (event) {
-        event.originalEvent.preventDefault();  // Prevent default behavior
-        event.originalEvent.stopPropagation(); // Stop the event from affecting the page
+    map.on('click', function (e) {
+        e.originalEvent.preventDefault();
+        e.originalEvent.stopPropagation();
     });
+
     setMapHeight();
     initializeLayers();
     createControls();
+
     await loadFeatures().then(() => {
+        layersets = getAllLayers()
         zoomToAllLayers();
+
     });
 
     map.on('popupclose', function () {
         $(document).find(".color-picker").spectrum("hide");
+        $('.title-control').show();
     });
+
+
 }
 
 function setMapHeight() {
@@ -63,93 +54,11 @@ function setMapHeight() {
     map.invalidateSize();
 }
 
-async function loadFeatures() {
-    //setInterval(() => {
-    //    await this.loadPoints();
-    //    await this.loadLines();
-    //    await this.loadPolygons();
-    //}, 30000);
-    await util.loadObjects(pointsL, 'Point');
-    await util.loadObjects(linesL, 'Line');
-    await util.loadObjects(polysL, 'Polygon');
-    await util.loadObjects(circlesL, 'Circle');
-}
-
-function initializeLayers() {
-
-    var satellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-        maxZoom: 20,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-        attribution: '© Google'
-    }).addTo(map);
-
-    var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-    });
-
-    var baseMaps = {
-        "Satellite": satellite,
-        "OpenStreetMap": osm,
-    };
-
-    L.control.layers(baseMaps).addTo(map);
-
-    pointsL = L.geoJSON(null, {
-
-        pointToLayer: function (feature, latlng) {
-            const props = feature.properties;
-            props["objType"] = 'Point';
-            const icon = util.iconUtil.createIcon(props.iconPath);
-            const layer = L.marker(latlng, { icon: icon });
-
-            setActions(props, layer);
-            return layer;
-        }
-    }).addTo(map);
-
-    linesL = L.geoJSON(null, {
-        style: function (feature) {
-            return setStyle(feature.properties,);
-        },
-        onEachFeature: (feature, layer) => {
-            feature.properties['objType'] = 'Line';
-            setActions(feature.properties, layer);
-        }
-    }).addTo(map);
-
-    circlesL = L.geoJSON(null, {
-        pointToLayer: function (feature, latlng) {
-            console.log('circle pointToLayer feature', feature, 'properties', feature.properties)
-            feature.properties["fillOpacity"] = 1;
-            if (feature.properties && feature.properties.radius) {
-
-                return L.circle(latlng, feature.properties);
-            }
-            return L.marker(latlng); // just render as marker if no radius
-        },
-        onEachFeature: (feature, layer) => {
-            feature.properties['objType'] = 'Circle';
-            setActions(feature.properties, layer);
-        }
-    }).addTo(map);
-
-    polysL = L.geoJSON(null, {
-        style: function (feature) {
-            feature.properties["fillOpacity"] = 1;
-            return setStyle(feature.properties);
-        },
-        onEachFeature: (feature, layer) => {
-            feature.properties['objType'] = 'Polygon';
-            setActions(feature.properties, layer);
-        }
-    }).addTo(map);
-}
-
 function zoomToAllLayers() {
     let ctr = null;
     const bounds = [];
 
-    [pointsL, linesL, circlesL, polysL].forEach(l => {
+    getAllLayers().forEach(l => {
         if (l.getLayers().length > 0) {
             const b = l.getBounds();
             if (b.isValid()) {
@@ -167,49 +76,12 @@ function zoomToAllLayers() {
     ctr ? map.fitBounds(ctr, { padding: [40, 40] }) : map.setView([39.8283, -98.5795], 4);
 }
 
-function setActions(props, layer) {
-
-    const type = props.objType;
-    layerIndex.set(props.id, layer);
-
-    layer.bindTooltip(props.name, { permanent: true, direction: "top" });
-
-    layer.on('click', async function (e) {
-
-        util.curLayer.val = layer;
-
-        const center = (type == 'Point' || type == 'Circle') ? e.latlng : layer.getBounds().getCenter();
-
-        util.getEdit(props.id, type, center)
-    })
-
-    layer.on('remove', function () {
-        layerIndex.delete(props.id);
-        map.removeLayer(layer);
-        map.closePopup();
-    });
-}
-
-function setStyle(props) {
-    let style = {
-        color: props.color,
-        weight: props.weight,
-        dashArray: props.dashArray,
-        fillColor: props.fillColor,
-        fillOpacity: props.fillOpacity
-    }
-    if (props.objType == 'Circle') {
-        style["radius"] = props.radius;
-    }
-    return style;
-}
-
 function createControls() {
-    L.Marker.prototype.options.icon = util.iconUtil.createIcon('https://img.icons8.com/?size=100&id=43731&format=png&color=263EDE')
+    L.Marker.prototype.options.icon = createIcon('https://img.icons8.com/?size=100&id=43731&format=png&color=263EDE')
 
     const drawControl = new L.Control.Draw({
         draw: {
-            polyline: true, // enable polyline drawing
+            polyline: true,
             polygon: true,
             rectangle: true,
             circle: true,
@@ -220,15 +92,8 @@ function createControls() {
     map.addControl(drawControl);
 
     map.on('draw:created', function (e) {
-        console.log('draw type', e.layerType);
-        console.log('e', e);
-        const layersetMap = {
-            marker: pointsL,
-            polyline: linesL,
-            circle: circlesL
-        };
-        let layerset = layersetMap[e.layerType] ?? polysL;
-        util.addObject(e, layerset);
+        let layerset = getLayerset(e.layerType);
+        _obj.addObject(e, layerset);
 
     });
 
@@ -236,30 +101,27 @@ function createControls() {
 
     const TitleControl = L.Control.extend({
         onAdd: function () {
-            const mapTitle = L.DomUtil.create('div', 'leaflet-control title-control');
-
+            const titleDiv = L.DomUtil.create('div', 'leaflet-control title-control');
             const $title = document.getElementById('map-title');
+
             if ($title) {
-                mapTitle.innerHTML = $title.innerHTML;
+                titleDiv.innerHTML = $title.innerHTML;
             }
 
-            L.DomEvent.disableClickPropagation(mapTitle);
+            L.DomEvent.disableClickPropagation(titleDiv);
 
             $(document).on('click', '.map-toggle', function (e) {
-                console.log('click')
+                /*console.log('click')*/
                 $('.map-info').toggleClass('d-none');
                 e.stopPropagation()
             })
 
-            util.mapFormUtil.setFormListeners('#mapForm');
+            _obj.mapFormUtil.setFormListeners('#mapForm');
 
-
-            return mapTitle;
+            return titleDiv;
         }
     });
-
     map.addControl(new TitleControl({ position: 'topcenter' }));
-
 }
 
 function addTopCenterPosition() {

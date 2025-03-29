@@ -9,7 +9,8 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    @* <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&display=swap" rel="stylesheet"> *@
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
 
     <!-- jQuery, Bootstrap -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/themes/base/jquery-ui.min.css" integrity="sha512-TFee0335YRJoyiqz8hA8KV3P0tXa5CpRBSoM0Wnkn7JoJx1kaq1yXL/rb8YFpWXkMOjRcv5txv+C6UluttluCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -36,9 +37,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
 
 
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/nav.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/fonts.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site/fonts.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site/buttons.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site/nav.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/OptraxMVC.styles.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -51,8 +53,7 @@
                 @RenderBody()
             </main>
             @* Popup *@
-            <div id="overlay" class="ui-widget-overlay"></div>
-            <div id="popupDialog" class="popup"><div id="dialogContent"></div></div>
+           @*  <div id="overlay" class="ui-widget-overlay"></div> *@
             <div id="popup" class="popup">
                 <div id="popupTop" class="popup-top w-100 px-2">
                     <div id="popupTopInner" class="popup-top-inner d-flex w-100">
@@ -90,6 +91,9 @@
 
     <!-- jsTree -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js" defer></script>
+
+    <!-- iMask -->
+    <script src="https://unpkg.com/imask"></script>
 
     <script src="https://kit.fontawesome.com/6e68fe6bdb.js" crossorigin="anonymous"></script>
     <script type="module" src="~/js/site.js" asp-append-version="true"></script>

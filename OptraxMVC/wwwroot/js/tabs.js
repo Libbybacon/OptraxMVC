@@ -2,12 +2,13 @@
 var curPage;
 
 $(document).ready(function () {
+
     $(".top-tabs .nav-link").on("click", function () {
         loadTab($(this));
     });
 
-
     curPage = $('#tab-page').val();
+
     let storedTab = sessionStorage.getItem(`${curPage}-active`);
 
     if (storedTab && storedTab !== "undefined") {
@@ -18,6 +19,8 @@ $(document).ready(function () {
         let firstTab = $(".top-tabs .nav-link.active");
         loadTab($(firstTab));
     }
+
+
 });
 
 function loadTab(tab) {
@@ -39,10 +42,12 @@ function loadTab(tab) {
         url: path,
         type: "GET",
         success: function (view) {
+            //document.getElementById(tabKey).innerHTML(view);
             $innerTab.html(view);
             $innerTab.hasClass("loaded");
         },
         error: function () {
+            //document.getElementById(tabKey).innerHTML('<div class="tab-div"><div class="tab-inner error-div">Coming Soon!</div></div>');
             $innerTab.html('<div class="tab-div"><div class="tab-inner error-div">Coming Soon!</div></div>');
         }
     });

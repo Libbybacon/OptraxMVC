@@ -1,5 +1,5 @@
-﻿<link rel="stylesheet" href="~/css/locations.css" />
-<link rel="stylesheet" href="~/css/map.css" />
+﻿<link rel="stylesheet" href="~/css/grow/locations.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/grow/map.css" asp-append-version="true" />
 @model LocationVM
 
 @{
@@ -9,7 +9,7 @@
 <div id="locations" class="loc-layout d-flex" data-hassite="@(Model.IsFirstSite.ToString().ToLower())">
     <div class="loc-tree inner-layout">
         <div class="loc-title">All Locations</div>
-        <button id="add-new-loc" class="tree-btn save-btn">Add New</button>
+        <button id="add-new-loc" class="tree-btn btn-grn btn-sm my-2">Add New</button>
         <div id="locationTree"></div>
     </div>
 
@@ -27,7 +27,7 @@
 
                     @if (active)
                     {
-                        <div id="loc-details-partial">
+                        <div id="loc-partial">
                             <partial name="_Location" model="Model" />
                         </div>
                     }
@@ -55,6 +55,7 @@
         </div>
     </div>
 </div>
+@* <script src="~/assets/js/vendors.bundle.js"></script> *@
+<script src="~/assets/js/mapPage.bundle.js"></script>
+@* <script src="~/assets/js/map.bundle.js"></script> *@
 
-<script type="module" src="/js/map/map.js"></script>
-<script type="module" src="/js/grow/locations.js"></script>

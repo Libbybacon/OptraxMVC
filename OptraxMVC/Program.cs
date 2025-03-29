@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
 using OptraxDAL.Models.Admin;
 using OptraxMVC.Models;
+using OptraxMVC.Models.Formatters;
 using OptraxMVC.Models.ModelBinders;
 using OptraxMVC.Services;
 using OptraxMVC.Services.Inventory;
@@ -38,14 +39,17 @@ builder.Services.AddControllersWithViews(options =>
 
 builder.Services.AddRazorPages();
 builder.Services.AddMemoryCache();
+
+builder.Services.AddScoped<IMapService, MapService>();
+builder.Services.AddScoped<IPlantService, PlantService>();
 builder.Services.AddScoped<IOptionsService, OptionsService>();
 builder.Services.AddScoped<IResourceService, ResourceService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IPlantService, PlantService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
-builder.Services.AddScoped<IMapService, MapService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddScoped<IPhoneFormatter, PhoneFormatter>();
 
 
 

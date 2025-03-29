@@ -98,7 +98,7 @@
     clip-path: inset(0 0 0 25px);
     overflow: hidden;
     z-index: 10002;
-    box-shadow: var(--box-shdw-sm);
+    box-shadow: var(--shdw-sm);
 }
 
     #nav-hide:hover {

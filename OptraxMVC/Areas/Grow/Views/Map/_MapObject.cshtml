@@ -13,7 +13,7 @@
 <input type="hidden" asp-for="MapID" />
 <input id="changes" type="hidden" name="Changes" />
 
-<div id="edit-content" class="px-2">
+<div id="edit-content" class="px-2 pt-3">
     <div class="row col-12 w-100 px-0 m-0">
         <div class="col-12">
             <label asp-for="Name"></label>
@@ -36,8 +36,8 @@
         </div>
     </div>
 </div>
-<div class="popup-btns d-flex w-100 justify-content-center">
-    <button type="submit" class="save-btn @(formVM.IsNew ? "" : "d-none")">Save @formVM.Type</button>
-    <button type="button" class="delete-btn me-3 @(formVM.IsNew ? "d-none" : "")" data-id="@Model.ID" data-type="Circle">Delete</button>
-    <button type="submit" class="update-btn ms-3 @(formVM.IsNew ? "d-none" : "")">Save Changes</button>
+<div class="popup-btns d-flex w-100 justify-content-center pb-3">
+    @* <button type="submit" class="btn-grn btn-sm @(formVM.IsNew ? "" : "d-none")">Save @formVM.Type</button> *@
+    <button type="button" class="btn-red btn-sm me-3 @(formVM.IsNew ? "d-none" : "")" data-id="@Model.ID" data-type="Circle">Delete</button>
+    <button type="submit" class="btn-grn btn-sm ms-3">Save</button>
 </div>

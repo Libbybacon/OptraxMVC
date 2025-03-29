@@ -1,0 +1,251 @@
+﻿:root {
+    /**/
+    --blue-xlt: #F1F4F9;
+    --blue-lt: #C5D2E7;
+    --blue-md: #4E689E;
+    --blue-dk: #0F296C;
+    --blue-xdk: #030726;
+    /**/
+    /*--grn-xlt: #B9DFD5;*/
+    --grn-xlt: #EEF7F5;
+    --grn-lt: #61B39F;
+    --grn-md: #378874;
+    --grn-dk: #195C4B;
+    --grn-xdk: #124034;
+    /**/
+    --red-lt: #FEFDFD;
+    --red: #B60D0D;
+    /**/
+    --tan: #FAF8F2;
+    /**/
+    --gray-lt: #F5F5F5;
+    --gray-md: #8F8F8F;
+    --gray-dk: #303030;
+    /**/
+    --highlight: #FFFFC2;
+    /**/
+    --br: 4px;
+    /**/
+    --shdw: 0px 1px 6px rgba(0,0,0,0.4);
+    --shdw-hov: 0px 2px 7px rgba(0,0,0,.4);
+    --shdw-sm: 0px 1px 2px rgba(0,0,0,0.4);
+    --shdw-sm-hov: 0px 1px 4px rgba(0,0,0,0.2);
+    /**/
+    --input-border: 1px solid var(--gray-dk);
+    --input-outline: 2px solid var(--grn-dk);
+    --input-shdw: 0 0 0 0.15rem var(--grn-md);
+}
+
+@media only screen and (max-width: 576px) {
+    .dash-container {
+        max-height: calc(100vh - 40px) !important;
+    }
+
+    #popup {
+        min-width: 450px;
+    }
+
+    .inner-layout {
+        height: calc(100vh-35px);
+        margin-top: 35px;
+    }
+}
+
+
+@media only screen and (min-width: 576) {
+    #popup {
+        min-width: 450px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    #popup {
+        min-width: 600px;
+    }
+
+    .ui-draggable {
+        max-width: 400px !important;
+    }
+
+    .inner-layout {
+        height: calc(100vh-50px);
+    }
+}
+
+/*@media only screen and (min-width: 992px) {
+    #popup.ui-draggable {
+        max-width: 400px;
+    }
+}*/
+
+@media only screen and (min-width: 1200px) {
+    #popup {
+        max-width: 600px;
+    }
+}
+
+/* Site Layout */
+html {
+    height: 100vh;
+    font-size: 12px;
+}
+
+body {
+    font-size: 1rem;
+    font-weight: 375;
+    margin-bottom: 0;
+    overflow: hidden;
+    letter-spacing: .3px;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 500px !important;
+    background-color: var(--tan) !important;
+    /*font-family: 'Quicksand', sans-serif !important;*/
+}
+
+.content {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex: 1 1 auto;
+    overflow: hidden;
+    position: relative;
+}
+
+main {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+#clr-picker {
+    pointer-events: auto !important;
+    z-index: 100000;
+}
+
+
+.box-shadow {
+    box-shadow: var(--shdw);
+}
+
+.y-scroll {
+    overflow-y: auto;
+}
+
+.show-y {
+    overflow-y: scroll !important;
+}
+
+.no-wrap {
+    white-space: nowrap;
+}
+
+.readonly {
+    pointer-events: none !important;
+    background-color: var(--gray-lt);
+}
+
+/* Inputs */
+label {
+    font-weight: 465;
+    letter-spacing: .5px;
+    padding-left: 3px;
+    /*font-size: var(--f-s);*/
+}
+
+.attr.form-control,
+.attr.form-select {
+    font-size: var(--f-xs) !important;
+}
+
+.form-select {
+    max-height: 100px !important;
+    overflow-y: auto;
+}
+
+    .form-select option {
+        padding-top: 2px;
+        padding-bottom: 2px;
+        font-size: var(--f-xs);
+    }
+
+.form-control, .form-select {
+    border: var(--input-border);
+}
+
+    .btn:focus,
+    .btn:active:focus,
+    .form-select:focus,
+    .form-control:focus,
+    .form-check-input:focus,
+    .btn-link.nav-link:focus {
+        border: var(--input-border) !important;
+        outline: var(--input-outline) !important;
+        box-shadow: var(--input-shdw) !important;
+    }
+
+.form-check-input {
+    border: var(--input-border) !important;
+}
+
+    .form-check-input:checked {
+        border-color: var(--grn-dk);
+        background-color: var(--grn-md);
+    }
+
+input[type=checkbox]:hover, input[type=radio]:hover {
+    cursor: pointer;
+}
+
+/* Messages */
+
+.msg {
+    width: 100%;
+    padding: .2rem;
+    margin-top: 5px;
+    font-weight: 500;
+    text-align: center;
+    position: absolute;
+}
+
+.success {
+    color: var(--grn-dk);
+    background-color: var(--grn-xlt);
+}
+
+.error {
+    color: var(--red-dk);
+    background-color: var(--red-lt);
+}
+
+.val-msg,
+.field-validation-error span {
+    color: red;
+    padding-top: 1rem;
+    padding-left: 3px;
+    font-size: var(--f-xxs);
+}
+
+
+/* Shows when error loading page -- Coming Soon! msg */
+.error-div {
+    display: flex;
+    color: var(--grn-dk);
+    font-size: 3rem;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.form-note {
+    font-weight: 500;
+    font-style: italic;
+    text-align: center;
+    margin-top: 5px;
+    color: var(--blue-dk);
+}
+
+.highlight td {
+    background-color: var(--highlight) !important;
+    transition: background-color 1s ease-in-out;
+}
