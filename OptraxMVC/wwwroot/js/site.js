@@ -1,4 +1,23 @@
-﻿import popupHandler from "./utilities/popup.js";
+﻿// jQuery + Bootstrap
+import $ from 'jquery';
+window.$ = $;
+window.jQuery = $;
+import 'jquery-ui';
+import 'bootstrap';
+
+// Leaflet
+import L from 'leaflet';
+import 'leaflet-draw'; // also attaches to Leaflet
+
+// Choices.js
+import 'choices.js';
+
+// Driver.js
+import Driver from 'driver.js';
+import 'driver.js';
+
+
+import popupHandler from "./utilities/popup.js";
 
 var hideNav;
 

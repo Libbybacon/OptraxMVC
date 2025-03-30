@@ -13,24 +13,32 @@
     <Compile Remove="Areas\Inventory\Views\Shared\**" />
     <Compile Remove="Views\Account\**" />
     <Compile Remove="Views\Shared\EditorTemplates\**" />
+    <Compile Remove="wwwroot\css\grow\**" />
+    <Compile Remove="wwwroot\css\site\**" />
     <Content Remove="Areas\Admin\**" />
     <Content Remove="Areas\Grow\Data\**" />
     <Content Remove="Areas\Grow\Views\Plants\EditorTemplates\**" />
     <Content Remove="Areas\Inventory\Views\Shared\**" />
     <Content Remove="Views\Account\**" />
     <Content Remove="Views\Shared\EditorTemplates\**" />
+    <Content Remove="wwwroot\css\grow\**" />
+    <Content Remove="wwwroot\css\site\**" />
     <EmbeddedResource Remove="Areas\Admin\**" />
     <EmbeddedResource Remove="Areas\Grow\Data\**" />
     <EmbeddedResource Remove="Areas\Grow\Views\Plants\EditorTemplates\**" />
     <EmbeddedResource Remove="Areas\Inventory\Views\Shared\**" />
     <EmbeddedResource Remove="Views\Account\**" />
     <EmbeddedResource Remove="Views\Shared\EditorTemplates\**" />
+    <EmbeddedResource Remove="wwwroot\css\grow\**" />
+    <EmbeddedResource Remove="wwwroot\css\site\**" />
     <None Remove="Areas\Admin\**" />
     <None Remove="Areas\Grow\Data\**" />
     <None Remove="Areas\Grow\Views\Plants\EditorTemplates\**" />
     <None Remove="Areas\Inventory\Views\Shared\**" />
     <None Remove="Views\Account\**" />
     <None Remove="Views\Shared\EditorTemplates\**" />
+    <None Remove="wwwroot\css\grow\**" />
+    <None Remove="wwwroot\css\site\**" />
   </ItemGroup>
 
   <ItemGroup>

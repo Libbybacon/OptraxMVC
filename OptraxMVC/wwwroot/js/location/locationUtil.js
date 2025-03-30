@@ -1,5 +1,7 @@
 ﻿import apiService from '../utilities/api.js';
 
+const urlBase = '/Grow/Locations/';
+
 
 export async function loadPartial(props) {
     const response = await apiService.get(`${urlBase}${props.action}/`, props.data);
@@ -12,6 +14,4 @@ export async function loadPartial(props) {
 
     const view = await response.data;
     $("#loc-partial").html(view);
-
-    locFormUtil.setFormListeners();
 }

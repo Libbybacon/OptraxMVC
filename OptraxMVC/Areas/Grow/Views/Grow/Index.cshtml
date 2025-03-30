@@ -1,6 +1,6 @@
 ﻿@model OptraxMVC.Models.TabsVM
-
-<link rel="stylesheet" href="~/css/site/tabs.css" asp-append-version="true" />
+@* 
+<link rel="stylesheet" href="~/css/site/tabs.css" asp-append-version="true" /> *@
 
 @{
     ViewData["Page"] = "Grow";
@@ -11,7 +11,7 @@
 <partial name="_Tabs" model="Model" />
 
 @section Scripts {
-    <script src="~/assets/js/tabs.bundle.js"></script>
+    <script src="~/dist/tabs.bundle.js"></script>
     @{        
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

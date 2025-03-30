@@ -22,7 +22,9 @@ function setLocListeners() {
 
     $('#add-new-loc').on('click', function () {
         const props = { action: 'LoadCreate', data: { type: 'Field' } }
-        loadPartial(props);
+        loadPartial(props).then = () => {
+            locFormUtil.setFormListeners();
+        };
     })
 
     $('#locForm .toggle-edit').on('click', function () {

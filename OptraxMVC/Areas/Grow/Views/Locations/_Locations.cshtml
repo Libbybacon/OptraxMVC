@@ -1,5 +1,5 @@
-﻿<link rel="stylesheet" href="~/css/grow/locations.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/grow/map.css" asp-append-version="true" />
+﻿@* <link rel="stylesheet" href="~/css/grow/locations.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/grow/map.css" asp-append-version="true" /> *@
 @model LocationVM
 
 @{
@@ -8,9 +8,11 @@
 
 <div id="locations" class="loc-layout d-flex" data-hassite="@(Model.IsFirstSite.ToString().ToLower())">
     <div class="loc-tree inner-layout">
-        <div class="loc-title">All Locations</div>
-        <button id="add-new-loc" class="tree-btn btn-grn btn-sm my-2">Add New</button>
-        <div id="locationTree"></div>
+        <div class="tree-div">
+            <div class="loc-title">All Locations</div>
+            <button id="add-new-loc" class="tree-btn btn-grn btn-sm my-2">Add New</button>
+            <div id="locationTree"></div>
+        </div>
     </div>
 
     <div id="loc-details" class="inner-layout view-tabs">
@@ -23,7 +25,7 @@
                 bool active = tab.Name == "Details";
                 string key = tab.TabKey;
 
-                <div id="@key" class="tab-pane fade h-100 @(active ? "show active loaded" : "")" role="tabpanel" aria-labelledby="@key-tab">
+                <div id="@key" class="tab-pane fade h-100 @(active ? "show active loaded" : "")"  role="tabpanel" aria-labelledby="@key-tab">
 
                     @if (active)
                     {
@@ -32,6 +34,7 @@
                         </div>
                     }
                 </div>
+               
             }
         </div>
     </div>
@@ -55,7 +58,6 @@
         </div>
     </div>
 </div>
-@* <script src="~/assets/js/vendors.bundle.js"></script> *@
-<script src="~/assets/js/mapPage.bundle.js"></script>
-@* <script src="~/assets/js/map.bundle.js"></script> *@
+@* <script src="~/dist/map.bundle.js"></script> *@
+<script src="~/dist/location.bundle.js"></script>
 

@@ -1,8 +1,10 @@
-﻿@media only screen and (max-width: 576px) {
+﻿$tab-pad: .4rem;
+
+@media only screen and (max-width: 576px) {
     .top-tabs {
         height: 35px !important;
-        padding-top: .4rem;
-        padding-bottom: .4rem;
+        padding-top: $tab-pad;
+        padding-bottom: $tab-pad;
     }
 
     .inner-tab {
@@ -18,8 +20,8 @@
 
     .top-tabs {
         height: 35px !important;
-        padding-top: .4rem;
-        padding-bottom: .4rem;
+        padding-top: $tab-pad;
+        padding-bottom: $tab-pad;
     }
 
     .inner-tab {
@@ -36,8 +38,8 @@
 
     .top-tabs {
         height: 35px;
-        padding-top: .4rem;
-        padding-bottom: .4rem;
+        padding-top: $tab-pad;
+        padding-bottom: $tab-pad;
     }
 }
 
@@ -50,14 +52,13 @@
     position: absolute;
     align-items: center;
     justify-content: center;
-    background: var(--grn-xlt);
+    background: $grn-bg;
 }
 
     .top-tabs .nav-tabs {
         border-bottom: none;
-        background: var(--grn-xlt);
+        background: $grn-bg;
     }
-
 
 
 .top-tabs .nav-tabs .nav-link {
@@ -65,7 +66,7 @@
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     margin-bottom: 0;
-    font-size: var(--f-md);
+    font-size: $f-md;
 }
 
     .nav-tabs .nav-link.active {
@@ -74,23 +75,20 @@
 
 .top-tabs .nav-tabs .nav-link:hover {
     border: none;
-    color: var(--grn-xlt);
-    background: var(--grn-lt);
+    color: $grn-bg;
+    background: $grn-lt;
 }
-
-
 
 .top-tabs .nav-tabs .nav-link.active,
 .top-tabs .nav-tabs .nav-link.active:hover,
 .top-tabs .nav-tabs .nav-item.show .nav-link,
 .top-tabs .nav-tabs .nav-item.show .nav-link:hover {
-    /*background: linear-gradient(var(--tan-md), var(--tan-dk));*/
-    background: var(--grn-dk);
+    background: $grn-dk;
     color: white;
 }
 
 .top-tabs .divider {
-    border-right: 2px ridge var(--grn-dk) !important;
+    border-right:  border($grn-dk,2px, ridge) !important;
 }
 
 .inner-tab {
@@ -100,16 +98,16 @@
 .tab-div {
     height: 100%;
     /*padding-top: 15px;*/
-    background: var(--tan);
+    background: $tan;
 }
 
 .tab-inner {
-    margin-left: auto;
-    margin-right: auto;
     width: 99%;
-    background-color: var(--tan);
-    /*box-shadow: 2px .25rem .75rem rgba(0, 0, 0, .4);*/
     padding: 0;
     padding-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: $tan;
+    /*box-shadow: 2px .25rem .75rem rgba(0, 0, 0, .4);*/
     min-height: calc(100vh - 80px) !important;
 }
