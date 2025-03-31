@@ -174,7 +174,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                 ViewBag.Action = action;
                 ViewBag.ShowEdit = action == "Create";
 
-                ViewData["Options"] = await _Options.LoadOptions(["StateSelects"], model.Level);
+                ViewData["Options"] = await _Options.LoadOptions(["StateSelects"]);
 
                 return PartialView("_Location", model);
             }
