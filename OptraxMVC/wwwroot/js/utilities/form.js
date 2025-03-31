@@ -68,7 +68,7 @@ export const formUtil = {
     showHideBtns: function (formID) {
         $form = $(formID);
 
-        $(formID + ' button.toggle-edit').off('click').on('click', function () {
+        $(formID + ' button.toggle-edit').on('click', function () {
             console.log('formjs showHideBtns click')
             $(formID + ' button.form-btn').toggleClass('d-none');
             $('.m-toggle').toggleClass('d-none');

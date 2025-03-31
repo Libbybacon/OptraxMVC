@@ -13,7 +13,6 @@ namespace OptraxMVC.Services.Inventory
         Task<ResponseVM> CreateAsync(Resource rsrc);
         Task<ResponseVM> UpdateAsync(Resource rsrc);
         Task<Category[]?> GetResourceCategoriesAsync(int categoryId);
-
     }
 
     public class ResourceService(OptraxContext context) : IResourceService

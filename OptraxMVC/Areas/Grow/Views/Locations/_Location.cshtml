@@ -17,12 +17,14 @@
 
         <input type="hidden" asp-for="ID" />
         <input type="hidden" asp-for="Level" />
+        <input type="hidden" asp-for="ParentID" />
         <input type="hidden" asp-for="IsPrimary" />
         <input type="hidden" asp-for="LocationType" />
 
         <div class="display loc-disp">
             <div class="m-toggle @display">
                 <div class="loc-name">@Model.Name</div>
+                <div class="loc-parents">@Model.ParentString</div>
                 @if (!string.IsNullOrEmpty(Model.Details))
                 {
                     <p class="loc-details">@Model.Details</p>
@@ -41,20 +43,21 @@
             }
             else
             {
-                <div class="@(Model.Level > 0 ? "col-6" : "col-12") text-center pe-2">
-                    <label>LocationType</label><br />
-                    <label>@Model.LocationType</label>
-                    @* <input asp-for="LocationType" class="form-control" readonly /> *@
-                </div>
 
                 @if (Model.Level > 0)
                 {
-                    <div class="col-6 ps-2">
-                        <label>Parent Location</label>
-                        <select asp-for="ParentID" asp-items="@options.LocSelectsByLevel" class="form-select attr"></select>
-                        <span asp-validation-for="ParentID" class="val-msg"></span>
+                    <div class="col-6 ps-2 text-center">
+                        <label>Parents</label><br />
+                        <div>@Model.ParentString</div>
                     </div>
                 }
+
+                <div class="@(Model.Level > 0 ? "col-6" : "col-12") text-center pe-2">
+                    <label>LocationType</label><br />
+                    <div>@Model.LocationType</div>
+                </div>
+
+
             }
             <div class="col-12 mt-2">
                 <label asp-for="Name"></label>
@@ -63,11 +66,38 @@
             </div>
             <div class="col-12">
                 <label asp-for="Details"></label>
-                <textarea asp-for="Details" class="form-control attr" rows="3"></textarea>
+                <textarea asp-for="Details" class="form-control attr" rows="2"></textarea>
                 <span asp-validation-for="Details" class="val-msg"></span>
             </div>
-
+            @if (Model.HasArea)
+            {
+                <div class="col-12 area-explain"></div>
+                <div class="col-6 pe-2">
+                    <div class="col-12 mb-3"><label>Parent Length:</label> <span class="area-span">@Math.Round(Model.ParentLength ?? 0, 2) m</span></div>
+                    <label asp-for="Length"></label>
+                    <div class="input-group">
+                        <input asp-for="Length" type="number" step="0.01" class="form-control attr" value="@Math.Round(Model.Length ?? 0, 2)" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">m</span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="Length" class="val-msg"></span>
+                </div>
+                <div class="col-6 ps-2">
+                    <div class="col-12 mb-3"><label>Parent Width:</label> <span class="area-span">@Math.Round(Model.ParentWidth ?? 0, 2) m</span></div>
+                    <label asp-for="Width"></label>
+                    <div class="input-group">
+                        <input asp-for="Width" type="number" step="0.01" class="form-control attr" value="@Math.Round(Model.Width ?? 0, 2)" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">m</span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="Width" class="val-msg"></span>
+                </div>
+            }
         </div>
+
+
 
         @if (Model.HasAddress)
         {
@@ -78,7 +108,7 @@
 
         <div class="popup-btns d-flex py-2 justify-content-center w-100">
             <button type="button" class="toggle-edit m-toggle btn-gray @display">Edit</button>
-            <button type="button" class="btn-red m-toggle me-3 @hideOnFirst">Delete</button>
+            @* <button type="button" class="btn-red m-toggle me-3 @hideOnFirst">Delete</button> *@
             <button type="submit" class="btn-grn  m-toggle mx-3 @edit">Save</button>
             <button type="button" class="toggle-edit  m-toggle btn-gray ms-3 d-none">Cancel</button>
         </div>

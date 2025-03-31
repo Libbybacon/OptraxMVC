@@ -1,14 +1,20 @@
 ﻿@media only screen and (max-width: 576px) {
-	// Styles here
+	.inner-layout {
+		height: calc(100vh - 35px);
+		margin-top: 35px;
+	}
 }
 
 @media only screen and (min-width: 576px) {
-	// Fix: missing 'px' in original min-width
+	.inner-layout {
+		height: calc(100vh - 35px);
+		margin-top: 35px;
+	}
 }
 
 @media only screen and (min-width: 768px) {
 	.inner-layout {
-		height: calc(100vh - 45px) !important;
+		height: calc(100vh - 45px);
 		margin-top: 45px;
 	}
 }
@@ -24,7 +30,7 @@
 
 	.nav-tabs {
 		color: #443122;
-		padding-top: 12px;
+		padding-top: 15px;
 		background: $tan;
 		padding-bottom: 0;
 		border-bottom: border($grn-md, 2px, ridge);
@@ -34,56 +40,41 @@
 		white-space: nowrap;
 
 		.nav-item {
-			padding-right: 3px !important;
+			padding-right: 0px !important;
 			padding-left: 0px !important;
+			box-shadow: 3px -1px 10px rgba(31, 62, 47, 0.2);
+		}
 
+		.nav-link {
+			color: $grn-xdk;
+			font-size: $f-md;
+			border-radius: 0;
+			/*margin-left: -8px;*/
+			background: $grn-bg;
+			border: border($grn-bg);
+			border-bottom: none;
+			position: relative;
+			border-top-left-radius: 4px;
+			border-top-right-radius: 4px;
+			box-shadow: 2px 0 5px rgba(31, 62, 47, 0.3);
 
-			.nav-link {
-				color: $grn-xdk;
-				font-size: $f-md;
-				border-radius: 0;
-				/*margin-left: -8px;*/
-				background: $grn-bg;
-				border: border($grn-bg);
+			&:hover {
+				color: white;
+				background: $grn-lt;
+				border: border($grn-lt);
 				border-bottom: none;
-				position: relative;
-				border-top-left-radius: 4px;
-				border-top-right-radius: 4px;
-				box-shadow: 3px -1px 10px rgba(31, 62, 47, 0.2);
-
-				&:hover {
-					// border: none;
-					color: white;
-					background: $grn-lt;
-					border: border($grn-lt);
-					border-bottom: none;
-					box-shadow: 3px -1px 10px rgba(31, 62, 47, 0.2);
-				}
-
-				&::after {
-					content: "";
-					position: absolute;
-					top: 0;
-					right: 0;
-					width: 2px;
-					height: 100%;
-					background: linear-gradient(to right, $grn-bg, $grn-xlt);
-					pointer-events: none;
-				}
+				text-shadow: shdw(text);
+				box-shadow: 3px -1px 5px rgba(31, 62, 47, 0.4);
 			}
 		}
 
 		.nav-link.active,
 		.nav-link.active:hover {
-			// border: none;
 			color: white;
-			border-color: $grn-md;
-			background-color: $grn-md;
-			box-shadow: 3px -1px 10px rgba(31, 62, 47, 0.2);
-		}
-		.nav-link.active::after{
-			background: none;
-					background: linear-gradient(to right, $grn-md, rgba(31, 62, 47, 0.01));
+			text-shadow: shdw(text);
+			border-color: $grn-dk;
+			background-color: $grn-dk;
+			box-shadow: 3px -1px 5px rgba(31, 62, 47, 0.3);
 		}
 	}
 }
@@ -129,13 +120,6 @@
 	flex-grow: 1;
 	overflow: auto;
 	position: relative;
-}
-
-.jstree-default {
-	.jstree-clicked {
-		background: $grn-lt;
-		color: white;
-	}
 }
 
 .edit-div {
@@ -211,4 +195,32 @@
 	pointer-events: none;
 	filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.3));
 	// opacity: 0.9;
+}
+
+.jstree-default {
+	padding-right: 2px;
+
+	.jstree-clicked {
+		color: white;
+		background: $grn-md;
+		text-shadow: shdw(text);
+	}
+
+	a.jstree-anchor {
+		margin-top: 3px;
+	}
+}
+
+.jstree-anchor.jstree-clicked:hover {
+	background: $grn-md;
+}
+
+.jstree-anchor:hover {
+	color: white;
+	background: $grn-lt;
+	text-shadow: shdw(text);
+}
+
+.jstree-contextmenu{
+	z-index: 100000;
 }

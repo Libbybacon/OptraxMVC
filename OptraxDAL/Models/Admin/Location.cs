@@ -15,6 +15,13 @@ namespace OptraxDAL.Models.Admin
         public virtual Business? Business { get; set; }
     }
 
+    public abstract class AreaLocation : Location
+    {
+        public decimal? Length { get; set; }
+        public decimal? Width { get; set; }
+
+    }
+
     [Table("Locations", Schema = "Admin")]
     public abstract class Location : TrackingBaseDetails
     {
@@ -42,20 +49,14 @@ namespace OptraxDAL.Models.Admin
         public virtual ICollection<StockItem>? StockItems { get; set; } = [];
 
 
-
         [InverseProperty(nameof(InventoryTransfer.Origin))]
         public virtual ICollection<InventoryTransfer>? TransfersOut { get; set; } = [];
 
         [InverseProperty(nameof(InventoryTransfer.Destination))]
         public virtual ICollection<InventoryTransfer>? TransfersIn { get; set; } = [];
 
-
-        [NotMapped]
-        public bool HasAddress { get; set; } = false;
-
         [NotMapped]
         public string NameWithType { get => $"{LocationType}: {Name}"; }
-
 
         public object ToTreeNode()
         {

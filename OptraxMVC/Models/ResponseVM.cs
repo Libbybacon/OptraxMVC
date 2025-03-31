@@ -26,4 +26,9 @@
         public Dictionary<string, string>? ModelError { get; set; }
 
     }
+
+    public class StringResult
+    {
+        public string Value { get; set; } = string.Empty;
+    }
 }

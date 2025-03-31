@@ -13,6 +13,7 @@ namespace OptraxMVC.Services
         Task<List<object>> GetTreeNodesAsync();
         Task<SiteLocation?> GetSiteLocationAsync();
         Task<LocationVM?> GetLocationAsync(int id);
+        LocationVM? LoadCreate(string type, string? parentID);
         Task<ResponseVM> CreateAsync(LocationVM loc);
         Task<ResponseVM> EditAsync(LocationVM loc);
         Task<ResponseVM> DeleteAsync(int id);
@@ -41,14 +42,47 @@ namespace OptraxMVC.Services
 
         public async Task<LocationVM?> GetLocationAsync(int id)
         {
-            Location? dbLoc = await db.Locations.FindAsync(id);
+            Location? dbLoc = await db.Locations.Where(l => l.ID == id && l.UserID == UserID).Include(l => l.Parent).FirstOrDefaultAsync() ?? null;
+
+            if (dbLoc == null || dbLoc.UserID != UserID) { return null; }
 
             if (dbLoc is AddressLocation addLoc)
             {
                 addLoc.Address = await db.Addresses.FindAsync(addLoc.AddressID);
             }
 
-            return (dbLoc == null || dbLoc.UserID != UserID) ? null : new LocationVM(dbLoc);
+            LocationVM vm = new(dbLoc);
+
+            if (dbLoc.ParentID != null)
+            {
+                vm.ParentString = GetParentString((int)dbLoc.ParentID);
+            }
+
+            return vm;
+        }
+
+        public LocationVM? LoadCreate(string type, string? parentID)
+        {
+            try
+            {
+                int parID = int.TryParse(parentID, out int id) ? id : 0;
+
+                LocationVM model = new LocationVM().LoadVM(type, parentID);
+
+                model.ParentString = parID > 0 ? GetParentString(parID) : "";
+                return model;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        private string GetParentString(int parentID)
+        {
+            StringResult? parentString = db.Database.SqlQuery<StringResult>($"EXEC GetLocParentsString {parentID}").AsEnumerable().FirstOrDefault();
+
+            return parentString?.Value ?? string.Empty;
         }
 
         public async Task<ResponseVM> CreateAsync(LocationVM vm)
@@ -80,15 +114,9 @@ namespace OptraxMVC.Services
 
                     addLoc.AddressID = vm.AddressID;
                     addLoc.Address = vm.Address;
-
-                    //if (addLoc.Address != null && vm.Address != null)
-                    //{
-                    //    _mapper.Map(vm.Address, addLoc.Address);
-                    //}
-
-                    //addLoc.BusinessID = vm.BusinessID;
-                    //addLoc.Business = vm.Business;
                 }
+
+
 
                 await db.Locations.AddAsync(loc);
                 await db.SaveChangesAsync();
@@ -131,10 +159,7 @@ namespace OptraxMVC.Services
                     {
                         addLoc.Address = vm.Address; // creates new address
                     }
-                    //addLoc.BusinessID = vm.BusinessID;
-                    //addLoc.Business = vm.Business;
                 }
-
                 await db.SaveChangesAsync();
 
                 return new ResponseVM(true);
@@ -155,6 +180,12 @@ namespace OptraxMVC.Services
 
             loc.IconID = vm.IconID;
             loc.MapObjectID = vm.MapObjectID;
+
+            if (loc is AreaLocation areaLoc)
+            {
+                areaLoc.Length = vm.Length;
+                areaLoc.Width = vm.Width;
+            }
         }
 
         public async Task<ResponseVM> DeleteAsync(int id)

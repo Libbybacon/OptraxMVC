@@ -8,7 +8,6 @@ namespace OptraxDAL.Models.Admin
         public SiteLocation()
         {
             Level = 0;
-            HasAddress = true;
             LocationType = "Site";
         }
 
@@ -16,7 +15,6 @@ namespace OptraxDAL.Models.Admin
         {
             Level = 0;
             LocationType = "Site";
-            HasAddress = true;
             AddressID = addressID;
             BusinessID = businessID;
         }

@@ -3,12 +3,14 @@
 namespace OptraxDAL.Models.Admin
 {
     [Table("Locations", Schema = "Admin")]
-    public class PlotLocation : Location
+    public class PlotLocation : AreaLocation
     {
         public PlotLocation()
         {
             Level = 4;
-            HasAddress = false;
+            Width = 0;
+            Length = 0;
+            LocationType = "Plot";
         }
     }
 }

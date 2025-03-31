@@ -150,8 +150,23 @@ namespace OptraxDAL
 
 
             #region Locations TPH
-            builder.Entity<Location>().HasIndex(x => x.Name).IsUnique();
+            //builder.Entity<Location>().HasIndex(x => x.Name).IsUnique();
             builder.Entity<Location>().Property(x => x.Active).HasDefaultValue(true);
+
+            builder.Entity<GreenhouseLocation>().Property(x => x.Length).HasPrecision(18, 4);
+            builder.Entity<GreenhouseLocation>().Property(x => x.Width).HasPrecision(18, 4);
+
+            builder.Entity<FieldLocation>().Property(x => x.Length).HasPrecision(18, 4);
+            builder.Entity<FieldLocation>().Property(x => x.Width).HasPrecision(18, 4);
+
+            builder.Entity<RowLocation>().Property(x => x.Length).HasPrecision(18, 4);
+            builder.Entity<RowLocation>().Property(x => x.Width).HasPrecision(18, 4);
+
+            builder.Entity<BedLocation>().Property(x => x.Length).HasPrecision(18, 4);
+            builder.Entity<BedLocation>().Property(x => x.Width).HasPrecision(18, 4);
+
+            builder.Entity<PlotLocation>().Property(x => x.Length).HasPrecision(18, 4);
+            builder.Entity<PlotLocation>().Property(x => x.Width).HasPrecision(18, 4);
 
             builder.Entity<Location>().HasDiscriminator<string>("LocationType")
                                       .HasValue<SiteLocation>("Site")

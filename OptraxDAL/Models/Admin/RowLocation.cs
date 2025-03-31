@@ -4,12 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace OptraxDAL.Models.Admin
 {
     [Table("Locations", Schema = "Admin")]
-    public class RowLocation : Location
+    public class RowLocation : AreaLocation
     {
         public RowLocation()
         {
             Level = 2;
-            HasAddress = false;
+            Width = 0;
+            Length = 0;
+            LocationType = "Row";
         }
 
         public virtual ICollection<Crop>? Crops { get; set; } = [];

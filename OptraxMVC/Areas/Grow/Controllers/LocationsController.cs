@@ -64,11 +64,20 @@ namespace OptraxMVC.Areas.Grow.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> LoadCreate(string type)
+        public async Task<IActionResult> LoadCreate(string type, string? parentID)
         {
             try
             {
-                LocationVM model = new LocationVM().LoadVM(type);
+                LocationVM? model = _Location.LoadCreate(type, parentID);
+
+                if (model == null)
+                {
+                    return Json(ResponseVM("Error loading new " + type));
+                }
+                if (model.HasAddress)
+                {
+                    ViewData["Options"] = _Options.LoadOptions(["StateSelects",]);
+                }
 
                 return await GetLocationView(model, "Create");
             }
@@ -112,7 +121,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                 if (model == null)
                     return Json(ResponseVM("Error loading location: not found"));
 
-                return await GetLocationView(model, "Details");
+                return await GetLocationView(model, "Edit");
             }
             catch (Exception ex)
             {
@@ -163,8 +172,9 @@ namespace OptraxMVC.Areas.Grow.Controllers
             try
             {
                 ViewBag.Action = action;
-                ViewBag.ShowEdit = action != "Details";
-                ViewData["Options"] = await _Options.LoadOptions(["StateSelects", "LocTypeSelects", "LocSelectsByLevel"], model.Level);
+                ViewBag.ShowEdit = action == "Create";
+
+                ViewData["Options"] = await _Options.LoadOptions(["StateSelects"], model.Level);
 
                 return PartialView("_Location", model);
             }

@@ -9,7 +9,7 @@ namespace OptraxDAL.Models.Admin
         public RoomLocation()
         {
             Level = 2;
-            HasAddress = false;
+            LocationType = "Room";
         }
 
         public virtual ICollection<Crop>? Crops { get; set; } = [];

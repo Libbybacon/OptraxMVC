@@ -4,6 +4,7 @@
 
 @{
     TabsVM tabs = (TabsVM)(ViewData["LocTabs"] ?? new TabsVM() { Area = "Grow", Tabs = [] });
+    ViewData["IsView"] = true;
 }
 
 <div id="locations" class="loc-layout d-flex" data-hassite="@(Model.IsFirstSite.ToString().ToLower())">
@@ -20,6 +21,7 @@
         <partial name="_TabsTop" model="tabs" />
 
         <div class="tab-content h-100 p-0">
+            <div class="loc-msg"></div>
             @foreach (var tab in tabs.Tabs)
             {
                 bool active = tab.Name == "Details";

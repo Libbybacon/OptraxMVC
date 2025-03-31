@@ -19,11 +19,6 @@
 	#popup {
 		min-width: 450px;
 	}
-
-	.inner-layout {
-		height: calc(100vh - 35px);
-		margin-top: 35px;
-	}
 }
 
 @media only screen and (min-width: 576px) {
@@ -35,14 +30,6 @@
 @media only screen and (min-width: 768px) {
 	#popup {
 		min-width: 600px;
-	}
-
-	.ui-draggable {
-		max-width: 400px !important;
-	}
-
-	.inner-layout {
-		height: calc(100vh - 50px);
 	}
 }
 
@@ -108,9 +95,32 @@ main {
 	background-color: $gray-xlt;
 }
 
+.msg {
+	width: 100%;
+	padding: .2rem;
+	/*margin-top: 5px;*/
+	font-weight: 500;
+	text-align: center;
+	position: relative;
+}
+
+.val-msg,
+.field-validation-error span {
+	color: red;
+	padding-top: 1rem;
+	padding-left: 3px;
+	font-size: $f-xxs;
+}
+
+.error-div {
+	display: flex;
+	font-size: 3rem;
+	align-items: center;
+	justify-content: center;
+}
 .success {
 	color: $grn-xdk;
-	background-color: $grn-bg;
+	background-color: $grn-lt;
 }
 
 .error {
@@ -186,31 +196,13 @@ label {
 	border: $in-border !important;
 }
 
+.input-group-append{
+	.input-group-text{
+		 border-top-left-radius: 0;
+		 border-bottom-left-radius: 0;
+	}
+}
 input[type=checkbox]:hover,
 input[type=radio]:hover {
 	cursor: pointer;
-}
-
-.msg {
-	width: 100%;
-	padding: .2rem;
-	margin-top: 5px;
-	font-weight: 500;
-	text-align: center;
-	position: absolute;
-}
-
-.val-msg,
-.field-validation-error span {
-	color: red;
-	padding-top: 1rem;
-	padding-left: 3px;
-	font-size: $f-xxs;
-}
-
-.error-div {
-	display: flex;
-	font-size: 3rem;
-	align-items: center;
-	justify-content: center;
 }
