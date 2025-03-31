@@ -12,7 +12,6 @@ namespace OptraxDAL.Models.Admin
         [MaxLength(50)]
         public string BusinessType { get; set; } = "Grower";
 
-
         public virtual List<Address> Addresses { get; set; } = [];
         public virtual List<SiteLocation>? Sites { get; set; } = [];
         public virtual List<BuildingLocation>? Buildings { get; set; } = [];

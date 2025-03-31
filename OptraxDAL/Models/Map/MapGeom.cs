@@ -1,4 +1,0 @@
-﻿namespace OptraxDAL.Models.Map
-{
-
-}

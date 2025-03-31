@@ -15,7 +15,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
             TabsVM model = new()
             {
                 Area = "Grow",
-                Tabs = [new Tab("Locations"), new Tab("Plants")]
+                Tabs = [new Tab("Locations", "./Locations/LoadLocations/"), new Tab("Plants")]
             };
 
             return View(model);

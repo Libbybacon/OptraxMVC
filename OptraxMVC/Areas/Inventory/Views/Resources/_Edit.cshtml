@@ -4,7 +4,7 @@
 
 @{
     FormVM formVM = ViewBag.FormVM;
-    OptionsVM drops = (OptionsVM)(ViewData["Dropdowns"] ?? new());
+    OptionsVM drops = (OptionsVM)(ViewData["Options"] ?? new());
     string showView = formVM.IsNew ? "d-none" : "";
     string showEdit = formVM.IsNew ? "" : "d-none";
     string showSelect = formVM.IsNew ? "" : "d-none";
@@ -43,7 +43,7 @@
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.CategoryID)
                         <span class="view @showView">@Html.DisplayFor(m => m.CategoryID)</span>
-                        @Html.DropDownListFor(m => m.CategoryID, drops.TopCategorySelects, "Select Category", new { @class = $"form-select attr {showSelect}"})
+                        @Html.DropDownListFor(m => m.CategoryID, drops.TopCatSelects, "Select Category", new { @class = $"form-select attr {showSelect}"})
                         @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = $"val-msg {showEdit}" })
                     </div>
                     <div class="col-xl-4 col-6">
@@ -75,8 +75,8 @@
             <div class="popup-btns d-flex justify-content-center">
                 <button type="button" class="edit-btn view form-btn @showView">Edit</button>
                 <button type="submit" class="update-btn show-ed form-btn me-2 d-none">Save Changes</button>
-                <button type="button" class="cancel-btn show-ed form-btn ms-2 d-none">Cancel</button>
-                <button type="submit" class="save-btn form-btn @showEdit">Save New Item</button>
+                <button type="button" class="btn-gray show-ed form-btn ms-2 d-none">Cancel</button>
+                <button type="submit" class="btn-grn form-btn @showEdit">Save New Item</button>
 
             </div>
         }

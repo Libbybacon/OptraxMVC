@@ -1,33 +1,35 @@
 ﻿@model MapPoint
 
 @{
-    OptionsVM drops = (OptionsVM)(ViewData["Dropdowns"] ?? new());
+    OptionsVM opts = (OptionsVM)(ViewData["Options"] ?? new());
     int collID = 1;
 }
 
-<label class="mb-2">Select Icon</label>
-<div class="w-100 d-flex">
-    <div class="icon-coll-list">
-        @foreach (var coll in drops.IconsList)
-        {
-            bool hasIcon = coll.ID == collID;
-            <div class="icon-coll-name  @($"coll-name-{coll.ID}")  @(hasIcon ? "selected" : "")" data-collid="@coll.ID">
-                <div class="px-3">@coll.Name</div>
-            </div>
-        }
-    </div>
-    <div class="icon-preview flex-fill">
-        @foreach (var coll in drops.IconsList)
-        {
-            bool hasIcon = coll.ID == collID;
-            <div class="preview-div d-flex flex-wrap @($"preview-coll-{coll.ID}")  @(hasIcon ? "" : "d-none")">
-                @foreach (var icon in coll.Icons)
-                {
-                    <div class="icon-div @(icon.ID == Model.IconID ? "selected" : "") flex-item mx-1 p-2 mb-2" data-iconid="@icon.ID">
-                        <img src="@icon.ImagePath" class="map-icon" />
-                    </div>
-                }
-            </div>
-        }
+<label class="">Select Icon</label>
+<div class="col-12 mb-2">
+    <div class="w-100 d-flex">
+        <div class="icon-coll-list">
+            @foreach (var coll in opts.IconsList)
+            {
+                bool hasIcon = coll.ID == collID;
+                <div class="icon-coll-name  @($"coll-name-{coll.ID}")  @(hasIcon ? "selected" : "")" data-collid="@coll.ID">
+                    <div class="px-3">@coll.Name</div>
+                </div>
+            }
+        </div>
+        <div class="icon-preview flex-fill">
+            @foreach (var coll in opts.IconsList)
+            {
+                bool hasIcon = coll.ID == collID;
+                <div class="preview-div d-flex flex-wrap @($"preview-coll-{coll.ID}")  @(hasIcon ? "" : "d-none")">
+                    @foreach (var icon in coll.Icons)
+                    {
+                        <div class="icon-div @(icon.ID == Model.IconID ? "selected" : "") flex-item mx-1 p-2 mb-2" data-iconid="@icon.ID">
+                            <img src="@icon.ImagePath" class="map-icon" />
+                        </div>
+                    }
+                </div>
+            }
+        </div>
     </div>
 </div>

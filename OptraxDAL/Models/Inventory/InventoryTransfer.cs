@@ -22,10 +22,6 @@ namespace OptraxDAL.Models.Inventory
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTimeOffset Date { get; set; }
 
-        [MaxLength(450)]
-        [ForeignKey("User")]
-        public string UserID { get; set; } = string.Empty;
-
 
         [Required]
         [Display(Name = "Origin")]
@@ -53,8 +49,6 @@ namespace OptraxDAL.Models.Inventory
         public bool NeedsApproval { get; set; } = false;
         public int? ApprovalID { get; set; }
 
-
-        public virtual AppUser? User { get; set; }
         public virtual StockItem? StockItem { get; set; }
         public virtual TransferApproval? Approval { get; set; }
         public virtual TransferEvent? PlantTransfer { get; set; }

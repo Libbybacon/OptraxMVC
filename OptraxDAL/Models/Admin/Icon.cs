@@ -1,5 +1,5 @@
 ﻿using OptraxDAL.Models.BaseClasses;
-using OptraxDAL.Models.Map;
+using OptraxDAL.Models.Maps;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Admin

@@ -2,10 +2,10 @@
 
 @{
     var states = (IEnumerable<SelectListItem>)(ViewData["States"] ?? new());
-    var editable = ViewData["Editable"] as bool? ?? false;
+    var showEdit = ViewData["Editable"] as bool? ?? false;
 
-    string dispClass = editable ? "d-none" : "";
-    string editClass = editable ? "" : "d-none";
+    string dispClass = showEdit ? "d-none" : "";
+    string editClass = showEdit ? "" : "d-none";
 }
 
 <div class="addy-component m-0 p-0">

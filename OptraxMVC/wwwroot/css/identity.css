@@ -80,9 +80,10 @@ body {
     flex: 1 0 auto;
     color: var(--grn-dk);
     font-size: var(--f-sm);
-    background-image: url('/content/bg-floral.jpg');
+    background: var(--tan-lt);
+/*    background-image: url('/content/bg-floral.jpg');
     background-repeat: repeat;
-    background-size: 500px;
+    background-size: 500px;*/
 }
 
     .login-bg hr {

@@ -1,5 +1,15 @@
 ﻿@model TabsVM
 
+@{
+    int t = 0;
+    var z = 200;
+    string top = "";
+    string left = "";
+    string style = "";
+    string isFirst = "";
+
+    bool viewTabs = ViewData["IsView"] as bool? ?? false;
+}
 
 <ul class="nav nav-tabs " role="tablist">
     @for (int i = 0; i < Model.Tabs.Count; i++)
@@ -8,16 +18,23 @@
         bool active = i == 0;
         string key = tab.TabKey;
         string divider = i < Model.Tabs.Count - 1 ? "divider" : "";
-
-        <li class="nav-item px-lg-2 px-1 @(divider)" role="presentation">
+        if (viewTabs)
+        {
+            isFirst = active ? "first" : "";
+            left = i == 0 ? "" : "margin-left: -6px;";
+            top = $"margin-top: {t}px";
+            style = $"z-index: {z}; {left}";
+        }
+        <li class="nav-item px-lg-2 px-1 @isFirst @(divider)" style="@top" role="presentation">
             <button type="button"
                     role="tab"
                     id="@key-tab"
-                    class="nav-link px-xl-4 px-md-3 px-1 @(active ? "active" : "")"
+                    class="nav-link h-100 px-xl-4 px-md-3 px-1 @(active ? "active" : "")"
+                    style="@style"
                     data-key="@key"
                     data-name="@tab.Name"
                     data-area="@Model.Area"
-                    data-path ="@tab.ViewPath"
+                    data-path="@tab.ViewPath"
                     data-bs-toggle="tab"
                     data-bs-target="#@key"
                     aria-controls="@key"
@@ -25,5 +42,7 @@
                 @(tab.Name)
             </button>
         </li>
+        z--;
+        t += 1;
     }
 </ul>

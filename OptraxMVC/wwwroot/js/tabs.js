@@ -2,11 +2,13 @@
 var curPage;
 
 $(document).ready(function () {
+
     $(".top-tabs .nav-link").on("click", function () {
         loadTab($(this));
     });
 
     curPage = $('#tab-page').val();
+
     let storedTab = sessionStorage.getItem(`${curPage}-active`);
 
     if (storedTab && storedTab !== "undefined") {
@@ -17,6 +19,8 @@ $(document).ready(function () {
         let firstTab = $(".top-tabs .nav-link.active");
         loadTab($(firstTab));
     }
+
+
 });
 
 function loadTab(tab) {
@@ -25,21 +29,25 @@ function loadTab(tab) {
     sessionStorage.setItem(`${curPage}-active`, tabKey);
 
     const $innerTab = $(`#${tabKey}`);
+
     if ($innerTab.hasClass("loaded")) return;
+
     $innerTab.addClass('loaded');
-    const area = $(tab).attr("data-area");
+
     const path = $(tab).attr("data-path");
-    const name = $(tab).attr("data-name");
     console.log('loadTab', path)
+
     $.ajax({
         //url: `../Areas/${area}/${name}/Load${name}/`,
-        url: `.${path}`,
+        url: path,
         type: "GET",
         success: function (view) {
+            //document.getElementById(tabKey).innerHTML(view);
             $innerTab.html(view);
             $innerTab.hasClass("loaded");
         },
         error: function () {
+            //document.getElementById(tabKey).innerHTML('<div class="tab-div"><div class="tab-inner error-div">Coming Soon!</div></div>');
             $innerTab.html('<div class="tab-div"><div class="tab-inner error-div">Coming Soon!</div></div>');
         }
     });

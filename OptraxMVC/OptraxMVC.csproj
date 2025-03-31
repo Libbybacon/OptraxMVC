@@ -13,7 +13,7 @@
     <Compile Remove="Areas\Inventory\Views\Shared\**" />
     <Compile Remove="Views\Account\**" />
     <Compile Remove="Views\Shared\EditorTemplates\**" />
-    <Compile Remove="wwwroot\css\NewFolder\**" />
+    <Compile Remove="wwwroot\css\grow\**" />
     <Compile Remove="wwwroot\css\site\**" />
     <Content Remove="Areas\Admin\**" />
     <Content Remove="Areas\Grow\Data\**" />
@@ -21,7 +21,7 @@
     <Content Remove="Areas\Inventory\Views\Shared\**" />
     <Content Remove="Views\Account\**" />
     <Content Remove="Views\Shared\EditorTemplates\**" />
-    <Content Remove="wwwroot\css\NewFolder\**" />
+    <Content Remove="wwwroot\css\grow\**" />
     <Content Remove="wwwroot\css\site\**" />
     <EmbeddedResource Remove="Areas\Admin\**" />
     <EmbeddedResource Remove="Areas\Grow\Data\**" />
@@ -29,7 +29,7 @@
     <EmbeddedResource Remove="Areas\Inventory\Views\Shared\**" />
     <EmbeddedResource Remove="Views\Account\**" />
     <EmbeddedResource Remove="Views\Shared\EditorTemplates\**" />
-    <EmbeddedResource Remove="wwwroot\css\NewFolder\**" />
+    <EmbeddedResource Remove="wwwroot\css\grow\**" />
     <EmbeddedResource Remove="wwwroot\css\site\**" />
     <None Remove="Areas\Admin\**" />
     <None Remove="Areas\Grow\Data\**" />
@@ -37,11 +37,16 @@
     <None Remove="Areas\Inventory\Views\Shared\**" />
     <None Remove="Views\Account\**" />
     <None Remove="Views\Shared\EditorTemplates\**" />
-    <None Remove="wwwroot\css\NewFolder\**" />
+    <None Remove="wwwroot\css\grow\**" />
     <None Remove="wwwroot\css\site\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Grow\Views\Locations\_AddressLocation.cshtml" />
+    <Content Remove="Areas\Grow\Views\Locations\_Create.cshtml" />
+    <Content Remove="Areas\Grow\Views\Locations\_Details.cshtml" />
+    <Content Remove="Areas\Grow\Views\Locations\_Edit.cshtml" />
+    <Content Remove="Areas\Grow\Views\Locations\_SiteLocation.cshtml" />
     <Content Remove="Areas\Inventory\Views\Resources\_Categories.cshtml" />
     <Content Remove="Views\Shared\_TreeNode.cshtml" />
   </ItemGroup>
@@ -78,6 +83,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Controllers\" />
+    <Folder Include="wwwroot\dist\" />
   </ItemGroup>
 
   <ItemGroup>

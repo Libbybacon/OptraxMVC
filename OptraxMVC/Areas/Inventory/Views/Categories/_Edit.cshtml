@@ -5,7 +5,7 @@
 
 @{
     FormVM formVM = ViewBag.FormVM;
-    OptionsVM drops = (OptionsVM)(ViewData["Dropdowns"] ?? new());
+    OptionsVM drops = (OptionsVM)(ViewData["Options"] ?? new());
 }
 
 @using (Html.BeginForm(formVM.Action, "Categories", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv, data_modelname = "cat" }))
@@ -33,7 +33,7 @@
             </div>
             <div class="col-4">
                 @Html.LabelFor(m => m.ParentID)
-                @Html.DropDownListFor(m => m.ParentID, drops.TopCategorySelects, "Parent Category", new { @class = "form-select attr select2" })
+                @Html.DropDownListFor(m => m.ParentID, drops.TopCatSelects, "Parent Category", new { @class = "form-select attr select2" })
                 @Html.ValidationMessageFor(m => m.ParentID, "", new { @class = "val-msg" })
             </div>
             <div class="col-4">
@@ -56,7 +56,7 @@
         <div class="mx-auto form-note">**Note: New categories will not be visible in table until resources have been assigned.</div>
     </div>
     <div class="popup-btns d-flex w-100 justify-content-center">
-        <button type="submit" class="save-btn form-btn @(formVM.IsNew ? "" : "d-none")">Save New Category</button>
+        <button type="submit" class="btn-grn form-btn @(formVM.IsNew ? "" : "d-none")">Save New Category</button>
         <button type="submit" class="update-btn form-btn d-none">Save Changes</button>
     </div>
 }

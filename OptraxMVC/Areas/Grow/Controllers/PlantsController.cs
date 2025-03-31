@@ -46,7 +46,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                     MsgDiv = "tableMsg"
                 };
 
-                ViewData["Dropdowns"] = _IOptions.LoadOptions(["StrainSelects", "PhaseSelects", "OriginTypeSelects", "LocationSelects", "UomSelects"]);
+                ViewData["Options"] = _IOptions.LoadOptions(["StrainSelects", "PhaseSelects", "OriginTypeSelects", "LocationSelects", "UomSelects"]);
 
                 Plant plant = await _IPlants.LoadNewPlant(UserID);
 

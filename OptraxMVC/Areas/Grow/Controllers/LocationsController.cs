@@ -2,87 +2,88 @@
 using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
 using OptraxDAL.Models.Admin;
+using OptraxDAL.Models.Maps;
 using OptraxMVC.Areas.Grow.Models;
 using OptraxMVC.Controllers;
 using OptraxMVC.Models;
 using OptraxMVC.Services;
-using System.Text.Json.Serialization;
 
 namespace OptraxMVC.Areas.Grow.Controllers
 {
     [Area("Grow")]
     [Authorize]
-    public class LocationsController(OptraxContext context, IOptionsService optionsService, ILocationService locationService) : BaseController(context)
+    public class LocationsController(OptraxContext context, ILocationService locationService, IMapService mapService, IOptionsService optionsService) : BaseController(context)
     {
-        private readonly ILocationService _ILocation = locationService;
-        private readonly IOptionsService _IOptions = optionsService;
+        private readonly IMapService _Map = mapService;
+        private readonly ILocationService _Location = locationService;
+        private readonly IOptionsService _Options = optionsService;
+
 
         [HttpGet]
-        public IActionResult LoadLocations()
+        public async Task<IActionResult> LoadLocations()
         {
+            SiteLocation? loc = await _Location.GetSiteLocationAsync();
+            Map? map = await _Map.GetMapAsync() ?? new("Default Map");
+
+            LocationVM model = loc != null ? new(loc) : new LocationVM().LoadVM("firstSite");
+            model.Map = map;
+
             ViewData["LocTabs"] = new TabsVM()
             {
                 Area = "",
-                Tabs = [new Tab("Site Details"), new Tab("Inventory")]
+                Tabs = [
+                    new Tab("Details", "./Locations/GetLocation/", true) { ID = model.ID},
+                    new Tab("Actions") { ID = model.ID },
+                    new Tab("Inventory")
+                ]
             };
+            ViewData["Options"] = await _Options.LoadOptions(["StateSelects"]);
 
-            SiteLocation? model = db.SiteLocations.Where(l => l.IsPrimary).FirstOrDefault();
+            ViewBag.ShowEdit = model.IsFirstSite;
+            ViewBag.Action = model.IsFirstSite ? "Create" : "Edit";
 
             return PartialView("_Locations", model);
         }
 
+
         [HttpGet]
         [HttpPost]
-        public async Task<IActionResult> GetLocations()
+        public async Task<IActionResult> GetLocationTreeData()
         {
             try
             {
-                var data = await _ILocation.GetLocationsAsync();
+                var data = await _Location.GetTreeNodesAsync();
 
                 return Json(data);
             }
             catch (Exception ex)
             {
-                return Json(new { Success = false, Msg = ex.Message });
+                return Json(ResponseVM(ex.Message));
             }
         }
 
+
         [HttpGet]
-        public async Task<IActionResult> LoadCreate(string type)
+        public async Task<IActionResult> LoadCreate(string type, string? parentID)
         {
             try
             {
-                ViewBag.IsFirst = type == "firstSite";
+                LocationVM? model = _Location.LoadCreate(type, parentID);
 
-                ViewBag.FormVM = new FormVM()
+                if (model == null)
                 {
-                    IsNew = true,
-                    Action = $"Create",
-                    MsgDiv = "tableMsg"
-                };
-
-                LocationVM model = type switch
+                    return Json(ResponseVM("Error loading new " + type));
+                }
+                if (model.HasAddress)
                 {
+                    ViewData["Options"] = _Options.LoadOptions(["StateSelects",]);
+                }
 
-                    "Site" => new LocationVM(new SiteLocation()),
-                    "Field" => new LocationVM(new FieldLocation()),
-                    "Row" => new LocationVM(new RowLocation()),
-                    "Bed" => new LocationVM(new BedLocation()),
-                    "Plot" => new LocationVM(new PlotLocation()),
-                    "Greenhouse" => new LocationVM(new GreenhouseLocation()),
-                    "Building" => new LocationVM(new BuildingLocation()),
-                    "Room" => new LocationVM(new RoomLocation()),
-                    "Offsite" => new LocationVM(new OffsiteLocation()),
-                    _ => new LocationVM(new SiteLocation()),
-                };
-
-                ViewData["Dropdowns"] = await _IOptions.LoadOptions(["StateSelects"]);
-
-                return PartialView("_Create", model);
+                return await GetLocationView(model, "Create");
             }
             catch (Exception ex)
             {
-                return Json(new { Success = false, Msg = ex.Message });
+                return Json(ResponseVM(ex.Message));
             }
         }
 
@@ -94,49 +95,10 @@ namespace OptraxMVC.Areas.Grow.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    //model.AvailableParents = [.. db.Locations
-                    //    .Select(l => new SelectListItem
-                    //    {
-                    //        Value = l.ID.ToString(),
-                    //        Text = l.Name
-                    //    })];
-
                     return Json(new ResponseVM() { Msg = "Invalid model" });
                 }
 
-                Location loc = model.LocationType.ToLower() switch
-                {
-                    "vehicle" => new VehicleLocation(),
-                    "site" => new SiteLocation(model.Address, model.Business),
-                    "greenhouse" => new GreenhouseLocation(),
-                    "field" => new FieldLocation(),
-                    "row" => new RowLocation(),
-                    "bed" => new BedLocation(),
-                    "plot" => new PlotLocation(),
-                    "building" => new BuildingLocation(),
-                    "room" => new RoomLocation(),
-                    "offsite" => new OffsiteLocation(),
-                    _ => new SiteLocation()
-                };
-
-                loc.Name = model.Name;
-                loc.Details = model.Details;
-                loc.ParentID = model.ParentID;
-
-                if (loc is SiteLocation site)
-                {
-                    site.BusinessID = model.BusinessID;
-                    site.AddressID = model.AddressID;
-                }
-
-                //loc.Level = model.ParentID.HasValue
-                //    ? db.Locations.Find(model.ParentID.Value)?.Level + 1 ?? 1
-                //: 0;
-
-                await db.Locations.AddAsync(loc);
-                await db.SaveChangesAsync();
-
-                return Json(new ResponseVM() { Success = true, Data = loc.ToTreeNode() });
+                return Json(await _Location.CreateAsync(model));
             }
             catch (Exception ex)
             {
@@ -144,60 +106,81 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
         }
 
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateBuildingAsync(BuildingLocation loc)
-        {
-            if (!ModelState.IsValid)
-            {
-                return Json(new ResponseVM() { Msg = "Invalid model" });
-            }
-
-            ResponseVM response = await CreateAsync(loc);
-            return Json(response, ReferenceHandler.Preserve);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateRoomAsync(RoomLocation loc)
-        {
-            if (!ModelState.IsValid)
-                return Json(new { Msg = "Invalid model" });
-
-            return Json(await CreateAsync(loc));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateVehicleAsync(VehicleLocation loc)
-        {
-            if (!ModelState.IsValid)
-                return Json(new { Msg = "Invalid model" });
-
-            return Json(await CreateAsync(loc));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateOffsiteAsync(OffsiteLocation loc)
-        {
-            if (!ModelState.IsValid)
-                return Json(new { Msg = "Invalid model" });
-
-            return Json(await CreateAsync(loc));
-        }
-
-        private async Task<ResponseVM> CreateAsync(Location loc)
+        [HttpGet]
+        public async Task<IActionResult> GetDetails(int? id)
         {
             try
             {
-                ResponseVM response = await _ILocation.CreateAsync(loc);
-                return response;
+                if (id == null)
+                {
+                    return Json(ResponseVM("Error loading location - null ID"));
+                }
+
+                LocationVM? model = await _Location.GetLocationAsync((int)id);
+
+                if (model == null)
+                    return Json(ResponseVM("Error loading location: not found"));
+
+                return await GetLocationView(model, "Edit");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new ResponseVM { Success = false, Msg = "Error saving location..." };
+                return Json(ResponseVM(ex.Message));
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditAsync(LocationVM locVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(ResponseVM("Error editing location - invalid model"));
+            }
+            try
+            {
+                return Json(await _Location.EditAsync(locVM));
+            }
+            catch (Exception ex)
+            {
+                return Json(ResponseVM("Error deleting location - " + ex.Message));
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAsync(int? id)
+        {
+            try
+            {
+                if (id == null)
+                {
+                    return Json(ResponseVM("Error deleting location - null ID"));
+                }
+
+                return Json(await _Location.DeleteAsync((int)id));
+            }
+            catch (Exception ex)
+            {
+                return Json(ResponseVM("Error deleting location - " + ex.Message));
+            }
+        }
+
+
+
+        private async Task<IActionResult> GetLocationView(LocationVM model, string action)
+        {
+            try
+            {
+                ViewBag.Action = action;
+                ViewBag.ShowEdit = action == "Create";
+
+                ViewData["Options"] = await _Options.LoadOptions(["StateSelects"], model.Level);
+
+                return PartialView("_Location", model);
+            }
+            catch (Exception ex)
+            {
+                return Json(ResponseVM(ex.Message));
             }
         }
     }

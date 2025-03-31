@@ -1,0 +1,83 @@
+﻿@model AddressLocation
+
+@{
+    OptionsVM options = (OptionsVM)(ViewData["Options"] ?? new());
+
+    bool showEdit = ViewBag.ShowEdit as bool? ?? false;
+    string action = ViewBag.Action;
+
+    string display = showEdit ? "d-none" : "";
+    string edit = showEdit ? "" : "d-none";
+    string hideOnFirst = Model.IsFirstSite ? "d-none" : edit;
+}
+
+<div class="edit-div p-3 model" data-isFirst="@Model.IsFirstSite.ToString().ToLower()">
+    <form asp-action="@action" asp-controller="Locations" method="post" id="locForm" data-obj="Location">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="ID" />
+        <input type="hidden" asp-for="Level" />
+        <input type="hidden" asp-for="IsPrimary" />
+        <input type="hidden" asp-for="Address.Name" />
+
+        <div class="m-toggle @display">
+            <div class="loc-name">@Model.Name</div>
+            @if (!string.IsNullOrEmpty(Model.Details))
+            {
+                <div class="loc-details">@Model.Details</div>
+            }
+        </div>
+
+        <div class="edit-div m-toggle row col-12 w-100 px-0 m-0 pe-0 @edit">
+            @if (Model.IsFirstSite)
+            {
+                <input type="hidden" asp-for="LocationType" />
+                <div class="col-12 first-site">
+                    <center class="mb-3">Create your first site!</center>
+                    <p>After you create your first site, you can add Fields, Greenhouses, and Buildings.</p>
+                    <p>Fields and Greenhouses can be divided into Rows > Beds > Plots</p>
+                    <p>Buildings can be divided into Rooms</p>
+                </div>
+            }
+            else
+            {
+                <div class="col-6 pe-2">
+                    <label asp-for="LocationType"></label><br />
+                    <label class="ps-4">@Model.LocationType</label>
+                    @* <input asp-for="LocationType" class="form-control" readonly /> *@
+                </div>
+                <div class="col-6 ps-2">
+                    <label>Parent Location</label>
+                    <select asp-for="ParentID" asp-items="@options.LocSelectsByLevel" class="form-select attr"></select>
+                    <span asp-validation-for="ParentID" class="val-msg"></span>
+                </div>
+            }
+            <div class="col-12 mt-2">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control attr" />
+                <span asp-validation-for="Name" class="val-msg"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="Details"></label>
+                <textarea asp-for="Details" class="form-control attr" rows="3"></textarea>
+                <span asp-validation-for="Details" class="val-msg"></span>
+            </div>
+
+        </div>
+
+        @if (Model.HasAddress)
+        {
+            var subViewData = new ViewDataDictionary(ViewData);
+            subViewData.TemplateInfo.HtmlFieldPrefix = "Address";
+            <partial name="~/Views/Shared/_Address.cshtml" model="Model.Address" view-data="@subViewData" />
+        }
+
+        <div class="popup-btns d-flex w-100 justify-content-center">
+            @* <button type="submit" class="save-btn form-btn @editClass">Save Location</button> *@
+            <button type="button" class="delete-btn form-btn me-3 @hideOnFirst">Delete</button>
+            <button type="submit" class="save-btn form-btn mx-3 @edit">Save</button>
+            <button type="button" class="toggle-edit gray-btn form-btn ms-3 @display">Edit</button>
+            <button type="button" class="toggle-edit gray-btn form-btn ms-3 d-none">Cancel</button>
+        </div>
+    </form>
+</div>

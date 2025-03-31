@@ -27,7 +27,7 @@ const apiService = {
         }
 
         try {
-            console.log('api url', url, 'options', options)
+            //console.log('api url', url, 'options', options)
             const response = await fetch(url, options);
             clearTimeout(id);
 
@@ -67,7 +67,7 @@ const apiService = {
     },
 
     postForm: async function (url, data) {
-        console.log('url', url, 'data', data);
+        console.log('api postForm url', url, 'data', data);
         return await this.request({ url, method: "POST", data, contentType: "form" });
     }
 };

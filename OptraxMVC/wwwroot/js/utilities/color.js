@@ -1,4 +1,4 @@
-﻿let colorSwatches = [
+﻿export const colorSwatches = [
     '#FF3333',
     '#EF7A1A',
     '#F9C04D',

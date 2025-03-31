@@ -1,17 +1,33 @@
 ﻿using OptraxDAL.Models.BaseClasses;
-using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
-using OptraxDAL.Models.Map;
+using OptraxDAL.Models.Maps;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Admin
 {
+    public abstract class AddressLocation : Location
+    {
+        public int? AddressID { get; set; }
+        public int? BusinessID { get; set; }
+
+        public virtual Address? Address { get; set; } = new();
+        public virtual Business? Business { get; set; }
+    }
+
+    public abstract class AreaLocation : Location
+    {
+        public decimal? Length { get; set; }
+        public decimal? Width { get; set; }
+
+    }
 
     [Table("Locations", Schema = "Admin")]
     public abstract class Location : TrackingBaseDetails
     {
         public Location() { }
+
+        public string LocationType { get; set; } = string.Empty;
 
         public int? MapObjectID { get; set; }
 
@@ -23,9 +39,11 @@ namespace OptraxDAL.Models.Admin
 
         public int? IconID { get; set; }
 
+
         public virtual Icon? Icon { get; set; }
         public virtual MapObject? MapObject { get; set; }
         public virtual Location? Parent { get; set; } = null;
+
 
         public virtual ICollection<Location>? Children { get; set; } = [];
         public virtual ICollection<StockItem>? StockItems { get; set; } = [];
@@ -38,30 +56,24 @@ namespace OptraxDAL.Models.Admin
         public virtual ICollection<InventoryTransfer>? TransfersIn { get; set; } = [];
 
         [NotMapped]
-        public bool HasAddress { get; set; } = false;
-
-        [NotMapped]
-        public string LocationType { get; set; } = string.Empty;
-
-        [NotMapped]
         public string NameWithType { get => $"{LocationType}: {Name}"; }
-
-        public object ToVM()
-        {
-            return new { ID, Name, Details, ParentID, LocationType, };
-        }
 
         public object ToTreeNode()
         {
             return new
             {
-                id = ID,
+                id = ID.ToString(),
                 parent = ParentID?.ToString() ?? "#",
                 text = Name,
                 type = LocationType.ToLower(),
-                children = Children?.Count > 0
+                state = new
+                {
+                    opened = Level < 2,
+                    selected = this is SiteLocation site && site.IsPrimary
+                }
             };
         }
+
 
         public string GetParentNamesString()
         {
@@ -92,128 +104,6 @@ namespace OptraxDAL.Models.Admin
         }
     }
 
-    public abstract class AddressLocation : Location
-    {
-        public int? AddressID { get; set; }
-        public int? BusinessID { get; set; }
-
-        public virtual Address? Address { get; set; } = new();
-        public virtual Business? Business { get; set; }
-    }
-
-    [Table("Locations", Schema = "Admin")]
-    public class VehicleLocation : Location
-    {
-        public VehicleLocation()
-        {
-            Level = 0;
-            LocationType = "Vehicle";
-        }
-    }
-
-    [Table("Locations", Schema = "Admin")]
-    public class SiteLocation : AddressLocation
-    {
-        public SiteLocation()
-        {
-            Level = 0;
-            HasAddress = true;
-            LocationType = "Site";
-        }
-
-        public SiteLocation(int addressID, int? businessID)
-        {
-            Level = 0;
-            LocationType = "Site";
-            HasAddress = true;
-            AddressID = addressID;
-            BusinessID = businessID;
-        }
-
-        public SiteLocation(Address? address, Business? business)
-        {
-            Level = 0;
-            LocationType = "Site";
-            Address = address;
-            Business = business;
-        }
-
-        public bool IsPrimary { get; set; } = false;
-    }
-
-
-    [Table("Locations", Schema = "Admin")]
-    public class GreenhouseLocation : Location
-    {
-        public GreenhouseLocation()
-        {
-            Level = 1;
-            LocationType = "Greenhouse";
-        }
-
-        public virtual ICollection<Crop>? Crops { get; set; } = [];
-    }
-
-    [Table("Locations", Schema = "Admin")]
-    public class FieldLocation : Location
-    {
-        public FieldLocation()
-        {
-            Level = 1;
-            LocationType = "Field";
-        }
-
-        public virtual ICollection<Crop>? Crops { get; set; } = [];
-    }
-
-    [Table("Locations", Schema = "Admin")]
-    public class RowLocation : Location
-    {
-        public RowLocation() { Level = 2; }
-
-        public virtual ICollection<Crop>? Crops { get; set; } = [];
-    }
-
-    [Table("Locations", Schema = "Admin")]
-    public class BedLocation : Location
-    {
-        public BedLocation() { Level = 3; }
-    }
-
-    [Table("Locations", Schema = "Admin")]
-    public class PlotLocation : Location
-    {
-        public PlotLocation() { Level = 4; }
-    }
-
-    [Table("Locations", Schema = "Admin")]
-    public class BuildingLocation : AddressLocation
-    {
-        public BuildingLocation() { Level = 1; }
-        //public BuildingLocation(int addressID, int? businessID)
-        //{
-        //    Level = 1;
-        //    HasAddress = true;
-        //    AddressID = addressID;
-        //    BusinessID = businessID;
-        //}
-    }
-
-    [Table("Locations", Schema = "Admin")]
-    public class RoomLocation : Location
-    {
-        public RoomLocation() { Level = 2; }
-
-        public virtual ICollection<Crop>? Crops { get; set; } = [];
-    }
-
-
-
-    [Table("Locations", Schema = "Admin")]
-    public class OffsiteLocation : AddressLocation
-    {
-        public OffsiteLocation() { Level = 0; }
-    }
 
     public enum LocationType
     {

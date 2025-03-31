@@ -1,0 +1,33 @@
+﻿@model Map
+
+<div class="map-edit">
+    <div class="map-title map-toggle map-info px-3 py-1">@Model.Name</div>
+
+    <form asp-action="EditMap" asp-controller="Map" method="post" id="mapForm" class="map-info p-3  d-none">
+        <input type="hidden" asp-for="ID" />
+
+        <div id="map-edit">
+            <div class="row col-12 m-0">
+                <div class="col-12">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="val-msg"></span>
+                </div>
+            </div>
+            <div class="row w-100 col-12 m-0">
+                <div class="col-12">
+                    <label asp-for="Details"></label>
+                    <textarea asp-for="Details" class="form-control f-xs" rows="3"></textarea>
+                    <span asp-validation-for="Details" class="val-msg"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row col-12 m-0 pb-1">
+            <div class="d-flex w-100 justify-content-center">
+                <button type="submit" class="btn-grn btn-sm map-btn me-2">Save</button>
+                <button type="button" class="btn-gray btn-sm map-toggle map-btn ms-2">Cancel</button>
+            </div>
+        </div>
+    </form>
+</div>
+

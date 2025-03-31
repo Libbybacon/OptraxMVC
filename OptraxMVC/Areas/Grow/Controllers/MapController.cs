@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
-using OptraxDAL.Models.Map;
+using OptraxDAL.Models.Maps;
 using OptraxMVC.Controllers;
 using OptraxMVC.Models;
 using OptraxMVC.Services;
@@ -12,8 +12,58 @@ namespace OptraxMVC.Areas.Grow.Controllers
     [Authorize]
     public class MapController(OptraxContext context, IOptionsService optionsService, IMapService mapService) : BaseController(context)
     {
-        private readonly IMapService _IMap = mapService;
-        private readonly IOptionsService _IOptions = optionsService;
+        private readonly IMapService _Map = mapService;
+        private readonly IOptionsService _Options = optionsService;
+
+        [HttpGet]
+        public async Task<JsonResult> GetMap()
+        {
+            try
+            {
+                Map? map = await _Map.GetMapAsync();
+                if (map == null)
+                {
+                    return Json(ResponseVM("No map found"));
+                }
+                return Json(ResponseVM(map));
+            }
+            catch (Exception ex)
+            {
+                return Json(ResponseVM("Error getting map: " + ex.Message));
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> CreateMapAsync(Map map)
+        {
+            if (!ModelState.IsValid) { return Json(ResponseVM("Invalid map")); }
+
+            try
+            {
+                return Json(await _Map.CreateMapAsync(map));
+            }
+            catch (Exception ex)
+            {
+                return Json(ResponseVM("Error creating map: " + ex.Message));
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> EditMapAsync(Map map)
+        {
+            if (!ModelState.IsValid) { return Json(ResponseVM("Invalid map")); }
+
+            try
+            {
+                return Json(await _Map.EditMapAsync(map));
+            }
+            catch (Exception ex)
+            {
+                return Json(ResponseVM("Error updating map: " + ex.Message));
+            }
+        }
 
         [HttpGet]
         public IActionResult LoadMap()
@@ -26,16 +76,16 @@ namespace OptraxMVC.Areas.Grow.Controllers
         {
             try
             {
-                return Json(await _IMap.GetObjectsAsync(objType));
+                return Json(await _Map.GetObjectsAsync(objType));
             }
             catch (Exception)
             {
-                return Json(new ResponseVM() { Msg = "Error getting map objects" });
+                return Json(ResponseVM("Error getting map objects"));
             }
         }
 
         [HttpGet]
-        public IActionResult AddNewObject(string objType)
+        public async Task<IActionResult> AddNewObject(string objType)
         {
             try
             {
@@ -48,6 +98,11 @@ namespace OptraxMVC.Areas.Grow.Controllers
                 };
 
                 LoadFormVM(objType, "Create");
+
+                if (model is MapPoint point)
+                {
+                    ViewData["Options"] = await _Options.LoadOptions(["IconsList"]);
+                }
 
                 return PartialView($"_{objType}", model);
             }
@@ -62,12 +117,12 @@ namespace OptraxMVC.Areas.Grow.Controllers
         {
             if (id == null) { return Json(new { Msg = "Invalid object ID" }); }
 
-            object? model = await _IMap.GetObjectAsync((int)id, objType);
+            object? model = await _Map.GetObjectAsync((int)id, objType);
 
             if (model == null) { return Json(new ResponseVM() { Msg = "Object not found" }); }
 
             LoadFormVM(objType, "Edit");
-            ViewData["Dropdowns"] = await _IOptions.LoadOptions(["LocationSelects", "IconsList"]);
+            ViewData["Options"] = await _Options.LoadOptions(["LocationSelects", "IconsList"]);
 
             return PartialView($"_{objType}", model);
         }
@@ -82,7 +137,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                     return Json(new ResponseVM() { Msg = "Null object id" });
                 }
 
-                return Json(await _IMap.DeleteObjectAsync((int)id, objType));
+                return Json(await _Map.DeleteObjectAsync((int)id, objType));
 
             }
             catch (Exception ex)
@@ -102,7 +157,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                     return Json(new ResponseVM() { Msg = "Invalid model state" });
                 }
 
-                return Json(await _IMap.CreateObjectAsync(point));
+                return Json(await _Map.CreateObjectAsync(point));
             }
             catch (Exception)
             {
@@ -121,7 +176,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                     return Json(new ResponseVM() { Msg = "Invalid model state" });
                 }
 
-                return Json(await _IMap.EditObjectAsync(point));
+                return Json(await _Map.EditObjectAsync(point));
             }
             catch (Exception)
             {
@@ -140,7 +195,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                     return Json(new ResponseVM() { Msg = "Invalid model state" });
                 }
 
-                return Json(await _IMap.CreateObjectAsync(line));
+                return Json(await _Map.CreateObjectAsync(line));
             }
             catch (Exception)
             {
@@ -159,7 +214,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                     return Json(new ResponseVM() { Msg = "Invalid model state" });
                 }
 
-                return Json(await _IMap.EditObjectAsync(line));
+                return Json(await _Map.EditObjectAsync(line));
             }
             catch (Exception)
             {
@@ -178,7 +233,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                     return Json(new ResponseVM() { Msg = "Invalid model state" });
                 }
 
-                return Json(await _IMap.CreateObjectAsync(circle));
+                return Json(await _Map.CreateObjectAsync(circle));
             }
             catch (Exception)
             {
@@ -197,7 +252,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                     return Json(new ResponseVM() { Msg = "Invalid model state" });
                 }
 
-                return Json(await _IMap.EditObjectAsync(circle));
+                return Json(await _Map.EditObjectAsync(circle));
             }
             catch (Exception)
             {
@@ -216,7 +271,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                     return Json(new ResponseVM() { Msg = "Invalid model state" });
                 }
 
-                return Json(await _IMap.CreateObjectAsync(poly));
+                return Json(await _Map.CreateObjectAsync(poly));
             }
             catch (Exception)
             {
@@ -235,7 +290,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                     return Json(new ResponseVM() { Msg = "Invalid model state" });
                 }
 
-                return Json(await _IMap.EditObjectAsync(poly));
+                return Json(await _Map.EditObjectAsync(poly));
             }
             catch (Exception)
             {
@@ -250,11 +305,10 @@ namespace OptraxMVC.Areas.Grow.Controllers
                 IsNew = funcType == ("Create"),
                 JsFunc = $"{funcType.ToLower()}{objType}",
                 Action = $"{funcType}{objType}",
+                Type = objType
             };
 
             ViewBag.IconCollID = 1;
-
-
         }
     }
 }
