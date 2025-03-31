@@ -55,6 +55,7 @@ namespace OptraxDAL
         public DbSet<Crop> Crops { get; set; }
         public DbSet<Batch> Batches { get; set; }
         public DbSet<Planting> Plantings { get; set; }
+        public DbSet<PlantingPattern> PlantingPatterns { get; set; }
 
         public DbSet<Strain> Strains { get; set; }
         public DbSet<StrainRelationship> StrainRelationships { get; set; }
@@ -118,6 +119,8 @@ namespace OptraxDAL
             builder.Entity<IdentityUserLogin<string>>().ToTable("AspNetUserLogins", "Identity");
             builder.Entity<IdentityUserToken<string>>().ToTable("AspNetUserTokens", "Identity");
 
+            builder.Entity<Address>().Property(x => x.Latitude).HasPrecision(12, 8);
+            builder.Entity<Address>().Property(x => x.Longitude).HasPrecision(12, 8);
             builder.Entity<Business>().HasIndex(x => x.Name).IsUnique();
             builder.Entity<Input>().HasIndex(x => x.InputName).IsUnique();
             builder.Entity<UoM>().Property(x => x.PerQuantity).HasPrecision(6, 2);
@@ -153,20 +156,23 @@ namespace OptraxDAL
             //builder.Entity<Location>().HasIndex(x => x.Name).IsUnique();
             builder.Entity<Location>().Property(x => x.Active).HasDefaultValue(true);
 
-            builder.Entity<GreenhouseLocation>().Property(x => x.Length).HasPrecision(18, 4);
-            builder.Entity<GreenhouseLocation>().Property(x => x.Width).HasPrecision(18, 4);
+            builder.Entity<AreaLocation>().Property(x => x.Length).HasPrecision(18, 4);
+            builder.Entity<AreaLocation>().Property(x => x.Width).HasPrecision(18, 4);
 
-            builder.Entity<FieldLocation>().Property(x => x.Length).HasPrecision(18, 4);
-            builder.Entity<FieldLocation>().Property(x => x.Width).HasPrecision(18, 4);
+            //builder.Entity<GreenhouseLocation>().Property(x => x.Length).HasPrecision(18, 4);
+            //builder.Entity<GreenhouseLocation>().Property(x => x.Width).HasPrecision(18, 4);
 
-            builder.Entity<RowLocation>().Property(x => x.Length).HasPrecision(18, 4);
-            builder.Entity<RowLocation>().Property(x => x.Width).HasPrecision(18, 4);
+            //builder.Entity<FieldLocation>().Property(x => x.Length).HasPrecision(18, 4);
+            //builder.Entity<FieldLocation>().Property(x => x.Width).HasPrecision(18, 4);
 
-            builder.Entity<BedLocation>().Property(x => x.Length).HasPrecision(18, 4);
-            builder.Entity<BedLocation>().Property(x => x.Width).HasPrecision(18, 4);
+            //builder.Entity<RowLocation>().Property(x => x.Length).HasPrecision(18, 4);
+            //builder.Entity<RowLocation>().Property(x => x.Width).HasPrecision(18, 4);
 
-            builder.Entity<PlotLocation>().Property(x => x.Length).HasPrecision(18, 4);
-            builder.Entity<PlotLocation>().Property(x => x.Width).HasPrecision(18, 4);
+            //builder.Entity<BedLocation>().Property(x => x.Length).HasPrecision(18, 4);
+            //builder.Entity<BedLocation>().Property(x => x.Width).HasPrecision(18, 4);
+
+            //builder.Entity<PlotLocation>().Property(x => x.Length).HasPrecision(18, 4);
+            //builder.Entity<PlotLocation>().Property(x => x.Width).HasPrecision(18, 4);
 
             builder.Entity<Location>().HasDiscriminator<string>("LocationType")
                                       .HasValue<SiteLocation>("Site")
@@ -180,31 +186,46 @@ namespace OptraxDAL
                                       .HasValue<OffsiteLocation>("Offsite")
                                       .HasValue<VehicleLocation>("Vehicle");
 
-            builder.Entity<BuildingLocation>().HasOne(bl => bl.Address)
-                                              .WithOne(a => a.Building)
-                                              .HasForeignKey<BuildingLocation>(bl => bl.AddressID)
-                                              .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<SiteLocation>(e =>
+            {
+                e.HasOne(sl => sl.Business)
+                 .WithMany(b => b.Sites)
+                 .HasForeignKey(sl => sl.BusinessID)
+                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<SiteLocation>().HasOne(sl => sl.Business)
-                                          .WithMany(b => b.Sites)
-                                          .HasForeignKey(sl => sl.BusinessID)
-                                          .OnDelete(DeleteBehavior.Restrict);
+                e.HasOne(bl => bl.Address)
+                 .WithOne(a => a.Site)
+                 .HasForeignKey<SiteLocation>(bl => bl.AddressID)
+                 .OnDelete(DeleteBehavior.Restrict);
+            });
 
-            builder.Entity<BuildingLocation>().HasOne(bl => bl.Business)
-                                              .WithMany(b => b.Buildings)
-                                              .HasForeignKey(bl => bl.BusinessID)
-                                              .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<BuildingLocation>(e =>
+            {
+                e.HasOne(bl => bl.Business)
+                 .WithMany(b => b.Buildings)
+                 .HasForeignKey(bl => bl.BusinessID)
+                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<InventoryTransfer>().Property(x => x.UnitCount).HasPrecision(8, 2);
-            builder.Entity<InventoryTransfer>().HasOne(it => it.Origin)
-                                               .WithMany(o => o.TransfersOut)
-                                               .HasForeignKey(it => it.OriginID)
-                                               .OnDelete(DeleteBehavior.Restrict);
+                e.HasOne(bl => bl.Address)
+                 .WithOne(a => a.Building)
+                 .HasForeignKey<BuildingLocation>(bl => bl.AddressID)
+                 .OnDelete(DeleteBehavior.Restrict);
+            });
 
-            builder.Entity<InventoryTransfer>().HasOne(it => it.Destination)
-                                               .WithMany(o => o.TransfersIn)
-                                               .HasForeignKey(it => it.DestinationID)
-                                               .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<InventoryTransfer>(e =>
+            {
+                e.Property(x => x.UnitCount).HasPrecision(8, 2);
+
+                e.HasOne(it => it.Origin)
+                 .WithMany(o => o.TransfersOut)
+                 .HasForeignKey(it => it.OriginID)
+                 .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(it => it.Destination)
+                 .WithMany(o => o.TransfersIn)
+                 .HasForeignKey(it => it.DestinationID)
+                 .OnDelete(DeleteBehavior.Restrict);
+            });
             #endregion
             #endregion
 

@@ -20,6 +20,7 @@ namespace OptraxDAL.Models.Admin
         public decimal? Length { get; set; }
         public decimal? Width { get; set; }
 
+        //public virtual ICollection<PlantingPattern>? PlantingPatterns { get; set; }
     }
 
     [Table("Locations", Schema = "Admin")]
@@ -54,6 +55,9 @@ namespace OptraxDAL.Models.Admin
 
         [InverseProperty(nameof(InventoryTransfer.Destination))]
         public virtual ICollection<InventoryTransfer>? TransfersIn { get; set; } = [];
+
+        [NotMapped]
+        public List<string> Tabs { get; set; } = [];
 
         [NotMapped]
         public string NameWithType { get => $"{LocationType}: {Name}"; }

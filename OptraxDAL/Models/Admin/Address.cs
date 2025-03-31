@@ -43,11 +43,16 @@ namespace OptraxDAL.Models.Admin
         [Display(Name = "Email")]
         public string? ContactEmail { get; set; }
 
+        public decimal? Latitude { get; set; }
+        public decimal? Longitude { get; set; }
+
         public int? BusinessID { get; set; }
         public int? BuildingID { get; set; }
+        public int? SiteID { get; set; }
 
         public virtual Business? Business { get; set; }
 
+        public virtual SiteLocation? Site { get; set; }
         public virtual BuildingLocation? Building { get; set; }
     }
 }

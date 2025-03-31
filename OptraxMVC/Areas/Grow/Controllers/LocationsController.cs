@@ -174,7 +174,27 @@ namespace OptraxMVC.Areas.Grow.Controllers
                 ViewBag.Action = action;
                 ViewBag.ShowEdit = action == "Create";
 
-                ViewData["Options"] = await _Options.LoadOptions(["StateSelects"], model.Level);
+                TabsVM tabsVM = new()
+                {
+                    Area = "",
+                    Tabs = [new Tab("Details", "./Locations/GetLocation/", true) { ID = model.ID }]
+                };
+
+                if (model.LocationType == "Site")
+                {
+                    tabsVM.Tabs.Add(new Tab("Actions") { ID = model.ID });
+                    tabsVM.Tabs.Add(new Tab("Inventory") { ID = model.ID });
+                }
+                else
+                {
+                    foreach (string tabName in model.Tabs)
+                    {
+                        Tab tab = new(tabName, $"./{tabName}/Get{tabName}/", true) { ID = model.ID };
+                        tabsVM.Tabs.Add(tab);
+                    }
+                }
+                ViewData["LocTabs"] = tabsVM;
+                ViewData["Options"] = await _Options.LoadOptions(["StateSelects"]);
 
                 return PartialView("_Location", model);
             }

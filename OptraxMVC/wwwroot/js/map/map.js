@@ -146,3 +146,24 @@ function addTopCenterPosition() {
     });
     map._controlCorners.topcenter = L.DomUtil.create('div', 'leaflet-top leaflet-center', map._controlContainer);
 }
+
+//function geocodeAddress(address, callback) {
+//    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+
+//    fetch(url, {
+//        headers: {
+//            'User-Agent': 'OptraxFarmingApp/1.0 (your@email.com)'
+//        }
+//    })
+//        .then(res => res.json())
+//        .then(data => {
+//            if (data.length > 0) {
+//                const lat = parseFloat(data[0].lat);
+//                const lon = parseFloat(data[0].lon);
+//                callback(null, { lat, lon, display_name: data[0].display_name });
+//            } else {
+//                callback("No results found");
+//            }
+//        })
+//        .catch(err => callback(err));
+//}

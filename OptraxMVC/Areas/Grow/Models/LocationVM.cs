@@ -20,9 +20,9 @@ namespace OptraxMVC.Areas.Grow.Models
             IconID = loc.IconID;
             MapObjectID = loc.MapObjectID;
 
-            IsPrimary = loc is SiteLocation site && site.IsPrimary;
+            Tabs = loc.Tabs;
 
-            TreeNode = loc.ToTreeNode();
+            IsPrimary = loc is SiteLocation site && site.IsPrimary;
 
             if (loc is AddressLocation addLoc)
             {
@@ -79,10 +79,9 @@ namespace OptraxMVC.Areas.Grow.Models
         public virtual Business? Business { get; set; }
 
 
+        public List<string> Tabs { get; set; } = [];
         public string? Changes { get; set; }
         public string? ParentString { get; set; }
-
-        public object? TreeNode { get; set; }
 
         public LocationVM LoadVM(string type, string? parentID = null)
         {

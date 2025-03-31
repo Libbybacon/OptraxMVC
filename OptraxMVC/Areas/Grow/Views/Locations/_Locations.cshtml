@@ -1,25 +1,23 @@
-﻿@* <link rel="stylesheet" href="~/css/grow/locations.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/grow/map.css" asp-append-version="true" /> *@
-@model LocationVM
+﻿@model LocationVM
 
 @{
     TabsVM tabs = (TabsVM)(ViewData["LocTabs"] ?? new TabsVM() { Area = "Grow", Tabs = [] });
     ViewData["IsView"] = true;
 }
 
-<div id="locations" class="loc-layout d-flex" data-hassite="@(Model.IsFirstSite.ToString().ToLower())">
+<div id="locations" class="loc-layout d-flex" data-isFirst="@(Model.IsFirstSite.ToString().ToLower())">
     <div class="loc-tree inner-layout">
         <div class="tree-div">
             <div class="loc-title">All Locations</div>
-            <button id="add-new-loc" class="tree-btn btn-grn btn-sm my-2">Add New</button>
+            <button id="add-new-loc" class="tree-btn btn-grn btn-sm my-2">Add Site</button>
             <div id="locationTree"></div>
         </div>
     </div>
 
     <div id="loc-details" class="inner-layout view-tabs">
 
-        <partial name="_TabsTop" model="tabs" />
-
+        <partial name="_LocationPanel" model="Model" />
+        @*<partial name="_TabsTop" model="tabs" />
         <div class="tab-content h-100 p-0">
             <div class="loc-msg"></div>
             @foreach (var tab in tabs.Tabs)
@@ -36,9 +34,8 @@
                         </div>
                     }
                 </div>
-               
             }
-        </div>
+        </div>*@
     </div>
     <div class="resizer" id="resizer">
         <svg class="resize-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" stroke-linecap="butt" stroke-linejoin="miter">
@@ -60,6 +57,5 @@
         </div>
     </div>
 </div>
-@* <script src="~/dist/map.bundle.js"></script> *@
 <script src="~/dist/location.bundle.js"></script>
 

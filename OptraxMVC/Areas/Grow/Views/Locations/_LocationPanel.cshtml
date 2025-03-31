@@ -1,0 +1,27 @@
+﻿@model LocationVM
+
+@{
+    TabsVM tabs = (TabsVM)(ViewData["LocTabs"] ?? new TabsVM() { Area = "Grow", Tabs = [] });
+}
+
+<partial name="_TabsTop" model="tabs" />
+
+<div class="tab-content h-100 p-0">
+    <div class="loc-msg"></div>
+    @foreach (var tab in tabs.Tabs)
+    {
+        bool active = tab.Name == "Details";
+        string key = tab.TabKey;
+
+        <div id="@key" class="tab-pane fade h-100 @(active ? "show active loaded" : "")" role="tabpanel" aria-labelledby="@key-tab">
+
+            @if (active)
+            {
+                <div id="loc-partial">
+                    <partial name="_Location" model="Model" />
+                </div>
+            }
+        </div>
+
+    }
+</div>

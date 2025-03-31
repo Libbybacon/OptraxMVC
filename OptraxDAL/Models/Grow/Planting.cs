@@ -20,6 +20,8 @@ namespace OptraxDAL.Models.Grow
 
         public int LocationID { get; set; }
 
+
+
         [Required]
         [Display(Name = "Current Stage")]
         public string CurrentStage { get; set; } = string.Empty;
@@ -33,6 +35,7 @@ namespace OptraxDAL.Models.Grow
         public virtual Crop Crop { get; set; } = new();
         public virtual Batch? Batch { get; set; }
         public virtual Location Location { get; set; } = default!;
+        public virtual PlantingPattern PlantingPattern { get; set; } = default!;
 
         public virtual ICollection<ProductItem> ProductItems { get; set; } = [];
     }

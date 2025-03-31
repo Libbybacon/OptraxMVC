@@ -15,10 +15,10 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.css"> <!-- Color Picker -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" /> <!-- jsTree -->
     
-    <link href="~/css/shared.css" rel="stylesheet">
     <link href="~/css/site.css" rel="stylesheet">
-
+    <link href="~/css/shared.css" rel="stylesheet">
     <link rel="stylesheet" href="~/OptraxMVC.styles.css" asp-append-version="true" />
+
     @await RenderSectionAsync("Styles", required: false)
 </head>
 
@@ -48,12 +48,10 @@
     <script src="~/dist/main.bundle.js"></script>
     <script src="~/dist/site.bundle.js"></script>
 
-
-
-@*     <script src="https://unpkg.com/imask"></script>  <!-- iMask --> *@
     <script src="https://kit.fontawesome.com/6e68fe6bdb.js" crossorigin="anonymous"></script> <!-- Font Awesome -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js" defer></script> <!-- jsTree -->
     <script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.js"></script><!-- Color Picker -->
+
     @await RenderSectionAsync("Scripts", required: false)
     @await RenderSectionAsync("Modules", required: false)
 </body>

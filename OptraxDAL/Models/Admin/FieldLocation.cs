@@ -12,8 +12,11 @@ namespace OptraxDAL.Models.Admin
             Width = 0;
             Length = 0;
             LocationType = "Field";
+            Tabs = ["Plantings"];
         }
 
-        public virtual ICollection<Crop>? Crops { get; set; } = [];
+        public virtual ICollection<Planting>? Plantings { get; set; } = [];
+        public virtual ICollection<PlantingPattern>? PlantingPatterns { get; set; } = [];
+
     }
 }

@@ -15,13 +15,20 @@ namespace OptraxDAL.Models.Grow
         public int? VarietyID { get; set; }
         public int? CultivarID { get; set; }
 
+        public string? Classification { get; set; }
+
         public virtual Species? Species { get; set; }
         public virtual Variety? Variety { get; set; }
         public virtual Cultivar? Cultivar { get; set; }
 
         public virtual ICollection<Batch> Batches { get; set; } = [];
 
-
+        public enum CropClassification
+        {
+            Heirloom,
+            Non_GMO,
+            GMO
+        }
 
         //public int GetCurrentVegDays()
         //{

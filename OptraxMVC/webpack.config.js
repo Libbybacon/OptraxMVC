@@ -86,8 +86,8 @@ module.exports = {
                     priority: 15,
                     enforce: true,
                 },
-                default: false,  
-                vendors: false  
+                default: false,
+                vendors: false
             }
         }
     },

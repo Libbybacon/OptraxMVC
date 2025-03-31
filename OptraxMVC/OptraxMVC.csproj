@@ -9,7 +9,8 @@
   <ItemGroup>
     <Compile Remove="Areas\Admin\**" />
     <Compile Remove="Areas\Grow\Data\**" />
-    <Compile Remove="Areas\Grow\Views\Plants\EditorTemplates\**" />
+    <Compile Remove="Areas\Grow\Views\Plants\**" />
+    <Compile Remove="Areas\Grow\Views\Rooms\**" />
     <Compile Remove="Areas\Inventory\Views\Shared\**" />
     <Compile Remove="Views\Account\**" />
     <Compile Remove="Views\Shared\EditorTemplates\**" />
@@ -17,7 +18,8 @@
     <Compile Remove="wwwroot\css\site\**" />
     <Content Remove="Areas\Admin\**" />
     <Content Remove="Areas\Grow\Data\**" />
-    <Content Remove="Areas\Grow\Views\Plants\EditorTemplates\**" />
+    <Content Remove="Areas\Grow\Views\Plants\**" />
+    <Content Remove="Areas\Grow\Views\Rooms\**" />
     <Content Remove="Areas\Inventory\Views\Shared\**" />
     <Content Remove="Views\Account\**" />
     <Content Remove="Views\Shared\EditorTemplates\**" />
@@ -25,7 +27,8 @@
     <Content Remove="wwwroot\css\site\**" />
     <EmbeddedResource Remove="Areas\Admin\**" />
     <EmbeddedResource Remove="Areas\Grow\Data\**" />
-    <EmbeddedResource Remove="Areas\Grow\Views\Plants\EditorTemplates\**" />
+    <EmbeddedResource Remove="Areas\Grow\Views\Plants\**" />
+    <EmbeddedResource Remove="Areas\Grow\Views\Rooms\**" />
     <EmbeddedResource Remove="Areas\Inventory\Views\Shared\**" />
     <EmbeddedResource Remove="Views\Account\**" />
     <EmbeddedResource Remove="Views\Shared\EditorTemplates\**" />
@@ -33,7 +36,8 @@
     <EmbeddedResource Remove="wwwroot\css\site\**" />
     <None Remove="Areas\Admin\**" />
     <None Remove="Areas\Grow\Data\**" />
-    <None Remove="Areas\Grow\Views\Plants\EditorTemplates\**" />
+    <None Remove="Areas\Grow\Views\Plants\**" />
+    <None Remove="Areas\Grow\Views\Rooms\**" />
     <None Remove="Areas\Inventory\Views\Shared\**" />
     <None Remove="Views\Account\**" />
     <None Remove="Views\Shared\EditorTemplates\**" />
@@ -49,6 +53,7 @@
     <Content Remove="Areas\Grow\Views\Locations\_SiteLocation.cshtml" />
     <Content Remove="Areas\Inventory\Views\Resources\_Categories.cshtml" />
     <Content Remove="Views\Shared\_TreeNode.cshtml" />
+    <Content Remove="wwwroot\js\inventory\locations.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -83,7 +88,6 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Controllers\" />
-    <Folder Include="wwwroot\dist\" />
   </ItemGroup>
 
   <ItemGroup>
