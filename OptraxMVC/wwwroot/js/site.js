@@ -12,6 +12,8 @@ import 'leaflet-draw'; // also attaches to Leaflet
 // Choices.js
 import 'choices.js';
 
+import IMask from 'imask';
+
 // Driver.js
 import Driver from 'driver.js';
 import 'driver.js';
