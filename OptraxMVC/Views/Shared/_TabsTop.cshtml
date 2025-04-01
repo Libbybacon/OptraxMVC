@@ -1,5 +1,4 @@
-﻿@model TabsVM
-
+﻿@model List<Tab>
 @{
     int t = 0;
     var z = 200;
@@ -12,12 +11,13 @@
 }
 
 <ul class="nav nav-tabs " role="tablist">
-    @for (int i = 0; i < Model.Tabs.Count; i++)
+    @for (int i = 0; i < Model.Count; i++)
     {
-        var tab = Model.Tabs[i];
+        var tab = Model[i];
         bool active = i == 0;
         string key = tab.TabKey;
-        string divider = i < Model.Tabs.Count - 1 ? "divider" : "";
+        string divider = i < Model.Count - 1 ? "divider" : "";
+
         if (viewTabs)
         {
             isFirst = active ? "first" : "";
@@ -25,6 +25,7 @@
             top = $"margin-top: {t}px";
             style = $"z-index: {z}; {left}";
         }
+        
         <li class="nav-item px-lg-2 px-1 @isFirst @(divider)" style="@top" role="presentation">
             <button type="button"
                     role="tab"
@@ -33,7 +34,6 @@
                     style="@style"
                     data-key="@key"
                     data-name="@tab.Name"
-                    data-area="@Model.Area"
                     data-path="@tab.ViewPath"
                     data-bs-toggle="tab"
                     data-bs-target="#@key"
@@ -42,7 +42,8 @@
                 @(tab.Name)
             </button>
         </li>
+        
         z--;
-        t += 1;
+        t++;
     }
 </ul>

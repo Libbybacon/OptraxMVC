@@ -7,16 +7,12 @@ using OptraxMVC.Models;
 namespace OptraxMVC.Areas.Grow.Controllers
 {
     [Area("Grow")]
-    public class GrowController(OptraxContext context) : TabsController(context)
+    public class GrowController(OptraxContext context) : BaseController(context)
     {
         [Authorize]
         public IActionResult Index()
         {
-            TabsVM model = new()
-            {
-                Area = "Grow",
-                Tabs = [new Tab("Locations", "./Locations/LoadLocations/"), new Tab("Plants")]
-            };
+            List<Tab> model = [new Tab("Locations", "./Locations/LoadLocations/"), new Tab("Plants")];
 
             return View(model);
         }

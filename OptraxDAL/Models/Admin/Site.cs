@@ -3,30 +3,31 @@
 namespace OptraxDAL.Models.Admin
 {
     [Table("Locations", Schema = "Admin")]
-    public class SiteLocation : AddressLocation
+    public class Site : AddressLocation
     {
-        public SiteLocation()
+        public Site()
         {
-            Level = 0;
             LocationType = "Site";
         }
 
-        public SiteLocation(int addressID, int? businessID)
+        public Site(int addressID, int? businessID)
         {
-            Level = 0;
             LocationType = "Site";
             AddressID = addressID;
             BusinessID = businessID;
         }
 
-        public SiteLocation(Address? address, Business? business)
+        public Site(Address? address, Business? business)
         {
-            Level = 0;
             LocationType = "Site";
             Address = address;
             Business = business;
         }
 
         public bool IsPrimary { get; set; } = false;
+
+        [NotMapped]
+        public bool IsFirst { get; set; } = false;
+
     }
 }

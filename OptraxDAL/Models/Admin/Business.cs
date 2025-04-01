@@ -13,8 +13,8 @@ namespace OptraxDAL.Models.Admin
         public string BusinessType { get; set; } = "Grower";
 
         public virtual List<Address> Addresses { get; set; } = [];
-        public virtual List<SiteLocation>? Sites { get; set; } = [];
-        public virtual List<BuildingLocation>? Buildings { get; set; } = [];
+        public virtual List<Site>? Sites { get; set; } = [];
+        public virtual List<Building>? Buildings { get; set; } = [];
 
     }
     public enum BusinessTypes

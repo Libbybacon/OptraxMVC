@@ -1,0 +1,41 @@
+﻿@inject IPhoneFormatter PhoneFormatter
+
+@model Address
+
+@{
+    bool hasPhone = !string.IsNullOrEmpty(Model.ContactPhone);
+    bool hasEmail = !string.IsNullOrEmpty(Model.ContactEmail);
+    string phoneNum = hasPhone ? PhoneFormatter.Format(Model.ContactPhone!) : "";
+}
+
+<div class="m-toggle loc-disp display">
+    <div class="w-100">
+        @{
+            if (!string.IsNullOrEmpty(Model.Details))
+            {
+                <div class="addy-details">@Model.Details</div>
+            }
+
+            <div class="addy-info text-center">@Model.Address1</div>
+
+            if (!string.IsNullOrEmpty(Model.Address2))
+            {
+                <div class="addy-info text-center">@Model.Address2</div>
+            }
+
+            <div class="addy-info"><center>@Model.City, @Model.State @Model.ZipCode</center> </div>
+
+            <div class="addy-contact d-flex w-100">
+                @if (hasPhone && hasEmail)
+                {
+                    <div class="w-50 text-end"> @phoneNum <span class="ps-2">|</span></div>
+                    <div class="w-50 text-start ps-2"> @Model.ContactEmail</div>
+                }
+                else if (hasPhone || hasEmail)
+                {
+                    <div class="text-center">@(hasPhone ? phoneNum : Model.ContactEmail) </div>
+                }
+            </div>
+        }
+    </div>
+</div>

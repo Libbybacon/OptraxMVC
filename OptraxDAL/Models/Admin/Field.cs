@@ -3,11 +3,13 @@
 namespace OptraxDAL.Models.Admin
 {
     [Table("Locations", Schema = "Admin")]
-    public class OffsiteLocation : AddressLocation
+    public class Field : AreaLocation
     {
-        public OffsiteLocation()
+        public Field()
         {
-            LocationType = "OFfsite";
+            Width = 3;
+            Length = 30;
+            LocationType = "Field";
         }
     }
 }

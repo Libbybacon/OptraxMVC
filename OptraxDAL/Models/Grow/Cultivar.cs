@@ -13,5 +13,7 @@ namespace OptraxDAL.Models.Grow
         public string? PatentNumber { get; set; }
 
         public virtual Species Species { get; set; } = null!;
+
+        public virtual ICollection<Crop> Crops { get; set; } = [];
     }
 }

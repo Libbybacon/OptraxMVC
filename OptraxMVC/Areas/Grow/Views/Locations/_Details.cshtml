@@ -1,11 +1,20 @@
 ﻿@using OptraxDAL.Models.Admin
 
-@model LocationVM
+@model Location
 
 @{
-    ViewData["ShowEdit"] = false;
+    bool showEdit = ViewBag.ShowEdit as bool? ?? false;
 }
 
-<div class="loc-details">
-    <partial name="_Edit.cshtml" model="Model"/>
+<div class="m-toggle @(showEdit ? "d-none" : "")">
+    <div class="loc-name">@Model.Name</div>
+
+    @if (!string.IsNullOrEmpty(Model.Parent?.Name))
+    {
+        <div class="loc-parents">@Model.Parent?.Name</div>
+    }
+    @if (!string.IsNullOrEmpty(Model.Details))
+    {
+        <p class="loc-details">@Model.Details</p>
+    }
 </div>

@@ -12,13 +12,11 @@ namespace OptraxDAL.Models.Grow
         public Planting() { }
 
         public int CropID { get; set; }
-
-        [MaxLength(50)]
-        [ForeignKey("Batch")]
-        [Display(Name = "Batch ID")]
         public int? BatchID { get; set; }
-
         public int LocationID { get; set; }
+        public string? PlantingMethod { get; set; }
+
+        public DateTimeOffset? DatePlanted { get; set; }
 
         [Required]
         [Display(Name = "Current Stage")]
@@ -31,9 +29,10 @@ namespace OptraxDAL.Models.Grow
         public string? WasteQuantityUoM { get; set; }
 
         public virtual Crop Crop { get; set; } = new();
-        public virtual Batch? Batch { get; set; }
-        public virtual Location Location { get; set; } = default!;
+        public virtual CropBatch? Batch { get; set; }
+        public virtual AreaLocation Location { get; set; } = default!;
 
+        public virtual List<PlantingSection> Sections { get; set; } = [];
         public virtual ICollection<ProductItem> ProductItems { get; set; } = [];
     }
 }

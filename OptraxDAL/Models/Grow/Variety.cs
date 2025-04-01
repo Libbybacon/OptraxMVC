@@ -10,5 +10,6 @@ namespace OptraxDAL.Models.Grow
 
         public int SpeciesID { get; set; }
 
+        public virtual ICollection<Crop>? Crops { get; set; } = [];
     }
 }

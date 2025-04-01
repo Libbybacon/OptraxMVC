@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace OptraxDAL.Models.Grow
 {
     [Table("Batches", Schema = "Grow")]
-    public class Batch : TrackingBaseDetails
+    public class CropBatch : TrackingBaseDetails
     {
         public int CropID { get; set; }
         public int? SalesOrderID { get; set; }

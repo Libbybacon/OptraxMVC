@@ -1,60 +1,22 @@
-﻿@model LocationVM
+﻿@model Location
 
 @{
-
-    var showEdit = ViewData["ShowEdit"] as bool? ?? false;
-
-    string dispClass = showEdit ? "d-none" : "";
-    string editClass = showEdit ? "" : "d-none";
-
-    var subViewData = new ViewDataDictionary(ViewData);
-    subViewData.TemplateInfo.HtmlFieldPrefix = "Address";
+    bool showEdit = ViewBag.ShowEdit as bool? ?? false;
 }
+<div class="m-toggle row col-12 w-100 px-0 m-0 pe-0 @(showEdit ? "" : "d-none")">
+    <input type="hidden" asp-for="ID" />
+    <input type="hidden" asp-for="UserID" />
+    <input type="hidden" asp-for="ParentID" />
+    <input type="hidden" asp-for="LocationType" />
 
-<div class="p-3 model">
-    <form asp-action="@ViewBag.Action" asp-controller="Locations" method="post" id="modelForm">
-        @Html.AntiForgeryToken()
-
-        <input type="hidden" asp-for="ID" />
-        <input type="hidden" asp-for="Level" />
-        <input type="hidden" asp-for="IsPrimary" />
-        <input type="hidden" asp-for="LocationType" />
-        <input type="hidden" asp-for="Address.Name" />
-
-        <div class="m-toggle @dispClass">
-            <div class="loc-name">@Model.Name</div>
-            @if (!string.IsNullOrEmpty(Model.Details))
-            {
-                <div class="loc-details">@Model.Details</div>
-            }
-        </div>
-
-        <div class="m-toggle row col-12 w-100 px-0 m-0 pe-0 @editClass">
-            <div class="col-12 mt-2">
-                <label asp-for="Name"></label>
-                <input asp-for="Name" class="form-control attr" />
-                <span asp-validation-for="Name" class="val-msg"></span>
-            </div>
-            <div class="col-12">
-                <label asp-for="Details"></label>
-                <textarea asp-for="Details" class="form-control attr" rows="3"></textarea>
-                <span asp-validation-for="Details" class="val-msg"></span>
-            </div>
-
-        </div>
-        
-        @if (Model.HasAddress)
-        {
-            <partial name="~/Views/Shared/_Address.cshtml" model="Model.Address" view-data="@subViewData" />
-        }
-        
-        <div class="popup-btns d-flex w-100 justify-content-center">
-            <button type="submit" class="save-btn form-btn @editClass">Save Location</button>
-            <button type="button" class="delete-btn m-edit form-btn me-3 @editClass">Delete</button>
-            <button type="submit" class="update-btn m-edit form-btn ms-3 @editClass">Save Changes</button>
-            <button type="button" class="toggle-edit m form-btn ms-3 @dispClass">Edit</button>
-            <button type="button" class="toggle-edit m-edit form-btn ms-3 d-none">Cancel</button>
-
-        </div>
-    </form>
+    <div class="col-12 mt-2">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control attr" />
+        <span asp-validation-for="Name" class="val-msg"></span>
+    </div>
+    <div class="col-12">
+        <label asp-for="Details"></label>
+        <textarea asp-for="Details" class="form-control attr" rows="2"></textarea>
+        <span asp-validation-for="Details" class="val-msg"></span>
+    </div>
 </div>

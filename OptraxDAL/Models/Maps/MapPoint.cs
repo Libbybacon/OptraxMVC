@@ -26,7 +26,6 @@ namespace OptraxDAL.Models.Maps
         public decimal Elevation { get; set; } = 0;
 
         public virtual Icon? Icon { get; set; }
-        public virtual Location? Location { get; set; }
 
         [NotMapped]
         public string IconPath { get; set; } = string.Empty;

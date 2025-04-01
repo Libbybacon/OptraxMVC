@@ -3,11 +3,10 @@
 namespace OptraxDAL.Models.Admin
 {
     [Table("Locations", Schema = "Admin")]
-    public class BuildingLocation : AddressLocation
+    public class Building : AddressLocation
     {
-        public BuildingLocation()
+        public Building()
         {
-            Level = 1;
             LocationType = "Building";
         }
         //public BuildingLocation(int addressID, int? businessID)

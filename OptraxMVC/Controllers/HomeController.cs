@@ -7,7 +7,7 @@ using System.Diagnostics;
 namespace OptraxMVC.Controllers;
 
 [Authorize]
-public class HomeController(OptraxContext context) : TabsController(context)
+public class HomeController(OptraxContext context) : BaseController(context)
 {
 
     [Authorize]

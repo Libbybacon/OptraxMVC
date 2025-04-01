@@ -3,11 +3,11 @@
 namespace OptraxDAL.Models.Admin
 {
     [Table("Locations", Schema = "Admin")]
-    public class OffsiteLocation : AddressLocation
+    public class Room : Location
     {
-        public OffsiteLocation()
+        public Room()
         {
-            LocationType = "OFfsite";
+            LocationType = "Room";
         }
     }
 }

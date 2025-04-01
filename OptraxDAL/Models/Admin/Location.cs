@@ -1,4 +1,5 @@
 ﻿using OptraxDAL.Models.BaseClasses;
+using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
 using OptraxDAL.Models.Maps;
 using System.ComponentModel.DataAnnotations;
@@ -19,8 +20,12 @@ namespace OptraxDAL.Models.Admin
     {
         public decimal? Length { get; set; }
         public decimal? Width { get; set; }
+        public decimal? Radius { get; set; }
+        public string Shape { get; set; } = "Polygon";
 
+        public virtual ICollection<Planting>? Plantings { get; set; } = [];
     }
+
 
     [Table("Locations", Schema = "Admin")]
     public abstract class Location : TrackingBaseDetails
@@ -28,15 +33,10 @@ namespace OptraxDAL.Models.Admin
         public Location() { }
 
         public string LocationType { get; set; } = string.Empty;
-
         public int? MapObjectID { get; set; }
 
         [Display(Name = "Parent Location")]
         public int? ParentID { get; set; }
-
-        [MaxLength(1)]
-        public int Level { get; set; }
-
         public int? IconID { get; set; }
 
 
@@ -56,6 +56,9 @@ namespace OptraxDAL.Models.Admin
         public virtual ICollection<InventoryTransfer>? TransfersIn { get; set; } = [];
 
         [NotMapped]
+        public string? ParentString { get; set; }
+
+        [NotMapped]
         public string NameWithType { get => $"{LocationType}: {Name}"; }
 
         public object ToTreeNode()
@@ -68,12 +71,11 @@ namespace OptraxDAL.Models.Admin
                 type = LocationType.ToLower(),
                 state = new
                 {
-                    opened = Level < 2,
-                    selected = this is SiteLocation site && site.IsPrimary
+                    opened = true,
+                    selected = this is Site site && site.IsPrimary
                 }
             };
         }
-
 
         public string GetParentNamesString()
         {
@@ -109,9 +111,6 @@ namespace OptraxDAL.Models.Admin
     {
         Site,
         Field,
-        Row,
-        Bed,
-        Plot,
         Greenhouse,
         Building,
         Room,

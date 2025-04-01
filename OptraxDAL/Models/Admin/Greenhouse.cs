@@ -3,12 +3,13 @@
 namespace OptraxDAL.Models.Admin
 {
     [Table("Locations", Schema = "Admin")]
-    public class VehicleLocation : Location
+    public class Greenhouse : AreaLocation
     {
-        public VehicleLocation()
+        public Greenhouse()
         {
-            Level = 0;
-            LocationType = "Vehicle";
+            Width = 0;
+            Length = 0;
+            LocationType = "Greenhouse";
         }
     }
 }

@@ -16,7 +16,6 @@ namespace OptraxDAL.Models.Maps
         public int? LocationID { get; set; }
 
         public Polygon? PolyGeometry { get; set; }
-        public virtual Admin.Location? Location { get; set; }
 
 
         public override object ToGeoJSON()

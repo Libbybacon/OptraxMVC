@@ -86,5 +86,7 @@ namespace OptraxDAL.Models.Grow
         public string? RiskFactors { get; set; }
 
         public string? Notes { get; set; }
+
+        public virtual ICollection<Crop> Crops { get; set; } = [];
     }
 }

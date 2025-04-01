@@ -43,7 +43,7 @@ namespace OptraxMVC.Services
 
                 LocSelectsAll = drops.Contains("LocSelectsAll") ? await GetLocSelectsAll() : [],
                 LocSelectsByType = drops.Contains("LocSelectsByType") ? await GetLocSelectsByType(types) : [],
-                LocSelectsByLevel = drops.Contains("LocSelectsByLevel") ? await GetLocSelectsByLevel(level) : [],
+                //LocSelectsByLevel = drops.Contains("LocSelectsByLevel") ? await GetLocSelectsByLevel(level) : [],
                 LocTypeSelects = drops.Contains("LocTypeSelects") ? GetEnumSelects(typeof(Enums.LocationType)) : [],
             };
 
@@ -147,18 +147,18 @@ namespace OptraxMVC.Services
             }).ToList() ?? EmptyList;
         }
 
-        private async Task<List<SelectListItem>> GetLocSelectsByLevel(int? level)
-        {
-            if (level == null || level == 0)
-                return EmptyList;
+        //private async Task<List<SelectListItem>> GetLocSelectsByLevel(int? level)
+        //{
+        //    if (level == null || level == 0)
+        //        return EmptyList;
 
-            int parentLevel = (int)level - 1;
-            return (await db.Locations.Where(c => c.Active && c.Level == parentLevel).OrderBy(c => c.Name).ToListAsync()).Select(c => new SelectListItem
-            {
-                Value = c.ID.ToString(),
-                Text = string.Format("{0} - {1}", c.Name, c.LocationType)
-            }).ToList() ?? EmptyList;
-        }
+        //    int parentLevel = (int)level - 1;
+        //    return (await db.Locations.Where(c => c.Active && c.Level == parentLevel).OrderBy(c => c.Name).ToListAsync()).Select(c => new SelectListItem
+        //    {
+        //        Value = c.ID.ToString(),
+        //        Text = string.Format("{0} - {1}", c.Name, c.LocationType)
+        //    }).ToList() ?? EmptyList;
+        //}
     }
 }
 

@@ -1,116 +1,42 @@
 ﻿@model LocationVM
 
 @{
-    OptionsVM options = (OptionsVM)(ViewData["Options"] ?? new());
-
     bool showEdit = ViewBag.ShowEdit as bool? ?? false;
-    string action = ViewBag.Action;
-
-    string display = showEdit ? "d-none" : "";
-    string edit = showEdit ? "" : "d-none";
-    string hideOnFirst = Model.IsFirstSite ? "d-none" : edit;
+    var model = Model.Location;
 }
 
-<div class="edit-div ps-2 pt-3 model" data-isFirst="@Model.IsFirstSite.ToString().ToLower()">
-    <form asp-action="@action" asp-controller="Locations" method="post" class="px-1" id="locForm">
-        @Html.AntiForgeryToken()
+<partial name="_TabsTop" model="Model.Tabs" />
 
-        <input type="hidden" asp-for="ID" />
-        <input type="hidden" asp-for="Level" />
-        <input type="hidden" asp-for="ParentID" />
-        <input type="hidden" asp-for="IsPrimary" />
-        <input type="hidden" asp-for="LocationType" />
+<div class="tab-content h-100 p-0">
+    <div class="loc-msg"></div>
 
-        <div class="display loc-disp">
-            <div class="m-toggle @display">
-                <div class="loc-name">@Model.Name</div>
-                <div class="loc-parents">@Model.ParentString</div>
-                @if (!string.IsNullOrEmpty(Model.Details))
-                {
-                    <p class="loc-details">@Model.Details</p>
-                }
-            </div>
-        </div>
-        <div class="m-toggle row col-12 w-100 px-0 m-0 pe-0 @edit">
-            @if (Model.IsFirstSite)
+    @foreach (var tab in Model.Tabs)
+    {
+        bool active = tab.Name == "Details";
+        string key = tab.TabKey;
+
+        <div id="@key" class="tab-pane fade h-100 @(active ? "show active loaded" : "")" role="tabpanel" aria-labelledby="@key-tab">
+
+            @if (active)
             {
-                <div class="col-12 first-site">
-                    <center class="mb-3">Create your first site!</center>
-                    <p>After you create your first site, you can add Fields, Greenhouses, and Buildings.</p>
-                    <p>Fields and Greenhouses can be divided into Rows > Beds > Plots</p>
-                    <p>Buildings can be divided into Rooms</p>
-                </div>
-            }
-            else
-            {
+                <div id="loc-partial">
+                    <div class="edit-div ps-2 pt-3 model">
+                        <form asp-action="@ViewBag.Action" asp-controller="Locations" method="post" class="px-1" id="locForm">
+                            @Html.AntiForgeryToken()
 
-                @if (Model.Level > 0)
-                {
-                    <div class="col-6 ps-2 text-center">
-                        <label>Parents</label><br />
-                        <div>@Model.ParentString</div>
+                            @if (Model.Location is Site site)
+                            {
+                                <partial name="_Site" model="site" />
+                            }
+                            else if (Model.Location is AreaLocation areaLoc)
+                            {
+                                <partial name="_AreaLocation" model="areaLoc" />
+                            }
+                            <partial name="_FormButtons" model="showEdit" />
+                        </form>
                     </div>
-                }
-
-                <div class="@(Model.Level > 0 ? "col-6" : "col-12") text-center pe-2">
-                    <label>LocationType</label><br />
-                    <div>@Model.LocationType</div>
-                </div>
-
-
-            }
-            <div class="col-12 mt-2">
-                <label asp-for="Name"></label>
-                <input asp-for="Name" class="form-control attr" />
-                <span asp-validation-for="Name" class="val-msg"></span>
-            </div>
-            <div class="col-12">
-                <label asp-for="Details"></label>
-                <textarea asp-for="Details" class="form-control attr" rows="2"></textarea>
-                <span asp-validation-for="Details" class="val-msg"></span>
-            </div>
-            @if (Model.HasArea)
-            {
-                <div class="col-12 area-explain"></div>
-                <div class="col-6 pe-2">
-                    <div class="col-12 mb-3"><label>Parent Length:</label> <span class="area-span">@Math.Round(Model.ParentLength ?? 0, 2) m</span></div>
-                    <label asp-for="Length"></label>
-                    <div class="input-group">
-                        <input asp-for="Length" type="number" step="0.01" class="form-control attr" value="@Math.Round(Model.Length ?? 0, 2)" />
-                        <div class="input-group-append">
-                            <span class="input-group-text">m</span>
-                        </div>
-                    </div>
-                    <span asp-validation-for="Length" class="val-msg"></span>
-                </div>
-                <div class="col-6 ps-2">
-                    <div class="col-12 mb-3"><label>Parent Width:</label> <span class="area-span">@Math.Round(Model.ParentWidth ?? 0, 2) m</span></div>
-                    <label asp-for="Width"></label>
-                    <div class="input-group">
-                        <input asp-for="Width" type="number" step="0.01" class="form-control attr" value="@Math.Round(Model.Width ?? 0, 2)" />
-                        <div class="input-group-append">
-                            <span class="input-group-text">m</span>
-                        </div>
-                    </div>
-                    <span asp-validation-for="Width" class="val-msg"></span>
                 </div>
             }
         </div>
-
-
-
-        @if (Model.HasAddress)
-        {
-            var subViewData = new ViewDataDictionary(ViewData);
-            subViewData.TemplateInfo.HtmlFieldPrefix = "Address";
-            <partial name="~/Views/Shared/_Address.cshtml" model="Model.Address" view-data="@subViewData" />
-        }
-
-        <div class="popup-btns d-flex py-2 justify-content-center w-100">
-            <button type="button" class="toggle-edit m-toggle btn-gray @display">Edit</button>
-            @* <button type="button" class="btn-red m-toggle me-3 @hideOnFirst">Delete</button> *@
-            <button type="submit" class="btn-grn  m-toggle mx-3 @edit">Save</button>
-            <button type="button" class="toggle-edit  m-toggle btn-gray ms-3 d-none">Cancel</button>
-        </div>
-    </form>
+    }
 </div>

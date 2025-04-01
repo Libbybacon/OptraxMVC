@@ -35,19 +35,16 @@ function loadTab(tab) {
     $innerTab.addClass('loaded');
 
     const path = $(tab).attr("data-path");
-    console.log('loadTab', path)
+    console.log('loadTab', path);
 
     $.ajax({
-        //url: `../Areas/${area}/${name}/Load${name}/`,
         url: path,
         type: "GET",
         success: function (view) {
-            //document.getElementById(tabKey).innerHTML(view);
             $innerTab.html(view);
             $innerTab.hasClass("loaded");
         },
         error: function () {
-            //document.getElementById(tabKey).innerHTML('<div class="tab-div"><div class="tab-inner error-div">Coming Soon!</div></div>');
             $innerTab.html('<div class="tab-div"><div class="tab-inner error-div">Coming Soon!</div></div>');
         }
     });

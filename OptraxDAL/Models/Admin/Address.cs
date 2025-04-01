@@ -48,6 +48,6 @@ namespace OptraxDAL.Models.Admin
 
         public virtual Business? Business { get; set; }
 
-        public virtual BuildingLocation? Building { get; set; }
+        public virtual Building? Building { get; set; }
     }
 }

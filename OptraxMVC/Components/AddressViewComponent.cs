@@ -8,11 +8,11 @@ namespace OptraxMVC.Components
     {
         private readonly IOptionsService _Options = options;
 
-        public async Task<IViewComponentResult> Invoke(Address address, string prefix = "Address", bool showEdit = false)
+        public async Task<IViewComponentResult> InvokeAsync(Address address, bool showEdit = false, string prefix = "Address")
         {
-            ViewData["States"] = await _Options.LoadOptions(["StateSelects"]);
+            ViewData["States"] = (await _Options.LoadOptions(["StateSelects"])).StateSelects;
             ViewData.TemplateInfo.HtmlFieldPrefix = prefix;
-            ViewData["Editable"] = showEdit;
+            ViewData["ShowEdit"] = showEdit;
 
             return View(address);
         }

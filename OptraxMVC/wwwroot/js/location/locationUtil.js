@@ -25,7 +25,7 @@ export async function loadPartial(props) {
 
     const view = await response.data;
     if (view) {
-        $("#loc-partial").html(view);
+        $("#loc-details").html(view);
         setFormListeners();
     }
 }
@@ -36,19 +36,16 @@ export function setLocListeners() {
     })
 
     $('#locationTree').on("select_node.jstree", function (e, data) {
-        const props = { action: 'GetDetails', data: { id: data.node.id } }
+        const props = { action: 'GetDetails', data: { id: data.node.id, type: data.node.type } }
         loadPartial(props)
     });
     setFormListeners();
 }
 
 export function setFormListeners() {
+
     $(formID + ' #Name').on('input', function () {
         $(formID + ' #Address_Name').val($(this).val()).change();
-    })
-
-    $('#LocationType').off('change').on('change', function () {
-
     })
 
     $(formID + ' locForm .toggle-edit').on('click', function () {
@@ -96,6 +93,7 @@ export async function onSubmitForm(){
                 const tree = $('#locationTree').jstree(true);
                 tree.create_node(response.data.parent, response.data, "last", function (newNode) {
                     console.log('newnode:', newNode);
+
                     newNode.parents.forEach(id => {
                         tree.open_node(id);
                     });
