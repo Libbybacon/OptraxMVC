@@ -5,7 +5,11 @@
 
 # About
 
-Optrax is a platform designed to help growers track individual plants from seed to sale, manage operations and inventory, and gain insight through in-depth reporting.
+Optrax is a personal project I’ve been developing to sharpen my skills with .NET 8 and Azure. It’s a full-featured platform designed for growers to manage and monitor their operations from seed to sale.
+
+Users can create and organize farms or growing sites, add crops, and track plantings through every stage.
+
+The app includes inventory and resource tracking, plant genetics management, detailed reporting, and a real-time analytics dashboard. It also uses Leaflet.js for interactive mapping and a fully responsive UI.
 
 <sup>**_Please Note: This project is very much a work in progress, with new features being actively developed and refined. Expect ongoing improvements as the platform evolves_**</sup>
 
