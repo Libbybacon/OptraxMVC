@@ -9,7 +9,7 @@ Optrax is a personal project I’ve been developing to sharpen my skills with .N
 
 Users can create and organize farms or growing sites, add crops, and track plantings through every stage.
 
-The app includes inventory and resource tracking, plant genetics management, detailed reporting, and a real-time analytics dashboard. It also uses Leaflet.js for interactive mapping and a fully responsive UI.
+The app includes inventory and resource tracking, plant genetics management, detailed reporting, and a real-time analytics dashboard. It has a fully responsive UI and uses Leaflet for interactive site mapping.
 
 <sup>**_Please Note: This project is very much a work in progress, with new features being actively developed and refined. Expect ongoing improvements as the platform evolves_**</sup>
 
