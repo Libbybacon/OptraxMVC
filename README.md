@@ -1,15 +1,13 @@
-![logo-lt](https://github.com/user-attachments/assets/04da5b57-4199-4a50-ba70-7b44f896b77e)   
-<sup>***Track All of Your Growing Operationg From Seed to Sale***</sup>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/399ba782-04d5-4fb2-b9cb-07d454f93a12" alt="Optrax Logo"/>
 
-www.Optrax.dev
+<p align="center">www.Optrax.dev</p>
 
 # About
 
-Optrax is an ASP.NET Core 8.0 MVC web application deployed on Microsoft Azure App Service, with an Azure SQL Database.
+Optrax is a platform designed to help growers track individual plants from seed to sale, manage operations and inventory, and gain insight through in-depth reporting.
 
-This platform is designed to help growers track individual plants from seed to sale, manage grow operations and inventory, and gain insight through in-depth reporting.
-
-<sup>**_Please Note: Optrax is very much a work in progress, with new features being actively developed and refined. Expect ongoing improvements as the platform evolves_**</sup>
+<sup>**_Please Note: This project is very much a work in progress, with new features being actively developed and refined. Expect ongoing improvements as the platform evolves_**</sup>
 
 ## Tech Stack
 
@@ -28,5 +26,6 @@ This platform is designed to help growers track individual plants from seed to s
 **Hosting:**
 - Azure App Service
 - Azure SQL Database
+
 
 
