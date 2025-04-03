@@ -60,7 +60,7 @@ export function setColorPicker(attr) {
 
 export function updateStyle(input, val) {
     let layer = getActive();
-    console.log('updateStyle layer', layer, 'input', input, 'val', val);
+    //console.log('updateStyle layer', layer, 'input', input, 'val', val);
     switch (input) {
         case 'name':
             layer._tooltip.setContent(val);
@@ -93,7 +93,7 @@ export function saveStyle () {
     };
 }
 export function restoreStyle(input, val) {
-    console.log('restoreStyle')
+    //console.log('restoreStyle')
     let l = getActive();
     let origStyle = l._origStyle
     let tooltip = l.getTooltip();

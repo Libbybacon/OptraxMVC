@@ -14,7 +14,7 @@ namespace OptraxDAL.Models.Grow
         public int? VarietyID { get; set; }
         public int? CultivarID { get; set; }
 
-        public virtual Species? Species { get; set; }
+        //public virtual Species? Species { get; set; }
         public virtual Variety? Variety { get; set; }
         public virtual Cultivar? Cultivar { get; set; }
 

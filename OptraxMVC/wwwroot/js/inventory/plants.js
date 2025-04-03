@@ -20,21 +20,21 @@ function makeDatatable() {
             [1, "asc"],
             [3, "asc"],
         ],
-        rowGroup: {
-            dataSrc: ["strain", "cropID"],
-            startRender: function (rows, group, level) {
-                let name = level == 0 ? group.split('-')[0] : group;
-                let props = {
-                    Level: level,
-                    IsTop: level == 0,
-                    ID: level == 0 ? group.split('-')[1] : group,
-                    Name: name,
-                    NameNoSpace: level == 0 ? name.replace(/\s+/g, "") : name,
-                }
-                let $tr = makeHeaderToggle(props);
-                return $tr
-            }
-        },
+        //rowGroup: {
+        //    dataSrc: ["strain", "cropID"],
+        //    startRender: function (rows, group, level) {
+        //        let name = level == 0 ? group.split('-')[0] : group;
+        //        let props = {
+        //            Level: level,
+        //            IsTop: level == 0,
+        //            ID: level == 0 ? group.split('-')[1] : group,
+        //            Name: name,
+        //            NameNoSpace: level == 0 ? name.replace(/\s+/g, "") : name,
+        //        }
+        //        let $tr = makeHeaderToggle(props);
+        //        return $tr
+        //    }
+        //},
         columnDefs: [
             { className: "dt-control", data: null, targets: 0, sortable: false },
             { visible: false, targets: [1, 2, 3] },

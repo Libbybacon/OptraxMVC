@@ -10,6 +10,7 @@
 	  <Compile Remove="Models\Admin\BedLocation.cs" />
 	  <Compile Remove="Models\Admin\PlotLocation.cs" />
 	  <Compile Remove="Models\Admin\RowLocation.cs" />
+	  <Compile Remove="Models\Grow\Species.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

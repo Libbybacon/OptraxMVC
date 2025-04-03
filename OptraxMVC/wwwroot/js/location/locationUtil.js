@@ -43,7 +43,6 @@ export function setLocListeners() {
 }
 
 export function setFormListeners() {
-
     $(formID + ' #Name').on('input', function () {
         $(formID + ' #Address_Name').val($(this).val()).change();
     })
@@ -69,16 +68,24 @@ export function setFormListeners() {
 }
 
 export async function onDelete(id, type) {
+    const response = await apiService.get(`${urlBase}Delete/`, { id: id });
 
+    if (response && response.success) {
+        window.showMessage({ msg: `${locType} Deleted!`, css: 'success msg', msgdiv: $('.loc-msg') });
+    }
+    else {
+        var msg = response.msg ?? "Error deleting " + type;
+        window.showMessage({ msg: msg, css: 'error msg', msgdiv: $('.loc-msg') });
 
-
+    }
 }
 
-export async function onSubmitForm(){
+export async function onSubmitForm() {
     const action = $(formID).attr('action');
     const locType = $(formID + ' #LocationType').val();
     const isCreate = action && action.includes('Create');
-    console.log('loc onSubmitForm objType: ', locType, ' action:', action);
+
+    //console.log('loc onSubmitForm objType: ', locType, ' action:', action);
 
     const response = await formUtil.submitForm(formID);
     console.log('loc onSubmitForm response', response);
@@ -92,7 +99,7 @@ export async function onSubmitForm(){
 
                 const tree = $('#locationTree').jstree(true);
                 tree.create_node(response.data.parent, response.data, "last", function (newNode) {
-                    console.log('newnode:', newNode);
+                    //console.log('newnode:', newNode);
 
                     newNode.parents.forEach(id => {
                         tree.open_node(id);
@@ -101,7 +108,7 @@ export async function onSubmitForm(){
                     tree.select_node(newNode.id);
                 });
             }
-           
+
         }
         $(formID + ' .m-toggle').toggleClass('d-none');
 

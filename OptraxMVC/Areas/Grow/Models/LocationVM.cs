@@ -6,6 +6,7 @@ namespace OptraxMVC.Areas.Grow.Models
 {
     public class LocationVM
     {
+        public LocationVM() { }
         public LocationVM(string type, int? parentID = null)
         {
             Location = SetLocation(type);
@@ -19,9 +20,9 @@ namespace OptraxMVC.Areas.Grow.Models
             Tabs = SetTabs(loc);
         }
 
-        public Location Location { get; set; }
+        public Location Location { get; set; } = new Site();
         public Map? Map { get; set; }
-        public List<Tab> Tabs { get; set; }
+        public List<Tab> Tabs { get; set; } = [];
         public bool ShowEdit { get; set; } = false;
 
 

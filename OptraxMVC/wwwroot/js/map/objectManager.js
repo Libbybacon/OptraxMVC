@@ -3,7 +3,6 @@ import { formUtil } from '../utilities/form.js';
 import { getMap, getActive, setActive, deleteActive, setIndex, deleteIndex } from './mapState.js';
 import * as _style from './objStyleUtil.js'; 
 
-
 let map = getMap();
 
 const urlBase = '/Grow/Map/';
@@ -83,12 +82,13 @@ export const getLastLayer = layerSet => {
 }
 
 export async function showEditPopup(props) {
+
     map = getMap();
-    console.log('showEditPopup props', props, 'map', map);
+    //console.log('showEditPopup props', props, 'map', map);
 
     const response = await apiService.get(props.url, props.data);
+    //console.log('showEditPopup response', response);
 
-    console.log('showEditPopup response', response);
     if (!response.success == true) {
         window.showMesage({ msg: 'Error loading' + props.type, msgdiv: $('.map-msg'), css: 'error' });
         throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);

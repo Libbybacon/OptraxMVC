@@ -48,7 +48,7 @@ namespace OptraxDAL
 
 
         #region Grow
-        public DbSet<Species> Species { get; set; }
+        //public DbSet<Species> Species { get; set; }
         public DbSet<Variety> Varieties { get; set; }
         public DbSet<Cultivar> Cultivars { get; set; }
 
@@ -266,19 +266,19 @@ namespace OptraxDAL
             #endregion
 
             #region Grow
-            builder.Entity<Species>(e =>
-            {
-                e.HasIndex(x => x.SpeciesName).IsUnique();
-                e.Property(x => x.WaterNeedsQty).HasPrecision(8, 2);
-            });
+            //builder.Entity<Species>(e =>
+            //{
+            //    e.HasIndex(x => x.SpeciesName).IsUnique();
+            //    e.Property(x => x.WaterNeedsQty).HasPrecision(8, 2);
+            //});
 
             builder.Entity<Crop>(e =>
             {
                 e.HasIndex(x => x.Name).IsUnique();
 
-                e.HasOne(x => x.Species).WithMany(c => c.Crops)
-                                        .HasForeignKey(x => x.SpeciesID)
-                                        .OnDelete(DeleteBehavior.Restrict);
+                //e.HasOne(x => x.Species).WithMany(c => c.Crops)
+                //                        .HasForeignKey(x => x.SpeciesID)
+                //                        .OnDelete(DeleteBehavior.Restrict);
 
                 e.HasOne(x => x.Variety).WithMany(c => c.Crops)
                                         .HasForeignKey(x => x.VarietyID)

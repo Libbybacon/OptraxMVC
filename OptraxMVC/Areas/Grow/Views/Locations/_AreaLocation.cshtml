@@ -7,7 +7,7 @@
 <partial name="_Details" model="Model" />
 <partial name="_Edit" model="Model" />
 
-<div class="m-toggle @(showEdit ? "" : "d-none")">
+<div class="m-toggle row col-12 w-100 m-0 p-0 @(showEdit ? "" : "d-none")">
     <div class="col-12 area-explain"></div>
     <div class="col-6 pe-2">
         @* <div class="col-12 mb-3"><label>Parent Length:</label> <span class="area-span">@Math.Round(Model.ParentLength ?? 0, 2) m</span></div> *@

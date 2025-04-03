@@ -3,6 +3,7 @@
 @{
     bool showEdit = ViewBag.ShowEdit as bool? ?? false;
     var model = Model.Location;
+    ViewData.TemplateInfo.HtmlFieldPrefix = "Location";
 }
 
 <partial name="_TabsTop" model="Model.Tabs" />
@@ -21,7 +22,7 @@
             {
                 <div id="loc-partial">
                     <div class="edit-div ps-2 pt-3 model">
-                        <form asp-action="@ViewBag.Action" asp-controller="Locations" method="post" class="px-1" id="locForm">
+                        <form asp-action="@ViewBag.Action" asp-controller="Locations" method="post" class="px-1" id="locForm" data-id="@Model.Location.ID" data-type="@Model.Location.LocationType">
                             @Html.AntiForgeryToken()
 
                             @if (Model.Location is Site site)

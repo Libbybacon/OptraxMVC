@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using OptraxDAL;
@@ -12,9 +13,11 @@ using OptraxDAL;
 namespace OptraxDAL.Migrations
 {
     [DbContext(typeof(OptraxContext))]
-    partial class OptraxContextModelSnapshot : ModelSnapshot
+    [Migration("20250403022254_SpeciesUpdate")]
+    partial class SpeciesUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -648,6 +651,8 @@ namespace OptraxDAL.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
+                    b.HasIndex("SpeciesID");
+
                     b.HasIndex("StrainID");
 
                     b.HasIndex("UserID");
@@ -1027,6 +1032,253 @@ namespace OptraxDAL.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("PlantingSections", "Grow");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Grow.Species", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Abbreviation")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(5);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Attracts")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(47);
+
+                    b.Property<string>("AvoidPlants")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(46);
+
+                    b.Property<bool>("Blooms")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(11);
+
+                    b.Property<string>("CommonDiseases")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(44);
+
+                    b.Property<string>("CommonName")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(3);
+
+                    b.Property<string>("CommonPests")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(43);
+
+                    b.Property<string>("CompanionPlants")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(45);
+
+                    b.Property<string>("CropRotationDetails")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(42);
+
+                    b.Property<int?>("CultivarID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CustomName")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(4);
+
+                    b.Property<string>("Cycle")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(22);
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DaysToMaturity")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(23);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(6);
+
+                    b.Property<string>("Details")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Family")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(0);
+
+                    b.Property<bool>("Fruits")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(12);
+
+                    b.Property<string>("Genus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(1);
+
+                    b.Property<string>("GerminationDays")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(36);
+
+                    b.Property<string>("GerminationDetails")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(37);
+
+                    b.Property<bool?>("HardenOff")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(38);
+
+                    b.Property<string>("HardenOffDetails")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(39);
+
+                    b.Property<string>("HardinessZone")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(20);
+
+                    b.Property<string>("HarvestDetails")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(41);
+
+                    b.Property<string>("HarvestPeriod")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(24);
+
+                    b.Property<string>("HarvestSignifiers")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(40);
+
+                    b.Property<string>("HeatZone")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(19);
+
+                    b.Property<string>("Height")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(14);
+
+                    b.Property<string>("IdealAirTemp")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(30);
+
+                    b.Property<string>("IdealHumidity")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(32);
+
+                    b.Property<string>("IdealLightHours")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(33);
+
+                    b.Property<string>("IdealSoilTemp")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(31);
+
+                    b.Property<string>("IdealpH")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(34);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PlantSpacing")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(9);
+
+                    b.Property<string>("PlantType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(7);
+
+                    b.Property<string>("PlantingDepth")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(8);
+
+                    b.Property<string>("PlantingMethods")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(21);
+
+                    b.Property<string>("PropagationMethods")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(35);
+
+                    b.Property<string>("PropagationTypes")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(25);
+
+                    b.Property<string>("Repels")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(48);
+
+                    b.Property<string>("RowSpacing")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(10);
+
+                    b.Property<string>("Seasons")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(17);
+
+                    b.Property<bool>("Seeds")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(13);
+
+                    b.Property<string>("Site")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(16);
+
+                    b.Property<string>("SoilDrainage")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(29);
+
+                    b.Property<string>("SoilType")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(18);
+
+                    b.Property<string>("SpeciesName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnOrder(2);
+
+                    b.Property<string>("Spread")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(15);
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("WaterNeedsFrequency")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnOrder(28);
+
+                    b.Property<decimal?>("WaterNeedsQty")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("decimal(8,2)")
+                        .HasColumnOrder(26);
+
+                    b.Property<string>("WaterQtyUOM")
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnOrder(27);
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CultivarID");
+
+                    b.HasIndex("SpeciesName")
+                        .IsUnique();
+
+                    b.HasIndex("UserID");
+
+                    b.HasIndex("WaterQtyUOM");
+
+                    b.ToTable("Species", "Grow");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.Strain", b =>
@@ -2372,6 +2624,12 @@ namespace OptraxDAL.Migrations
                         .HasForeignKey("CultivarID")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("OptraxDAL.Models.Grow.Species", "Species")
+                        .WithMany("Crops")
+                        .HasForeignKey("SpeciesID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("OptraxDAL.Models.Grow.Strain", null)
                         .WithMany("Crops")
                         .HasForeignKey("StrainID");
@@ -2386,6 +2644,8 @@ namespace OptraxDAL.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Cultivar");
+
+                    b.Navigation("Species");
 
                     b.Navigation("User");
 
@@ -2527,6 +2787,25 @@ namespace OptraxDAL.Migrations
                     b.Navigation("Planting");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Grow.Species", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Grow.Cultivar", null)
+                        .WithMany("ParentSpecies")
+                        .HasForeignKey("CultivarID");
+
+                    b.HasOne("OptraxDAL.Models.Admin.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID");
+
+                    b.HasOne("OptraxDAL.Models.Admin.UoM", "WaterUOM")
+                        .WithMany()
+                        .HasForeignKey("WaterQtyUOM");
+
+                    b.Navigation("User");
+
+                    b.Navigation("WaterUOM");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.Strain", b =>
@@ -3034,6 +3313,8 @@ namespace OptraxDAL.Migrations
 
                     b.Navigation("ParentCultivars");
 
+                    b.Navigation("ParentSpecies");
+
                     b.Navigation("ParentVarieties");
                 });
 
@@ -3052,6 +3333,11 @@ namespace OptraxDAL.Migrations
             modelBuilder.Entity("OptraxDAL.Models.Grow.PlantingSection", b =>
                 {
                     b.Navigation("Children");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Grow.Species", b =>
+                {
+                    b.Navigation("Crops");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.Strain", b =>
