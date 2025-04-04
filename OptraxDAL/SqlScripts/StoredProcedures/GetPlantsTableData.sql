@@ -11,11 +11,11 @@ BEGIN
 	SET NOCOUNT ON;
 
 SELECT 
-	plant.ID AS PlantID,
-	crop.BatchID AS CropID,
-	plant.StrainID,
-	TrackingID,
-	CONCAT(strain.[Name], '-', CAST(strain.ID AS nvarchar)) AS Strain,
+	plant.Id AS PlantId,
+	crop.BatchId AS CropId,
+	plant.StrainId,
+	TrackingId,
+	CONCAT(strain.[Name], '-', CAST(strain.Id AS nvarchar)) AS Strain,
 	IsMother,
 	MotherName,
 	Phase,
@@ -25,8 +25,8 @@ SELECT
 	LocationType,
 	1 AS Quantity
 FROM [Optrax].[dbo].[Plants] plant
-INNER JOIN Strains strain ON plant.StrainID = strain.ID
-LEFT JOIN Crops crop ON plant.CropID = crop.ID
-LEFT JOIN InventoryLocations loc ON crop.LocationID = loc.ID
+INNER JOIN Strains strain ON plant.StrainId = strain.Id
+LEFT JOIN Crops crop ON plant.CropId = crop.Id
+LEFT JOIN InventoryLocations loc ON crop.LocationId = loc.Id
 
 END

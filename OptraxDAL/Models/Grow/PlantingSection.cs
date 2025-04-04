@@ -9,11 +9,11 @@ namespace OptraxDAL.Models.Grow
     {
         public PlantingSection() { }
 
-        public int PlantingID { get; set; }
+        public int PlantingId { get; set; }
         public int? Order { get; set; }
-        public int? ParentID { get; set; }
-        public int PatternID { get; set; }
-        public int? MapObjectID { get; set; }
+        public int? ParentId { get; set; }
+        public int PatternId { get; set; }
+        public int? MapObjectId { get; set; }
         public string SectionType { get; set; } = ""; // Field, Row, Bed, Plot
 
 

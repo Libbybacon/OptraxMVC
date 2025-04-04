@@ -7,6 +7,6 @@ namespace OptraxMVC.Services
     {
         private readonly IHttpContextAccessor _accessor = accessor;
 
-        public string UserID => _accessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+        public string UserId => _accessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
     }
 }

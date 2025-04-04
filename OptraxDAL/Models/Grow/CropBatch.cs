@@ -7,8 +7,8 @@ namespace OptraxDAL.Models.Grow
     [Table("Batches", Schema = "Grow")]
     public class CropBatch : TrackingBaseDetails
     {
-        public int CropID { get; set; }
-        public int? SalesOrderID { get; set; }
+        public int CropId { get; set; }
+        public int? SalesOrderId { get; set; }
         public string PropagationType { get; set; } = string.Empty;
 
         [MaxLength(50)]

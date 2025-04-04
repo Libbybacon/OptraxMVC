@@ -34,7 +34,7 @@ namespace OptraxMVC.Services.Inventory
                 db.Categories.Add(cat);
                 await db.SaveChangesAsync();
 
-                return new ResponseVM { Success = true, Msg = $"New {(!cat.ParentID.HasValue ? "top level " : "")}category '{cat.Name}' added!" };
+                return new ResponseVM { Success = true, Msg = $"New {(!cat.ParentId.HasValue ? "top level " : "")}category '{cat.Name}' added!" };
             }
             catch (Exception)
             {
@@ -46,7 +46,7 @@ namespace OptraxMVC.Services.Inventory
         {
             try
             {
-                var dbCat = await GetCategoryByIdAsync(cat.ID);
+                var dbCat = await GetCategoryByIdAsync(cat.Id);
 
                 if (dbCat == null)
                     return new ResponseVM { Msg = "Category not found." };

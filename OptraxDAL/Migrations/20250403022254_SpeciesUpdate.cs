@@ -10,15 +10,15 @@ namespace OptraxDAL.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Cultivars_Species_SpeciesID",
-                schema: "Grow",
-                table: "Cultivars");
+            //migrationBuilder.DropForeignKey(
+            //    name: "FK_Cultivars_Species_SpeciesID",
+            //    schema: "Grow",
+            //    table: "Cultivars");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Cultivars_SpeciesID",
-                schema: "Grow",
-                table: "Cultivars");
+            //migrationBuilder.DropIndex(
+            //    name: "IX_Cultivars_SpeciesID",
+            //    schema: "Grow",
+            //    table: "Cultivars");
 
             migrationBuilder.DropColumn(
                 name: "BestPlantingMethod",
@@ -759,65 +759,65 @@ namespace OptraxDAL.Migrations
                 type: "nvarchar(max)",
                 nullable: true);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Varieties_CultivarID",
-                schema: "Grow",
-                table: "Varieties",
-                column: "CultivarID");
+            //migrationBuilder.CreateIndex(
+            //    name: "IX_Varieties_CultivarID",
+            //    schema: "Grow",
+            //    table: "Varieties",
+            //    column: "CultivarID");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Species_CultivarID",
-                schema: "Grow",
-                table: "Species",
-                column: "CultivarID");
+            //migrationBuilder.CreateIndex(
+            //    name: "IX_Species_CultivarID",
+            //    schema: "Grow",
+            //    table: "Species",
+            //    column: "CultivarID");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Species_WaterQtyUOM",
-                schema: "Grow",
-                table: "Species",
-                column: "WaterQtyUOM");
+            //migrationBuilder.CreateIndex(
+            //    name: "IX_Species_WaterQtyUOM",
+            //    schema: "Grow",
+            //    table: "Species",
+            //    column: "WaterQtyUOM");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Cultivars_CultivarID",
-                schema: "Grow",
-                table: "Cultivars",
-                column: "CultivarID");
+            //migrationBuilder.CreateIndex(
+            //    name: "IX_Cultivars_CultivarID",
+            //    schema: "Grow",
+            //    table: "Cultivars",
+            //    column: "CultivarID");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Cultivars_Cultivars_CultivarID",
-                schema: "Grow",
-                table: "Cultivars",
-                column: "CultivarID",
-                principalSchema: "Grow",
-                principalTable: "Cultivars",
-                principalColumn: "ID");
+            //migrationBuilder.AddForeignKey(
+            //    name: "FK_Cultivars_Cultivars_CultivarID",
+            //    schema: "Grow",
+            //    table: "Cultivars",
+            //    column: "CultivarID",
+            //    principalSchema: "Grow",
+            //    principalTable: "Cultivars",
+            //    principalColumn: "ID");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Species_Cultivars_CultivarID",
-                schema: "Grow",
-                table: "Species",
-                column: "CultivarID",
-                principalSchema: "Grow",
-                principalTable: "Cultivars",
-                principalColumn: "ID");
+            //migrationBuilder.AddForeignKey(
+            //    name: "FK_Species_Cultivars_CultivarID",
+            //    schema: "Grow",
+            //    table: "Species",
+            //    column: "CultivarID",
+            //    principalSchema: "Grow",
+            //    principalTable: "Cultivars",
+            //    principalColumn: "ID");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Species_UoMs_WaterQtyUOM",
-                schema: "Grow",
-                table: "Species",
-                column: "WaterQtyUOM",
-                principalSchema: "Admin",
-                principalTable: "UoMs",
-                principalColumn: "UnitName");
+            //migrationBuilder.AddForeignKey(
+            //    name: "FK_Species_UoMs_WaterQtyUOM",
+            //    schema: "Grow",
+            //    table: "Species",
+            //    column: "WaterQtyUOM",
+            //    principalSchema: "Admin",
+            //    principalTable: "UoMs",
+            //    principalColumn: "UnitName");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Varieties_Cultivars_CultivarID",
-                schema: "Grow",
-                table: "Varieties",
-                column: "CultivarID",
-                principalSchema: "Grow",
-                principalTable: "Cultivars",
-                principalColumn: "ID");
+            //migrationBuilder.AddForeignKey(
+            //    name: "FK_Varieties_Cultivars_CultivarID",
+            //    schema: "Grow",
+            //    table: "Varieties",
+            //    column: "CultivarID",
+            //    principalSchema: "Grow",
+            //    principalTable: "Cultivars",
+            //    principalColumn: "ID");
         }
 
         /// <inheritdoc />

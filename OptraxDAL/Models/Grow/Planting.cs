@@ -11,9 +11,9 @@ namespace OptraxDAL.Models.Grow
     {
         public Planting() { }
 
-        public int CropID { get; set; }
-        public int? BatchID { get; set; }
-        public int LocationID { get; set; }
+        public int CropId { get; set; }
+        public int? BatchId { get; set; }
+        public int LocationId { get; set; }
         public string? PlantingMethod { get; set; }
 
         public DateTimeOffset? DatePlanted { get; set; }

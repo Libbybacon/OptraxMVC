@@ -50,12 +50,12 @@ namespace OptraxMVC.Areas.Grow.Controllers
         }
 
         [HttpGet]
-        public IActionResult LoadCreate(string type, string? parentID)
+        public IActionResult LoadCreate(string type, string? parentId)
         {
             try
             {
-                int? parID = int.TryParse(parentID, out int id) ? id : null;
-                LocationVM model = new(type, parID);
+                int? parId = int.TryParse(parentId, out int id) ? id : null;
+                LocationVM model = new(type, parId);
 
                 string action = type == "site" ? "CreateSite" : "CreateAreaLoc";
                 return GetLocationView(model, "Create");
@@ -155,7 +155,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
         {
             try
             {
-                if (id == null) { return Json(ResponseVM("Error deleting location - null ID")); }
+                if (id == null) { return Json(ResponseVM("Error deleting location - null Id")); }
 
                 return Json(await _Location.DeleteAsync((int)id));
             }

@@ -7,10 +7,10 @@ namespace OptraxMVC.Areas.Grow.Models
     public class LocationVM
     {
         public LocationVM() { }
-        public LocationVM(string type, int? parentID = null)
+        public LocationVM(string type, int? parentId = null)
         {
             Location = SetLocation(type);
-            Location.ParentID = parentID;
+            Location.ParentId = parentId;
             Tabs = SetTabs(Location);
         }
 
@@ -28,7 +28,7 @@ namespace OptraxMVC.Areas.Grow.Models
 
         public List<Tab> SetTabs(Location loc)
         {
-            int id = loc.ID;
+            int id = loc.Id;
             List<Tab> tabs = [new Tab("Details", id)];
 
             if (loc is AreaLocation)

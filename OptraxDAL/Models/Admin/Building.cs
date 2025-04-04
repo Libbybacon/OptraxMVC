@@ -9,12 +9,12 @@ namespace OptraxDAL.Models.Admin
         {
             LocationType = "Building";
         }
-        //public BuildingLocation(int addressID, int? businessID)
+        //public BuildingLocation(int addressId, int? businessId)
         //{
         //    Level = 1;
         //    HasAddress = true;
-        //    AddressID = addressID;
-        //    BusinessID = businessID;
+        //    AddressId = addressId;
+        //    BusinessId = businessId;
         //}
     }
 }

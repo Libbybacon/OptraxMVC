@@ -18,9 +18,9 @@ namespace OptraxDAL.Models.Maps
             Longitude = lng;
         }
 
-        public int IconID { get; set; } = 1;
-        public int IconCollectionID { get; set; } = 1;
-        public int? LocationID { get; set; }
+        public int IconId { get; set; } = 1;
+        public int IconCollectionId { get; set; } = 1;
+        public int? LocationId { get; set; }
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public decimal Elevation { get; set; } = 0;
@@ -37,7 +37,7 @@ namespace OptraxDAL.Models.Maps
                 type = "Feature",
                 properties = new
                 {
-                    id = ID,
+                    id = Id,
                     name = Name,
                     objType = "Point",
                     iconPath = GetIconPath()

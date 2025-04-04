@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -16,10 +15,10 @@ namespace OptraxDAL.Migrations
                 schema: "Grow",
                 table: "Crops");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_Crops_Locations_FieldLocationID",
-                schema: "Grow",
-                table: "Crops");
+            //migrationBuilder.DropForeignKey(
+            //    name: "FK_Crops_Locations_FieldLocationID",
+            //    schema: "Grow",
+            //    table: "Crops");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Crops_Locations_GreenhouseLocationID",
@@ -91,10 +90,10 @@ namespace OptraxDAL.Migrations
                 schema: "Admin",
                 table: "Locations");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Crops_FieldLocationID",
-                schema: "Grow",
-                table: "Crops");
+            //migrationBuilder.DropIndex(
+            //    name: "IX_Crops_FieldLocationID",
+            //    schema: "Grow",
+            //    table: "Crops");
 
             migrationBuilder.DropIndex(
                 name: "IX_Crops_GreenhouseLocationID",
@@ -116,10 +115,10 @@ namespace OptraxDAL.Migrations
                 schema: "Admin",
                 table: "Locations");
 
-            migrationBuilder.DropColumn(
-                name: "FieldLocationID",
-                schema: "Grow",
-                table: "Crops");
+            //migrationBuilder.DropColumn(
+            //    name: "FieldLocationID",
+            //    schema: "Grow",
+            //    table: "Crops");
 
             migrationBuilder.DropColumn(
                 name: "GreenhouseLocationID",
@@ -176,37 +175,37 @@ namespace OptraxDAL.Migrations
                 oldClrType: typeof(bool),
                 oldType: "bit");
 
-            migrationBuilder.CreateTable(
-                name: "PlantingPatterns",
-                schema: "Grow",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Width = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
-                    Length = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
-                    Radius = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
-                    SpaceLeft = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
-                    SpaceRight = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
-                    PlantSpacing = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
-                    Direction = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
-                    Active = table.Column<bool>(type: "bit", nullable: false),
-                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    DateCreated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    DateLastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Details = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PlantingPatterns", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_PlantingPatterns_AspNetUsers_UserID",
-                        column: x => x.UserID,
-                        principalSchema: "Identity",
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
+            //migrationBuilder.CreateTable(
+            //    name: "PlantingPatterns",
+            //    schema: "Grow",
+            //    columns: table => new
+            //    {
+            //        ID = table.Column<int>(type: "int", nullable: false)
+            //            .Annotation("SqlServer:Identity", "1, 1"),
+            //        Width = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+            //        Length = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+            //        Radius = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+            //        SpaceLeft = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+            //        SpaceRight = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+            //        PlantSpacing = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+            //        Direction = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+            //        Active = table.Column<bool>(type: "bit", nullable: false),
+            //        UserID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+            //        DateCreated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+            //        DateLastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+            //        Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+            //        Details = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_PlantingPatterns", x => x.ID);
+            //        table.ForeignKey(
+            //            name: "FK_PlantingPatterns_AspNetUsers_UserID",
+            //            column: x => x.UserID,
+            //            principalSchema: "Identity",
+            //            principalTable: "AspNetUsers",
+            //            principalColumn: "Id");
+            //    });
 
             migrationBuilder.CreateTable(
                 name: "PlantingSections",
@@ -275,11 +274,11 @@ namespace OptraxDAL.Migrations
                 unique: true,
                 filter: "[MapObjectID] IS NOT NULL");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_PlantingPatterns_UserID",
-                schema: "Grow",
-                table: "PlantingPatterns",
-                column: "UserID");
+            //migrationBuilder.CreateIndex(
+            //    name: "IX_PlantingPatterns_UserID",
+            //    schema: "Grow",
+            //    table: "PlantingPatterns",
+            //    column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PlantingSections_MapObjectID",

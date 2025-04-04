@@ -9,7 +9,7 @@ namespace OptraxMVC.Services.Inventory
     public interface IResourceService
     {
         Task<List<ResourceVM>> GetResourcesAsync();
-        Task<Resource?> GetResourceByIdAsync(int rsrcID);
+        Task<Resource?> GetResourceByIdAsync(int rsrcId);
         Task<ResponseVM> CreateAsync(Resource rsrc);
         Task<ResponseVM> UpdateAsync(Resource rsrc);
         Task<Category[]?> GetResourceCategoriesAsync(int categoryId);
@@ -24,14 +24,14 @@ namespace OptraxMVC.Services.Inventory
             return await db.Database.SqlQuery<ResourceVM>($"GetResourcesTableData").ToListAsync();
         }
 
-        public async Task<Resource?> GetResourceByIdAsync(int rsrcID)
+        public async Task<Resource?> GetResourceByIdAsync(int rsrcId)
         {
-            return await db.Resources.FindAsync(rsrcID);
+            return await db.Resources.FindAsync(rsrcId);
         }
 
         public async Task<ResponseVM> CreateAsync(Resource rsrc)
         {
-            var rsrcCats = await GetResourceCategoriesAsync(rsrc.CategoryID);
+            var rsrcCats = await GetResourceCategoriesAsync(rsrc.CategoryId);
 
             if (rsrcCats == null)
                 return new ResponseVM { Success = true, Msg = "Invalid category" };
@@ -56,12 +56,12 @@ namespace OptraxMVC.Services.Inventory
 
         public async Task<ResponseVM> UpdateAsync(Resource rsrc)
         {
-            Resource? dbRsrc = await GetResourceByIdAsync(rsrc.ID);
+            Resource? dbRsrc = await GetResourceByIdAsync(rsrc.Id);
 
             if (dbRsrc == null)
                 return new ResponseVM { Msg = "Resource not found." };
 
-            var rsrcCats = await GetResourceCategoriesAsync(dbRsrc.CategoryID);
+            var rsrcCats = await GetResourceCategoriesAsync(dbRsrc.CategoryId);
 
             if (rsrcCats == null)
                 return new ResponseVM { Msg = "Invalid category" };
@@ -90,7 +90,7 @@ namespace OptraxMVC.Services.Inventory
 
         public async Task<Category[]?> GetResourceCategoriesAsync(int categoryId)
         {
-            var cat1 = await db.Categories.Where(c => c.ID == categoryId).Include(c => c.Parent).FirstOrDefaultAsync();
+            var cat1 = await db.Categories.Where(c => c.Id == categoryId).Include(c => c.Parent).FirstOrDefaultAsync();
 
             var cat0 = cat1?.Parent;
 

@@ -19,18 +19,18 @@ namespace OptraxMVC.Services
 
     public class LocationService(OptraxContext context, ICurrentUserService user, IMapper mapper) : ILocationService
     {
-        private readonly string UserID = user.UserID;
+        private readonly string UserId = user.UserId;
         private readonly IMapper _Mapper = mapper;
         private readonly OptraxContext db = context;
 
         public async Task<Site?> GetSiteLocationAsync()
         {
-            return (await db.Sites.Where(l => l.IsPrimary && l.UserID == UserID).Include(l => l.Address).FirstOrDefaultAsync()) ?? null;
+            return (await db.Sites.Where(l => l.IsPrimary && l.UserId == UserId).Include(l => l.Address).FirstOrDefaultAsync()) ?? null;
         }
 
         public async Task<List<object>> GetTreeNodesAsync()
         {
-            return [.. (await db.Locations.Where(l => l.Active && l.UserID == UserID).ToListAsync()).Select(l => l.ToTreeNode())];
+            return [.. (await db.Locations.Where(l => l.Active && l.UserId == UserId).ToListAsync()).Select(l => l.ToTreeNode())];
         }
 
         public async Task<LocationVM?> GetLocationAsync(int id, string type)
@@ -39,11 +39,11 @@ namespace OptraxMVC.Services
 
             if (type.Equals("site", StringComparison.CurrentCultureIgnoreCase))
             {
-                dbLoc = await db.Sites.Where(l => l.ID == id && l.UserID == UserID).Include(l => l.Address).FirstOrDefaultAsync() ?? null;
+                dbLoc = await db.Sites.Where(l => l.Id == id && l.UserId == UserId).Include(l => l.Address).FirstOrDefaultAsync() ?? null;
             }
             else
             {
-                dbLoc = await db.Locations.Where(l => l.ID == id && l.UserID == UserID).FirstOrDefaultAsync() ?? null;
+                dbLoc = await db.Locations.Where(l => l.Id == id && l.UserId == UserId).FirstOrDefaultAsync() ?? null;
             }
 
             return dbLoc == null ? null : new(dbLoc);
@@ -68,7 +68,7 @@ namespace OptraxMVC.Services
         {
             try
             {
-                Location? dbLoc = await db.Locations.FindAsync(viewLoc.ID);
+                Location? dbLoc = await db.Locations.FindAsync(viewLoc.Id);
 
                 if (dbLoc == null) { return new ResponseVM("Location not found"); }
 
@@ -88,11 +88,11 @@ namespace OptraxMVC.Services
         {
             dbLoc.Name = viewLoc.Name;
             dbLoc.Details = viewLoc.Details;
-            dbLoc.ParentID = viewLoc.ParentID;
+            dbLoc.ParentId = viewLoc.ParentId;
             dbLoc.LocationType = viewLoc.LocationType;
 
-            dbLoc.IconID = viewLoc.IconID;
-            dbLoc.MapObjectID = viewLoc.MapObjectID;
+            dbLoc.IconId = viewLoc.IconId;
+            dbLoc.MapObjectId = viewLoc.MapObjectId;
 
             if (viewLoc is AddressLocation viewAdd && dbLoc is AddressLocation dbAdd)
             {
@@ -107,7 +107,7 @@ namespace OptraxMVC.Services
 
         private void UpdateAddress(AddressLocation viewLoc, AddressLocation dbLoc)
         {
-            Address? dbAdd = dbLoc.AddressID == null ? new() : db.Addresses.Find(dbLoc.AddressID);
+            Address? dbAdd = dbLoc.AddressId == null ? new() : db.Addresses.Find(dbLoc.AddressId);
 
             if (dbAdd != null)
             {
@@ -127,7 +127,7 @@ namespace OptraxMVC.Services
         {
             try
             {
-                Location? dbLoc = await db.Locations.Where(l => l.ID == id && l.UserID == UserID).FirstOrDefaultAsync();
+                Location? dbLoc = await db.Locations.Where(l => l.Id == id && l.UserId == UserId).FirstOrDefaultAsync();
 
                 if (dbLoc == null)
                 {
@@ -147,9 +147,9 @@ namespace OptraxMVC.Services
 }
 
 
-//private string GetParentString(int parentID)
+//private string GetParentString(int parentId)
 //{
-//    StringResult? parentString = db.Database.SqlQuery<StringResult>($"EXEC GetLocParentsString {parentID}").AsEnumerable().FirstOrDefault();
+//    StringResult? parentString = db.Database.SqlQuery<StringResult>($"EXEC GetLocParentsString {parentId}").AsEnumerable().FirstOrDefault();
 
 //    return parentString?.Value ?? string.Empty;
 //}

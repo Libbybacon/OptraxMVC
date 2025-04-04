@@ -83,12 +83,12 @@ export function nodeMenu(node) {
 function deleteNode(id, type) {
     const tree = $('#locationTree').jstree(true);
     const node = tree.get_node(id);
-    const parentID = tree.get_parent(node)
+    const parentId = tree.get_parent(node)
 
     tree.delete_node(node);
 
-    if (parentID != '#') {
-        tree.select_node(parentID);
+    if (parentId != '#') {
+        tree.select_node(parentId);
     }
     else {
         var firstSite = allNodes.find(node => node.type === 'site');

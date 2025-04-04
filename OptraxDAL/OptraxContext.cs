@@ -48,9 +48,11 @@ namespace OptraxDAL
 
 
         #region Grow
-        //public DbSet<Species> Species { get; set; }
-        public DbSet<Variety> Varieties { get; set; }
-        public DbSet<Cultivar> Cultivars { get; set; }
+        public DbSet<Plant> Plants { get; set; }
+        public DbSet<PlantTrait> PlantTraits { get; set; }
+        public DbSet<PlantProfile> PlantProfiles { get; set; }
+        public DbSet<TraitDefinition> TraitDefinitions { get; set; }
+
 
         public DbSet<Crop> Crops { get; set; }
         public DbSet<CropBatch> CropBatches { get; set; }
@@ -59,15 +61,15 @@ namespace OptraxDAL
         public DbSet<PlantingSection> Sections { get; set; }
         public DbSet<PlantingPattern> Patterns { get; set; }
 
-        public DbSet<Strain> Strains { get; set; }
-        public DbSet<StrainRelationship> StrainRelationships { get; set; }
+        //public DbSet<Strain> Strains { get; set; }
+        //public DbSet<StrainRelationship> StrainRelationships { get; set; }
 
-        public DbSet<PlantEvent> PlantEvents { get; set; }
-        public DbSet<PruneEvent> PruneEvents { get; set; }
-        public DbSet<GrowthEvent> GrowthEvents { get; set; }
-        public DbSet<TransferEvent> TransferEvents { get; set; }
-        public DbSet<TreatmentEvent> TreatmentEvents { get; set; }
-        public DbSet<TransplantEvent> TransplantEvents { get; set; }
+        //public DbSet<PlantEvent> PlantEvents { get; set; }
+        //public DbSet<PruneEvent> PruneEvents { get; set; }
+        //public DbSet<GrowthEvent> GrowthEvents { get; set; }
+        //public DbSet<TransferEvent> TransferEvents { get; set; }
+        //public DbSet<TreatmentEvent> TreatmentEvents { get; set; }
+        //public DbSet<TransplantEvent> TransplantEvents { get; set; }
         #endregion
 
 
@@ -76,8 +78,6 @@ namespace OptraxDAL
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<StockItem> StockItems { get; set; }
-        public DbSet<Plant> Plants { get; set; }
-        public DbSet<Light> Lights { get; set; }
         public DbSet<Durable> Durables { get; set; }
         public DbSet<Consumable> Consumables { get; set; }
 
@@ -137,7 +137,7 @@ namespace OptraxDAL
                 e.Property(x => x.Active).HasDefaultValue(true);
 
                 e.HasOne(x => x.MapObject).WithOne(b => b.Location)
-                                          .HasForeignKey<Location>(x => x.MapObjectID)
+                                          .HasForeignKey<Location>(x => x.MapObjectId)
                                           .OnDelete(DeleteBehavior.Cascade);
 
                 e.HasDiscriminator<string>("LocationType").HasValue<Site>("Site")
@@ -152,7 +152,7 @@ namespace OptraxDAL
             builder.Entity<Site>(e =>
             {
                 e.HasOne(sl => sl.Business).WithMany(b => b.Sites)
-                                           .HasForeignKey(sl => sl.BusinessID)
+                                           .HasForeignKey(sl => sl.BusinessId)
                                            .OnDelete(DeleteBehavior.Restrict);
             });
 
@@ -173,11 +173,11 @@ namespace OptraxDAL
             builder.Entity<Building>(e =>
             {
                 e.HasOne(bl => bl.Address).WithOne(a => a.Building)
-                                          .HasForeignKey<Building>(bl => bl.AddressID)
+                                          .HasForeignKey<Building>(bl => bl.AddressId)
                                           .OnDelete(DeleteBehavior.Restrict);
 
                 e.HasOne(bl => bl.Business).WithMany(b => b.Buildings)
-                                           .HasForeignKey(bl => bl.BusinessID)
+                                           .HasForeignKey(bl => bl.BusinessId)
                                            .OnDelete(DeleteBehavior.Restrict);
             });
 
@@ -186,11 +186,11 @@ namespace OptraxDAL
                 e.Property(x => x.UnitCount).HasPrecision(8, 2);
 
                 e.HasOne(it => it.Origin).WithMany(o => o.TransfersOut)
-                                         .HasForeignKey(it => it.OriginID)
+                                         .HasForeignKey(it => it.OriginId)
                                          .OnDelete(DeleteBehavior.Restrict);
 
                 e.HasOne(it => it.Destination).WithMany(o => o.TransfersIn)
-                                              .HasForeignKey(it => it.DestinationID)
+                                              .HasForeignKey(it => it.DestinationId)
                                               .OnDelete(DeleteBehavior.Restrict);
             });
             #endregion
@@ -210,18 +210,19 @@ namespace OptraxDAL
             });
 
             #region Stock Items TPT
-            builder.Entity<Plant>().ToTable("Plants", "Inventory");
-            builder.Entity<Light>().ToTable("Lights", "Inventory");
-            builder.Entity<Durable>().ToTable("Durables", "Inventory");
-            builder.Entity<Consumable>().ToTable("Consumables", "Inventory");
-
-            builder.Entity<Plant>().HasBaseType<StockItem>();
-            builder.Entity<Light>().HasBaseType<StockItem>();
-            builder.Entity<Durable>().HasBaseType<StockItem>();
-            builder.Entity<Consumable>().HasBaseType<StockItem>();
+            builder.Entity<Durable>(e =>
+            {
+                e.HasBaseType<StockItem>();
+                e.ToTable("Durables", "Inventory");
+            });
+            builder.Entity<Consumable>(e =>
+            {
+                e.HasBaseType<StockItem>();
+                e.ToTable("Consumables", "Inventory");
+                e.Property(x => x.UnitCount).HasPrecision(8, 2);
+            });
 
             builder.Entity<StockItem>().Property(x => x.PurchasePrice).HasPrecision(8, 2);
-            builder.Entity<Consumable>().Property(x => x.UnitCount).HasPrecision(8, 2);
             #endregion
 
             #endregion
@@ -266,27 +267,35 @@ namespace OptraxDAL
             #endregion
 
             #region Grow
-            //builder.Entity<Species>(e =>
-            //{
-            //    e.HasIndex(x => x.SpeciesName).IsUnique();
-            //    e.Property(x => x.WaterNeedsQty).HasPrecision(8, 2);
-            //});
+            builder.Entity<Plant>(e =>
+            {
+                e.HasOne(p => p.Parent1).WithMany(p => p.ChildrenP1)
+                                        .HasForeignKey(p => p.Parent1Id)
+                                        .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(p => p.Parent2).WithMany(p => p.ChildrenP2)
+                                        .HasForeignKey(p => p.Parent2Id)
+                                        .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(p => p.Profile).WithMany(p => p.Plants)
+                                        .HasForeignKey(p => p.ProfileId)
+                                        .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<PlantTrait>(e =>
+            {
+                e.HasOne(p => p.Definition).WithMany(p => p.Traits)
+                                           .HasForeignKey(p => p.DefinitionId)
+                                           .OnDelete(DeleteBehavior.Restrict);
+            });
 
             builder.Entity<Crop>(e =>
             {
                 e.HasIndex(x => x.Name).IsUnique();
 
-                //e.HasOne(x => x.Species).WithMany(c => c.Crops)
-                //                        .HasForeignKey(x => x.SpeciesID)
-                //                        .OnDelete(DeleteBehavior.Restrict);
-
-                e.HasOne(x => x.Variety).WithMany(c => c.Crops)
-                                        .HasForeignKey(x => x.VarietyID)
-                                        .OnDelete(DeleteBehavior.Restrict);
-
-                e.HasOne(x => x.Cultivar).WithMany(c => c.Crops)
-                                         .HasForeignKey(x => x.CultivarID)
-                                         .OnDelete(DeleteBehavior.Restrict);
+                e.HasOne(x => x.Plant).WithMany(c => c.Crops)
+                                      .HasForeignKey(x => x.PlantId)
+                                      .OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Entity<CropBatch>(e =>
@@ -294,7 +303,7 @@ namespace OptraxDAL
                 e.HasIndex(x => x.Name).IsUnique();
 
                 e.HasOne(c => c.Crop).WithMany(s => s.Batches)
-                                     .HasForeignKey(c => c.CropID)
+                                     .HasForeignKey(c => c.CropId)
                                      .OnDelete(DeleteBehavior.Restrict);
             });
 
@@ -303,15 +312,15 @@ namespace OptraxDAL
                 e.Property(x => x.WasteQuantity).HasPrecision(10, 2);
 
                 e.HasOne(x => x.Crop).WithMany(c => c.Plantings)
-                                     .HasForeignKey(x => x.CropID)
+                                     .HasForeignKey(x => x.CropId)
                                      .OnDelete(DeleteBehavior.Restrict);
 
                 e.HasOne(x => x.Batch).WithMany(b => b.Plantings)
-                                      .HasForeignKey(x => x.BatchID)
+                                      .HasForeignKey(x => x.BatchId)
                                       .OnDelete(DeleteBehavior.Restrict);
 
                 e.HasOne(x => x.Location).WithMany(b => b.Plantings)
-                                         .HasForeignKey(x => x.LocationID)
+                                         .HasForeignKey(x => x.LocationId)
                                          .OnDelete(DeleteBehavior.Restrict);
             });
 
@@ -331,67 +340,67 @@ namespace OptraxDAL
                 e.Property(x => x.SectionType).HasMaxLength(20);
 
                 e.HasOne(x => x.Planting).WithMany(b => b.Sections)
-                                         .HasForeignKey(x => x.PlantingID)
+                                         .HasForeignKey(x => x.PlantingId)
                                          .OnDelete(DeleteBehavior.Restrict);
 
                 e.HasOne(x => x.Parent).WithMany(b => b.Children)
-                                       .HasForeignKey(x => x.ParentID)
+                                       .HasForeignKey(x => x.ParentId)
                                        .OnDelete(DeleteBehavior.Restrict);
 
                 e.HasOne(x => x.Pattern).WithMany(b => b.Sections)
-                                        .HasForeignKey(x => x.PatternID)
+                                        .HasForeignKey(x => x.PatternId)
                                         .OnDelete(DeleteBehavior.Restrict);
 
                 e.HasOne(x => x.MapObject).WithOne(b => b.Section)
-                                          .HasForeignKey<PlantingSection>(x => x.MapObjectID)
+                                          .HasForeignKey<PlantingSection>(x => x.MapObjectId)
                                           .OnDelete(DeleteBehavior.Cascade);
             });
 
             // Genetics Relationships
-            builder.Entity<Strain>().HasIndex(x => x.Name).IsUnique();
+            //builder.Entity<Strain>().HasIndex(x => x.Name).IsUnique();
 
-            builder.Entity<StrainRelationship>(e =>
-            {
-                e.HasKey(x => new { x.ParentID, x.ChildID }); // Composite Key
+            //builder.Entity<StrainRelationship>(e =>
+            //{
+            //    e.HasKey(x => new { x.ParentId, x.ChildId }); // Composite Key
 
-                e.HasOne(x => x.ParentStrain).WithMany(s => s.Children)
-                                             .HasForeignKey(x => x.ParentID)
-                                             .OnDelete(DeleteBehavior.Restrict);
+            //    e.HasOne(x => x.ParentStrain).WithMany(s => s.Children)
+            //                                 .HasForeignKey(x => x.ParentId)
+            //                                 .OnDelete(DeleteBehavior.Restrict);
 
-                e.HasOne(x => x.ChildStrain).WithMany(s => s.Parents)
-                                            .HasForeignKey(x => x.ChildID)
-                                            .OnDelete(DeleteBehavior.Restrict);
-            });
+            //    e.HasOne(x => x.ChildStrain).WithMany(s => s.Parents)
+            //                                .HasForeignKey(x => x.ChildId)
+            //                                .OnDelete(DeleteBehavior.Restrict);
+            //});
 
             #region Plant Events 
 
-            builder.Entity<PruneEvent>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
-            builder.Entity<TreatmentEvent>().Property(x => x.QuantityApplied).HasPrecision(8, 2);
+            //builder.Entity<PruneEvent>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
+            //builder.Entity<TreatmentEvent>().Property(x => x.QuantityApplied).HasPrecision(8, 2);
 
-            // TPH
-            builder.Entity<PlantEvent>(e =>
-            {
-                e.HasDiscriminator<string>("EventType").HasValue<PruneEvent>("Prune")
-                                                       .HasValue<GrowthEvent>("Growth")
-                                                       .HasValue<TransferEvent>("Transfer")
-                                                       .HasValue<TreatmentEvent>("Treatment")
-                                                       .HasValue<TransplantEvent>("Transplant");
+            //// TPH
+            //builder.Entity<PlantEvent>(e =>
+            //{
+            //    e.HasDiscriminator<string>("EventType").HasValue<PruneEvent>("Prune")
+            //                                           .HasValue<GrowthEvent>("Growth")
+            //                                           .HasValue<TransferEvent>("Transfer")
+            //                                           .HasValue<TreatmentEvent>("Treatment")
+            //                                           .HasValue<TransplantEvent>("Transplant");
 
-                e.HasOne(pe => pe.Plant).WithMany(p => p.PlantEvents)
-                                        .OnDelete(DeleteBehavior.Restrict);
-            });
+            //    e.HasOne(pe => pe.Plant).WithMany(p => p.PlantEvents)
+            //                            .OnDelete(DeleteBehavior.Restrict);
+            //});
 
-            builder.Entity<TransferEvent>().HasOne(ta => ta.Transfer)
-                                           .WithOne(pt => pt.PlantTransfer)
-                                           .HasForeignKey<TransferEvent>(ta => ta.TransferID)
-                                           .OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<TransferEvent>().HasOne(ta => ta.Transfer)
+            //                               .WithOne(pt => pt.PlantTransfer)
+            //                               .HasForeignKey<TransferEvent>(ta => ta.TransferId)
+            //                               .OnDelete(DeleteBehavior.Restrict);
 
 
-            builder.Entity<TreatmentEvent>().HasOne(te => te.Product)
-                                            .WithMany(p => p.PlantTreatments)
-                                            .HasForeignKey(te => te.ProductID)
-                                            .HasPrincipalKey(p => p.ID)
-                                            .OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<TreatmentEvent>().HasOne(te => te.Product)
+            //                                .WithMany(p => p.PlantTreatments)
+            //                                .HasForeignKey(te => te.ProductId)
+            //                                .HasPrincipalKey(p => p.Id)
+            //                                .OnDelete(DeleteBehavior.Restrict);
             #endregion
             #endregion
 
@@ -418,13 +427,13 @@ namespace OptraxDAL
 
         private void SetTracking()
         {
-            var userID = _userService?.UserID;
+            var userId = _userService?.UserId;
 
             foreach (var entry in ChangeTracker.Entries<TrackingBase>())
             {
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.UserID = userID;
+                    entry.Entity.UserId = userId;
                     entry.Entity.DateCreated = DateTime.Now;
                 }
                 else if (entry.State == EntityState.Modified)

@@ -27,7 +27,7 @@ function makeDatatable() {
                 let props = {
                     Level: 1,
                     IsTop: level == 1,
-                    ID: group,
+                    Id: group,
                     Name: group,
                     NameNoSpace: group.replace(/\s+/g, ""),
                 }
@@ -108,7 +108,7 @@ function makeHeaderToggle(props) {
 
     let $th = $('<th/>').attr('colspan', 7).addClass(`plant${props.Level}`).append($div);
 
-    return $('<tr/>').attr('data-id', props.ID).addClass(`grp-row cat${props.Level}-head`).append($th);
+    return $('<tr/>').attr('data-id', props.Id).addClass(`grp-row cat${props.Level}-head`).append($th);
 }
 
 function SetLocationHandlers() {

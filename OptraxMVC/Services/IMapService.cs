@@ -25,7 +25,7 @@ namespace OptraxMVC.Services
     public class MapService(OptraxContext context, ICurrentUserService user) : IMapService
     {
         private readonly OptraxContext db = context;
-        private readonly string UserID = user.UserID;
+        private readonly string UserId = user.UserId;
 
         public async Task<Map?> CreateMapAsync(Map map)
         {
@@ -44,7 +44,7 @@ namespace OptraxMVC.Services
 
         public async Task<Map?> GetMapAsync()
         {
-            Map? dbMap = await db.Maps.Where(m => m.Active && m.UserID == UserID).FirstOrDefaultAsync();
+            Map? dbMap = await db.Maps.Where(m => m.Active && m.UserId == UserId).FirstOrDefaultAsync();
 
             return dbMap ?? await CreateMapAsync(new Map("Default Map"));
         }
@@ -53,7 +53,7 @@ namespace OptraxMVC.Services
         {
             try
             {
-                Map? dbMap = await db.Maps.Where(m => m.ID == map.ID && m.UserID == UserID).FirstOrDefaultAsync();
+                Map? dbMap = await db.Maps.Where(m => m.Id == map.Id && m.UserId == UserId).FirstOrDefaultAsync();
 
                 if (dbMap == null)
                 {
@@ -79,10 +79,10 @@ namespace OptraxMVC.Services
             {
                 var features = objType switch
                 {
-                    "Point" => (await db.MapPoints.Where(p => p.Active && (p.UserID == UserID)).Include(p => p.Icon).ToListAsync()).Select(p => p.ToGeoJSON()).ToList(),
-                    "Line" => [.. (await db.MapLines.Where(p => p.Active && (p.UserID == UserID)).ToListAsync()).Select(p => p.ToGeoJSON())],
-                    "Circle" => [.. (await db.MapCircles.Where(p => p.Active && (p.UserID == UserID)).ToListAsync()).Select(p => p.ToGeoJSON())],
-                    "Polygon" => [.. (await db.MapPolygons.Where(p => p.Active && (p.UserID == UserID)).ToListAsync()).Select(p => p.ToGeoJSON())],
+                    "Point" => (await db.MapPoints.Where(p => p.Active && (p.UserId == UserId)).Include(p => p.Icon).ToListAsync()).Select(p => p.ToGeoJSON()).ToList(),
+                    "Line" => [.. (await db.MapLines.Where(p => p.Active && (p.UserId == UserId)).ToListAsync()).Select(p => p.ToGeoJSON())],
+                    "Circle" => [.. (await db.MapCircles.Where(p => p.Active && (p.UserId == UserId)).ToListAsync()).Select(p => p.ToGeoJSON())],
+                    "Polygon" => [.. (await db.MapPolygons.Where(p => p.Active && (p.UserId == UserId)).ToListAsync()).Select(p => p.ToGeoJSON())],
                     _ => throw new NotImplementedException()
                 };
                 var geoJson = new
@@ -157,7 +157,7 @@ namespace OptraxMVC.Services
         {
             try
             {
-                MapObject? dbObj = await db.MapObjects.FirstOrDefaultAsync(p => p.ID == obj.ID);
+                MapObject? dbObj = await db.MapObjects.FirstOrDefaultAsync(p => p.Id == obj.Id);
 
                 if (dbObj == null)
                 {
@@ -271,8 +271,8 @@ namespace OptraxMVC.Services
                 }
                 else if (mapObj is MapPoint point && dbMapObj is MapPoint dbPoint)
                 {
-                    dbPoint.IconID = point.IconID;
-                    dbPoint.IconCollectionID = point.IconCollectionID;
+                    dbPoint.IconId = point.IconId;
+                    dbPoint.IconCollectionId = point.IconCollectionId;
                     dbPoint.Latitude = point.Latitude;
                     dbPoint.Longitude = point.Longitude;
                 }

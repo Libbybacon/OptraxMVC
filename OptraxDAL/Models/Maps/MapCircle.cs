@@ -29,7 +29,7 @@ namespace OptraxDAL.Models.Maps
                 type = "Feature",
                 properties = new
                 {
-                    id = ID,
+                    id = Id,
                     name = Name,
                     color = ColorBytes.ToString(),
                     weight = Weight,

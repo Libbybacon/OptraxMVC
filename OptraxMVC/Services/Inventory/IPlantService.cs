@@ -10,11 +10,11 @@ namespace OptraxMVC.Services.Inventory
 {
     public interface IPlantService
     {
-        Task<Plant> LoadNewPlant(string UserID);
-        Task<ResponseVM> GetParentListAsync(int strainID);
-        Task<int> GetPlantInventoryIDAsync();
+        Task<Plant> LoadNewPlant(string UserId);
+        Task<ResponseVM> GetParentListAsync(int strainId);
+        Task<int> GetPlantInventoryIdAsync();
         Task<List<PlantVM>> GetPlantsAsync();
-        Task<ResponseVM> CreateAsync(Plant plant, string userID);
+        Task<ResponseVM> CreateAsync(Plant plant, string userId);
     }
 
     [Authorize]
@@ -29,14 +29,14 @@ namespace OptraxMVC.Services.Inventory
         }
 
         [Authorize]
-        public async Task<Plant> LoadNewPlant(string UserID)
+        public async Task<Plant> LoadNewPlant(string UserId)
         {
-            int inventoryID = await GetPlantInventoryIDAsync();
+            int inventoryId = await GetPlantInventoryIdAsync();
 
             var transfer = new InventoryTransfer()
             {
                 Date = DateTime.Now,
-                UserID = UserID,
+                UserId = UserId,
                 UnitCount = 1,
                 UnitUoM = "Each",
                 IsPartial = false,
@@ -44,80 +44,81 @@ namespace OptraxMVC.Services.Inventory
                 NeedsApproval = false,
             };
 
-            Plant plant = new()
-            {
-                PurchaseDate = DateTime.Now,
-                ResourceID = inventoryID,
-                PlantEvents = [
-                new TransferEvent() {
-                        Date = DateTime.Now,
-                        EventType = "Transfer",
-                        UserID = UserID,
-                        Transfer = transfer
-                    }]
-            };
+            //Plant plant = new()
+            //{
+            //    PurchaseDate = DateTime.Now,
+            //    ResourceId = inventoryId,
+            //    PlantEvents = [
+            //    new TransferEvent() {
+            //            Date = DateTime.Now,
+            //            EventType = "Transfer",
+            //            UserId = UserId,
+            //            Transfer = transfer
+            //        }]
+            //};
 
-            return plant;
+            //return plant;
+            return new Plant();
         }
 
         [Authorize]
-        public async Task<int> GetPlantInventoryIDAsync()
+        public async Task<int> GetPlantInventoryIdAsync()
         {
-            return await db.Resources.Where(i => i.Name == "Plant").Select(i => i.ID).FirstAsync();
+            return await db.Resources.Where(i => i.Name == "Plant").Select(i => i.Id).FirstAsync();
         }
 
-        [Authorize]
-        public async Task<ResponseVM> CreateAsync(Plant plant, string userID)
+        //[Authorize]
+        public async Task<ResponseVM> CreateAsync(Plant plant, string userId)
         {
-            plant.Resource = await db.Resources.FindAsync(await GetPlantInventoryIDAsync());
+            //    plant.Resource = await db.Resources.FindAsync(await GetPlantInventoryIdAsync());
 
-            var strain = await db.Strains.FindAsync(plant.SpeciesID);
+            //    var strain = await db.Strains.FindAsync(plant.SpeciesId);
 
-            if (strain == null)
-                return new ResponseVM() { Msg = "Could not find Strain" };
+            //    if (strain == null)
+            //        return new ResponseVM() { Msg = "Could not find Strain" };
 
-            try
-            {
-                //Crop crop = await db.Crops.Where(c => c.BatchID == plant.Crop.BatchID).FirstOrDefaultAsync() ?? plant.Crop;
+            //    try
+            //    {
+            //        //Crop crop = await db.Crops.Where(c => c.BatchId == plant.Crop.BatchId).FirstOrDefaultAsync() ?? plant.Crop;
 
-                //if (crop.StrainID != plant.SpeciesID)
-                //    return new ResponseVM() { Msg = "Plant Strain does not match Crop Strain" };
+            //        //if (crop.StrainId != plant.SpeciesId)
+            //        //    return new ResponseVM() { Msg = "Plant Strain does not match Crop Strain" };
 
-                //plant.Crop = crop;
-                ////crop.Strain = strain;
-                ////plant.Strain = strain;
+            //        //plant.Crop = crop;
+            //        ////crop.Strain = strain;
+            //        ////plant.Strain = strain;
 
-                //var mapper = new MapperConfiguration(cfg => cfg.AddProfile<PlantProfile>()).CreateMapper();
+            //        //var mapper = new MapperConfiguration(cfg => cfg.AddProfile<PlantProfile>()).CreateMapper();
 
-                //for (int i = 0; i < plant.Quantity; i++)
-                //{
-                //    var newPlant = mapper.Map<Plant>(plant);
-                //    crop.Plants.Add(newPlant);
-                //    await db.Plants.AddAsync(newPlant);
-                //}
+            //        //for (int i = 0; i < plant.Quantity; i++)
+            //        //{
+            //        //    var newPlant = mapper.Map<Plant>(plant);
+            //        //    crop.Plants.Add(newPlant);
+            //        //    await db.Plants.AddAsync(newPlant);
+            //        //}
 
-                //await db.SaveChangesAsync();
+            //        //await db.SaveChangesAsync();
 
-                return new ResponseVM() { Success = true, Msg = "Plants Added!" };
-            }
-            catch (Exception)
-            {
-                return new ResponseVM() { Msg = "Error adding plants..." };
-            }
+            //        return new ResponseVM() { Success = true, Msg = "Plants Added!" };
+            //    }
+            //    catch (Exception)
+            //    {
+            return new ResponseVM() { Msg = "Error adding plants..." };
+            //    }
         }
 
-        public async Task<ResponseVM> GetParentListAsync(int strainID)
+        public async Task<ResponseVM> GetParentListAsync(int strainId)
         {
-            try
-            {
-                var mothers = await db.Plants.Where(p => p.SpeciesID == strainID).Select(p => new { p.ID, Name = p.Phase }).ToListAsync();
-                //var mothers = await db.Plants.Where(p => p.IsMother && p.StrainID == strainID).Select(p => new { p.ID, Name = p.MotherName }).ToListAsync();
-                return new ResponseVM() { Success = true, Data = mothers };
-            }
-            catch (Exception)
-            {
-                return new ResponseVM() { Msg = "Error loading mothers" };
-            }
+            //    try
+            //    {
+            //        //var mothers = await db.Plants.Where(p => p.SpeciesId == strainId).Select(p => new { p.Id, Name = p.Phase }).ToListAsync();
+            //        //var mothers = await db.Plants.Where(p => p.IsMother && p.StrainId == strainId).Select(p => new { p.Id, Name = p.MotherName }).ToListAsync();
+            //        //return new ResponseVM() { Success = true, Data = mothers };
+            //    }
+            //    catch (Exception)
+            //    {
+            return new ResponseVM() { Msg = "Error loading mothers" };
+            //    }
         }
     }
 }

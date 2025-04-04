@@ -3,7 +3,6 @@
 using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
 using OptraxDAL.Models.Grow;
-using OptraxDAL.Models.Inventory;
 using OptraxMVC.Controllers;
 using OptraxMVC.Models;
 using OptraxMVC.Services;
@@ -48,7 +47,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
 
                 ViewData["Options"] = _IOptions.LoadOptions(["StrainSelects", "PhaseSelects", "OriginTypeSelects", "LocationSelects", "UomSelects"]);
 
-                Plant plant = await _IPlants.LoadNewPlant(UserID);
+                Plant plant = await _IPlants.LoadNewPlant(UserId);
 
                 return PartialView("_Create", plant);
             }
@@ -58,35 +57,35 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAsync(Plant plant)
-        {
-            if (plant.PlantEvents.First() is TransferEvent transferEvent)
-            {
-                TryValidateModel(transferEvent.Transfer, "PlantEvents[0].Transfer");
-            }
-            if (!ModelState.IsValid)
-                return Json(new { msg = "Invalid model" });
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> CreateAsync(Plant plant)
+        //{
+        //    if (plant.PlantEvents.First() is TransferEvent transferEvent)
+        //    {
+        //        TryValidateModel(transferEvent.Transfer, "PlantEvents[0].Transfer");
+        //    }
+        //    if (!ModelState.IsValid)
+        //        return Json(new { msg = "Invalid model" });
 
-            try
-            {
-                ResponseVM response = await _IPlants.CreateAsync(plant, UserID);
+        //    try
+        //    {
+        //        ResponseVM response = await _IPlants.CreateAsync(plant, UserId);
 
-                return Json(response);
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, msg = ex.Message });
-            }
-        }
+        //        return Json(response);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, msg = ex.Message });
+        //    }
+        //}
 
         [HttpGet]
-        public async Task<IActionResult> GetParentList(int strainID)
+        public async Task<IActionResult> GetParentList(int strainId)
         {
             try
             {
-                ResponseVM response = await _IPlants.GetParentListAsync(strainID);
+                ResponseVM response = await _IPlants.GetParentListAsync(strainId);
 
                 return Json(response);
             }

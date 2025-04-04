@@ -10,11 +10,11 @@ namespace OptraxDAL.Models.Admin
             LocationType = "Site";
         }
 
-        public Site(int addressID, int? businessID)
+        public Site(int addressId, int? businessId)
         {
             LocationType = "Site";
-            AddressID = addressID;
-            BusinessID = businessID;
+            AddressId = addressId;
+            BusinessId = businessId;
         }
 
         public Site(Address? address, Business? business)

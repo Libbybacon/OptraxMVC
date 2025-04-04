@@ -7,7 +7,7 @@ namespace OptraxDAL.Models.BaseClasses
     public abstract class BaseClass
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [DefaultValue(true)]
         public bool Active { get; set; } = true;

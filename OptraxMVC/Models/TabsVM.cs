@@ -16,7 +16,7 @@
     {
         public Tab(string name, int id)
         {
-            ID = id;
+            Id = id;
             Name = name;
             TabKey = SetViewTabKey(name);
         }
@@ -28,7 +28,7 @@
             ViewPath = path ?? SetTopTabPath(name);
         }
 
-        public int? ID { get; set; }
+        public int? Id { get; set; }
         public string Name { get; set; }
         public string TabKey { get; set; }
         public string? ViewPath { get; set; }

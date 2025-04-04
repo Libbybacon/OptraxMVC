@@ -10,13 +10,8 @@ namespace OptraxDAL.Models.Grow
         public Crop() { }
 
         [Display(Name = "Strain")]
-        public int SpeciesID { get; set; }
-        public int? VarietyID { get; set; }
-        public int? CultivarID { get; set; }
-
-        //public virtual Species? Species { get; set; }
-        public virtual Variety? Variety { get; set; }
-        public virtual Cultivar? Cultivar { get; set; }
+        public int PlantId { get; set; }
+        public virtual Plant Plant { get; set; } = new();
 
         public virtual ICollection<CropBatch> Batches { get; set; } = [];
         public virtual ICollection<Planting> Plantings { get; set; } = [];

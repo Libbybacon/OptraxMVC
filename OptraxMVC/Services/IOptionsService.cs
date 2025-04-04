@@ -5,7 +5,6 @@ using OptraxDAL;
 using OptraxDAL.Models;
 using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
-using OptraxDAL.Models.Inventory;
 using OptraxMVC.Models;
 
 namespace OptraxMVC.Services
@@ -32,10 +31,10 @@ namespace OptraxMVC.Services
                 IconsList = drops.Contains("IconsList") ? await GetIconsList() : [],
 
                 PlantTypeSelects = drops.Contains("PlantTypeSelects") ? GetEnumSelects(typeof(Enums.PlantType)) : [],
-                PhaseSelects = drops.Contains("PhaseSelects") ? GetEnumSelects(typeof(Plant.PlantPhases)) : [],
+                //PhaseSelects = drops.Contains("PhaseSelects") ? GetEnumSelects(typeof(Plant.PlantPhases)) : [],
                 CropsList = drops.Contains("StrainsList") ? await GetCropsList() : [],
                 CropSelects = drops.Contains("StrainSelects") ? await GetCropSelects() : [],
-                OriginTypeSelects = drops.Contains("OriginTypeSelects") ? GetEnumSelects(typeof(Plant.OriginTypes)) : [],
+                //OriginTypeSelects = drops.Contains("OriginTypeSelects") ? GetEnumSelects(typeof(Plant.OriginTypes)) : [],
 
                 CatSelects = drops.Contains("CatSelects") ? await GetCatSelects() : [],
                 TopCatSelects = drops.Contains("TopCatSelects") ? await GetTopCatSelects() : [],
@@ -89,7 +88,7 @@ namespace OptraxMVC.Services
         {
             return (await db.Crops.Where(c => c.Active).OrderBy(c => c.Name).ToListAsync()).Select(c => new SelectListItem
             {
-                Value = c.ID.ToString(),
+                Value = c.Id.ToString(),
                 Text = c.Name
             }).ToList() ?? EmptyList;
         }
@@ -103,14 +102,14 @@ namespace OptraxMVC.Services
         // Inventory
         private async Task<List<SelectListItem>> GetCatSelects()
         {
-            return (await db.Categories.Where(c => c.ParentID != null)
+            return (await db.Categories.Where(c => c.ParentId != null)
                                        .Include(c => c.Parent)
                                        .Where(c => c.Parent != null)
                                        .OrderBy(c => c.Parent!.Name).ThenBy(c => c.Name)
                                        .ToListAsync())
                                        .Select(c => new SelectListItem
                                        {
-                                           Value = c.ID.ToString(),
+                                           Value = c.Id.ToString(),
                                            Text = c.ListName
                                        }).ToList() ?? EmptyList;
 
@@ -118,9 +117,9 @@ namespace OptraxMVC.Services
 
         private async Task<List<SelectListItem>> GetTopCatSelects()
         {
-            return (await db.Categories.Where(c => c.ParentID == null).OrderBy(c => c.Name).ToListAsync()).Select(c => new SelectListItem
+            return (await db.Categories.Where(c => c.ParentId == null).OrderBy(c => c.Name).ToListAsync()).Select(c => new SelectListItem
             {
-                Value = c.ID.ToString(),
+                Value = c.Id.ToString(),
                 Text = c.Name
             }).ToList() ?? EmptyList;
         }
@@ -130,7 +129,7 @@ namespace OptraxMVC.Services
         {
             return (await db.Locations.Where(c => c.Active).OrderBy(c => c.Name).ToListAsync()).Select(c => new SelectListItem
             {
-                Value = c.ID.ToString(),
+                Value = c.Id.ToString(),
                 Text = c.Name
             }).ToList() ?? EmptyList;
         }
@@ -142,7 +141,7 @@ namespace OptraxMVC.Services
 
             return (await db.Locations.Where(c => c.Active && types.Contains(c.LocationType)).OrderBy(c => c.Name).ToListAsync()).Select(c => new SelectListItem
             {
-                Value = c.ID.ToString(),
+                Value = c.Id.ToString(),
                 Text = c.Name
             }).ToList() ?? EmptyList;
         }
@@ -155,7 +154,7 @@ namespace OptraxMVC.Services
         //    int parentLevel = (int)level - 1;
         //    return (await db.Locations.Where(c => c.Active && c.Level == parentLevel).OrderBy(c => c.Name).ToListAsync()).Select(c => new SelectListItem
         //    {
-        //        Value = c.ID.ToString(),
+        //        Value = c.Id.ToString(),
         //        Text = string.Format("{0} - {1}", c.Name, c.LocationType)
         //    }).ToList() ?? EmptyList;
         //}

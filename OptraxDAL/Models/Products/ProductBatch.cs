@@ -8,7 +8,7 @@ namespace OptraxDAL.Models.Products
     {
         public ProductBatch() { }
 
-        public int ProductID { get; set; }
+        public int ProductId { get; set; }
 
         public int BatchNumber { get; set; }
 

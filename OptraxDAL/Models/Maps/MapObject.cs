@@ -12,7 +12,7 @@ namespace OptraxDAL.Models.Maps
         [MaxLength(50)]
         public string? Category { get; set; }
 
-        public int? MapID { get; set; }
+        public int? MapId { get; set; }
 
         public abstract object ToGeoJSON();
 

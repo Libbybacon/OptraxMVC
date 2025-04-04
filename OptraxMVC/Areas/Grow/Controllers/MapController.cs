@@ -115,7 +115,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
         [HttpGet]
         public async Task<IActionResult> LoadEdit(int? id, string objType)
         {
-            if (id == null) { return Json(new { Msg = "Invalid object ID" }); }
+            if (id == null) { return Json(new { Msg = "Invalid object Id" }); }
 
             object? model = await _Map.GetObjectAsync((int)id, objType);
 
@@ -308,7 +308,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
                 Type = objType
             };
 
-            ViewBag.IconCollID = 1;
+            ViewBag.IconCollId = 1;
         }
     }
 }

@@ -9,8 +9,8 @@
 
 <div class="popup-msg"></div>
 
-<input type="hidden" asp-for="ID" />
-<input type="hidden" asp-for="MapID" />
+<input type="hidden" asp-for="Id" />
+<input type="hidden" asp-for="MapId" />
 <input id="changes" type="hidden" name="Changes" />
 
 <div id="edit-content" class="px-2 pt-3">
@@ -38,6 +38,6 @@
 </div>
 <div class="popup-btns d-flex w-100 justify-content-center pb-3">
     @* <button type="submit" class="btn-grn btn-sm @(formVM.IsNew ? "" : "d-none")">Save @formVM.Type</button> *@
-    <button type="button" class="btn-red btn-sm me-3 @(formVM.IsNew ? "d-none" : "")" data-id="@Model.ID" data-type="Circle">Delete</button>
+    <button type="button" class="btn-red btn-sm me-3 @(formVM.IsNew ? "d-none" : "")" data-id="@Model.Id" data-type="Circle">Delete</button>
     <button type="submit" class="btn-grn btn-sm ms-3">Save</button>
 </div>

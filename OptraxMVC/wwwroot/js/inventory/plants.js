@@ -21,13 +21,13 @@ function makeDatatable() {
             [3, "asc"],
         ],
         //rowGroup: {
-        //    dataSrc: ["strain", "cropID"],
+        //    dataSrc: ["strain", "cropId"],
         //    startRender: function (rows, group, level) {
         //        let name = level == 0 ? group.split('-')[0] : group;
         //        let props = {
         //            Level: level,
         //            IsTop: level == 0,
-        //            ID: level == 0 ? group.split('-')[1] : group,
+        //            Id: level == 0 ? group.split('-')[1] : group,
         //            Name: name,
         //            NameNoSpace: level == 0 ? name.replace(/\s+/g, "") : name,
         //        }
@@ -45,13 +45,13 @@ function makeDatatable() {
             { targets: 0, data: null, defaultContent: '', className: "dt-control" },
             { targets: 1, data: 'strain' },
             { targets: 2, data: 'isMother' },
-            { targets: 3, data: 'cropID' },
+            { targets: 3, data: 'cropId' },
             {
                 targets: 4,
                 data: null,
                 render: function (data, type, row) {
 
-                    return row.isMother ? `${row.motherName} - ${row.trackingID}` : row.trackingID;
+                    return row.isMother ? `${row.motherName} - ${row.trackingId}` : row.trackingId;
 
                 }
             },
@@ -74,8 +74,8 @@ function makeDatatable() {
         },
         createdRow: function (row, data, dataIndex) {
 
-            $(row).attr('id', 'item-' + data.plantID);
-            $(row).addClass(`item-row f-xs d-none ${data.strain.split('-')[0].replace(/\s+/g, "")} ${data.cropID.replace(/\s+/g, "")}`);
+            $(row).attr('id', 'item-' + data.plantId);
+            $(row).addClass(`item-row f-xs d-none ${data.strain.split('-')[0].replace(/\s+/g, "")} ${data.cropId.replace(/\s+/g, "")}`);
 
             $(row).hover(
                 function () {
@@ -109,13 +109,13 @@ function makeHeaderToggle(props) {
 
     let $th = $('<th/>').attr('colspan', 7).addClass(`plant${props.Level}`).append($div);
 
-    return $('<tr/>').attr('data-id', props.ID).addClass(`grp-row cat${props.Level}-head`).append($th);
+    return $('<tr/>').attr('data-id', props.Id).addClass(`grp-row cat${props.Level}-head`).append($th);
 }
 
 function setPlantListeners() {
 
-    $('#StrainID').on('change', function () {
-        $('#Crop_StrainID').val($(this).val());
+    $('#StrainId').on('change', function () {
+        $('#Crop_StrainId').val($(this).val());
     });
 
     $('#Phase').on('change', function () {
@@ -124,18 +124,18 @@ function setPlantListeners() {
     });
 
     $('.dest-id').on('change', function () {
-        $('#Crop_LocationID').val($(this).val());
+        $('#Crop_LocationId').val($(this).val());
     });
 
     $('#OriginType').on('change', function () {
         let type = $(this).val(); 
         if (type == 'Clone_Internal') {
             $('#parentIdDiv').removeClass('d-none');
-            $('#ParentID').removeAttr('disabled');
+            $('#ParentId').removeAttr('disabled');
             loadParentList();
         }
         else {
-            $('#ParentID').attr('disabled', 'disabled');
+            $('#ParentId').attr('disabled', 'disabled');
             $('#parentIdDiv').addClass('d-none');
         }
 
@@ -154,21 +154,21 @@ function setPlantListeners() {
 
 function loadParentList() {
 
-    var strainID = $('#StrainID').val();
+    var strainId = $('#StrainId').val();
 
-    if (strainID != null) {
+    if (strainId != null) {
 
         $.ajax({
             url: '/Grow/Plants/GetParentList/',
             type: 'GET',
-            data: { strainID: strainID },
+            data: { strainId: strainId },
             success: function (response) {
 
                 if (response.Success) {
-                    let $select = $('#ParentID');
+                    let $select = $('#ParentId');
                     $select.html('');
                     $.each(response.data, function (index, parent) {
-                        let $opt = $('<option/>').val(parent.ID).text(parent.Name)
+                        let $opt = $('<option/>').val(parent.Id).text(parent.Name)
                         $select.append($opt)
                     });
                 }

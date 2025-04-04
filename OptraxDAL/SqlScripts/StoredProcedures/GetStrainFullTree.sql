@@ -5,32 +5,32 @@
 -- =============================================
 CREATE OR ALTER PROCEDURE GetStrainFullTree
 (
-	@strainID int
+	@strainId int
 )
 AS
 BEGIN
 
 WITH Ancestors AS (
-    SELECT ParentID, ChildID, 0 AS Generation
+    SELECT ParentId, ChildId, 0 AS Generation
     FROM StrainRelationships
-    WHERE ChildID = @strainId
+    WHERE ChildId = @strainId
 
     UNION ALL
 
-    SELECT sr.ParentID, sr.ChildID, a.Generation + 1
+    SELECT sr.ParentId, sr.ChildId, a.Generation + 1
     FROM StrainRelationships sr
-    INNER JOIN Ancestors a ON sr.ChildID = a.ParentID
+    INNER JOIN Ancestors a ON sr.ChildId = a.ParentId
 ),
 Children AS (
-    SELECT ChildID, ParentID, 0 AS Generation
+    SELECT ChildId, ParentId, 0 AS Generation
     FROM StrainRelationships
-    WHERE ParentID = @strainId
+    WHERE ParentId = @strainId
 
     UNION ALL
 
-    SELECT sr.ChildID, sr.ParentID, d.Generation + 1
+    SELECT sr.ChildId, sr.ParentId, d.Generation + 1
     FROM StrainRelationships sr
-    INNER JOIN Children d ON sr.ParentID = d.ChildID
+    INNER JOIN Children d ON sr.ParentId = d.ChildId
 )
 
 SELECT  * 

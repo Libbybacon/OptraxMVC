@@ -9,8 +9,8 @@ namespace OptraxDAL.Models.Admin
 {
     public abstract class AddressLocation : Location
     {
-        public int? AddressID { get; set; }
-        public int? BusinessID { get; set; }
+        public int? AddressId { get; set; }
+        public int? BusinessId { get; set; }
 
         public virtual Address? Address { get; set; } = new();
         public virtual Business? Business { get; set; }
@@ -33,11 +33,11 @@ namespace OptraxDAL.Models.Admin
         public Location() { }
 
         public string LocationType { get; set; } = string.Empty;
-        public int? MapObjectID { get; set; }
+        public int? MapObjectId { get; set; }
 
         [Display(Name = "Parent Location")]
-        public int? ParentID { get; set; }
-        public int? IconID { get; set; }
+        public int? ParentId { get; set; }
+        public int? IconId { get; set; }
 
 
         public virtual Icon? Icon { get; set; }
@@ -65,8 +65,8 @@ namespace OptraxDAL.Models.Admin
         {
             return new
             {
-                id = ID.ToString(),
-                parent = ParentID?.ToString() ?? "#",
+                id = Id.ToString(),
+                parent = ParentId?.ToString() ?? "#",
                 text = Name,
                 type = LocationType.ToLower(),
                 state = new

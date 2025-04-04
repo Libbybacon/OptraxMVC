@@ -11,11 +11,11 @@ namespace OptraxDAL.Models.Maps
 
         [DataMember]
         [ProtoMember(1)]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [DataMember]
         [ProtoMember(2)]
-        public int MapObjectID { get; set; }
+        public int MapObjectId { get; set; }
 
         [DataMember]
         [ProtoMember(3)]

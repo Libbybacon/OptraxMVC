@@ -43,8 +43,8 @@ namespace OptraxDAL.Models.Admin
         [Display(Name = "Email")]
         public string? ContactEmail { get; set; }
 
-        public int? BusinessID { get; set; }
-        public int? BuildingID { get; set; }
+        public int? BusinessId { get; set; }
+        public int? BuildingId { get; set; }
 
         public virtual Business? Business { get; set; }
 

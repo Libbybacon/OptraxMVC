@@ -7,9 +7,9 @@
     string phoneNum = !string.IsNullOrEmpty(Model.ContactPhone) ? formatter.Format(Model.ContactPhone!) : "";
 }
 
-<input type="hidden" asp-for="ID" />
+<input type="hidden" asp-for="Id" />
 <input type="hidden" asp-for="Name" />
-<input type="hidden" asp-for="UserID" />
+<input type="hidden" asp-for="UserId" />
 
 <div class="col-6 pe-2">
     <label asp-for="Address1"></label>

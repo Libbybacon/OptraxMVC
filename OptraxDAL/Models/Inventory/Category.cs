@@ -9,7 +9,7 @@ namespace OptraxDAL.Models.Inventory
     public class Category : BaseDetails
     {
         public Category() { }
-        public int? ParentID { get; set; }
+        public int? ParentId { get; set; }
 
         [MaxLength(10)]
         public string? HexColor { get; set; } = "#FFFFFF";
@@ -21,7 +21,7 @@ namespace OptraxDAL.Models.Inventory
         public virtual List<Category> Children { get; set; } = [];
 
         [NotMapped]
-        public string ListName => ParentID.HasValue ? $"{Parent?.Name} - {Name}" : Name;
+        public string ListName => ParentId.HasValue ? $"{Parent?.Name} - {Name}" : Name;
 
         [NotMapped]
         public List<TagVM> ChildTags { get; set; } = [];
@@ -31,7 +31,7 @@ namespace OptraxDAL.Models.Inventory
 
         public bool IsTop()
         {
-            return ID > 0 && ParentID == null;
+            return Id > 0 && ParentId == null;
         }
 
         public string NameNoSpace()
@@ -43,7 +43,7 @@ namespace OptraxDAL.Models.Inventory
         {
             if (Children.Count > 0)
             {
-                List<TagVM> tags = [.. Children.Select(c => new TagVM { ID = c.ID, Name = c.Name, Color = c.HexColor })];
+                List<TagVM> tags = [.. Children.Select(c => new TagVM { Id = c.Id, Name = c.Name, Color = c.HexColor })];
 
                 return tags;
             }
@@ -55,7 +55,7 @@ namespace OptraxDAL.Models.Inventory
         {
             if (Parent != null)
             {
-                List<TagVM> tags = [new TagVM { ID = Parent.ID, Name = Parent.Name, Color = Parent.HexColor }];
+                List<TagVM> tags = [new TagVM { Id = Parent.Id, Name = Parent.Name, Color = Parent.HexColor }];
 
                 if (Parent.Parent != null)
                 {
@@ -68,7 +68,7 @@ namespace OptraxDAL.Models.Inventory
         }
         private static List<TagVM> GetParentTagsRecursive(Category cat)
         {
-            List<TagVM> tags = [new TagVM { ID = cat.ID, Name = cat.Name, Color = cat.HexColor }];
+            List<TagVM> tags = [new TagVM { Id = cat.Id, Name = cat.Name, Color = cat.HexColor }];
 
             if (cat.Parent != null)
             {
@@ -79,36 +79,36 @@ namespace OptraxDAL.Models.Inventory
             return tags;
         }
 
-        public List<int> GetChildIDs()
+        public List<int> GetChildIds()
         {
             if (Children.Count > 0)
             {
-                List<int> childIDs = [ID, .. Children.Select(c => c.ID).ToList()];
+                List<int> childIds = [Id, .. Children.Select(c => c.Id).ToList()];
 
                 foreach (var child in Children)
                 {
                     if (child.Children.Count > 0)
                     {
-                        childIDs.AddRange(GetChildIDsRecursive(child));
+                        childIds.AddRange(GetChildIdsRecursive(child));
                     }
                 }
-                return childIDs;
+                return childIds;
             }
             return [];
         }
 
-        private static List<int> GetChildIDsRecursive(Category category)
+        private static List<int> GetChildIdsRecursive(Category category)
         {
-            List<int> childIDs = [.. category.Children.Select(c => c.ID)];
+            List<int> childIds = [.. category.Children.Select(c => c.Id)];
 
             foreach (var child in category.Children)
             {
                 if (child.Children.Count > 0)
                 {
-                    childIDs.AddRange(GetChildIDsRecursive(child));
+                    childIds.AddRange(GetChildIdsRecursive(child));
                 }
             }
-            return childIDs;
+            return childIds;
         }
 
         public List<string> GetChildNamesList()

@@ -4,9 +4,9 @@
     bool showEdit = ViewBag.ShowEdit as bool? ?? false;
 }
 <div class="m-toggle row col-12 w-100 px-0 m-0 pe-0 @(showEdit ? "" : "d-none")">
-    <input type="hidden" asp-for="ID" />
-    <input type="hidden" asp-for="UserID" />
-    <input type="hidden" asp-for="ParentID" />
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="UserId" />
+    <input type="hidden" asp-for="ParentId" />
     <input type="hidden" asp-for="LocationType" />
 
     <div class="col-12 mt-2">
