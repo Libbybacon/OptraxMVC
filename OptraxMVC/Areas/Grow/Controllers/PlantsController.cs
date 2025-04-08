@@ -6,7 +6,7 @@ using OptraxDAL.Models.Grow;
 using OptraxMVC.Controllers;
 using OptraxMVC.Models;
 using OptraxMVC.Services;
-using OptraxMVC.Services.Inventory;
+using OptraxMVC.Services.Grow;
 
 namespace OptraxMVC.Areas.Grow.Controllers
 {
@@ -18,13 +18,17 @@ namespace OptraxMVC.Areas.Grow.Controllers
         private readonly IOptionsService _IOptions = optionsService;
 
         [HttpGet]
-        public async Task<IActionResult> GetPlants()
+        public IActionResult LoadPlants()
+        {
+            return PartialView("_Plants");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPlantNodes(string? comName = null)
         {
             try
             {
-                var data = await _IPlants.GetPlantsAsync();
-
-                return Json(data);
+                return Json(await _IPlants.GetPlantNodesAsync(comName));
             }
             catch (Exception ex)
             {
@@ -33,23 +37,18 @@ namespace OptraxMVC.Areas.Grow.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> LoadCreate(string type, string parentId)
         {
             try
             {
-                ViewBag.FormVM = new FormVM()
+                if (type.Equals("species group", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    IsNew = true,
-                    JsFunc = "addPlants",
-                    Action = "Create",
-                    MsgDiv = "tableMsg"
-                };
+                    return PartialView("_CreateGroup", new PlantTypeGroup() { PlantType = parentId });
+                }
 
-                ViewData["Options"] = _IOptions.LoadOptions(["StrainSelects", "PhaseSelects", "OriginTypeSelects", "LocationSelects", "UomSelects"]);
+                Plant model = await _IPlants.LoadCreate(type, parentId);
 
-                Plant plant = await _IPlants.LoadNewPlant(UserId);
-
-                return PartialView("_Create", plant);
+                return await GetPlantView(model, "Create");
             }
             catch (Exception ex)
             {
@@ -57,41 +56,56 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> CreateAsync(Plant plant)
-        //{
-        //    if (plant.PlantEvents.First() is TransferEvent transferEvent)
-        //    {
-        //        TryValidateModel(transferEvent.Transfer, "PlantEvents[0].Transfer");
-        //    }
-        //    if (!ModelState.IsValid)
-        //        return Json(new { msg = "Invalid model" });
-
-        //    try
-        //    {
-        //        ResponseVM response = await _IPlants.CreateAsync(plant, UserId);
-
-        //        return Json(response);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { success = false, msg = ex.Message });
-        //    }
-        //}
-
-        [HttpGet]
-        public async Task<IActionResult> GetParentList(int strainId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateGroupAsync(PlantTypeGroup group)
         {
+            if (!ModelState.IsValid) { return Json(ResponseVM("Invalid model")); }
+
             try
             {
-                ResponseVM response = await _IPlants.GetParentListAsync(strainId);
+                ResponseVM response = await _IPlants.CreateGroupAsync(group);
 
                 return Json(response);
             }
             catch (Exception ex)
             {
                 return Json(new { success = false, msg = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateAsync(Plant plant)
+        {
+            if (!ModelState.IsValid) { return Json(ResponseVM("Invalid model")); }
+
+            try
+            {
+                ResponseVM response = await _IPlants.CreateAsync(plant, UserId);
+
+                return Json(response);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, msg = ex.Message });
+            }
+        }
+
+        private async Task<IActionResult> GetPlantView(Plant model, string action)
+        {
+            try
+            {
+                ViewBag.Action = action;
+                ViewData["IsView"] = true;
+                ViewBag.ShowEdit = action.Contains("Create");
+                ViewData["Options"] = await _IOptions.LoadOptions(["PlantTypeSelects", "TaxonSelects", "PlantSelects", "UomSelects"]);
+
+                return PartialView("_Plant", model);
+            }
+            catch (Exception ex)
+            {
+                return Json(ResponseVM(ex.Message));
             }
         }
     }

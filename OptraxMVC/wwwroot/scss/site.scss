@@ -1,7 +1,7 @@
 ﻿@import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'leaflet/dist/leaflet.css';
 @import 'leaflet-draw/dist/leaflet.draw.css';
-@import 'choices.js/public/assets/styles/choices.min.css';
+@import "choices.js/src/styles/choices";
 //
 @import 'utilities.scss';
 @import 'buttons.scss';
@@ -118,6 +118,7 @@ main {
 	align-items: center;
 	justify-content: center;
 }
+
 .success {
 	color: $grn-xdk;
 	background-color: $grn-lt;
@@ -176,9 +177,19 @@ label {
 	}
 }
 
+.form-control {
+}
+
 .form-control,
 .form-select {
+	font-size: 1rem;
+	line-height: 1.2rem;
+	border-radius: $br;
 	border: $in-border
+}
+
+.input-group-text {
+	line-height: 1.2rem;
 }
 
 .btn:focus,
@@ -196,13 +207,62 @@ label {
 	border: $in-border !important;
 }
 
-.input-group-append{
-	.input-group-text{
-		 border-top-left-radius: 0;
-		 border-bottom-left-radius: 0;
+.input-group-append {
+	.input-group-text {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
 	}
 }
+
 input[type=checkbox]:hover,
 input[type=radio]:hover {
 	cursor: pointer;
 }
+
+.title {
+	font-size: $f-lg;
+	font-weight: 525;
+	text-align: center;
+}
+
+.choices {
+	margin-bottom: 0;
+}
+
+.choices__inner {
+	border-radius: $br;
+	padding: 0;
+	font-size: $f-sm;
+	border: $in-border;
+	min-height: 30px;
+	line-height: 1.5;
+	background-color: white;
+}
+
+.choices__input {
+	background-color: white;
+	font-size: $f-sm;
+	padding: 0;
+}
+
+.choices__list.choices__list--dropdown {
+	border-bottom-left-radius: $br;
+	border-bottom-right-radius: $br;
+}
+
+.choices__list--dropdown .choices__item,
+.choices__list[aria-expanded] .choices__item {
+	font-size: $f-sm;
+	padding: .25rem;
+}
+.choices__list--multiple .choices__item {
+	margin: 0;
+	margin-top: 3px;
+	margin-left: 3px;
+	padding: 1px 8px;
+	font-weight: 400;
+	letter-spacing: .8px;
+	background-color: $grn-xdk;
+	border: border($grn-xdk, 1px, solid);
+}
+

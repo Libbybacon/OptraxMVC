@@ -19,6 +19,11 @@ export const formUtil = {
         if ($form.attr('action').includes('Edit')) {
             formUtil.setModelChanges();
         }
+
+        $(formId + ' .toggle-edit').on('click', function () {
+            const model = $(this).parent('.model');
+            model.find('.m-toggle').toggleClass('d-none');
+        });
     },
     setModelChanges: function () {
         Changes = [];

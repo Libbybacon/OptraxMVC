@@ -4,19 +4,21 @@
     {
         public enum PlantType
         {
-            Indica,
-            Sativa,
-            Hybrid
+            Flower,
+            Fruit,
+            Herb,
+            Tree,
+            Vegetable
         }
 
-        public enum Cannabinoid
+        public enum TaxonType
         {
-            THC,
-            CBD,
-            CBN,
+            Species,
+            Variety,
+            Cultivar
         }
 
-        public enum GrowStage
+        public enum PlantPhase
         {
             Seedling,
             Vegetative,
@@ -28,45 +30,18 @@
             Sold
         }
 
-        public enum EndProductType
+        public enum CropEvent
         {
-            Flower,
-            Trim,
-            Extract,
-            Concentrate,
-            Edible,
-            Topical,
-            Other
-        }
-
-        public enum PlantEvent
-        {
-            StartSeed1,
-            StartClone,
-            Transplant,
-            Top,
-            FIM,
-            LST1,
-            LST2,
-            LST3,
-            Defoliate,
-            Water,
-            Feed,
-            Flush,
-            Spray,
-            Neem,
-            DiatomaceousEarth,
-            ChangeLight,
-            ChangeRoom,
+            Plant,
             Harvest
         }
 
-        public enum PlantEventCategory
+        public enum CropEventCategory
         {
-            Move,
-            Prune,
-            FeedOrWater,
-            PestControl,
+            Sow,
+            Till,
+            Transplant,
+            AmendSoil,
             Harvest
         }
 

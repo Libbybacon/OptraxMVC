@@ -1,5 +1,5 @@
 ﻿// Color
-$colors: ( grn: ( bg: #EEF7F5, xlt: #FBFDFD, lt: #61B39F, md: #378874, dk: #195C4B, xdk: #124034), red: ( xlt: #FEFDFD, dk: #B60D0D), tan: (xlt: #FAF8F2), gray: ( xlt: #F5F5F5, md: #8F8F8F, dk: #303030), highlight: #FFFFC2 );
+$colors: ( grn: ( bg: #EEF7F5, xlt: #FBFDFD, lt: #61B39F, md: #378874, dk: #195C4B, xdk: #124034), red: ( xlt: #FEFDFD, dk: #B60D0D), tan: (xlt: #FAF8F2), gray: ( xlt: #F5F5F5, lt: #C2C2C2, md: #8F8F8F, dk: #303030), highlight: #FFFFC2 );
 /*$colors: ( grn: ( bg: #F0F8F1, xlt: #FBFDFD, lt: #A6C9B7, md: #5E9777, dk: #315E4B, xdk: #124034), red: ( xlt: #FEFDFD, dk: #B60D0D), tan: (xlt: #FAF8F2), gray: ( xlt: #F5F5F5, md: #8F8F8F, dk: #303030), highlight: #FFFFC2 );*/
 
 @function map-get-deep($map, $keys...) {
@@ -25,15 +25,12 @@ $grn-xdk: app-color(grn, xdk);
 $red-xlt: app-color(red, xlt);
 $red-dk: app-color(red, dk);
 $gray-xlt: app-color(gray, xlt);
+$gray-lt: app-color(gray, lt);
 $gray-md: app-color(gray, md);
 $gray-dk: app-color(gray, dk);
 $tan: app-color(tan, xlt);
 
-// input
-$br: 4px;
-$in-border: border($gray-dk);
-$in-outline: border($gray-dk, 2px);
-$in-shdw: 0 0 0 0.15rem $grn-md;
+
 
 // height
 $nav-h-lg: 35px;
@@ -90,6 +87,12 @@ $shadows: ( base: 0px 1px 6px rgba(0, 0, 0, 0.4), hov: 0px 2px 7px rgba(0, 0, 0,
 @function border($color, $weight: 1px, $style: solid) {
 	@return #{$weight} #{$style} #{$color};
 }
+
+// input
+$br: 4px;
+$in-border: border($gray-lt);
+$in-outline: border($gray-lt, 2px);
+$in-shdw: 0 0 0 0.15rem $grn-md;
 
 // Button
 $button-theme-names: (grn, gray, red);

@@ -28,3 +28,5 @@
  * Released under the MIT license.
  * https://jquery.org/license
  */
+
+/*! choices.js v11.1.0 | © 2025 Josh Johnson | https://github.com/jshjohnson/Choices#readme */

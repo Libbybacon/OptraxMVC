@@ -20,7 +20,7 @@
 }
 
 .inner-layout {
-	// background: color(tan);
+	overflow-y: auto;
 }
 
 .view-tabs {
@@ -79,7 +79,7 @@
 	}
 }
 
-.loc-tree {
+.tree {
 	width: auto;
 	z-index: 103;
 	padding: 1rem;
@@ -97,10 +97,35 @@
 		position: relative;
 	}
 
-	.loc-title {
+	.tree-title {
 		font-weight: 500;
 		font-size: $f-lg;
 		color: $grn-xdk;
+	}
+}
+
+#plants {
+	.tree {
+		min-width: fit-content;
+		width: fit-content !important;
+		/*position: fixed;*/
+		overflow-x: hidden;
+	}
+
+	#tree-details {
+		position: relative;
+		width: fit-content;
+	}
+
+	.view-tabs {
+		overflow-y: auto;
+		scrollbar-width: thin;
+	}
+}
+
+#plantForm{
+	label{
+		padding-top: .5rem;
 	}
 }
 
@@ -111,7 +136,8 @@
 }
 
 .tab-content {
-	overflow-y: auto;
+	/*overflow-y: auto;*/
+	scrollbar-width: thin;
 }
 
 .loc-map {
@@ -220,6 +246,6 @@
 	text-shadow: shdw(text);
 }
 
-.jstree-contextmenu{
+.jstree-contextmenu {
 	z-index: 100000;
 }

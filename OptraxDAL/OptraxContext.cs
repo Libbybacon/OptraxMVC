@@ -49,6 +49,7 @@ namespace OptraxDAL
 
         #region Grow
         public DbSet<Plant> Plants { get; set; }
+        public DbSet<PlantTypeGroup> PlantTypeGroups { get; set; }
         public DbSet<PlantTrait> PlantTraits { get; set; }
         public DbSet<PlantProfile> PlantProfiles { get; set; }
         public DbSet<TraitDefinition> TraitDefinitions { get; set; }

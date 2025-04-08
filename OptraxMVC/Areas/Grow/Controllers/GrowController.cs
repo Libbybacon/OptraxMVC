@@ -12,7 +12,10 @@ namespace OptraxMVC.Areas.Grow.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            List<Tab> model = [new Tab("Locations", "./Locations/LoadLocations/"), new Tab("Plants")];
+            List<Tab> model = [
+                new Tab("Locations", "./Locations/LoadLocations/"),
+                new Tab("Plants", "./Plants/LoadPlants/")
+            ];
 
             return View(model);
         }

@@ -8,8 +8,7 @@ namespace OptraxDAL.Models.Grow
     {
         public PlantProfile() { }
 
-        public ICollection<PlantTrait> Traits { get; set; } = [];
+        public List<PlantTrait> Traits { get; set; } = [];
         public virtual ICollection<Plant> Plants { get; set; } = [];
-
     }
 }

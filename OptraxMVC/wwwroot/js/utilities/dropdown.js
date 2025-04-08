@@ -1,4 +1,5 @@
-﻿const dropdownOptions = {
+﻿
+const choicesOpts = {
     silent: false,
     items: [],
     choices: [],
@@ -94,4 +95,4 @@
     appendGroupInSearch: false,
 }
 
-export default dropdownOptions;
+export default choicesOpts;

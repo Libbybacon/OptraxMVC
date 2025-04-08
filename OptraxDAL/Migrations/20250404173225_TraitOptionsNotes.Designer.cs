@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using OptraxDAL;
@@ -12,9 +13,11 @@ using OptraxDAL;
 namespace OptraxDAL.Migrations
 {
     [DbContext(typeof(OptraxContext))]
-    partial class OptraxContextModelSnapshot : ModelSnapshot
+    [Migration("20250404173225_TraitOptionsNotes")]
+    partial class TraitOptionsNotes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -737,23 +740,17 @@ namespace OptraxDAL.Migrations
                     b.Property<string>("Genus")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsHybrid")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("Parent1Id")
                         .HasColumnType("int");
 
                     b.Property<int?>("Parent2Id")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PlantId")
-                        .HasColumnType("int");
-
                     b.Property<string>("PlantType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProfileId")
+                    b.Property<int?>("ProfileId")
                         .HasColumnType("int");
 
                     b.Property<string>("ScientificName")
@@ -774,8 +771,6 @@ namespace OptraxDAL.Migrations
                     b.HasIndex("Parent1Id");
 
                     b.HasIndex("Parent2Id");
-
-                    b.HasIndex("PlantId");
 
                     b.HasIndex("ProfileId");
 
@@ -853,27 +848,6 @@ namespace OptraxDAL.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("PlantTraits", "Grow");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Grow.PlantTypeGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PlantType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TypeGroups", "Grow");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.Planting", b =>
@@ -1108,9 +1082,6 @@ namespace OptraxDAL.Migrations
                     b.Property<string>("Group")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("HasUOM")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsCustom")
                         .HasColumnType("bit");
 
@@ -1150,9 +1121,6 @@ namespace OptraxDAL.Migrations
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Category")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset?>("DateCreated")
                         .HasColumnType("datetimeoffset");
@@ -2333,15 +2301,10 @@ namespace OptraxDAL.Migrations
                         .HasForeignKey("Parent2Id")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("OptraxDAL.Models.Grow.Plant", null)
-                        .WithMany("AllChildren")
-                        .HasForeignKey("PlantId");
-
                     b.HasOne("OptraxDAL.Models.Grow.PlantProfile", "Profile")
                         .WithMany("Plants")
                         .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("OptraxDAL.Models.Admin.AppUser", "User")
                         .WithMany()
@@ -2474,7 +2437,7 @@ namespace OptraxDAL.Migrations
             modelBuilder.Entity("OptraxDAL.Models.Grow.TraitOption", b =>
                 {
                     b.HasOne("OptraxDAL.Models.Grow.TraitDefinition", "Definition")
-                        .WithMany("Options")
+                        .WithMany()
                         .HasForeignKey("DefinitionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2903,8 +2866,6 @@ namespace OptraxDAL.Migrations
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.Plant", b =>
                 {
-                    b.Navigation("AllChildren");
-
                     b.Navigation("ChildrenP1");
 
                     b.Navigation("ChildrenP2");
@@ -2936,8 +2897,6 @@ namespace OptraxDAL.Migrations
 
             modelBuilder.Entity("OptraxDAL.Models.Grow.TraitDefinition", b =>
                 {
-                    b.Navigation("Options");
-
                     b.Navigation("Traits");
                 });
 

@@ -1,0 +1,27 @@
+﻿@model Plant
+
+@{
+    bool showEdit = ViewBag.ShowEdit as bool? ?? false;
+}
+<div class="tab-content h-100 p-0">
+    <div class="plant-msg"></div>
+        <form asp-action="@ViewBag.Action" asp-controller="Plants" method="post" class="px-1" id="plantForm" data-id="@Model.Id">
+            @Html.AntiForgeryToken()
+
+            <div class="m-toggle row col-12 w-100 px-0 m-0 pe-0 @(showEdit ? "d-none" : "")">
+                <partial name="_Details" model="Model" />
+                <partial name="_TraitsDetails" model="Model.Profile.Traits" />
+            </div>
+
+            <div class="m-toggle row col-12 w-100 px-0 m-0 pe-0 @(showEdit ? "" : "d-none")">
+                <partial name="_Edit" model="Model" />
+                <partial name="_TraitsEdit" model="Model.Profile.Traits" />
+            </div>
+
+            <partial name="_FormButtons" model="showEdit" />
+        </form>
+    </div>
+</div>
+
+
+

@@ -9,14 +9,19 @@ namespace OptraxDAL.Models.Grow
     {
         public PlantTrait() { }
 
-        public string Value { get; set; } = string.Empty; // Stored as string for flexibility
+        public PlantTrait(TraitDefinition def)
+        {
+            DefinitionId = def.Id;
+            Definition = def;
+        }
 
         public int DefinitionId { get; set; }
+
+        public string? Value { get; set; } // Stored as string for flexibility
+
         public TraitDefinition Definition { get; set; } = null!;
 
-        public int ProfileId { get; set; }
+        public ICollection<TraitOption> SelectedOptions { get; set; } = []; // Options selected by the user (For multi-selects)
         public ICollection<PlantProfile> Profiles { get; set; } = [];
-
-
     }
 }

@@ -8,7 +8,7 @@ using OptraxDAL.Models;
 using OptraxDAL.Models.Maps;
 using OptraxMVC.Models;
 
-namespace OptraxMVC.Services
+namespace OptraxMVC.Services.Grow
 {
     public interface IMapService
     {
@@ -79,10 +79,10 @@ namespace OptraxMVC.Services
             {
                 var features = objType switch
                 {
-                    "Point" => (await db.MapPoints.Where(p => p.Active && (p.UserId == UserId)).Include(p => p.Icon).ToListAsync()).Select(p => p.ToGeoJSON()).ToList(),
-                    "Line" => [.. (await db.MapLines.Where(p => p.Active && (p.UserId == UserId)).ToListAsync()).Select(p => p.ToGeoJSON())],
-                    "Circle" => [.. (await db.MapCircles.Where(p => p.Active && (p.UserId == UserId)).ToListAsync()).Select(p => p.ToGeoJSON())],
-                    "Polygon" => [.. (await db.MapPolygons.Where(p => p.Active && (p.UserId == UserId)).ToListAsync()).Select(p => p.ToGeoJSON())],
+                    "Point" => (await db.MapPoints.Where(p => p.Active && p.UserId == UserId).Include(p => p.Icon).ToListAsync()).Select(p => p.ToGeoJSON()).ToList(),
+                    "Line" => [.. (await db.MapLines.Where(p => p.Active && p.UserId == UserId).ToListAsync()).Select(p => p.ToGeoJSON())],
+                    "Circle" => [.. (await db.MapCircles.Where(p => p.Active && p.UserId == UserId).ToListAsync()).Select(p => p.ToGeoJSON())],
+                    "Polygon" => [.. (await db.MapPolygons.Where(p => p.Active && p.UserId == UserId).ToListAsync()).Select(p => p.ToGeoJSON())],
                     _ => throw new NotImplementedException()
                 };
                 var geoJson = new

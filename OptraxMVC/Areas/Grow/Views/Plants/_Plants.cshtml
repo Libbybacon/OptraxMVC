@@ -1,37 +1,15 @@
-﻿@using OptraxDAL.Models.Inventory
-@using OptraxDAL.ViewModels
+﻿@{
+    ViewData["IsView"] = true;
+}
 
-@model IEnumerable<Plant>
-
-<div class="p-md-3 p-0 pt-0">
-
-    <div class="table-div  px-lg-3 px-2">
-        <div class="table-responsive">
-            <div id="tableMsg"></div>
-            <table id="plant-table" class="grp-table table table-responsive w-100">
-                <thead>
-                    <tr>
-                        <th class="show-child">
-                            <button class="toggle toggle-all">
-                                <i class="bi bi-chevron-down show-i show2"></i>
-                                <i class="bi bi-chevron-up hide-i d-none"></i>
-                            </button>
-                        </th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th>Tracking Id</th>
-                        <th>Start Type</th>
-                        <th>Growth Phase</th>
-                        <th>Location</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+<div id="plants" class="loc-layout d-flex">
+    <div class="tree inner-layout">
+        <div class="tree-div">
+            <div class="tree-title">Plant List</div>
+            <div id="plantTree"></div>
         </div>
     </div>
-</div>
 
-<script src="/js/inventory/plants.js"></script>
-<script src="/js/inventory/inventory.js"></script>
+    <div id="plant-details" class="inner-layout view-tabs"></div>
+</div>
+<script src="~/dist/plant.bundle.js"></script>

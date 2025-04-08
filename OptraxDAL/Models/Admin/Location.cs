@@ -12,8 +12,8 @@ namespace OptraxDAL.Models.Admin
         public int? AddressId { get; set; }
         public int? BusinessId { get; set; }
 
-        public virtual Address? Address { get; set; } = new();
-        public virtual Business? Business { get; set; }
+        public Address? Address { get; set; } = new();
+        public Business? Business { get; set; }
     }
 
     public abstract class AreaLocation : Location
@@ -40,9 +40,9 @@ namespace OptraxDAL.Models.Admin
         public int? IconId { get; set; }
 
 
-        public virtual Icon? Icon { get; set; }
-        public virtual MapObject? MapObject { get; set; }
-        public virtual Location? Parent { get; set; } = null;
+        public Icon? Icon { get; set; }
+        public MapObject? MapObject { get; set; }
+        public Location? Parent { get; set; } = null;
 
 
         public virtual ICollection<Location>? Children { get; set; } = [];

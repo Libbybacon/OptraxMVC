@@ -1,4 +1,5 @@
 ﻿using OptraxDAL.Models.BaseClasses;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Grow
@@ -8,8 +9,17 @@ namespace OptraxDAL.Models.Grow
     {
         public Plant() { }
 
-        public string PlantType { get; set; } = string.Empty; // Fruit, Vegetable, Flower, Tree
+        public Plant(List<PlantTrait> traits)
+        {
+            Profile = new PlantProfile
+            {
+                Traits = traits
+            };
+        }
+
+        public string PlantType { get; set; } = string.Empty; // Fruit, Vegetable, Herb, Flower, Tree
         public string TaxonType { get; set; } = string.Empty; // Species, Variety, Cultivar
+        public bool IsHybrid { get; set; } = false;
         public string? Family { get; set; }
         public string? Genus { get; set; }
         public string? Species { get; set; }
@@ -22,6 +32,7 @@ namespace OptraxDAL.Models.Grow
         public string? Abbreviation { get; set; } // Filled in by user
         public string? Description { get; set; }
 
+        [Display(Name = "Parent 1")]
         public int? Parent1Id { get; set; }
         public int? Parent2Id { get; set; }
 
@@ -31,9 +42,19 @@ namespace OptraxDAL.Models.Grow
         public ICollection<Plant> ChildrenP1 { get; set; } = [];
         public ICollection<Plant> ChildrenP2 { get; set; } = [];
 
-        public int? ProfileId { get; set; }
-        public PlantProfile? Profile { get; set; }
+        public int ProfileId { get; set; }
+        public PlantProfile Profile { get; set; } = null!;
 
         public virtual ICollection<Crop> Crops { get; set; } = [];
+
+        public List<Plant> AllChildren
+        {
+            get
+            {
+                return [.. ChildrenP1.ToList().Union([.. ChildrenP2])];
+            }
+        }
     }
 }
+
+
