@@ -213,7 +213,8 @@ namespace OptraxMVC.Services.Grow
             List<PlantTrait> traits = [.. plant.Profile.Traits];
             var defIds = traits.Select(t => t.DefinitionId).Distinct().ToList();
 
-            var dbTraits = db.PlantTraits.Include(pt => pt.SelectedOptions)
+            var dbTraits = db.PlantTraits.Include(pt => pt.Definition)
+                                         .Include(pt => pt.SelectedOptions)
                                          .Where(pt => defIds.Contains(pt.DefinitionId))
                                          .ToList()
                                          .GroupBy(t => t.DefinitionId)
@@ -234,6 +235,7 @@ namespace OptraxMVC.Services.Grow
                 }
                 else
                 {
+                    traits[i].Definition = db.TraitDefinitions.FirstOrDefault(t => t.Id == traits[i].DefinitionId);
                     hasNew = true;
                 }
             }

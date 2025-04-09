@@ -123,9 +123,22 @@
 	}
 }
 
-#plantForm{
-	label{
-		padding-top: .5rem;
+#plantForm {
+	label {
+		font-size: $f-xs;
+		padding-top: .75rem;
+		font-weight: 410;
+	}
+
+	.form-control,
+	.form-select,
+	.choices__inner {
+		font-size: $f-xs;
+	}
+	.choices__inner{
+		height: fit-content;
+		white-space: normal;
+		
 	}
 }
 

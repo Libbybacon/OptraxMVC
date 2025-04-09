@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using OptraxDAL;
@@ -12,9 +13,11 @@ using OptraxDAL;
 namespace OptraxDAL.Migrations
 {
     [DbContext(typeof(OptraxContext))]
-    partial class OptraxContextModelSnapshot : ModelSnapshot
+    [Migration("20250408233114_TraitDefOrders")]
+    partial class TraitDefOrders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -795,7 +798,27 @@ namespace OptraxDAL.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateLastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Details")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("PlantProfiles", "Grow");
                 });
@@ -1093,10 +1116,6 @@ namespace OptraxDAL.Migrations
 
                     b.Property<bool>("HasUom")
                         .HasColumnType("bit");
-
-                    b.Property<string>("InputType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsCustom")
                         .HasColumnType("bit");
@@ -2342,6 +2361,15 @@ namespace OptraxDAL.Migrations
                     b.Navigation("Parent2");
 
                     b.Navigation("Profile");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Grow.PlantProfile", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Admin.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace OptraxDAL.Models.Grow
 {
     [Table("PlantProfiles", Schema = "Grow")]
-    public class PlantProfile : TrackingBaseDetails
+    public class PlantProfile : BaseClass
     {
         public PlantProfile() { }
 

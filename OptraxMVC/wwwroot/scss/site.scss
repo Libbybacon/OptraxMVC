@@ -177,11 +177,10 @@ label {
 	}
 }
 
-.form-control {
-}
-
 .form-control,
-.form-select {
+.form-select,
+.choices__inner {
+	color: $gray-dk;
 	font-size: 1rem;
 	line-height: 1.2rem;
 	border-radius: $br;
@@ -190,6 +189,7 @@ label {
 
 .input-group-text {
 	line-height: 1.2rem;
+	font-size: $f-xs;
 }
 
 .btn:focus,
@@ -226,35 +226,41 @@ input[type=radio]:hover {
 }
 
 .choices {
+	font-size: $f-sm;
 	margin-bottom: 0;
+	background-clip: padding-box;
 }
 
 .choices__inner {
-	border-radius: $br;
-	padding: 0;
+	margin: 0;
 	font-size: $f-sm;
+	min-height: 10px;
+	border-radius: $br;
 	border: $in-border;
-	min-height: 30px;
-	line-height: 1.5;
+	padding: .375rem .75rem;
 	background-color: white;
+	background-clip: padding-box;
 }
 
 .choices__input {
-	background-color: white;
-	font-size: $f-sm;
+	margin: 0;
 	padding: 0;
+	font-size: $f-sm;
+	background-color: white;
 }
 
 .choices__list.choices__list--dropdown {
 	border-bottom-left-radius: $br;
 	border-bottom-right-radius: $br;
+	scrollbar-width: thin;
 }
 
 .choices__list--dropdown .choices__item,
 .choices__list[aria-expanded] .choices__item {
-	font-size: $f-sm;
+	font-size: $f-xs;
 	padding: .25rem;
 }
+
 .choices__list--multiple .choices__item {
 	margin: 0;
 	margin-top: 3px;
@@ -262,7 +268,22 @@ input[type=radio]:hover {
 	padding: 1px 8px;
 	font-weight: 400;
 	letter-spacing: .8px;
-	background-color: $grn-xdk;
+	color: $grn-xdk;
+	border-radius: $br;
+	background-color: $gray-lt;
 	border: border($grn-xdk, 1px, solid);
 }
 
+.choices__item.is-highlighted {
+	color: $grn-xdk !important;	
+	background-color: $grn-xlt !important;
+}
+.choices__button {
+	border: none;
+	text-indent: 0;
+	color: $grn-xdk !important;
+	font-size: $f-xs;
+	background-image: none !important;
+	padding-left: .2rem !important;
+	padding-right: .8rem !important;
+}

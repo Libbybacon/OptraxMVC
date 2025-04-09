@@ -1,6 +1,6 @@
 ﻿import apiService from '../utilities/api.js';
 import { formUtil } from '../utilities/form.js';
-import choicesOpts from '../utilities/dropdown.js';
+import * as opts from '../utilities/dropdown.js';
 
 var childTypes = {
     pt: ['Species Group'],
@@ -92,15 +92,24 @@ async function loadPartial(props) {
 function setFormListeners() {
 
     $.each($(formId + ' .multi'), function (i, drop) {
-        console.log('drop', drop)
-        let drops = new choices(drop, choicesOpts);
+        let drops = new choices(drop, opts.multiOpts);
     });
 
     $(formId + ' .name').on('input', function () {
-        let cultName = $(formId + ' #Cultivar').val() ? $(" '" + formId + ' #Cultivar' + "'").val() : '';
-        let varName = $(formId + ' #Variety').val() ? $(" var. " + formId + ' #Variety').val() : '';
-        let sciName = `${$(formId + ' #Genus').val()} ${$(formId + ' #Species').val()}${varName}${cultName}`;
+        let taxon = $(formId + ' #TaxonType').val();
+        let cultName = $(formId + ' #CultivarName').val();
+        console.log('cultName', cultName, 'taxon', taxon);
+        let varName = (cultName && cultName != '') ? taxon === 'Variety' ? ` var. ${cultName}` : ` '${cultName}'` : '';       
+        let sciName = `${$(formId + ' #Genus').val()} ${$(formId + ' #Species').val()}${varName}`;
         $(formId + ' #ScientificName').val(sciName).change();
+    })
+
+    $(formId + ' .rng').on('change', function () {
+        var par = $(this).parent('.range');
+        var first = par.find('.first').val();
+        var sec = par.find('.second').val();
+
+        $(formId + ' #Value').val(`${first},${sec}`);
     })
 
     $(formId + ' .btn-red').off('click').on('click', function () {

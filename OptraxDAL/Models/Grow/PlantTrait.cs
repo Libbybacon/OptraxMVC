@@ -19,9 +19,21 @@ namespace OptraxDAL.Models.Grow
 
         public string? Value { get; set; } // Stored as string for flexibility
 
-        public TraitDefinition Definition { get; set; } = null!;
+        public virtual TraitDefinition? Definition { get; set; }
 
         public ICollection<TraitOption> SelectedOptions { get; set; } = []; // Options selected by the user (For multi-selects)
         public ICollection<PlantProfile> Profiles { get; set; } = [];
+
+        [NotMapped]
+        public string[] RangeVals
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Value) || !Value.Contains(','))
+                    return ["", ""];
+
+                return Value.Split([',']);
+            }
+        }
     }
 }

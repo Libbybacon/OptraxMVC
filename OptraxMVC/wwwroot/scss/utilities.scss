@@ -1,5 +1,5 @@
 ﻿// Color
-$colors: ( grn: ( bg: #EEF7F5, xlt: #FBFDFD, lt: #61B39F, md: #378874, dk: #195C4B, xdk: #124034), red: ( xlt: #FEFDFD, dk: #B60D0D), tan: (xlt: #FAF8F2), gray: ( xlt: #F5F5F5, lt: #C2C2C2, md: #8F8F8F, dk: #303030), highlight: #FFFFC2 );
+$colors: ( grn: ( bg: #EEF7F5, xlt: #FBFDFD, lt: #61B39F, md: #378874, dk: #195C4B, xdk: #124034), red: ( xlt: #FEFDFD, dk: #B60D0D), tan: (xlt: #FAF8F2), gray: ( xlt: #F5F5F5, lt: #E7E8E8, md: #606060, dk: #303030), highlight: #FFFFC2 );
 /*$colors: ( grn: ( bg: #F0F8F1, xlt: #FBFDFD, lt: #A6C9B7, md: #5E9777, dk: #315E4B, xdk: #124034), red: ( xlt: #FEFDFD, dk: #B60D0D), tan: (xlt: #FAF8F2), gray: ( xlt: #F5F5F5, md: #8F8F8F, dk: #303030), highlight: #FFFFC2 );*/
 
 @function map-get-deep($map, $keys...) {
@@ -30,6 +30,9 @@ $gray-md: app-color(gray, md);
 $gray-dk: app-color(gray, dk);
 $tan: app-color(tan, xlt);
 
+.text-grn {
+	color: $grn-md;
+}
 
 
 // height

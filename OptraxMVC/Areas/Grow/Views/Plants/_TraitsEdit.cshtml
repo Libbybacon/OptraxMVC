@@ -4,100 +4,80 @@
     ViewData.TemplateInfo.HtmlFieldPrefix = "Profile.Traits";
 
     var indexed = Model.Select((trait, index) => new { Trait = trait, Index = index });
-    var grouped = indexed.GroupBy(x => x.Trait.Definition.Group ?? "General").OrderBy(g => g.Key);
+    var grouped = indexed.GroupBy(x => x.Trait.Definition.GroupOrder.ToString() ?? "").OrderBy(g => g.Key);
 }
 
 @foreach (var group in grouped)
 {
-    var j = 0;
+    string grpName = group.First().Trait.Definition.Group!;
 
     <fieldset class="border rounded p-3 mb-4">
-        <legend class="w-auto px-2">@group.Key</legend>
+        <legend class="w-auto px-2">@grpName</legend>
         <div class="row col-12 w-100 px-0 m-0 pe-0">
-            @foreach (var item in group)
+
+            @foreach (var item in group.OrderBy(g => g.Trait.Definition.ItemOrder).ThenBy(g => g.Trait.Definition.DisplayName))
             {
                 var i = item.Index;
-                var trait = item.Trait;
-                var def = trait.Definition;
-                var options = def.Options;
-                var padding = j % 2 == 0 ? "pe-md-2 pe-0" : "ps-md-2 ps-0";
+                var def = item.Trait.Definition;
+                var options = def.Options.Select(o => new SelectListItem() { Text = o.Value, Value = o.Id.ToString() });
+
+                var padding = def.InputType == "Radio" ? "justify-content-center" : "";
+                var pattern = def.DataType == "decimal2" ? @"^\d+(\.\d{1,2})?$" : def.DataType == "decimal1" ? @"^\d+(\.\d{1})?$" : null;
 
                 <input type="hidden" asp-for="@Model[i].DefinitionId" />
 
-                <div class="col-md-6 col-12 @padding">
-
-                    <label class="form-label d-flex align-items-center gap-1">
+                <div class="col-xxl-3 col-lg-4 col-sm-6 col-12 px-1">
+                    <label class="d-flex align-items-center @padding">
                         @def.DisplayName
                         @if (!string.IsNullOrWhiteSpace(def.Description))
                         {
                             <span tabindex="0" class="ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="@def.Description">
-                                <i class="bi bi-question-circle-fill text-secondary" style="cursor: help;"></i>
+                                <i class="bi bi-question-circle-fill f-xs text-grn" style="cursor: help;"></i>
                             </span>
                         }
                     </label>
 
-                    @if (def.IsMultiSelect)
-                    {
-                        <select asp-for="@Model[i].SelectedOptions" class="form-select multi">
-                            @foreach (var opt in options ?? Enumerable.Empty<TraitOption>())
-                            {
-                                <option value="@opt.Value" title="@opt.Notes">@opt.Value</option>
-                            }
-                        </select>
-                    }
-                    else if (def.IsDropdown && def.IsRange)
-                    {
-                        <div class="input-group range">
-                            <select class="form-control first">
-                                <option value="">-- Min --</option>
-                                @foreach (var opt in options ?? Enumerable.Empty<TraitOption>())
-                                {
-                                    var selected = trait.Value?.Split(" - ")[0] == opt.Value;
-                                    <option value="@opt.Value" title="@opt.Notes">@opt.Value</option>
-                                }
-                            </select>
-                            <span class="input-group-text">to</span>
-                            <select class="form-control second">
-                                <option value="">-- Max --</option>
-                                @foreach (var opt in options ?? Enumerable.Empty<TraitOption>())
-                                {
-                                    <option value="@opt.Value" title="@opt.Notes">@opt.Value</option>
-                                }
-                            </select>
-                            <input type="hidden" asp-for="@Model[i].Value" />
-                        </div>
-                    }
-                    else if (def.IsDropdown)
-                    {
-                        <select asp-for="@Model[i].Value" class="form-control">
-                            <option value="">-- Select --</option>
-                            @foreach (var opt in options ?? Enumerable.Empty<TraitOption>())
-                            {
-                                <option value="@opt.Value" title="@opt.Notes">@opt.Value</option>
-                            }
-                        </select>
-                    }
-                    else
-                    {
-                        var dataType = def.DataType;
-
-                        if (dataType == "decimal")
+                    @{
+                        switch (def.InputType)
                         {
-                            <input asp-for="@Model[i].Value" class="form-control" pattern="^\d+(\.\d{1,2})?$" />
-                        }
-                        else if (dataType == "bool")
-                        {
-                            <label><input type="radio" asp-for="@Model[i].Value" value="true" /> Yes</label>
-                            <label><input type="radio" asp-for="@Model[i].Value" value="false" /> No</label>
-                        }
-                        else
-                        {
-                            <input asp-for="@Model[i].Value" class="form-control" />
+                            case "MultiSelect":
+                                <select asp-for="@Model[i].SelectedOptions" asp-items="options" class="form-select multi" multiple></select>
+                                break;
+                            case "Dropdown":
+                                <select asp-for="@Model[i].Value" asp-items="options" class="form-control"></select>
+                                break;
+                            case "SelectRange":
+                                <div class="input-group range">
+                                    <select asp-for="@Model[i].RangeVals[0]" asp-items="options" class="form-control rng first"></select>
+                                    <span class="input-group-text">to</span>
+                                    <select asp-for="@Model[i].RangeVals[0]" asp-items="options" class="form-control rng second"></select>
+                                </div>
+                                <input type="hidden" asp-for="@Model[i].Value" />
+                                break;
+                            case "InputRange":
+                                <div class="input-group range">
+                                    <input asp-for="@Model[i].RangeVals[0]" class="form-control rng first" pattern=@pattern />
+                                    <span class="input-group-text">to</span>
+                                    <input asp-for="@Model[i].RangeVals[1]" class="form-control rng second" pattern=@pattern />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">@def.Unit</span>
+                                    </div>
+                                </div>
+                                <input type="hidden" asp-for="@Model[i].Value" />
+                                break;
+                            case "Radio":
+                                <div class="d-flex justify-content-center">
+                                    <label><input type="radio" asp-for="@Model[i].Value" value="true" /> Yes</label>
+                                    <label><input type="radio" asp-for="@Model[i].Value" value="false" /> No</label>
+                                </div>
+                                break;
+                            default:
+                                <input asp-for="@Model[i].Value" class="form-control" pattern=@pattern />
+                                break;
                         }
                     }
                     <span asp-validation-for="@Model[i].Value" class="text-danger"></span>
                 </div>
-                j++;
             }
         </div>
     </fieldset>

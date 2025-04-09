@@ -16,8 +16,8 @@ namespace OptraxMVC.Services
     public class OptionsService(OptraxContext context) : IOptionsService
     {
         private readonly OptraxContext db = context;
-        private readonly SelectListItem EmptyItem = new() { Text = "-- Select --", Value = null };
-        private readonly List<SelectListItem> EmptyList = [new SelectListItem() { Text = "No options available", Value = null }];
+        private readonly SelectListItem EmptyItem = new() { Text = "---- Select ----", Value = null };
+        private readonly List<SelectListItem> EmptyList = [new SelectListItem()];
 
         public async Task<OptionsVM> LoadOptions(List<string> drops, int? level, List<string>? types)
         {
@@ -55,12 +55,7 @@ namespace OptraxMVC.Services
                 throw new ArgumentException("Provided type must be an enum.", nameof(enumType));
             }
 
-            List<SelectListItem> newList = [EmptyItem];
-            List<SelectListItem> list = Enum.GetNames(enumType).Select(e => new SelectListItem { Value = e.ToString(), Text = e.ToString() }).ToList() ?? [];
-
-            newList.AddRange(list);
-
-            return newList.Count > 1 ? newList : EmptyList;
+            return Enum.GetNames(enumType).Select(e => new SelectListItem { Value = e.ToString(), Text = e.ToString() }).ToList() ?? EmptyList;
 
 
             //return [.. Enum.GetValues(enumType).Cast<Enum>().Select(e => new SelectListItem
@@ -93,32 +88,20 @@ namespace OptraxMVC.Services
         // Plants
         private async Task<List<SelectListItem>> GetPlantSelects()
         {
-            List<SelectListItem> newList = [EmptyItem];
-
-            var plants = (await db.Plants.Where(c => c.Active).OrderBy(c => c.CommonName).ToListAsync()).Select(c => new SelectListItem
+            return (await db.Plants.Where(c => c.Active).OrderBy(c => c.CommonName).ToListAsync()).Select(c => new SelectListItem
             {
                 Value = c.Id.ToString(),
                 Text = c.CommonName + "(" + c.ScientificName + ")"
-            }).ToList() ?? [];
-
-            newList.AddRange(plants);
-
-            return newList.Count > 1 ? newList : EmptyList;
+            }).ToList() ?? EmptyList;
         }
 
         private async Task<List<SelectListItem>> GetCropSelects()
         {
-            List<SelectListItem> newList = [EmptyItem];
-
-            var crops = (await db.Crops.Where(c => c.Active).OrderBy(c => c.Name).ToListAsync()).Select(c => new SelectListItem
+            return (await db.Crops.Where(c => c.Active).OrderBy(c => c.Name).ToListAsync()).Select(c => new SelectListItem
             {
                 Value = c.Id.ToString(),
                 Text = c.Name
-            }).ToList() ?? [];
-
-            newList.AddRange(crops);
-
-            return newList.Count > 1 ? newList : EmptyList;
+            }).ToList() ?? EmptyList;
         }
 
         private async Task<List<Crop>> GetCropsList()

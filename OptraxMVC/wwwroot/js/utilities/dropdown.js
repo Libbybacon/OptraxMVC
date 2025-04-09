@@ -1,98 +1,58 @@
 ﻿
-const choicesOpts = {
-    silent: false,
-    items: [],
-    choices: [],
-    renderChoiceLimit: -1,
-    maxItemCount: -1,
-    closeDropdownOnSelect: 'auto',
-    singleModeForMultiSelect: false,
-    addChoices: true,
-    addItems: true,
-    addItemFilter: (value) => !!value && value !== '',
+export const multiOpts = {
     removeItems: true,
-    removeItemButton: false,
-    removeItemButtonAlignLeft: false,
-    editItems: false,
-    allowHTML: false,
-    allowHtmlUserInput: false,
+    removeItemButton: true,
     duplicateItemsAllowed: false,
     delimiter: ',',
-    paste: true,
-    searchEnabled: true,
-    searchChoices: true,
-    searchFloor: 1,
-    searchResultLimit: 4,
-    searchFields: ['label', 'value'],
-    position: 'auto',
     resetScrollPosition: true,
     shouldSort: true,
     shouldSortItems: true,
-    //sorter: () => {...},
-    shadowRoot: null,
     placeholder: true,
-    placeholderValue: null,
-    searchPlaceholderValue: null,
-    prependValue: null,
-    appendValue: null,
-    renderSelectedChoices: 'auto',
-    loadingText: 'Loading...',
-    noResultsText: 'No results found',
-    noChoicesText: 'No choices to choose from',
-    itemSelectText: 'Press to select',
-    uniqueItemText: 'Only unique values can be added',
-    customAddItemText: 'Only values matching specific conditions can be added',
+    placeholderValue: '---- Select ----',
     addItemText: (value) => {
         return `Press Enter to add <b>"${value}"</b>`;
     },
-    removeItemIconText: () => `Remove item`,
-    removeItemLabelText: (value) => `Remove item: ${value}`,
+    removeItemIconText: () => `X`,
+    removeItemLabelText: (value) => `X`,
     maxItemText: (maxItemCount) => {
         return `Only ${maxItemCount} values can be added`;
     },
     valueComparer: (value1, value2) => {
-        return value1 === value2;
+        return value1.toLowerCase().replace(' ', '') === value2.toLowerCase().replace(' ', '');
     },
-    classNames: {
-        containerOuter: ['choices'],
-        containerInner: ['choices__inner'],
-        input: ['choices__input'],
-        inputCloned: ['choices__input--cloned'],
-        list: ['choices__list'],
-        listItems: ['choices__list--multiple'],
-        listSingle: ['choices__list--single'],
-        listDropdown: ['choices__list--dropdown'],
-        item: ['choices__item'],
-        itemSelectable: ['choices__item--selectable'],
-        itemDisabled: ['choices__item--disabled'],
-        itemChoice: ['choices__item--choice'],
-        description: ['choices__description'],
-        placeholder: ['choices__placeholder'],
-        group: ['choices__group'],
-        groupHeading: ['choices__heading'],
-        button: ['choices__button'],
-        activeState: ['is-active'],
-        focusState: ['is-focused'],
-        openState: ['is-open'],
-        disabledState: ['is-disabled'],
-        highlightedState: ['is-highlighted'],
-        selectedState: ['is-selected'],
-        flippedState: ['is-flipped'],
-        loadingState: ['is-loading'],
-        notice: ['choices__notice'],
-        addChoice: ['choices__item--selectable', 'add-choice'],
-        noResults: ['has-no-results'],
-        noChoices: ['has-no-choices'],
-    },
-    // Choices uses the great Fuse library for searching. You
-    // can find more options here: https://fusejs.io/api/options.html
-    fuseOptions: {
-        includeScore: true
-    },
-    labelId: '',
-    callbackOnInit: null,
-    callbackOnCreateTemplates: null,
-    appendGroupInSearch: false,
+    callbackOnInit: function () {
+        const placeholder = this.containerInner.element.querySelector('.choices__input--cloned');
+
+        const togglePlaceholder = () => {
+            const selectedItems = this.getValue();
+            if (placeholder) {
+                placeholder.style.display = selectedItems.length > 0 ? 'none' : '';
+            }
+        };
+        togglePlaceholder();
+
+        this.passedElement.element.addEventListener('change', togglePlaceholder);
+    }
 }
 
-export default choicesOpts;
+export const singleOpts = {
+    resetScrollPosition: true,
+    shouldSort: true,
+    shouldSortItems: true,
+    placeholder: true,
+    placeholderValue: '---- Select ----',
+    callbackOnInit: function () {
+
+        //const placeholder = this.containerInner.element.querySelector('.choices__input--cloned');
+
+        //const togglePlaceholder = () => {
+        //    const selectedItems = this.getValue();
+        //    if (placeholder) {
+        //        placeholder.style.display = selectedItems.length > 0 ? 'none' : '';
+        //    }
+        //};
+        //togglePlaceholder();
+
+        //this.passedElement.element.addEventListener('change', togglePlaceholder);
+    }
+};
