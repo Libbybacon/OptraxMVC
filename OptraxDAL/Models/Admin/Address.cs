@@ -1,4 +1,5 @@
 ﻿using OptraxDAL.Models.BaseClasses;
+using OptraxDAL.Models.Maps;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -46,8 +47,21 @@ namespace OptraxDAL.Models.Admin
         public int? BusinessId { get; set; }
         public int? BuildingId { get; set; }
 
-        public virtual Business? Business { get; set; }
+        public decimal? Latitude { get; set; }
+        public decimal? Longitude { get; set; }
+        public int? MapObjectId { get; set; }
 
+        public virtual Business? Business { get; set; }
         public virtual Building? Building { get; set; }
+        public virtual MapObject? MapObject { get; set; }
+
+        [NotMapped]
+        public string AddressString
+        {
+            get
+            {
+                return $"{Address1}, {City}, {State} {ZipCode}";
+            }
+        }
     }
 }

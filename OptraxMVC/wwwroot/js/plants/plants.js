@@ -11,7 +11,7 @@ var childTypes = {
 const formId = '#plantForm';
 const urlBase = '/Grow/Plants/';
 
-$(document).ready(function () {
+$(function () {
     console.log('plant.js document ready');
     initializeTree();
 })

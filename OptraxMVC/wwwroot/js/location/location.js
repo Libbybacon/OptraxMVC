@@ -1,10 +1,11 @@
 ﻿import { getMap, onMapReady } from '../map/mapState.js';
+
 import * as tree from './locationTree.js';
 import * as util from './locationUtil.js';
 
 let map = null;
 
-$(document).ready(function () {
+$(function () {
     setResizer();
     util.setLocListeners();
     tree.initializeTree();

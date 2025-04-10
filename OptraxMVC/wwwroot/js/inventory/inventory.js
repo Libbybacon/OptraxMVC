@@ -3,7 +3,7 @@ var none = 'd-none';
 var bg = 'background-color';
 var $itemsTable;
 
-$(document).ready(function () {
+$(function () {
 
     makeDatatable();
 
@@ -13,14 +13,13 @@ $(document).ready(function () {
 });
 
 function setRowGroupHover() {
-    $(document).find('.head-txt').hover(
+    $(document).find('.head-txt').on('mouseenter',
         function () {
             $(this).addClass('item-hover');
-        },
-        function () {
-            $(this).removeClass('item-hover');
-        }
-    );
+        }).on('mouseleave',
+            function () {
+                $(this).removeClass('item-hover');
+            });
 
     $(document).find('.head-txt').on('click', function () {
         getCategoryDetails($(this));

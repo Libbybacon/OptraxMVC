@@ -1,11 +1,11 @@
 ﻿import * as _obj from './objectManager.js';
 import { setMap } from './mapState.js';
-import { initializeLayers, loadFeatures, getLayerset, getAllLayers } from './layerManager.js';
+import * as _layers from './layerManager.js';
 import { createIcon } from './objStyleUtil.js';
 
 let map = null;
-let layersets = [];
-$(document).ready(function () {
+
+$(function () {
 
     initializeMap();
 
@@ -27,21 +27,18 @@ async function initializeMap() {
     });
 
     setMapHeight();
-    initializeLayers();
+    _layers.initializeLayers();
     createControls();
 
-    await loadFeatures().then(() => {
-        layersets = getAllLayers()
+    await _layers.loadFeatures().then(() => {
+        layersets = _layers.getAllLayers()
         zoomToAllLayers();
-
     });
 
     map.on('popupclose', function () {
         $(document).find(".color-picker").spectrum("hide");
         $('.title-control').show();
     });
-
-
 }
 
 function setMapHeight() {
@@ -54,11 +51,12 @@ function setMapHeight() {
     map.invalidateSize();
 }
 
+// Center map on center of all layers
 function zoomToAllLayers() {
     let ctr = null;
     const bounds = [];
 
-    getAllLayers().forEach(l => {
+    _layers.getAllLayers().forEach(l => {
         if (l.getLayers().length > 0) {
             const b = l.getBounds();
             if (b.isValid()) {
@@ -92,14 +90,14 @@ function createControls() {
     map.addControl(drawControl);
 
     map.on('draw:created', function (e) {
-        let layerset = getLayerset(e.layerType);
+        let layerset = _layers.getLayerset(e.layerType);
         _obj.addObject(e, layerset);
 
     });
 
     addTopCenterPosition();
 
-    const TitleControl = L.Control.extend({
+    const titleControl = L.Control.extend({
         onAdd: function () {
             const titleDiv = L.DomUtil.create('div', 'leaflet-control title-control');
             const $title = document.getElementById('map-title');
@@ -121,7 +119,7 @@ function createControls() {
             return titleDiv;
         }
     });
-    map.addControl(new TitleControl({ position: 'topcenter' }));
+    map.addControl(new titleControl({ position: 'topcenter' }));
 }
 
 function addTopCenterPosition() {
@@ -145,4 +143,21 @@ function addTopCenterPosition() {
         }
     });
     map._controlCorners.topcenter = L.DomUtil.create('div', 'leaflet-top leaflet-center', map._controlContainer);
+}
+
+export function addSitePoint(lng, lat, name) {
+    let props = _obj.layerProps;
+    props["name"] = name;
+
+    const sitePoint = {
+        type: "Feature",
+        properties: props,
+        geometry: {
+            type: "Point",
+            coordinates: [lng, lat]
+        },
+    };
+    const pointsL = _layers.getLayerset('marker');
+    console.log('addSitePoint sitePoint', sitePoint);
+    pointsL.addData(sitePoint);
 }

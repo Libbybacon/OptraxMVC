@@ -49,6 +49,7 @@
     <Content Remove="Areas\Grow\Views\Locations\_AddressLocation.cshtml" />
     <Content Remove="Areas\Grow\Views\Locations\_Create.cshtml" />
     <Content Remove="Areas\Grow\Views\Locations\_SiteLocation.cshtml" />
+    <Content Remove="Areas\Grow\Views\Map\_Map.cshtml" />
     <Content Remove="Areas\Inventory\Views\Resources\_Categories.cshtml" />
     <Content Remove="Views\Shared\Tabs.cshtml" />
     <Content Remove="Views\Shared\_LoginPartial.cshtml" />

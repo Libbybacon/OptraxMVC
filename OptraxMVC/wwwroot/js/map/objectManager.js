@@ -13,7 +13,7 @@ const typeMap = {
     circle: 'Circle'
 };
 
-const layerProps = {
+export const layerProps = {
     id: -1,
     weight: 3,
     dashArray: '5 5',
@@ -76,6 +76,8 @@ export async function addObject(e, layerSet) {
     });
 }
 
+
+
 export const getLastLayer = layerSet => {
     let layers = layerSet.getLayers();
     return layers[layers.length - 1];
@@ -94,7 +96,7 @@ export async function showEditPopup(props) {
         throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
     }
 
-    $('.title-control').hide();
+    $('.title-control').hide(); // Hide map title so it doesn't overlap editor window
 
     const view = await response.data;
 
@@ -150,7 +152,6 @@ export function updateHiddenFields(type, props) {
     }
 }
 
-
 // Edit
 export async function loadEdit(id, type, center) {
 
@@ -161,7 +162,7 @@ export async function loadEdit(id, type, center) {
         url: `${urlBase}LoadEdit/`
     }
 
-    _style.saveStyle();
+    _style.saveStyle(); // Store current style in case user cancels update
 
     await showEditPopup(props).then(() => {
         mapFormUtil.setFormListeners('#mapObjForm');
@@ -169,7 +170,6 @@ export async function loadEdit(id, type, center) {
         map.on('popupclose', _style.restoreStyle);
     });
 }
-
 
 // Delete
 export async function onDelete(id, type) {
@@ -181,8 +181,6 @@ export async function onDelete(id, type) {
         deleteActive();
     }
 }
-
-
 
 export const mapFormUtil = {
     setFormListeners: function (formId) {
@@ -216,6 +214,7 @@ export const mapFormUtil = {
 
         if (response && response.success) {
 
+            // Update map title if user edited name
             if (formId == '#mapForm') {
                 const newName = $('#mapForm #Name').val();
 
@@ -223,7 +222,7 @@ export const mapFormUtil = {
                 $('.map-title').text(newName);
             }
             else {
-                map.off('popupclose', _style.restoreStyle);
+                map.off('popupclose', _style.restoreStyle); // Cancel event listeners to reset/delete
                 map.off('popupclose', deleteActive);
                 map.closePopup();
 

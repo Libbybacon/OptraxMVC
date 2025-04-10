@@ -24,7 +24,7 @@ import popupHandler from "./utilities/popup.js";
 
 var hideNav;
 
-$(document).ready(function () {
+$(function () {
     hideNav = sessionStorage.getItem('hideNav');
 
     if (hideNav == "true") {

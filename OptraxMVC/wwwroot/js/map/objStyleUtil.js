@@ -23,7 +23,7 @@ export function updateIcon(props) {
 
 export function selectIcon($icon) {
     $('.icon-div').removeClass('selected');
-    $('#IconId').val($icon.data('iconid')).change();
+    $('#IconId').val($icon.data('iconid')).trigger('change');
 
     $icon.addClass('selected');
 
@@ -128,11 +128,11 @@ export function setStyleListeners(formId) {
     $(formId + ' #Pattern').on('change', function () {
         var pattern = $(this).val();
         if (pattern == 'solid') {
-            $(formId + ' #DashArray').val(0).change();
+            $(formId + ' #DashArray').val(0).trigger('change');
             $(formId + ' #DashArray').attr('readonly', 'readonly');
         }
         else {
-            $(formId + ' #DashArray').val('5 5').change();
+            $(formId + ' #DashArray').val('5 5').trigger('change');
             $(formId + ' #DashArray').removeAttr('readonly');
         }
         setTimeout(() => {

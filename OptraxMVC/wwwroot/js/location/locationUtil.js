@@ -1,6 +1,6 @@
 ﻿import apiService from '../utilities/api.js';
 import { formUtil } from '../utilities/form.js';
-
+import { addSitePoint } from '../map/map.js';
 const urlBase = '/Grow/Locations/';
 const formId = '#locForm';
 
@@ -44,12 +44,16 @@ export function setLocListeners() {
 
 export function setFormListeners() {
     $(formId + ' #Name').on('input', function () {
-        $(formId + ' #Address_Name').val($(this).val()).change();
+        $(formId + ' #Address_Name').val($(this).val()).trigger('change');
     })
 
     $(formId + ' locForm .toggle-edit').on('click', function () {
         const model = $(this).parent('.model');
         model.find('.m-toggle').toggleClass('d-none');
+    });
+
+    $(formId + ' .addy').on('change', function () {
+        setAddyLatLng();
     });
 
     $(formId + ' .btn-red').off('click').on('click', function () {
@@ -88,11 +92,12 @@ export async function onSubmitForm() {
     //console.log('loc onSubmitForm objType: ', locType, ' action:', action);
 
     const response = await formUtil.submitForm(formId);
-    console.log('loc onSubmitForm response', response);
+    console.log('loc onSubmitForm response', response, 'address', address);
 
     if (response && response.success) {
-
         if (isCreate) {
+            addSitePoint($('.addy-lat').val(), $('.addy-lng').val(), $(formId + ' #Name').val());
+
             if (response.data) {
                 console.log('response.data', response.data)
                 $(formId + ' #Id').val(response.data.id);
@@ -108,7 +113,6 @@ export async function onSubmitForm() {
                     tree.select_node(newNode.id);
                 });
             }
-
         }
         $(formId + ' .m-toggle').toggleClass('d-none');
 
@@ -118,4 +122,45 @@ export async function onSubmitForm() {
     else {
         alert('Error! ' + response.error);
     }
+}
+
+export function setAddyLatLng() {
+    const address =
+        $('.addy-street1').val() + ',' +
+        $('.addy-city').val() + ',' +
+        $('.addy-state').val() + ' ' +
+        $('.addy-zip').val();
+
+
+    geocodeAddress(address, (err, result) => {
+        if (err) {
+            return;
+        }
+
+        const { lat, lng, name } = result;
+
+        $('.addy-lat').val(lat);
+        $('.addy-lng').val(lng);
+    });
+}
+
+function geocodeAddress(address, callback) {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+
+    fetch(url, {
+        headers: {
+            'User-Agent': 'OptraxFarmingApp/1.0 (your@email.com)'
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.length > 0) {
+                const lat = parseFloat(data[0].lat);
+                const lon = parseFloat(data[0].lon);
+                callback(null, { lat, lon, display_name: data[0].display_name });
+            } else {
+                callback("No results found");
+            }
+        })
+        .catch(err => callback(err));
 }

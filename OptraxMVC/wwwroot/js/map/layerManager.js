@@ -1,5 +1,5 @@
 ﻿import apiService from '../utilities/api.js';
-import { loadEdit } from './objectManager.js';
+import { loadEdit, layerProps } from './objectManager.js';
 import { createIcon } from './objStyleUtil.js';
 import { getMap, setMap, setIndex, deleteIndex, setActive } from './mapState.js';
 
@@ -104,6 +104,7 @@ export function setActions(props, layer) {
 
     layer.bindTooltip(props.name, { permanent: true, direction: "top" });
 
+    // Center map on selected object
     layer.on('click', async function (e) {
         setActive(layer);
         const center = (type === 'Point' || type === 'Circle') ? e.latlng : layer.getBounds().getCenter();
@@ -161,3 +162,5 @@ export function getPolysLayer() { return polysL; }
 export function getAllLayers() {
     return [pointsL, linesL, circlesL, polysL ];
 }
+
+

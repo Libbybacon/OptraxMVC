@@ -19,7 +19,7 @@
             {
                 var i = item.Index;
                 var def = item.Trait.Definition;
-                var options = def!.Options.Select(o => new SelectListItem() { Text = o.Value, Value = o.Id.ToString() });
+                var options = def!.Options.Select(o => new SelectListItem() { Text = o.Value, Value = o.Value });
 
                 <input type="hidden" asp-for="@Model[i].DefinitionId" />
 
@@ -55,7 +55,7 @@
                                 <div class="input-group range w-100">
                                     <select asp-for="@Model[i].RangeVals[0]" asp-items="options" class="form-control drop rng first"></select>
                                     <span class="input-group-text">to</span>
-                                    <select asp-for="@Model[i].RangeVals[0]" asp-items="options" class="form-control drop rng second"></select>
+                                    <select asp-for="@Model[i].RangeVals[1]" asp-items="options" class="form-control drop rng second"></select>
                                 </div>
                                 <input type="hidden" asp-for="@Model[i].Value" />
                                 break;
