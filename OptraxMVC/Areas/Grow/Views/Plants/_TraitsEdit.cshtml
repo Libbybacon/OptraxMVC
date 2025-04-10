@@ -4,30 +4,27 @@
     ViewData.TemplateInfo.HtmlFieldPrefix = "Profile.Traits";
 
     var indexed = Model.Select((trait, index) => new { Trait = trait, Index = index });
-    var grouped = indexed.GroupBy(x => x.Trait.Definition.GroupOrder.ToString() ?? "").OrderBy(g => g.Key);
+    var grouped = indexed.GroupBy(x => x.Trait.Definition!.GroupOrder.ToString() ?? "").OrderBy(g => g.Key);
 }
 
 @foreach (var group in grouped)
 {
-    string grpName = group.First().Trait.Definition.Group!;
+    string grpName = group.First().Trait.Definition!.Group!;
 
     <fieldset class="border rounded p-3 mb-4">
         <legend class="w-auto px-2">@grpName</legend>
         <div class="row col-12 w-100 px-0 m-0 pe-0">
 
-            @foreach (var item in group.OrderBy(g => g.Trait.Definition.ItemOrder).ThenBy(g => g.Trait.Definition.DisplayName))
+            @foreach (var item in group.OrderBy(g => g.Trait.Definition!.ItemOrder).ThenBy(g => g.Trait.Definition!.DisplayName))
             {
                 var i = item.Index;
                 var def = item.Trait.Definition;
-                var options = def.Options.Select(o => new SelectListItem() { Text = o.Value, Value = o.Id.ToString() });
-
-                var padding = def.InputType == "Radio" ? "justify-content-center" : "";
-                var pattern = def.DataType == "decimal2" ? @"^\d+(\.\d{1,2})?$" : def.DataType == "decimal1" ? @"^\d+(\.\d{1})?$" : null;
+                var options = def!.Options.Select(o => new SelectListItem() { Text = o.Value, Value = o.Id.ToString() });
 
                 <input type="hidden" asp-for="@Model[i].DefinitionId" />
 
                 <div class="col-xxl-3 col-lg-4 col-sm-6 col-12 px-1">
-                    <label class="d-flex align-items-center @padding">
+                    <label class="d-flex align-items-center @(def.InputType == "Radio" ? "justify-content-center" : "")">
                         @def.DisplayName
                         @if (!string.IsNullOrWhiteSpace(def.Description))
                         {
@@ -38,24 +35,32 @@
                     </label>
 
                     @{
+                        var pattern = def.DataType == "decimal2" ? @"^\d+(\.\d{1,2})?$" :
+                                        def.DataType == "decimal1" ? @"^\d+(\.\d{1})?$" : null;
+
+                        if (def.DisplayName == "Cycle")
+                        {
+                            Console.WriteLine("Cycle");
+                        }
                         switch (def.InputType)
                         {
                             case "MultiSelect":
                                 <select asp-for="@Model[i].SelectedOptions" asp-items="options" class="form-select multi" multiple></select>
                                 break;
                             case "Dropdown":
-                                <select asp-for="@Model[i].Value" asp-items="options" class="form-control"></select>
+                                <select asp-for="@Model[i].Value" asp-items="options" class="form-control drop">
+                                </select>
                                 break;
                             case "SelectRange":
-                                <div class="input-group range">
-                                    <select asp-for="@Model[i].RangeVals[0]" asp-items="options" class="form-control rng first"></select>
+                                <div class="input-group range w-100">
+                                    <select asp-for="@Model[i].RangeVals[0]" asp-items="options" class="form-control drop rng first"></select>
                                     <span class="input-group-text">to</span>
-                                    <select asp-for="@Model[i].RangeVals[0]" asp-items="options" class="form-control rng second"></select>
+                                    <select asp-for="@Model[i].RangeVals[0]" asp-items="options" class="form-control drop rng second"></select>
                                 </div>
                                 <input type="hidden" asp-for="@Model[i].Value" />
                                 break;
                             case "InputRange":
-                                <div class="input-group range">
+                                <div class="input-group range w-100">
                                     <input asp-for="@Model[i].RangeVals[0]" class="form-control rng first" pattern=@pattern />
                                     <span class="input-group-text">to</span>
                                     <input asp-for="@Model[i].RangeVals[1]" class="form-control rng second" pattern=@pattern />
@@ -68,7 +73,7 @@
                             case "Radio":
                                 <div class="d-flex justify-content-center">
                                     <label><input type="radio" asp-for="@Model[i].Value" value="true" /> Yes</label>
-                                    <label><input type="radio" asp-for="@Model[i].Value" value="false" /> No</label>
+                                    <label><input type="radio" asp-for="@Model[i].Value" value="false" checked="@(Model[i].Value == "false" || Model[i].Value == null)"/> No</label>
                                 </div>
                                 break;
                             default:

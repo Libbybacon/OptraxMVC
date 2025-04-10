@@ -1,19 +1,26 @@
-﻿
-export const multiOpts = {
-    removeItems: true,
-    removeItemButton: true,
-    duplicateItemsAllowed: false,
-    delimiter: ',',
+﻿export const shared = {
     resetScrollPosition: true,
     shouldSort: true,
     shouldSortItems: true,
     placeholder: true,
     placeholderValue: '---- Select ----',
+    noChoicesText: 'No options',
+    itemSelectText: '',
+}
+
+
+export const multiOpts = {
+    ...shared,
+    removeItems: true,
+    removeItemButton: true,
+    duplicateItemsAllowed: false,
+    delimiter: ',',
+
     addItemText: (value) => {
         return `Press Enter to add <b>"${value}"</b>`;
     },
-    removeItemIconText: () => `X`,
-    removeItemLabelText: (value) => `X`,
+    removeItemIconText: () => `x`,
+    removeItemLabelText: (value) => `x`,
     maxItemText: (maxItemCount) => {
         return `Only ${maxItemCount} values can be added`;
     },
@@ -36,23 +43,9 @@ export const multiOpts = {
 }
 
 export const singleOpts = {
-    resetScrollPosition: true,
-    shouldSort: true,
-    shouldSortItems: true,
-    placeholder: true,
-    placeholderValue: '---- Select ----',
+    ...shared,
     callbackOnInit: function () {
-
-        //const placeholder = this.containerInner.element.querySelector('.choices__input--cloned');
-
-        //const togglePlaceholder = () => {
-        //    const selectedItems = this.getValue();
-        //    if (placeholder) {
-        //        placeholder.style.display = selectedItems.length > 0 ? 'none' : '';
-        //    }
-        //};
-        //togglePlaceholder();
-
-        //this.passedElement.element.addEventListener('change', togglePlaceholder);
+        $('.choices__inner').addClass('form-select');
+        $('.range .choices').addClass('flex-fill');
     }
 };

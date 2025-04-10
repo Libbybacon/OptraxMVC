@@ -52,11 +52,7 @@ export const formUtil = {
         const action = $form.attr('action')
         console.log('formUtil submitForm changes', Changes, 'action', action);
 
-        /*        let proceed = action.includes('Create') || Changes.length > 0;*/
-        let proceed = true;
-        console.log('formUtil submitForm', proceed);
-
-        if ($form.valid() && proceed) {
+        if ($form.valid()) {
 
             return await apiService.postForm(action, $form.serialize())
         }

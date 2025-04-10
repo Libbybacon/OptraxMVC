@@ -52,6 +52,7 @@ namespace OptraxDAL.Models.Grow
 
         public virtual ICollection<Crop> Crops { get; set; } = [];
 
+        [NotMapped]
         public List<Plant> AllChildren
         {
             get

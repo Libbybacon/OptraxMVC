@@ -125,3 +125,6 @@ $button-theme-names: (grn, gray, red);
 @each $name in $button-theme-names {
 	@include button-theme($name);
 }
+
+// Icons
+$i-flower:  url('https://img.icons8.com/?size=100&id=4NQ6isrw7YCc&format=png&color=FBFDFD');

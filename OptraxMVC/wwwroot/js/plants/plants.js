@@ -24,7 +24,7 @@ function initializeTree() {
                     if (node.id === '#') {
                         return `${urlBase}GetPlantNodes/`;
                     }
-                    return `${urlBase}/GetPlantNodes?comName=${node.id}`;
+                    return `${urlBase}GetPlantNodes?comName=${node.id}`;
                 }
             }
         },
@@ -32,8 +32,11 @@ function initializeTree() {
             'species': { 'icon': 'fa-light fa-crown' },
             'variety': { 'icon': 'bi bi-asterisk' },
             'cultivar': { 'icon': 'fa-regular fa-flask' },
-            'pt': { 'icon': '' },
-            'cn': { 'icon': '' }
+            'flower': { 'icon': 'ot-i ot-flower' },
+            'fruit': { 'icon': 'ot-i ot-i-sm ot-fruit' },
+            'herb': { 'icon': 'ot-i ot-i-sm ot-herb' },
+            'tree': { 'icon': 'ot-i ot-tree' },
+            'vegetable': { 'icon': 'ot-i ot-i-sm ot-vegetable' },
         },
         'plugins': ['types', 'contextmenu'],
         'contextmenu': {
@@ -95,13 +98,16 @@ function setFormListeners() {
         let drops = new choices(drop, opts.multiOpts);
     });
 
+    $.each($(formId + ' .drop'), function (i, drop) {
+        let drops = new choices(drop, opts.singleOpts);
+    });
+
     $(formId + ' .name').on('input', function () {
         let taxon = $(formId + ' #TaxonType').val();
         let cultName = $(formId + ' #CultivarName').val();
-        console.log('cultName', cultName, 'taxon', taxon);
         let varName = (cultName && cultName != '') ? taxon === 'Variety' ? ` var. ${cultName}` : ` '${cultName}'` : '';       
         let sciName = `${$(formId + ' #Genus').val()} ${$(formId + ' #Species').val()}${varName}`;
-        $(formId + ' #ScientificName').val(sciName).change();
+        $(formId + ' #ScientificName').val(sciName);
     })
 
     $(formId + ' .rng').on('change', function () {

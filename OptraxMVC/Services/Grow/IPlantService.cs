@@ -74,7 +74,7 @@ namespace OptraxMVC.Services.Grow
                         id = type,
                         parent = "#",
                         text = type + "s",
-                        type = "pt",
+                        type = type.ToLower(),
                         state = new { opened = true, selected = false },
                     });
 
@@ -84,7 +84,7 @@ namespace OptraxMVC.Services.Grow
                                                       id = c,
                                                       parent = type,
                                                       text = c,
-                                                      type = "cn",
+                                                      type = type.ToLower(),
                                                       children = true,
                                                       state = new { opened = false, selected = false },
                                                   })).ToList();
@@ -107,6 +107,7 @@ namespace OptraxMVC.Services.Grow
                                             .Include(p => p.ChildrenP1)
                                             .Include(p => p.ChildrenP2).ToListAsync();
 
+                List<object> allNodes = [];
                 var species = plants.Where(p => p.TaxonType == "Species").Select(p => new
                 {
                     id = p.Id,
@@ -128,7 +129,27 @@ namespace OptraxMVC.Services.Grow
 
                 }).ToList<object>();
 
-                return species;
+                allNodes.AddRange(species);
+
+                var varieties = plants.Where(p => p.TaxonType == "Variety").ToList();
+                if (varieties.Count > 0)
+                {
+                    List<object> nodes = [new { id = $"var-{comName}", parent = comName, text = "Varieties", state = new { opened = true } }];
+
+                    var varNodes = varieties.Select(p => new
+                    {
+                        id = p.Id,
+                        parent = $"var-{comName}",
+                        text = p.CustomName ?? p.CultivarName ?? p.CommonName ?? p.ScientificName ?? "No Name",
+                        type = "variety",
+                        data = new { id = p.Id, type = p.PlantType, taxon = p.TaxonType },
+                    }).ToList<object>();
+
+                    nodes.AddRange(varNodes);
+                    allNodes.AddRange(nodes);
+                }
+
+                return allNodes;
             }
             catch (Exception ex)
             {

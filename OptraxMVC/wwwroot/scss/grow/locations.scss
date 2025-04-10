@@ -121,6 +121,17 @@
 		overflow-y: auto;
 		scrollbar-width: thin;
 	}
+
+	.jstree-default .jstree-themeicon-custom{
+		width: 18px;
+		height: 18px;
+		font-weight: 375;
+		margin-right: 0;
+		line-height: 18px;
+	}
+	.bi::before, [class*=" bi-"]::before{
+		font-size: $f-xxs;
+	}
 }
 
 #plantForm {
