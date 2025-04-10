@@ -1,4 +1,6 @@
-﻿using OptraxDAL.Models.BaseClasses;
+﻿using OptraxDAL.Models.Admin;
+using OptraxDAL.Models.BaseClasses;
+using OptraxDAL.Models.Grow;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,10 +12,13 @@ namespace OptraxDAL.Models.Maps
         [MaxLength(50)]
         public string? Category { get; set; }
 
-        public int? MapID { get; set; }
+        public int? MapId { get; set; }
 
         public abstract object ToGeoJSON();
 
         public virtual Map? Map { get; set; }
+
+        public virtual Location? Location { get; set; }
+        public virtual PlantingSection? Section { get; set; }
     }
 }

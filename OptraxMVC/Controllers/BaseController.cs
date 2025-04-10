@@ -12,13 +12,13 @@ namespace OptraxMVC.Controllers
     {
         protected readonly OptraxContext db;
 
-        private string? _userID;
-        protected string UserID
+        private string? _userId;
+        protected string UserId
         {
             get
             {
-                _userID ??= User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
-                return _userID;
+                _userId ??= User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+                return _userId;
             }
         }
 
@@ -43,7 +43,7 @@ namespace OptraxMVC.Controllers
 
         public override void OnActionExecuting(ActionExecutingContext execContext)
         {
-            if (string.IsNullOrEmpty(UserID))
+            if (string.IsNullOrEmpty(UserId))
                 return;
 
             base.OnActionExecuting(execContext);

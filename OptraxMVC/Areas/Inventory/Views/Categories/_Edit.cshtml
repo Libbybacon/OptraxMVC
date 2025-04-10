@@ -12,7 +12,7 @@
 {
     @Html.AntiForgeryToken()
 
-    <input id="ID" type="hidden" name="ID" value="@Model.ID" />
+    <input id="Id" type="hidden" name="Id" value="@Model.Id" />
     <input id="changes" type="hidden" name="Changes" />
     <input id="Details" type="hidden" name="Details" value="@Model.Details" />
     <div class="d-flex justify-content-center">
@@ -32,9 +32,9 @@
                 </div>
             </div>
             <div class="col-4">
-                @Html.LabelFor(m => m.ParentID)
-                @Html.DropDownListFor(m => m.ParentID, drops.TopCatSelects, "Parent Category", new { @class = "form-select attr select2" })
-                @Html.ValidationMessageFor(m => m.ParentID, "", new { @class = "val-msg" })
+                @Html.LabelFor(m => m.ParentId)
+                @Html.DropDownListFor(m => m.ParentId, drops.TopCatSelects, "Parent Category", new { @class = "form-select attr select2" })
+                @Html.ValidationMessageFor(m => m.ParentId, "", new { @class = "val-msg" })
             </div>
             <div class="col-4">
                 @Html.LabelFor(m => m.HexColor)

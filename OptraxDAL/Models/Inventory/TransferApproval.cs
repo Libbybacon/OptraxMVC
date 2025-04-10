@@ -7,10 +7,10 @@ namespace OptraxDAL.Models.Inventory
     [Table("TransferApprovals", Schema = "Inventory")]
     public class TransferApproval
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [ForeignKey("Transfer")]
-        public int TransferID { get; set; }
+        public int TransferId { get; set; }
 
         public DateTimeOffset ApprovalDate { get; set; }
 
@@ -18,7 +18,7 @@ namespace OptraxDAL.Models.Inventory
         [MaxLength(450)]
         [ForeignKey("Manager")]
         [Display(Name = "Approving Manager")]
-        public string ManagerID { get; set; } = string.Empty;
+        public string ManagerId { get; set; } = string.Empty;
 
         public string? Notes { get; set; }
 

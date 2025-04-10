@@ -67,11 +67,11 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Details(int resourceID)
+        public async Task<IActionResult> Details(int resourceId)
         {
             try
             {
-                Resource? rsrc = await _IResource.GetResourceByIdAsync(resourceID);
+                Resource? rsrc = await _IResource.GetResourceByIdAsync(resourceId);
 
                 if (rsrc == null)
                 {

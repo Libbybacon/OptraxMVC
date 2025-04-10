@@ -13,10 +13,9 @@ namespace OptraxDAL.Models.Maps
             Name = "New Polygon";
         }
 
-        public int? LocationID { get; set; }
+        public int? LocationId { get; set; }
 
         public Polygon? PolyGeometry { get; set; }
-        public virtual Admin.Location? Location { get; set; }
 
 
         public override object ToGeoJSON()
@@ -26,7 +25,7 @@ namespace OptraxDAL.Models.Maps
                 type = "Feature",
                 properties = new
                 {
-                    id = ID,
+                    id = Id,
                     name = Name,
                     color = ColorBytes.ToString(),
                     weight = Weight,

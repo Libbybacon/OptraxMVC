@@ -17,7 +17,7 @@
         @using (Html.BeginForm(formVM.Action, "Items", FormMethod.Post, new { id = "modelForm", data_func = formVM.JsFunc, data_msgdiv = formVM.MsgDiv }))
         {
             @Html.AntiForgeryToken()
-            <input id="ID" type="hidden" name="ID" value="@Model.ID" />
+            <input id="Id" type="hidden" name="Id" value="@Model.Id" />
             <input id="changes" type="hidden" name="Changes" />
 
             <div class="d-flex justify-content-center">
@@ -41,10 +41,10 @@
                         @Html.ValidationMessageFor(m => m.SKU, "", new { htmlAttributes = new { @class = $"val-msg {showEdit}" } })
                     </div>
                     <div class="col-xl-4 col-6">
-                        @Html.LabelFor(m => m.CategoryID)
-                        <span class="view @showView">@Html.DisplayFor(m => m.CategoryID)</span>
-                        @Html.DropDownListFor(m => m.CategoryID, drops.TopCatSelects, "Select Category", new { @class = $"form-select attr {showSelect}"})
-                        @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = $"val-msg {showEdit}" })
+                        @Html.LabelFor(m => m.CategoryId)
+                        <span class="view @showView">@Html.DisplayFor(m => m.CategoryId)</span>
+                        @Html.DropDownListFor(m => m.CategoryId, drops.TopCatSelects, "Select Category", new { @class = $"form-select attr {showSelect}"})
+                        @Html.ValidationMessageFor(m => m.CategoryId, "", new { @class = $"val-msg {showEdit}" })
                     </div>
                     <div class="col-xl-4 col-6">
                         @Html.LabelFor(m => m.DefaultUoM)

@@ -14,7 +14,7 @@ namespace OptraxDAL.Models.Products
         public DateTimeOffset? ShipDate { get; set; }
         public DateTimeOffset? VerifiedReceivedDate { get; set; }
 
-        public int CustomerID { get; set; }
+        public int CustomerId { get; set; }
 
         public List<StockItem> Items { get; set; } = [];
     }

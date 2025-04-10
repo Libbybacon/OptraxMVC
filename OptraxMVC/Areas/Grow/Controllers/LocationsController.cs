@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
 using OptraxDAL.Models.Admin;
-using OptraxDAL.Models.Maps;
 using OptraxMVC.Areas.Grow.Models;
 using OptraxMVC.Controllers;
 using OptraxMVC.Models;
 using OptraxMVC.Services;
+using OptraxMVC.Services.Grow;
 
 namespace OptraxMVC.Areas.Grow.Controllers
 {
@@ -22,29 +22,19 @@ namespace OptraxMVC.Areas.Grow.Controllers
         [HttpGet]
         public async Task<IActionResult> LoadLocations()
         {
-            SiteLocation? loc = await _Location.GetSiteLocationAsync();
-            Map? map = await _Map.GetMapAsync() ?? new("Default Map");
+            Site loc = await _Location.GetSiteLocationAsync() ?? new Site() { IsFirst = true, IsPrimary = true };
 
-            LocationVM model = loc != null ? new(loc) : new LocationVM().LoadVM("firstSite");
-            model.Map = map;
-
-            ViewData["LocTabs"] = new TabsVM()
+            LocationVM model = new(loc)
             {
-                Area = "",
-                Tabs = [
-                    new Tab("Details", "./Locations/GetLocation/", true) { ID = model.ID},
-                    new Tab("Actions") { ID = model.ID },
-                    new Tab("Inventory")
-                ]
+                ShowEdit = loc.IsFirst,
+                Map = await _Map.GetMapAsync() ?? new("Default Map"),
             };
-            ViewData["Options"] = await _Options.LoadOptions(["StateSelects"]);
 
-            ViewBag.ShowEdit = model.IsFirstSite;
-            ViewBag.Action = model.IsFirstSite ? "Create" : "Edit";
+            ViewBag.ShowEdit = loc.IsFirst;
+            ViewBag.Action = loc.IsFirst ? "Create" : "Edit";
 
             return PartialView("_Locations", model);
         }
-
 
         [HttpGet]
         [HttpPost]
@@ -52,9 +42,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
         {
             try
             {
-                var data = await _Location.GetTreeNodesAsync();
-
-                return Json(data);
+                return Json(await _Location.GetTreeNodesAsync());
             }
             catch (Exception ex)
             {
@@ -62,24 +50,16 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
         }
 
-
         [HttpGet]
-        public async Task<IActionResult> LoadCreate(string type, string? parentID)
+        public IActionResult LoadCreate(string type, string? parentId)
         {
             try
             {
-                LocationVM? model = _Location.LoadCreate(type, parentID);
+                int? parId = int.TryParse(parentId, out int id) ? id : null;
+                LocationVM model = new(type, parId);
 
-                if (model == null)
-                {
-                    return Json(ResponseVM("Error loading new " + type));
-                }
-                if (model.HasAddress)
-                {
-                    ViewData["Options"] = _Options.LoadOptions(["StateSelects",]);
-                }
-
-                return await GetLocationView(model, "Create");
+                string action = type == "site" ? "CreateSite" : "CreateAreaLoc";
+                return GetLocationView(model, "Create");
             }
             catch (Exception ex)
             {
@@ -93,10 +73,39 @@ namespace OptraxMVC.Areas.Grow.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return Json(new ResponseVM() { Msg = "Invalid model" });
-                }
+                if (!ModelState.IsValid) { return Json(ResponseVM("Invalid model")); }
+
+                return Json(await _Location.CreateAsync(model.Location));
+            }
+            catch (Exception ex)
+            {
+                return Json(new ResponseVM() { Msg = "Error creating location: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateSiteAsync(Site model)
+        {
+            try
+            {
+                if (!ModelState.IsValid) { return Json(ResponseVM("Invalid model")); }
+
+                return Json(await _Location.CreateAsync(model));
+            }
+            catch (Exception ex)
+            {
+                return Json(new ResponseVM() { Msg = "Error creating location: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateAreaLocAsync(AreaLocation model)
+        {
+            try
+            {
+                if (!ModelState.IsValid) { return Json(ResponseVM("Invalid model")); }
 
                 return Json(await _Location.CreateAsync(model));
             }
@@ -107,21 +116,18 @@ namespace OptraxMVC.Areas.Grow.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetDetails(int? id)
+        public async Task<IActionResult> GetDetails(int? id, string? type)
         {
             try
             {
-                if (id == null)
-                {
-                    return Json(ResponseVM("Error loading location - null ID"));
-                }
+                if (id == null || type == null) { return Json(ResponseVM("Error loading location - null id or type")); }
 
-                LocationVM? model = await _Location.GetLocationAsync((int)id);
+                LocationVM? model = await _Location.GetLocationAsync((int)id, type);
 
-                if (model == null)
-                    return Json(ResponseVM("Error loading location: not found"));
+                if (model == null) { return Json(ResponseVM("Error loading location: not found")); }
 
-                return await GetLocationView(model, "Edit");
+                string action = type == "site" ? "CreateSite" : "CreateAreaLoc";
+                return GetLocationView(model, "Edit");
             }
             catch (Exception ex)
             {
@@ -133,13 +139,11 @@ namespace OptraxMVC.Areas.Grow.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditAsync(LocationVM locVM)
         {
-            if (!ModelState.IsValid)
-            {
-                return Json(ResponseVM("Error editing location - invalid model"));
-            }
+            if (!ModelState.IsValid) { return Json(ResponseVM("Invalid model")); }
+
             try
             {
-                return Json(await _Location.EditAsync(locVM));
+                return Json(await _Location.EditAsync(locVM.Location));
             }
             catch (Exception ex)
             {
@@ -152,10 +156,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
         {
             try
             {
-                if (id == null)
-                {
-                    return Json(ResponseVM("Error deleting location - null ID"));
-                }
+                if (id == null) { return Json(ResponseVM("Error deleting location - null Id")); }
 
                 return Json(await _Location.DeleteAsync((int)id));
             }
@@ -165,16 +166,13 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
         }
 
-
-
-        private async Task<IActionResult> GetLocationView(LocationVM model, string action)
+        private IActionResult GetLocationView(LocationVM model, string action)
         {
             try
             {
                 ViewBag.Action = action;
-                ViewBag.ShowEdit = action == "Create";
-
-                ViewData["Options"] = await _Options.LoadOptions(["StateSelects"]);
+                ViewData["IsView"] = true;
+                ViewBag.ShowEdit = action.Contains("Create");
 
                 return PartialView("_Location", model);
             }

@@ -10,7 +10,8 @@ import L from 'leaflet';
 import 'leaflet-draw'; // also attaches to Leaflet
 
 // Choices.js
-import 'choices.js';
+import Choices from 'choices.js';
+window.choices = Choices;
 
 import IMask from 'imask';
 
@@ -53,7 +54,18 @@ $(document).ready(function () {
     window.showMessage = showMessage;
     window.loadPopup = popupHandler.loadPopup;
     window.closePopup = popupHandler.closePopup;
+
+    setTooltipListener();
 })
+
+function setTooltipListener() {
+    document.addEventListener('DOMContentLoaded', function () {
+        const tooltips = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        tooltips.forEach(function (tooltip) {
+            new bootstrap.Tooltip(tooltip)
+        })
+    });
+}
 
 function showMessage(props) {
 

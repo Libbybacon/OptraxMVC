@@ -1,0 +1,87 @@
+﻿@using OptraxDAL.Models.Grow
+@using OptraxDAL.Models.Inventory
+@using OptraxDAL.ViewModels
+@using OptraxMVC.Models
+
+@model Plant
+
+@{
+    OptionsVM opts = (OptionsVM)(ViewData["Options"] ?? new());
+}
+
+<input type="hidden" asp-for="Id" />
+<input type="hidden" asp-for="ProfileId" />
+<input type="hidden" asp-for="Changes" />
+<fieldset class="border rounded p-3 mb-4 mt-2">
+    <legend class="w-auto px-2">Plant Details</legend>
+    <div class="row col-12 w-100 px-0 m-0 pe-0">
+
+        <div class="col-lg-3 col-sm-5 col-6 px-1">
+            <label asp-for="TaxonType"></label>
+            <select asp-for="TaxonType" asp-items="opts.TaxonSelects" class="form-control"></select>
+            <span asp-validation-for="TaxonType" class="text-danger"></span>
+        </div>
+        <div class="col-lg-3 col-sm-5 col-6 px-1">
+            <label asp-for="PlantType" class="par1"></label>
+            <select asp-for="PlantType" asp-items="opts.PlantTypeSelects" class="form-control"></select>
+            <span asp-validation-for="PlantType" class="text-danger"></span>
+        </div>
+
+        <div class="col-lg-2 col-sm-2 col-4 px-1">
+            <center><label>Is Hybrid?</label></center>
+            <div class="d-flex align-items-center justify-content-center">
+                <label><input type="radio" asp-for="IsHybrid" value="true" /> Yes</label>
+                <label><input type="radio" asp-for="IsHybrid" value="false" /> No</label>
+            </div>
+            <span asp-validation-for="IsHybrid" class="text-danger"></span>
+        </div>
+
+        <div class="col-lg-4 col-sm-6 col-8 px-1">
+            <label asp-for="Parent1Id" class="par1"></label>
+            <select asp-for="Parent1Id" asp-items="opts.PlantSelects" class="form-control"></select>
+            <span asp-validation-for="Parent1Id" class="text-danger"></span>
+        </div>
+
+        <div class="col-xl-3 col-lg-4 col-sm-6 col-12 px-1">
+            <label asp-for="CommonName"></label>
+            <input asp-for="CommonName" class="form-control" />
+            <span asp-validation-for="CommonName" class="text-danger"></span>
+        </div>
+
+        <div class="col-xl-3 col-lg-4 col-sm-6 col-12 px-1">
+            <label asp-for="Genus"></label>
+            <input asp-for="Genus" class="name form-control" />
+            <span asp-validation-for="Genus" class="text-danger"></span>
+        </div>
+
+        <div class="col-xl-3 col-lg-4 col-sm-6 col-12 px-1">
+            <label asp-for="Species"></label>
+            <input asp-for="Species" class="name form-control" />
+            <span asp-validation-for="Species" class="text-danger"></span>
+        </div>
+
+        <div class="col-xl-3 col-sm-6 col-12 px-1">
+            <label>Variety/Cultivar Name</label>
+            <input asp-for="CultivarName" class="form-control" />
+            <span asp-validation-for="CultivarName" class="text-danger"></span>
+        </div>
+
+        <div class="col-xl-3 col-sm-6 col-12 px-1">
+            <label asp-for="CustomName"></label>
+            <input asp-for="CustomName" class="form-control" />
+            <span asp-validation-for="CustomName" class="text-danger"></span>
+        </div>
+
+        <div class="col-xl-3 col-lg-6 col-12 px-1">
+            <label asp-for="ScientificName"></label>
+            <input asp-for="ScientificName" class="form-control" />
+            <span asp-validation-for="ScientificName" class="text-danger"></span>
+        </div>
+
+        <div class="col-lg-6 col-12 px-1">
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" class="form-control" rows="2"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+</fieldset>

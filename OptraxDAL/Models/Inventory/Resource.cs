@@ -11,13 +11,13 @@ namespace OptraxDAL.Models.Inventory
 
         public Resource(Category category)
         {
-            CategoryID = category.ID;
+            CategoryId = category.Id;
             Category = category;
         }
 
         [Display(Name = "Category")]
         [Required(ErrorMessage = "Please select a category.")]
-        public int CategoryID { get; set; }
+        public int CategoryId { get; set; }
 
         [MaxLength(255)]
         public string? Tags { get; set; } = string.Empty;
@@ -42,7 +42,7 @@ namespace OptraxDAL.Models.Inventory
         [Display(Name = "Stock UoM")]
         public string? StockUoM { get; set; }
 
-        public int? SellerID { get; set; }
+        public int? SellerId { get; set; }
 
         public bool NeedsTransferApproval { get; set; } = false;
 
@@ -60,9 +60,9 @@ namespace OptraxDAL.Models.Inventory
         {
             ResourceVM rsrcVM = new()
             {
-                Cat0 = $"{cat0.Name}-{cat0.ID}-{cat0.HexColor}",
-                Cat1 = $"{cat1.Name}-{cat1.ID}-{cat1.HexColor}",
-                ResourceID = ID,
+                Cat0 = $"{cat0.Name}-{cat0.Id}-{cat0.HexColor}",
+                Cat1 = $"{cat1.Name}-{cat1.Id}-{cat1.HexColor}",
+                ResourceId = Id,
                 ResourceName = Name,
                 ResourceDesc = Details,
                 SKU = SKU,

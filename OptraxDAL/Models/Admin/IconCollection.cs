@@ -8,7 +8,7 @@ namespace OptraxDAL.Models.Admin
     {
         public IconCollection() { }
 
-        public int? ParentID { get; set; }
+        public int? ParentId { get; set; }
 
         public IconCollection? Parent { get; set; }
 

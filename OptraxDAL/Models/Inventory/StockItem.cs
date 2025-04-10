@@ -11,7 +11,7 @@ namespace OptraxDAL.Models.Inventory
     {
         public StockItem() { }
 
-        public int ResourceID { get; set; }
+        public int ResourceId { get; set; }
 
         [Display(Name = "Date Acquired")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]

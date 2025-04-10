@@ -1,4 +1,5 @@
 ﻿using OptraxDAL.Models.BaseClasses;
+using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
 using OptraxDAL.Models.Maps;
 using System.ComponentModel.DataAnnotations;
@@ -8,19 +9,23 @@ namespace OptraxDAL.Models.Admin
 {
     public abstract class AddressLocation : Location
     {
-        public int? AddressID { get; set; }
-        public int? BusinessID { get; set; }
+        public int? AddressId { get; set; }
+        public int? BusinessId { get; set; }
 
-        public virtual Address? Address { get; set; } = new();
-        public virtual Business? Business { get; set; }
+        public Address? Address { get; set; } = new();
+        public Business? Business { get; set; }
     }
 
     public abstract class AreaLocation : Location
     {
         public decimal? Length { get; set; }
         public decimal? Width { get; set; }
+        public decimal? Radius { get; set; }
+        public string Shape { get; set; } = "Polygon";
 
+        public virtual ICollection<Planting>? Plantings { get; set; } = [];
     }
+
 
     [Table("Locations", Schema = "Admin")]
     public abstract class Location : TrackingBaseDetails
@@ -28,21 +33,16 @@ namespace OptraxDAL.Models.Admin
         public Location() { }
 
         public string LocationType { get; set; } = string.Empty;
-
-        public int? MapObjectID { get; set; }
+        public int? MapObjectId { get; set; }
 
         [Display(Name = "Parent Location")]
-        public int? ParentID { get; set; }
-
-        [MaxLength(1)]
-        public int Level { get; set; }
-
-        public int? IconID { get; set; }
+        public int? ParentId { get; set; }
+        public int? IconId { get; set; }
 
 
-        public virtual Icon? Icon { get; set; }
-        public virtual MapObject? MapObject { get; set; }
-        public virtual Location? Parent { get; set; } = null;
+        public Icon? Icon { get; set; }
+        public MapObject? MapObject { get; set; }
+        public Location? Parent { get; set; } = null;
 
 
         public virtual ICollection<Location>? Children { get; set; } = [];
@@ -56,24 +56,26 @@ namespace OptraxDAL.Models.Admin
         public virtual ICollection<InventoryTransfer>? TransfersIn { get; set; } = [];
 
         [NotMapped]
+        public string? ParentString { get; set; }
+
+        [NotMapped]
         public string NameWithType { get => $"{LocationType}: {Name}"; }
 
         public object ToTreeNode()
         {
             return new
             {
-                id = ID.ToString(),
-                parent = ParentID?.ToString() ?? "#",
+                id = Id.ToString(),
+                parent = ParentId?.ToString() ?? "#",
                 text = Name,
                 type = LocationType.ToLower(),
                 state = new
                 {
-                    opened = Level < 2,
-                    selected = this is SiteLocation site && site.IsPrimary
+                    opened = true,
+                    selected = this is Site site && site.IsPrimary
                 }
             };
         }
-
 
         public string GetParentNamesString()
         {
@@ -109,9 +111,6 @@ namespace OptraxDAL.Models.Admin
     {
         Site,
         Field,
-        Row,
-        Bed,
-        Plot,
         Greenhouse,
         Building,
         Room,

@@ -3,7 +3,6 @@ import { formUtil } from '../utilities/form.js';
 import { getMap, getActive, setActive, deleteActive, setIndex, deleteIndex } from './mapState.js';
 import * as _style from './objStyleUtil.js'; 
 
-
 let map = getMap();
 
 const urlBase = '/Grow/Map/';
@@ -83,12 +82,13 @@ export const getLastLayer = layerSet => {
 }
 
 export async function showEditPopup(props) {
+
     map = getMap();
-    console.log('showEditPopup props', props, 'map', map);
+    //console.log('showEditPopup props', props, 'map', map);
 
     const response = await apiService.get(props.url, props.data);
+    //console.log('showEditPopup response', response);
 
-    console.log('showEditPopup response', response);
     if (!response.success == true) {
         window.showMesage({ msg: 'Error loading' + props.type, msgdiv: $('.map-msg'), css: 'error' });
         throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
@@ -111,9 +111,9 @@ export async function showEditPopup(props) {
 
 export function updateHiddenFields(type, props) {
     let layer = getActive();
-    const mapID = $("#mapForm").find("#ID").val();
+    const mapId = $("#mapForm").find("#Id").val();
 
-    $('#MapID').val(mapID)
+    $('#MapId').val(mapId)
 
     if (type.toLowerCase() == 'point') {
         const latlng = layer.getLatLng();
@@ -185,38 +185,38 @@ export async function onDelete(id, type) {
 
 
 export const mapFormUtil = {
-    setFormListeners: function (formID) {
-        console.log('mapFormUtil setFormListeners formID', formID);
+    setFormListeners: function (formId) {
+        console.log('mapFormUtil setFormListeners formId', formId);
 
-        $(formID).on('submit', function (event) {
+        $(formId).on('submit', function (event) {
             event.preventDefault();
-            mapFormUtil.onSubmitForm(formID) // submit form
+            mapFormUtil.onSubmitForm(formId) // submit form
         });
 
-        $(document).off('click', formID + ' .btn-red').on('click', formID + ' .btn-red', function () {
-            let id = $(formID).data('id');
-            let type = $(formID).data('obj')
+        $(document).off('click', formId + ' .btn-red').on('click', formId + ' .btn-red', function () {
+            let id = $(formId).data('id');
+            let type = $(formId).data('obj')
             onDelete(id, type);
         })
 
-        formUtil.setListeners(formID);
-        if (formID == '#mapObjForm') {
+        formUtil.setListeners(formId);
+        if (formId == '#mapObjForm') {
             _style.setStyleListeners('#mapObjForm');
         }
     },
-    onSubmitForm: async function (formID) {
-        let $form = $(formID);
+    onSubmitForm: async function (formId) {
+        let $form = $(formId);
 
         console.log('mapUtil onSubmitForm $form', $form);
 
         const isCreate = $form.attr('action').includes('Create')
 
-        let response = await formUtil.submitForm(formID);
+        let response = await formUtil.submitForm(formId);
         console.log('mapUtil onSubmitForm response', response);
 
         if (response && response.success) {
 
-            if (formID == '#mapForm') {
+            if (formId == '#mapForm') {
                 const newName = $('#mapForm #Name').val();
 
                 $('.map-info').toggleClass('d-none');
@@ -231,7 +231,7 @@ export const mapFormUtil = {
                 let action = isCreate ? 'Created' : 'Updated';
 
                 if (isCreate && response.data) {
-                    mapFormUtil.updateID(response.data, $form.data('obj'));
+                    mapFormUtil.updateId(response.data, $form.data('obj'));
                 }
 
                 window.showMessage({ msg: `${objType} ${action}!`, css: 'success', msgdiv: $('.map-msg') });
@@ -241,12 +241,12 @@ export const mapFormUtil = {
             alert('Error! ' + response.error);
         }
     },
-    updateID(data, type) {
+    updateId(data, type) {
         let layer = getActive();
         let id = data.properties.id;
 
         layer.feature.properties.id = id;
-        console.log('updateID layer', layer, 'id', id, 'data', data)
+        console.log('updateId layer', layer, 'id', id, 'data', data)
         deleteIndex(-1)
         setIndex(id, layer);
 

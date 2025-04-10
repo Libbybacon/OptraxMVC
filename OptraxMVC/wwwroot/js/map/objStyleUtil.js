@@ -1,7 +1,7 @@
 ﻿import { colorSwatches } from '../utilities/color.js';
 import { getActive } from './mapState.js';
 
-const formID = '#mapObjForm';
+const formId = '#mapObjForm';
 export function createIcon(url) {
     return L.icon({
         iconUrl: url,
@@ -23,23 +23,23 @@ export function updateIcon(props) {
 
 export function selectIcon($icon) {
     $('.icon-div').removeClass('selected');
-    $('#IconID').val($icon.data('iconid')).change();
+    $('#IconId').val($icon.data('iconid')).change();
 
     $icon.addClass('selected');
 
     let imgURL = $icon.find('img').attr('src');
-    let props = { iconURL: imgURL, marker: getActive(), title: $(formID + ' #Name').val(), desc: $(formID + ' #Notes').val() }
+    let props = { iconURL: imgURL, marker: getActive(), title: $(formId + ' #Name').val(), desc: $(formId + ' #Notes').val() }
 
     updateIcon(props);
 }
 export function selectIconColl($coll) {
-    let collID = $coll.data('collid')
+    let collId = $coll.data('collid')
 
     $('.icon-coll-name').removeClass('selected');
-    $(`.coll-name-${collID}`).addClass('selected');
+    $(`.coll-name-${collId}`).addClass('selected');
 
     $('.preview-div').addClass('d-none');
-    $(`.preview-div.preview-coll-${collID}`).removeClass('d-none');
+    $(`.preview-div.preview-coll-${collId}`).removeClass('d-none');
 }
 
 export function setColorPicker(attr) {
@@ -60,7 +60,7 @@ export function setColorPicker(attr) {
 
 export function updateStyle(input, val) {
     let layer = getActive();
-    console.log('updateStyle layer', layer, 'input', input, 'val', val);
+    //console.log('updateStyle layer', layer, 'input', input, 'val', val);
     switch (input) {
         case 'name':
             layer._tooltip.setContent(val);
@@ -93,7 +93,7 @@ export function saveStyle () {
     };
 }
 export function restoreStyle(input, val) {
-    console.log('restoreStyle')
+    //console.log('restoreStyle')
     let l = getActive();
     let origStyle = l._origStyle
     let tooltip = l.getTooltip();
@@ -111,7 +111,7 @@ export function restoreStyle(input, val) {
     delete l._originalStyle;
 }
 
-export function setStyleListeners(formID) {
+export function setStyleListeners(formId) {
     // Points
     $('.icon-coll-name').on('click', function () {
         selectIconColl($(this)); // change icon collection display
@@ -125,27 +125,27 @@ export function setStyleListeners(formID) {
     });
 
     // Not Points
-    $(formID + ' #Pattern').on('change', function () {
+    $(formId + ' #Pattern').on('change', function () {
         var pattern = $(this).val();
         if (pattern == 'solid') {
-            $(formID + ' #DashArray').val(0).change();
-            $(formID + ' #DashArray').attr('readonly', 'readonly');
+            $(formId + ' #DashArray').val(0).change();
+            $(formId + ' #DashArray').attr('readonly', 'readonly');
         }
         else {
-            $(formID + ' #DashArray').val('5 5').change();
-            $(formID + ' #DashArray').removeAttr('readonly');
+            $(formId + ' #DashArray').val('5 5').change();
+            $(formId + ' #DashArray').removeAttr('readonly');
         }
         setTimeout(() => {
-            updateStyle('dashArray', $(formID + ' #DashArray').val());
+            updateStyle('dashArray', $(formId + ' #DashArray').val());
         }, 50);
     })
-    $(formID + ' #Name').on('input', function () {
+    $(formId + ' #Name').on('input', function () {
         updateStyle('name', $(this).val());
     });
-    $(formID + ' #DashArray').on('input', function () {
+    $(formId + ' #DashArray').on('input', function () {
         updateStyle('dashArray', $(this).val())
     });
-    $(formID + ' #Weight').on('change', function () {
+    $(formId + ' #Weight').on('change', function () {
         updateStyle('weight', $(this).val())
     });
 }

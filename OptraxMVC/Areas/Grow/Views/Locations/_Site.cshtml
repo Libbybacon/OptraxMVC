@@ -1,0 +1,25 @@
+﻿@model Site
+
+@{
+    bool showEdit = ViewBag.ShowEdit as bool? ?? false;
+}
+
+<div id="site-loc" class="edit-div ps-2 pt-3 model" data-isFirst="@Model.IsFirst.ToString().ToLower()">
+
+    <input type="hidden" asp-for="IsPrimary" />
+
+    @if (Model.IsFirst)
+    {
+        <div class="col-12 first-site">
+            <center class="mb-3">Create your first site!</center>
+            <p>After you create your first site, you can add Fields, Greenhouses, and Buildings.</p>
+            <p>Fields and Greenhouses can be subdivided into Rows/Beds/Plots when you add Crop Plantings.</p>
+            <p>Buildings can be subdivided into Rooms</p>
+        </div>
+    }
+
+    <partial name="_Details" model="Model" />
+    <partial name="_Edit" model="Model" />
+
+    @await Component.InvokeAsync("Address", new { address = Model.Address, showEdit = showEdit })
+</div>

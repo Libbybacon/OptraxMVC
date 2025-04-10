@@ -13,7 +13,7 @@ namespace OptraxDAL.Models.Maps
             Name = name;
         }
 
-        public int? CollectionID { get; set; }
+        public int? CollectionId { get; set; }
 
         public virtual ICollection<MapObject>? MapObjects { get; set; } = [];
     }

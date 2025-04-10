@@ -9,7 +9,7 @@ let map = null;
 export function initializeLayers() {
     map = getMap();
 
-     console.log('initializeLayers map: ', map)
+     //console.log('initializeLayers map: ', map)
     const satellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
         maxZoom: 20,
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
@@ -127,9 +127,9 @@ export async function loadFeatures() {
 
 export async function loadObjects(mapLayer, layerType) {
     try {
-        console.log('mapLayer', mapLayer, 'layerType', layerType);
+        //console.log('mapLayer', mapLayer, 'layerType', layerType);
         const response = await apiService.get('/Grow/Map/GetObjects', { objType: layerType });
-        console.log('response', response);
+        //console.log('response', response);
 
         if (response.success === false) { alert(`Failed to load ${layerType.toLowerCase()}s`); throw new Error(response.error || `Failed to load ${layerType.toLowerCase()}s`); }
 

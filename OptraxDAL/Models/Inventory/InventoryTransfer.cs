@@ -1,6 +1,5 @@
 ﻿using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.BaseClasses;
-using OptraxDAL.Models.Grow;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,7 +15,7 @@ namespace OptraxDAL.Models.Inventory
             NeedsApproval = needsApproval;
         }
 
-        public int StockItemID { get; set; }
+        public int StockItemId { get; set; }
 
         [Required]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
@@ -25,11 +24,11 @@ namespace OptraxDAL.Models.Inventory
 
         [Required]
         [Display(Name = "Origin")]
-        public int OriginID { get; set; }
+        public int OriginId { get; set; }
 
         [Required]
         [Display(Name = "Destination")]
-        public int DestinationID { get; set; }
+        public int DestinationId { get; set; }
 
         [Display(Name = "Unit Count")]
         public decimal UnitCount { get; set; } = 1;
@@ -47,11 +46,11 @@ namespace OptraxDAL.Models.Inventory
 
         [Display(Name = "Needs Approval")]
         public bool NeedsApproval { get; set; } = false;
-        public int? ApprovalID { get; set; }
+        public int? ApprovalId { get; set; }
 
         public virtual StockItem? StockItem { get; set; }
         public virtual TransferApproval? Approval { get; set; }
-        public virtual TransferEvent? PlantTransfer { get; set; }
+        //public virtual TransferEvent? PlantTransfer { get; set; }
 
 
         [InverseProperty(nameof(Location.TransfersOut))]
@@ -61,29 +60,29 @@ namespace OptraxDAL.Models.Inventory
         public virtual Location? Destination { get; set; }
 
 
-        public InventoryTransfer NewTransfer()
-        {
-            return new InventoryTransfer()
-            {
-                Date = Date,
-                UserID = UserID,
-                OriginID = OriginID,
-                DestinationID = DestinationID,
-                UnitCount = UnitCount,
-                UnitUoM = UnitUoM,
-                IsPartial = IsPartial,
-                Status = Status,
-                Notes = Notes,
-                NeedsApproval = NeedsApproval,
-                StockItemID = StockItemID,
-            };
-        }
+        //public InventoryTransfer NewTransfer()
+        //{
+        //    return new InventoryTransfer()
+        //    {
+        //        Date = Date,
+        //        UserId = UserId,
+        //        OriginId = OriginId,
+        //        DestinationId = DestinationId,
+        //        UnitCount = UnitCount,
+        //        UnitUoM = UnitUoM,
+        //        IsPartial = IsPartial,
+        //        Status = Status,
+        //        Notes = Notes,
+        //        NeedsApproval = NeedsApproval,
+        //        StockItemId = StockItemId,
+        //    };
+        //}
 
-        public InventoryTransfer NewTransfer(Plant plant)
-        {
-            var newTransfer = NewTransfer();
-            newTransfer.StockItem = plant;
-            return newTransfer;
-        }
+        //public InventoryTransfer NewTransfer(Plant plant)
+        //{
+        //    var newTransfer = NewTransfer();
+        //    newTransfer.StockItem = plant;
+        //    return newTransfer;
+        //}
     }
 }

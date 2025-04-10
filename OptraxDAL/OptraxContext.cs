@@ -34,37 +34,43 @@ namespace OptraxDAL
 
 
         public DbSet<Location> Locations { get; set; }
-        public DbSet<SiteLocation> SiteLocations { get; set; }
-        public DbSet<FieldLocation> FieldLocations { get; set; }
-        public DbSet<RowLocation> RowLocations { get; set; }
-        public DbSet<BedLocation> BedLocations { get; set; }
-        public DbSet<PlotLocation> PlotLocations { get; set; }
-        public DbSet<GreenhouseLocation> GreenhouseLocations { get; set; }
-        public DbSet<BuildingLocation> BuildingLocations { get; set; }
-        public DbSet<RoomLocation> RoomLocations { get; set; }
-        public DbSet<VehicleLocation> VehicleLocation { get; set; }
+        public DbSet<Site> Sites { get; set; }
+        public DbSet<Field> Fields { get; set; }
+        public DbSet<Greenhouse> Greenhouses { get; set; }
+        public DbSet<Building> Buildings { get; set; }
+        public DbSet<Room> Rooms { get; set; }
+        public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<OffsiteLocation> OffsiteLocations { get; set; }
+        //public DbSet<RowLocation> RowLocations { get; set; }
+        //public DbSet<BedLocation> BedLocations { get; set; }
+        //public DbSet<PlotLocation> PlotLocations { get; set; }
         #endregion
 
 
         #region Grow
-        public DbSet<Species> Species { get; set; }
-        public DbSet<Variety> Varieties { get; set; }
-        public DbSet<Cultivar> Cultivars { get; set; }
+        public DbSet<Plant> Plants { get; set; }
+        public DbSet<PlantTypeGroup> PlantTypeGroups { get; set; }
+        public DbSet<PlantTrait> PlantTraits { get; set; }
+        public DbSet<PlantProfile> PlantProfiles { get; set; }
+        public DbSet<TraitDefinition> TraitDefinitions { get; set; }
+
 
         public DbSet<Crop> Crops { get; set; }
-        public DbSet<Batch> Batches { get; set; }
+        public DbSet<CropBatch> CropBatches { get; set; }
+
         public DbSet<Planting> Plantings { get; set; }
+        public DbSet<PlantingSection> Sections { get; set; }
+        public DbSet<PlantingPattern> Patterns { get; set; }
 
-        public DbSet<Strain> Strains { get; set; }
-        public DbSet<StrainRelationship> StrainRelationships { get; set; }
+        //public DbSet<Strain> Strains { get; set; }
+        //public DbSet<StrainRelationship> StrainRelationships { get; set; }
 
-        public DbSet<PlantEvent> PlantEvents { get; set; }
-        public DbSet<PruneEvent> PruneEvents { get; set; }
-        public DbSet<GrowthEvent> GrowthEvents { get; set; }
-        public DbSet<TransferEvent> TransferEvents { get; set; }
-        public DbSet<TreatmentEvent> TreatmentEvents { get; set; }
-        public DbSet<TransplantEvent> TransplantEvents { get; set; }
+        //public DbSet<PlantEvent> PlantEvents { get; set; }
+        //public DbSet<PruneEvent> PruneEvents { get; set; }
+        //public DbSet<GrowthEvent> GrowthEvents { get; set; }
+        //public DbSet<TransferEvent> TransferEvents { get; set; }
+        //public DbSet<TreatmentEvent> TreatmentEvents { get; set; }
+        //public DbSet<TransplantEvent> TransplantEvents { get; set; }
         #endregion
 
 
@@ -73,8 +79,6 @@ namespace OptraxDAL
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<StockItem> StockItems { get; set; }
-        public DbSet<Plant> Plants { get; set; }
-        public DbSet<Light> Lights { get; set; }
         public DbSet<Durable> Durables { get; set; }
         public DbSet<Consumable> Consumables { get; set; }
 
@@ -108,7 +112,6 @@ namespace OptraxDAL
 
             var rgbaConverter = new ValueConverter<ColorRgba, byte[]>(v => v.ToBytes(), v => ColorRgba.FromBytes(v));
 
-
             #region Admin
             builder.Entity<AppUser>().ToTable("AspNetUsers", "Identity");
             builder.Entity<IdentityRole>().ToTable("AspNetRoles", "Identity");
@@ -121,91 +124,108 @@ namespace OptraxDAL
             builder.Entity<Business>().HasIndex(x => x.Name).IsUnique();
             builder.Entity<Input>().HasIndex(x => x.InputName).IsUnique();
             builder.Entity<UoM>().Property(x => x.PerQuantity).HasPrecision(6, 2);
+
+            builder.Entity<ContainerType>(e =>
+            {
+                e.Property(x => x.Capacity).HasPrecision(8, 2);
+                e.Property(x => x.Active).HasDefaultValue(true);
+            });
+            #endregion
+
+            #region Locations TPH
+            builder.Entity<Location>(e =>
+            {
+                e.Property(x => x.Active).HasDefaultValue(true);
+
+                e.HasOne(x => x.MapObject).WithOne(b => b.Location)
+                                          .HasForeignKey<Location>(x => x.MapObjectId)
+                                          .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasDiscriminator<string>("LocationType").HasValue<Site>("Site")
+                                                          .HasValue<Field>("Field")
+                                                          .HasValue<Greenhouse>("Greenhouse")
+                                                          .HasValue<Building>("Building")
+                                                          .HasValue<Room>("Room")
+                                                          .HasValue<OffsiteLocation>("Offsite")
+                                                          .HasValue<Vehicle>("Vehicle");
+            });
+
+            builder.Entity<Site>(e =>
+            {
+                e.HasOne(sl => sl.Business).WithMany(b => b.Sites)
+                                           .HasForeignKey(sl => sl.BusinessId)
+                                           .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<Field>(e =>
+            {
+                e.Property(x => x.Width).HasPrecision(18, 4);
+                e.Property(x => x.Length).HasPrecision(18, 4);
+                e.Property(x => x.Radius).HasPrecision(18, 4);
+            });
+
+            builder.Entity<Greenhouse>(e =>
+            {
+                e.Property(x => x.Width).HasPrecision(18, 4);
+                e.Property(x => x.Length).HasPrecision(18, 4);
+                e.Property(x => x.Radius).HasPrecision(18, 4);
+            });
+
+            builder.Entity<Building>(e =>
+            {
+                e.HasOne(bl => bl.Address).WithOne(a => a.Building)
+                                          .HasForeignKey<Building>(bl => bl.AddressId)
+                                          .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(bl => bl.Business).WithMany(b => b.Buildings)
+                                           .HasForeignKey(bl => bl.BusinessId)
+                                           .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<InventoryTransfer>(e =>
+            {
+                e.Property(x => x.UnitCount).HasPrecision(8, 2);
+
+                e.HasOne(it => it.Origin).WithMany(o => o.TransfersOut)
+                                         .HasForeignKey(it => it.OriginId)
+                                         .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(it => it.Destination).WithMany(o => o.TransfersIn)
+                                              .HasForeignKey(it => it.DestinationId)
+                                              .OnDelete(DeleteBehavior.Restrict);
+            });
             #endregion
 
             #region Inventory
-            builder.Entity<Category>().HasIndex(x => x.Name).IsUnique();
+            builder.Entity<Category>(e =>
+            {
+                e.HasIndex(x => x.Name).IsUnique();
+                e.Property(x => x.Active).HasDefaultValue(true);
+            });
 
-            builder.Entity<Resource>().HasIndex(x => x.SKU).IsUnique();
-            builder.Entity<Resource>().HasIndex(x => x.Name).IsUnique();
-            builder.Entity<Resource>().Property(x => x.Active).HasDefaultValue(true);
-
-            builder.Entity<ContainerType>().Property(x => x.Capacity).HasPrecision(8, 2);
-            builder.Entity<ContainerType>().Property(x => x.Active).HasDefaultValue(true);
+            builder.Entity<Resource>(e =>
+            {
+                e.HasIndex(x => x.SKU).IsUnique();
+                e.HasIndex(x => x.Name).IsUnique();
+                e.Property(x => x.Active).HasDefaultValue(true);
+            });
 
             #region Stock Items TPT
-            builder.Entity<Plant>().ToTable("Plants", "Inventory");
-            builder.Entity<Light>().ToTable("Lights", "Inventory");
-            builder.Entity<Durable>().ToTable("Durables", "Inventory");
-            builder.Entity<Consumable>().ToTable("Consumables", "Inventory");
-
-            builder.Entity<Plant>().HasBaseType<StockItem>();
-            builder.Entity<Light>().HasBaseType<StockItem>();
-            builder.Entity<Durable>().HasBaseType<StockItem>();
-            builder.Entity<Consumable>().HasBaseType<StockItem>();
+            builder.Entity<Durable>(e =>
+            {
+                e.HasBaseType<StockItem>();
+                e.ToTable("Durables", "Inventory");
+            });
+            builder.Entity<Consumable>(e =>
+            {
+                e.HasBaseType<StockItem>();
+                e.ToTable("Consumables", "Inventory");
+                e.Property(x => x.UnitCount).HasPrecision(8, 2);
+            });
 
             builder.Entity<StockItem>().Property(x => x.PurchasePrice).HasPrecision(8, 2);
-            builder.Entity<Consumable>().Property(x => x.UnitCount).HasPrecision(8, 2);
             #endregion
 
-
-            #region Locations TPH
-            //builder.Entity<Location>().HasIndex(x => x.Name).IsUnique();
-            builder.Entity<Location>().Property(x => x.Active).HasDefaultValue(true);
-
-            builder.Entity<GreenhouseLocation>().Property(x => x.Length).HasPrecision(18, 4);
-            builder.Entity<GreenhouseLocation>().Property(x => x.Width).HasPrecision(18, 4);
-
-            builder.Entity<FieldLocation>().Property(x => x.Length).HasPrecision(18, 4);
-            builder.Entity<FieldLocation>().Property(x => x.Width).HasPrecision(18, 4);
-
-            builder.Entity<RowLocation>().Property(x => x.Length).HasPrecision(18, 4);
-            builder.Entity<RowLocation>().Property(x => x.Width).HasPrecision(18, 4);
-
-            builder.Entity<BedLocation>().Property(x => x.Length).HasPrecision(18, 4);
-            builder.Entity<BedLocation>().Property(x => x.Width).HasPrecision(18, 4);
-
-            builder.Entity<PlotLocation>().Property(x => x.Length).HasPrecision(18, 4);
-            builder.Entity<PlotLocation>().Property(x => x.Width).HasPrecision(18, 4);
-
-            builder.Entity<Location>().HasDiscriminator<string>("LocationType")
-                                      .HasValue<SiteLocation>("Site")
-                                      .HasValue<FieldLocation>("Field")
-                                      .HasValue<RowLocation>("Row")
-                                      .HasValue<BedLocation>("Bed")
-                                      .HasValue<PlotLocation>("Plot")
-                                      .HasValue<GreenhouseLocation>("Greenhouse")
-                                      .HasValue<BuildingLocation>("Building")
-                                      .HasValue<RoomLocation>("Room")
-                                      .HasValue<OffsiteLocation>("Offsite")
-                                      .HasValue<VehicleLocation>("Vehicle");
-
-            builder.Entity<BuildingLocation>().HasOne(bl => bl.Address)
-                                              .WithOne(a => a.Building)
-                                              .HasForeignKey<BuildingLocation>(bl => bl.AddressID)
-                                              .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<SiteLocation>().HasOne(sl => sl.Business)
-                                          .WithMany(b => b.Sites)
-                                          .HasForeignKey(sl => sl.BusinessID)
-                                          .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<BuildingLocation>().HasOne(bl => bl.Business)
-                                              .WithMany(b => b.Buildings)
-                                              .HasForeignKey(bl => bl.BusinessID)
-                                              .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<InventoryTransfer>().Property(x => x.UnitCount).HasPrecision(8, 2);
-            builder.Entity<InventoryTransfer>().HasOne(it => it.Origin)
-                                               .WithMany(o => o.TransfersOut)
-                                               .HasForeignKey(it => it.OriginID)
-                                               .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<InventoryTransfer>().HasOne(it => it.Destination)
-                                               .WithMany(o => o.TransfersIn)
-                                               .HasForeignKey(it => it.DestinationID)
-                                               .OnDelete(DeleteBehavior.Restrict);
-            #endregion
             #endregion
 
             #region Map
@@ -247,63 +267,141 @@ namespace OptraxDAL
             });
             #endregion
 
-
             #region Grow
-            builder.Entity<Species>().HasIndex(x => x.SpeciesName).IsUnique();
-            builder.Entity<Species>().Property(x => x.WaterNeedsQty).HasPrecision(8, 2);
+            builder.Entity<Plant>(e =>
+            {
+                e.HasOne(p => p.Parent1).WithMany(p => p.ChildrenP1)
+                                        .HasForeignKey(p => p.Parent1Id)
+                                        .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<Crop>().HasIndex(x => x.Name).IsUnique();
-            builder.Entity<Batch>().HasIndex(x => x.Name).IsUnique();
-            builder.Entity<Planting>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
+                e.HasOne(p => p.Parent2).WithMany(p => p.ChildrenP2)
+                                        .HasForeignKey(p => p.Parent2Id)
+                                        .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<Batch>().HasOne(c => c.Crop)
-                                  .WithMany(s => s.Batches)
-                                  .HasForeignKey(c => c.CropID)
-                                  .OnDelete(DeleteBehavior.Restrict);
+                e.HasOne(p => p.Profile).WithMany(p => p.Plants)
+                                        .HasForeignKey(p => p.ProfileId)
+                                        .OnDelete(DeleteBehavior.Restrict);
+            });
 
-            builder.Entity<Strain>().HasIndex(x => x.Name).IsUnique();
+            builder.Entity<PlantTrait>(e =>
+            {
+                e.HasOne(p => p.Definition).WithMany(p => p.Traits)
+                                           .HasForeignKey(p => p.DefinitionId)
+                                           .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<Crop>(e =>
+            {
+                e.HasIndex(x => x.Name).IsUnique();
+
+                e.HasOne(x => x.Plant).WithMany(c => c.Crops)
+                                      .HasForeignKey(x => x.PlantId)
+                                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<CropBatch>(e =>
+            {
+                e.HasIndex(x => x.Name).IsUnique();
+
+                e.HasOne(c => c.Crop).WithMany(s => s.Batches)
+                                     .HasForeignKey(c => c.CropId)
+                                     .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<Planting>(e =>
+            {
+                e.Property(x => x.WasteQuantity).HasPrecision(10, 2);
+
+                e.HasOne(x => x.Crop).WithMany(c => c.Plantings)
+                                     .HasForeignKey(x => x.CropId)
+                                     .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(x => x.Batch).WithMany(b => b.Plantings)
+                                      .HasForeignKey(x => x.BatchId)
+                                      .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(x => x.Location).WithMany(b => b.Plantings)
+                                         .HasForeignKey(x => x.LocationId)
+                                         .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<PlantingPattern>(e =>
+            {
+                e.Property(x => x.Width).HasPrecision(18, 4);
+                e.Property(x => x.Length).HasPrecision(18, 4);
+                e.Property(x => x.Radius).HasPrecision(18, 4);
+                e.Property(x => x.SpaceLeft).HasPrecision(18, 4);
+                e.Property(x => x.SpaceRight).HasPrecision(18, 4);
+                e.Property(x => x.PlantSpacing).HasPrecision(18, 4);
+                e.Property(x => x.Direction).HasMaxLength(10);
+            });
+
+            builder.Entity<PlantingSection>(e =>
+            {
+                e.Property(x => x.SectionType).HasMaxLength(20);
+
+                e.HasOne(x => x.Planting).WithMany(b => b.Sections)
+                                         .HasForeignKey(x => x.PlantingId)
+                                         .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(x => x.Parent).WithMany(b => b.Children)
+                                       .HasForeignKey(x => x.ParentId)
+                                       .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(x => x.Pattern).WithMany(b => b.Sections)
+                                        .HasForeignKey(x => x.PatternId)
+                                        .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(x => x.MapObject).WithOne(b => b.Section)
+                                          .HasForeignKey<PlantingSection>(x => x.MapObjectId)
+                                          .OnDelete(DeleteBehavior.Cascade);
+            });
 
             // Genetics Relationships
-            builder.Entity<StrainRelationship>().HasKey(x => new { x.ParentID, x.ChildID }); // Composite Key
+            //builder.Entity<Strain>().HasIndex(x => x.Name).IsUnique();
 
-            builder.Entity<StrainRelationship>().HasOne(x => x.ParentStrain)
-                                                .WithMany(s => s.Children)
-                                                .HasForeignKey(x => x.ParentID)
-                                                .OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<StrainRelationship>(e =>
+            //{
+            //    e.HasKey(x => new { x.ParentId, x.ChildId }); // Composite Key
 
-            builder.Entity<StrainRelationship>().HasOne(x => x.ChildStrain)
-                                                .WithMany(s => s.Parents)
-                                                .HasForeignKey(x => x.ChildID)
-                                                .OnDelete(DeleteBehavior.Restrict);
+            //    e.HasOne(x => x.ParentStrain).WithMany(s => s.Children)
+            //                                 .HasForeignKey(x => x.ParentId)
+            //                                 .OnDelete(DeleteBehavior.Restrict);
+
+            //    e.HasOne(x => x.ChildStrain).WithMany(s => s.Parents)
+            //                                .HasForeignKey(x => x.ChildId)
+            //                                .OnDelete(DeleteBehavior.Restrict);
+            //});
 
             #region Plant Events 
 
-            builder.Entity<PruneEvent>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
-            builder.Entity<TreatmentEvent>().Property(x => x.QuantityApplied).HasPrecision(8, 2);
+            //builder.Entity<PruneEvent>().Property(x => x.WasteQuantity).HasPrecision(10, 2);
+            //builder.Entity<TreatmentEvent>().Property(x => x.QuantityApplied).HasPrecision(8, 2);
 
-            // TPH
-            builder.Entity<PlantEvent>().HasDiscriminator<string>("EventType")
-                                        .HasValue<PruneEvent>("Prune")
-                                        .HasValue<GrowthEvent>("Growth")
-                                        .HasValue<TransferEvent>("Transfer")
-                                        .HasValue<TreatmentEvent>("Treatment")
-                                        .HasValue<TransplantEvent>("Transplant");
+            //// TPH
+            //builder.Entity<PlantEvent>(e =>
+            //{
+            //    e.HasDiscriminator<string>("EventType").HasValue<PruneEvent>("Prune")
+            //                                           .HasValue<GrowthEvent>("Growth")
+            //                                           .HasValue<TransferEvent>("Transfer")
+            //                                           .HasValue<TreatmentEvent>("Treatment")
+            //                                           .HasValue<TransplantEvent>("Transplant");
 
-            builder.Entity<PlantEvent>().HasOne(pe => pe.Plant)
-                                        .WithMany(p => p.PlantEvents)
-                                        .OnDelete(DeleteBehavior.Restrict);
+            //    e.HasOne(pe => pe.Plant).WithMany(p => p.PlantEvents)
+            //                            .OnDelete(DeleteBehavior.Restrict);
+            //});
 
-            builder.Entity<TransferEvent>().HasOne(ta => ta.Transfer)
-                                           .WithOne(pt => pt.PlantTransfer)
-                                           .HasForeignKey<TransferEvent>(ta => ta.TransferID)
-                                           .OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<TransferEvent>().HasOne(ta => ta.Transfer)
+            //                               .WithOne(pt => pt.PlantTransfer)
+            //                               .HasForeignKey<TransferEvent>(ta => ta.TransferId)
+            //                               .OnDelete(DeleteBehavior.Restrict);
 
 
-            builder.Entity<TreatmentEvent>().HasOne(te => te.Product)
-                                            .WithMany(p => p.PlantTreatments)
-                                            .HasForeignKey(te => te.ProductID)
-                                            .HasPrincipalKey(p => p.ID)
-                                            .OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<TreatmentEvent>().HasOne(te => te.Product)
+            //                                .WithMany(p => p.PlantTreatments)
+            //                                .HasForeignKey(te => te.ProductId)
+            //                                .HasPrincipalKey(p => p.Id)
+            //                                .OnDelete(DeleteBehavior.Restrict);
             #endregion
             #endregion
 
@@ -330,13 +428,13 @@ namespace OptraxDAL
 
         private void SetTracking()
         {
-            var userID = _userService?.UserID;
+            var userId = _userService?.UserId;
 
             foreach (var entry in ChangeTracker.Entries<TrackingBase>())
             {
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.UserID = userID;
+                    entry.Entity.UserId = userId;
                     entry.Entity.DateCreated = DateTime.Now;
                 }
                 else if (entry.State == EntityState.Modified)

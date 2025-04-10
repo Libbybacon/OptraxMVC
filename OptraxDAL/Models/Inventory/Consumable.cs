@@ -1,5 +1,4 @@
 ﻿using OptraxDAL.Models.Admin;
-using OptraxDAL.Models.Grow;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -22,6 +21,5 @@ namespace OptraxDAL.Models.Inventory
         public string UoMName { get; set; } = string.Empty;
         public virtual UoM? UnitUoM { get; set; }
 
-        public virtual ICollection<TreatmentEvent> PlantTreatments { get; set; } = [];
     }
 }

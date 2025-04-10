@@ -8,8 +8,8 @@ namespace OptraxDAL.Models.Admin
     {
         public Company() { }
 
-        public int AdminID { get; set; }
-        public int PrimaryAddressID { get; set; }
+        public int AdminId { get; set; }
+        public int PrimaryAddressId { get; set; }
         public virtual AppUser CompanyAdmin { get; set; } = new();
 
         public virtual ICollection<AppUser> Users { get; set; } = [];

@@ -9,7 +9,7 @@ module.exports = {
     entry: {
         main: './wwwroot/js/site.js',
         location: ['./wwwroot/js/location/location.js', './wwwroot/js/map/map.js'],
-        //map: './wwwroot/js/map/map.js',
+        plant: './wwwroot/js/plants/plants.js',
         tabs: './wwwroot/js/tabs.js',
         site: './wwwroot/scss/site.scss'
     },

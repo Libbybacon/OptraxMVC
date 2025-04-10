@@ -1,0 +1,35 @@
+﻿@model AreaLocation
+
+@{
+    bool showEdit = ViewBag.ShowEdit as bool? ?? false;
+}
+
+<partial name="_Details" model="Model" />
+<partial name="_Edit" model="Model" />
+
+<div class="m-toggle row col-12 w-100 m-0 p-0 @(showEdit ? "" : "d-none")">
+    <div class="col-12 area-explain"></div>
+    <div class="col-6 pe-2">
+        @* <div class="col-12 mb-3"><label>Parent Length:</label> <span class="area-span">@Math.Round(Model.ParentLength ?? 0, 2) m</span></div> *@
+        <label asp-for="Length"></label>
+        <div class="input-group">
+            <input asp-for="Length" type="number" step="0.01" class="form-control attr" value="@Math.Round(Model.Length ?? 0, 2)" />
+            <div class="input-group-append">
+                <span class="input-group-text">m</span>
+            </div>
+        </div>
+        <span asp-validation-for="Length" class="val-msg"></span>
+    </div>
+    <div class="col-6 ps-2">
+        @* <div class="col-12 mb-3"><label>Parent Width:</label> <span class="area-span">@Math.Round(Model.ParentWidth ?? 0, 2) m</span></div> *@
+        <label asp-for="Width"></label>
+        <div class="input-group">
+            <input asp-for="Width" type="number" step="0.01" class="form-control attr" value="@Math.Round(Model.Width ?? 0, 2)" />
+            <div class="input-group-append">
+                <span class="input-group-text">m</span>
+            </div>
+        </div>
+        <span asp-validation-for="Width" class="val-msg"></span>
+    </div>
+
+</div>

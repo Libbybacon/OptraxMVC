@@ -7,9 +7,7 @@ namespace OptraxDAL.Models.Admin
     {
         public OffsiteLocation()
         {
-            Level = 0;
             LocationType = "OFfsite";
         }
     }
-
 }

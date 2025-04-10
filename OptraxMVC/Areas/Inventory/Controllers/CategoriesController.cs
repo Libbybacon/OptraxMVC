@@ -61,11 +61,11 @@ namespace OptraxMVC.Areas.Inventory.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Details(int catID)
+        public async Task<IActionResult> Details(int catId)
         {
             try
             {
-                Category? category = await _ICategory.GetCategoryByIdAsync(catID);
+                Category? category = await _ICategory.GetCategoryByIdAsync(catId);
 
                 if (category == null)
                 {

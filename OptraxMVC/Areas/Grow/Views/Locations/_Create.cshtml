@@ -13,7 +13,7 @@
     <form asp-action="@formVM.Action" asp-controller="Locations" method="post" id="modelForm" data-obj="Location">
         @Html.AntiForgeryToken()
 
-        <input type="hidden" asp-for="ID" />
+        <input type="hidden" asp-for="Id" />
         <input type="hidden" asp-for="Level" />
         <input type="hidden" asp-for="LocationType" />
         <input type="hidden" asp-for="Address.Name" />

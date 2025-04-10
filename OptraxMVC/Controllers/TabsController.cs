@@ -48,7 +48,6 @@ namespace OptraxMVC.Controllers
             {
                 "Grow" => tab.Name switch
                 {
-                    "Rooms" => await db.RoomLocations.ToListAsync(),
                     "Crops" => await db.Crops.ToListAsync(),
                     "Genetics" => await db.Strains.OrderBy(s => s.Name).ToListAsync(),
                     _ => null

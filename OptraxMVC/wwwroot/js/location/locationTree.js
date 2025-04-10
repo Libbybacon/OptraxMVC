@@ -80,7 +80,24 @@ export function nodeMenu(node) {
     return items
 }
 
+function deleteNode(id, type) {
+    const tree = $('#locationTree').jstree(true);
+    const node = tree.get_node(id);
+    const parentId = tree.get_parent(node)
 
+    tree.delete_node(node);
+
+    if (parentId != '#') {
+        tree.select_node(parentId);
+    }
+    else {
+        var firstSite = allNodes.find(node => node.type === 'site');
+        if (firstSite) {
+            tree.deselect_all();
+            tree.select_node(firstSite.id);
+        }
+    }
+}
 
 function addNode(data) {
     console.log('addSiteNode');

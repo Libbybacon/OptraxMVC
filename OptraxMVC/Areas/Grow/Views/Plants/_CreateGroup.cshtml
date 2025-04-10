@@ -1,0 +1,26 @@
+﻿@model PlantTypeGroup
+
+@{
+    bool showEdit = true;
+}
+<div id="plant-details" class="inner-layout view-tabs p-3">
+    <div class="tab-content h-100 p-0">
+        <form asp-action="CreateGroup" asp-controller="Plants" method="post" class="px-1" id="plantForm">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" asp-for="Id"/>
+            <input type="hidden" asp-for="PlantType"/>
+
+            <div class="row col-12 w-100 px-0 m-0 pe-0">
+                <div class="title">New Plant Type Group</div>
+                <div class="col-12 ps-md-2 ps-0">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+
+            <partial name="_FormButtons" model="showEdit" />
+        </form>
+    </div>
+</div>

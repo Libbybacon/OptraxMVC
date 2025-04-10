@@ -1,7 +1,7 @@
 ﻿@import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'leaflet/dist/leaflet.css';
 @import 'leaflet-draw/dist/leaflet.draw.css';
-@import 'choices.js/public/assets/styles/choices.min.css';
+@import "choices.js/src/styles/choices";
 //
 @import 'utilities.scss';
 @import 'buttons.scss';
@@ -118,6 +118,7 @@ main {
 	align-items: center;
 	justify-content: center;
 }
+
 .success {
 	color: $grn-xdk;
 	background-color: $grn-lt;
@@ -177,8 +178,18 @@ label {
 }
 
 .form-control,
-.form-select {
+.form-select,
+.choices__inner {
+	color: $gray-dk;
+	font-size: 1rem;
+	line-height: 1.2rem;
+	border-radius: $br;
 	border: $in-border
+}
+
+.input-group-text {
+	line-height: 1.2rem;
+	font-size: $f-xs;
 }
 
 .btn:focus,
@@ -196,13 +207,216 @@ label {
 	border: $in-border !important;
 }
 
-.input-group-append{
-	.input-group-text{
-		 border-top-left-radius: 0;
-		 border-bottom-left-radius: 0;
+.input-group-append {
+	.input-group-text {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
 	}
 }
+
 input[type=checkbox]:hover,
 input[type=radio]:hover {
 	cursor: pointer;
+}
+
+.title {
+	font-size: $f-lg;
+	font-weight: 525;
+	text-align: center;
+}
+
+// Input wrapper
+.choices {
+	font-size: $f-xs;
+	margin-bottom: 0;
+	background-clip: padding-box;
+}
+
+// Multi select input
+.choices[data-type*=select-multiple] .choices__inner {
+	cursor: pointer;
+}
+
+// Select input
+.choices__inner {
+	margin: 0;
+	width: 100%;
+	font-size: $f-sm;
+	min-height: 10px;
+	border-radius: $br;
+	border: $in-border;
+	padding: .375rem .75rem;
+	background-color: white;
+	background-clip: padding-box;
+}
+
+// Original html element
+.choices__input {
+	margin: 0;
+	padding: 0;
+	font-size: $f-xs;
+	background-color: white;
+}
+
+// Selected item buttons/tag things
+.choices__list--multiple .choices__item {
+	margin: 0;
+	margin-top: 0;
+	margin-bottom: .375rem;
+	margin-left: 5px;
+	padding: 0 8px;
+	font-weight: 400;
+	letter-spacing: .8px;
+	color: $grn-xdk;
+	border-radius: $br;
+	background-color: $gray-xlt;
+	border: border($grn-dk, 1px, solid);
+}
+
+// Little 'x' button to remove selected items
+.choices__button {
+	border: none;
+	text-indent: 0;
+	color: $grn-xdk !important;
+	font-size: $f-xs;
+	background-image: none !important;
+	padding-left: .2rem !important;
+	padding-right: .8rem !important;
+	display: flex;
+	align-content: center;
+}
+
+// Dropdown list
+.choices__list.choices__list--dropdown {
+	border-bottom-left-radius: $br;
+	border-bottom-right-radius: $br;
+	scrollbar-width: thin;
+}
+
+// Open dropdown list
+.is-open .choices__list--dropdown,
+.is-open .choices__list[aria-expanded] {
+	box-shadow: shdw(sm);
+
+	.choices__list {
+		scrollbar-width: thin;
+	}
+}
+
+// Items in dropdown list
+.choices__list--dropdown .choices__item,
+.choices__list[aria-expanded] .choices__item {
+	font-size: $f-xs;
+	padding: .25rem;
+}
+
+.choices__item.is-highlighted {
+	color: $grn-xlt !important;
+	background-color: $grn-lt !important;
+}
+
+// Single select input - make flex so flex-fill on dropdowns works (added in dropdown.js)
+.input-group .choices {
+	display: flex;
+}
+
+.choices__list--single {
+	padding: 0;
+	display: flex;
+}
+
+.choices[data-type*=select-one] .choices__input {
+	padding: .3rem;
+}
+
+// Match BS padding
+.choices[data-type*=select-one] .choices__inner {
+	padding-bottom: .375rem;
+}
+
+// Hide Choices toggle
+.choices[data-type*=select-one]::after {
+	display: none;
+}
+
+
+// Tree Context Menu
+.vakata-context {
+	padding: 0;
+	border-radius: $br;
+
+	li > a {
+		font-size: $f-xs;
+		line-height: 1rem;
+		padding: .5rem .5rem;
+		border-bottom: border($gray-lt, 1px, solid);
+
+		> i {
+			display: none;
+		}
+
+		.vakata-contextmenu-sep {
+			border-left: none;
+			height: 1rem;
+			width: 0;
+			background: none;
+		}
+	}
+}
+
+.ot-i {
+	background-size: cover;
+	width: 18px;
+	height: 18px;
+	margin: 3px !important;
+}
+
+.ot-i-sm {
+	background-size: cover;
+	width: 16px !important;
+	height: 16px !important;
+	/*margin-right: 2px !important;*/
+}
+
+.jstree-node a:hover {
+	.ot-flower {
+		background-image: url('https://img.icons8.com/?size=100&id=4NQ6isrw7YCc&format=png&color=FBFDFD') !important;
+	}
+
+	.ot-herb {
+		background-image: url('https://img.icons8.com/?size=100&id=15803&format=png&color=FBFDFD') !important;
+	}
+
+	.ot-tree {
+		background-image: url('https://img.icons8.com/?size=100&id=qheX9nYu0bte&format=png&color=FBFDFD') !important;
+	}
+
+	.ot-vegetable {
+		background-image: url('https://img.icons8.com/?size=100&id=279&format=png&color=FBFDFD') !important;
+	}
+
+	.ot-fruit {
+		background-image: url('https://img.icons8.com/?size=100&id=2875&format=png&color=FBFDFD') !important;
+	}
+}
+
+.ot-flower {
+	background-image: url('https://img.icons8.com/?size=100&id=4NQ6isrw7YCc&format=png&color=124034') !important;
+}
+
+.ot-herb {
+	background-image: url('https://img.icons8.com/?size=100&id=15803&format=png&color=124034') !important;
+}
+
+.ot-tree {
+	background-image: url('https://img.icons8.com/?size=100&id=qheX9nYu0bte&format=png&color=124034') !important;
+	margin-top: 3px !important;
+}
+
+.ot-vegetable {
+	background-image: url('https://img.icons8.com/?size=100&id=279&format=png&color=124034') !important;
+}
+
+.ot-fruit {
+	background-image: url('https://img.icons8.com/?size=100&id=2875&format=png&color=124034') !important;
 }

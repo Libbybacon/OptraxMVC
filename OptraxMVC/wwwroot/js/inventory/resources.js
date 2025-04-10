@@ -29,7 +29,7 @@ function makeDatatable() {
                 let props = {
                     Level: level,
                     IsTop: level == 0,
-                    ID: arr[1],
+                    Id: arr[1],
                     Name: arr[0],
                     NameNoSpace: arr[0].replace(/\s+/g, ""),
                     Color: arr[2],
@@ -82,7 +82,7 @@ function makeDatatable() {
             let arr0 = data.cat0.split('-');
             let arr1 = data.cat1.split('-');
 
-            $(row).attr('id', 'item-' + data.resourceID);
+            $(row).attr('id', 'item-' + data.resourceId);
             $(row).addClass(`item-row d-none f-xs ${arr0[0].replace(/\s+/g, "")} ${arr1[0].replace(/\s+/g, "")}`);
 
             $(row).hover(
@@ -118,7 +118,7 @@ function makeHeaderToggle(props) {
     props.IsTop ? $div.append($txtSpan) : $div.append($colorIcon).append($txtSpan);
 
     let $th = $('<th/>').attr('colspan', 7).append($div);
-    let $tr = $('<tr/>').attr('data-id', props.ID).addClass(`grp-row cat${props.Level}-head`)
+    let $tr = $('<tr/>').attr('data-id', props.Id).addClass(`grp-row cat${props.Level}-head`)
 
     return props.IsTop ? $tr.append($th.css(bg, props.Color)) : $tr.append($th);
 }
@@ -127,15 +127,15 @@ function setCategoryListeners() {
 
     $(document).on('change', '#top-cat-check', function () {
         if ($('#top-cat-check').prop('checked') == true) {
-            $('#ParentID').attr('disabled', 'disabled');
+            $('#ParentId').attr('disabled', 'disabled');
         }
         else {
-            $('#ParentID').removeAttr('disabled')
+            $('#ParentId').removeAttr('disabled')
         }
     })
 
     if ($('#top-cat-check').prop('checked') == true) {
-        $('#ParentID').attr('disabled', 'disabled');
+        $('#ParentId').attr('disabled', 'disabled');
     }
 
     let colorSwatches = [
@@ -188,7 +188,7 @@ function getCategoryDetails($grp) {
     let props = {
         type: 'POST',
         url: '/Inventory/Categories/Details/',
-        data: { catID: $grp.parents('tr').data('id') },
+        data: { catId: $grp.parents('tr').data('id') },
         title: `Edit Category: ${$grp.text()}`
     }
     loadPopup(props);
@@ -244,7 +244,7 @@ function getResourceDetails(rowData) {
     let props = {
         type: 'POST',
         url: `/Inventory/Resources/Details/`,
-        data: { rsrcID: rowData.resourceID },
+        data: { rsrcId: rowData.resourceId },
         title: rowData.resourceName,
     }
     loadPopup(props);
@@ -254,7 +254,7 @@ function editResourceSuccess(response) {
 
     let resourceData = response.data;
     var row = $itemsTable.row(function (idx, data, node) {
-        return data.resourceID === resourceData.resourceID
+        return data.resourceId === resourceData.resourceId
     });
 
     if (row.any()) {

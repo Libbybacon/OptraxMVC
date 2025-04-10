@@ -2,10 +2,10 @@
 {
     public class PlantVM
     {
-        public int PlantID { get; set; }
-        public string? CropID { get; set; }
-        public int StrainID { get; set; }
-        public string TrackingID { get; set; } = string.Empty;
+        public int PlantId { get; set; }
+        public string? CropId { get; set; }
+        public int StrainId { get; set; }
+        public string TrackingId { get; set; } = string.Empty;
         public string? Strain { get; set; } = string.Empty;
         public bool IsMother { get; set; } = false;
         public string? MotherName { get; set; }

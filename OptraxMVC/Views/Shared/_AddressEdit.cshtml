@@ -1,0 +1,53 @@
+﻿@model Address
+
+
+@{
+    var states = (IEnumerable<SelectListItem>)(ViewData["States"] ?? new());
+    IPhoneFormatter formatter = (IPhoneFormatter)ViewData["Formatter"]!;
+    string phoneNum = !string.IsNullOrEmpty(Model.ContactPhone) ? formatter.Format(Model.ContactPhone!) : "";
+}
+
+<input type="hidden" asp-for="Id" />
+<input type="hidden" asp-for="Name" />
+<input type="hidden" asp-for="UserId" />
+
+<div class="col-6 pe-2">
+    <label asp-for="Address1"></label>
+    <input asp-for="Address1" class="form-control attr" required />
+    <span asp-validation-for="Address1" class="val-msg"></span>
+</div>
+<div class="col-6 ps-2">
+    <label asp-for="Address2"></label>
+    <input asp-for="Address2" class="form-control attr" />
+    <span asp-validation-for="Address2" class="val-msg"></span>
+</div>
+<div class="col-6 pe-2">
+    <label asp-for="City"></label>
+    <input asp-for="City" class="form-control attr" required />
+    <span asp-validation-for="City" class="val-msg"></span>
+</div>
+<div class="col-6 ps-2">
+    <label asp-for="State"></label>
+    <select asp-for="State" asp-items="@states" class="form-select attr" required></select>
+    <span asp-validation-for="State" class="val-msg"></span>
+</div>
+<div class="col-6 pe-2">
+    <label asp-for="ZipCode"></label>
+    <input asp-for="ZipCode" class="form-control attr" pattern="\d{5}" maxlength="5" required />
+    <span asp-validation-for="ZipCode" class="val-msg"></span>
+</div>
+<div class="col-6 ps-2">
+    <label asp-for="ContactName"></label>
+    <input asp-for="ContactName" class="form-control attr" />
+    <span asp-validation-for="ContactName" class="val-msg"></span>
+</div>
+<div class="col-6 pe-2">
+    <label asp-for="ContactPhone"></label>
+    <input asp-for="ContactPhone" class="phone form-control attr" />
+    <span asp-validation-for="ContactPhone" class="val-msg" value="@phoneNum"></span>
+</div>
+<div class="col-6 ps-2">
+    <label asp-for="ContactEmail"></label>
+    <input asp-for="ContactEmail" type="email" class="form-control attr" />
+    <span asp-validation-for="ContactEmail" class="val-msg"></span>
+</div>

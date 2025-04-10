@@ -2,7 +2,7 @@
 {
     public class TabsVM
     {
-        public required string Area { get; set; }
+        public string Area { get; set; } = "";
 
         public List<Tab> Tabs { get; set; } = [];
 
@@ -14,21 +14,32 @@
 
     public class Tab
     {
+        public Tab(string name, int id)
+        {
+            Id = id;
+            Name = name;
+            TabKey = SetViewTabKey(name);
+        }
+
         public Tab(string name, string? path = null, bool isViewTab = false)
         {
             Name = name;
-            TabKey = isViewTab ? SetViewTabKey(name) : SetTabKey(name);
-            ViewPath = !string.IsNullOrEmpty(path) ? path : SetViewPath(name);
+            TabKey = isViewTab ? SetViewTabKey(name) : SetTopTabKey(name);
+            ViewPath = path ?? SetTopTabPath(name);
         }
 
-        public int? ID { get; set; }
+        public int? Id { get; set; }
         public string Name { get; set; }
         public string TabKey { get; set; }
         public string? ViewPath { get; set; }
 
-        public string SetTabKey(string name)
+        public string SetTopTabKey(string name)
         {
             return name[..3].ToLower() + "-" + name.Replace(" ", "").ToLower();
+        }
+        public string SetTopTabPath(string name)
+        {
+            return $"/{name}/Get{name}View/";
         }
 
         public string SetViewTabKey(string name)
@@ -36,9 +47,9 @@
             return $"view-${name.Replace(" ", "").ToLower()}";
         }
 
-        public string SetViewPath(string name)
+        public string SetViewTabPath(string controller, string action)
         {
-            return $"/{name}/Get{name}View/";
+            return $"./{controller}/{action}/";
         }
     }
 }

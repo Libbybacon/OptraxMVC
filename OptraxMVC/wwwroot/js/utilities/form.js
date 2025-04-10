@@ -8,8 +8,8 @@ var $form;
 
 export const formUtil = {
 
-    setListeners: function (formID) {
-        $form = $(document).find($(formID));
+    setListeners: function (formId) {
+        $form = $(document).find($(formId));
         
         if ($.validator && $.validator.unobtrusive) {
             $.validator.unobtrusive.parse($form);
@@ -19,6 +19,11 @@ export const formUtil = {
         if ($form.attr('action').includes('Edit')) {
             formUtil.setModelChanges();
         }
+
+        $(formId + ' .toggle-edit').on('click', function () {
+            const model = $(this).parent('.model');
+            model.find('.m-toggle').toggleClass('d-none');
+        });
     },
     setModelChanges: function () {
         Changes = [];
@@ -41,17 +46,13 @@ export const formUtil = {
             $('#changes').val(changed > 0 ? Changes.toString() : null);
         });
     },
-    submitForm: async function (formID) {
-        $form = $(formID);
+    submitForm: async function (formId) {
+        $form = $(formId);
         console.log('formUtil submitForm $form', $form);
         const action = $form.attr('action')
         console.log('formUtil submitForm changes', Changes, 'action', action);
 
-        /*        let proceed = action.includes('Create') || Changes.length > 0;*/
-        let proceed = true;
-        console.log('formUtil submitForm', proceed);
-
-        if ($form.valid() && proceed) {
+        if ($form.valid()) {
 
             return await apiService.postForm(action, $form.serialize())
         }
@@ -65,12 +66,12 @@ export const formUtil = {
             
         }
     },
-    showHideBtns: function (formID) {
-        $form = $(formID);
+    showHideBtns: function (formId) {
+        $form = $(formId);
 
-        $(formID + ' button.toggle-edit').on('click', function () {
+        $(formId + ' button.toggle-edit').on('click', function () {
             console.log('formjs showHideBtns click')
-            $(formID + ' button.form-btn').toggleClass('d-none');
+            $(formId + ' button.form-btn').toggleClass('d-none');
             $('.m-toggle').toggleClass('d-none');
         });
     },

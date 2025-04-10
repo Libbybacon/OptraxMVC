@@ -20,7 +20,7 @@
 }
 
 .inner-layout {
-	// background: color(tan);
+	overflow-y: auto;
 }
 
 .view-tabs {
@@ -79,7 +79,7 @@
 	}
 }
 
-.loc-tree {
+.tree {
 	width: auto;
 	z-index: 103;
 	padding: 1rem;
@@ -97,10 +97,59 @@
 		position: relative;
 	}
 
-	.loc-title {
+	.tree-title {
 		font-weight: 500;
 		font-size: $f-lg;
 		color: $grn-xdk;
+	}
+}
+
+#plants {
+	.tree {
+		min-width: fit-content;
+		width: fit-content !important;
+		/*position: fixed;*/
+		overflow-x: hidden;
+	}
+
+	#tree-details {
+		position: relative;
+		width: fit-content;
+	}
+
+	.view-tabs {
+		overflow-y: auto;
+		scrollbar-width: thin;
+	}
+
+	.jstree-default .jstree-themeicon-custom{
+		width: 18px;
+		height: 18px;
+		font-weight: 375;
+		margin-right: 0;
+		line-height: 18px;
+	}
+	.bi::before, [class*=" bi-"]::before{
+		font-size: $f-xxs;
+	}
+}
+
+#plantForm {
+	label {
+		font-size: $f-xs;
+		padding-top: .75rem;
+		font-weight: 410;
+	}
+
+	.form-control,
+	.form-select,
+	.choices__inner {
+		font-size: $f-xs;
+	}
+	.choices__inner{
+		height: fit-content;
+		white-space: normal;
+		
 	}
 }
 
@@ -111,7 +160,8 @@
 }
 
 .tab-content {
-	overflow-y: auto;
+	/*overflow-y: auto;*/
+	scrollbar-width: thin;
 }
 
 .loc-map {
@@ -148,7 +198,6 @@
 	text-align: center;
 	font-size: $f-sm;
 	white-space: normal;
-	max-width: 400px;
 	margin-bottom: 0.3rem;
 }
 
@@ -221,6 +270,6 @@
 	text-shadow: shdw(text);
 }
 
-.jstree-contextmenu{
+.jstree-contextmenu {
 	z-index: 100000;
 }

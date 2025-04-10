@@ -4,8 +4,8 @@ using OptraxDAL;
 using OptraxDAL.Models.Admin;
 using OptraxMVC.Models;
 using OptraxMVC.Models.Formatters;
-using OptraxMVC.Models.ModelBinders;
 using OptraxMVC.Services;
+using OptraxMVC.Services.Grow;
 using OptraxMVC.Services.Inventory;
 
 
@@ -33,7 +33,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddControllersWithViews(options =>
 {
-    options.ModelBinderProviders.Insert(0, new PlantEventModelBinderProvider());
+    //options.ModelBinderProviders.Insert(0, new PlantEventModelBinderProvider());
 })
 .AddRazorRuntimeCompilation();
 
