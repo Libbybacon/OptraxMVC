@@ -1,27 +1,35 @@
-![logo-lt](https://github.com/user-attachments/assets/04da5b57-4199-4a50-ba70-7b44f896b77e)   
-<sup>***Seed to Sale Operations Tracking for Cut Flower Growers***</sup>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/399ba782-04d5-4fb2-b9cb-07d454f93a12" alt="Optrax Logo"/>
 
-www.Optrax.dev
+<p align="center">www.Optrax.dev</p>
 
 # About
 
-Optrax is an ASP.NET Core 8.0 MVC web application deployed on Microsoft Azure App Service, with an Azure SQL Database.
+Optrax is a personal project I’ve been developing to sharpen my skills with .NET 8 and Azure. It’s a full-featured platform designed for growers to manage and monitor their operations from seed to sale.
 
-This platform is designed to help growers track individual plants from seed to sale, manage grow operations and inventory, and gain insight through in-depth reporting.
+Users can create and organize farms or growing sites, add crops, and track plantings through every stage.
 
-**_Please Note: Optrax is very much a work in progress, with new features being actively developed and refined. Expect ongoing improvements as the platform evolves_**
+The app includes inventory and resource tracking, plant genetics management, detailed reporting, and a real-time analytics dashboard. It has a fully responsive UI and uses Leaflet for interactive site mapping.
 
-# Getting Started  
-  
-**Required Packages**     
-Microsoft.AspNetCore.Identity.EntityFrameworkCore(8.0.13)  
-Microsoft.EntityFrameworkCore(8.0.13)  
-Microsoft.EntityFrameworkCore.SqlServer(8.0.13)  
-Microsoft.EntityFrameworkCore.Tools(8.0.13)  
+<sup>**_Please Note: This project is very much a work in progress, with new features being actively developed and refined. Expect ongoing improvements as the platform evolves_**</sup>
 
-**_**Add your connection string in appsettings.json_**  
+## Tech Stack
 
-## Code First Migration  
-dotnet ef migrations add InitialCommit --project OptraxDAL --startup-project OptraxMVC   
-dotnet ef database update --project OptraxDAL --startup-project OptraxMVC  
+**Backend:**
+- ASP.NET Core 8
+- Entity Framework Core 8
+- SQL Server (with spatial support)
+- NetTopologySuite
+
+**Frontend:**
+- Webpack 5 + Babel + Sass
+- jQuery 3.7
+- Bootstrap 5
+- Leaflet
+
+**Hosting:**
+- Azure App Service
+- Azure SQL Database
+
+
 
