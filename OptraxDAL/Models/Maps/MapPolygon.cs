@@ -13,10 +13,7 @@ namespace OptraxDAL.Models.Maps
             Name = "New Polygon";
         }
 
-        public int? LocationId { get; set; }
-
         public Polygon? PolyGeometry { get; set; }
-
 
         public override object ToGeoJSON()
         {

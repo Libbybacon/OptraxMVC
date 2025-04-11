@@ -49,11 +49,13 @@ namespace OptraxDAL.Models.Admin
 
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
-        public int? MapObjectId { get; set; }
+        public int? MapPointId { get; set; }
+        public int? SiteId { get; set; }
 
         public virtual Business? Business { get; set; }
         public virtual Building? Building { get; set; }
-        public virtual MapObject? MapObject { get; set; }
+        public virtual MapPoint? MapPoint { get; set; }
+        public virtual Site? Site { get; set; }
 
         [NotMapped]
         public string AddressString

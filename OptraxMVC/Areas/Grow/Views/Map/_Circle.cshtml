@@ -1,14 +1,6 @@
 ﻿@model MapCircle
 
-@{
-    FormVM formVM = ViewBag.FormVM;
-}
-
-<form asp-action="@formVM.Action" asp-controller="Map" method="post" id="mapObjForm" data-id="@Model.Id" data-obj="Circle">
-    @Html.AntiForgeryToken()
-
-    <input type="hidden" asp-for="Radius" />
-    <input type="hidden" asp-for="Latitude" />
-    <input type="hidden" asp-for="Longitude" />
-    @await Html.PartialAsync("_MapObject", Model, ViewData)
-</form>
+<input type="hidden" asp-for="Radius" class="obj-radius" />
+<input type="hidden" asp-for="Latitude" class="obj-lat"/>
+<input type="hidden" asp-for="Longitude" class="obj-lng" />
+<partial name="_MapShape.cshtml" model="Model" />

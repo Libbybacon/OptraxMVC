@@ -7,9 +7,13 @@
     string col = Model is MapLine ? "col-6" : "col-4";
 }
 
+<input type="hidden" asp-for="GeometryWKT" class="obj-geomWKT" />
+
+<partial name="_Edit.cshtml" model="Model" />
+
 <div class="col-6 pe-1">
     <label asp-for="Color"></label>
-    <input asp-for="Color" class="form-control attr color-picker" />
+    <input asp-for="Color" class="form-control attr obj-color color-picker" />
     <span asp-validation-for="Color" class="val-msg"></span>
 </div>
 
@@ -17,19 +21,19 @@
 {
     <div class="col-6 ps-1">
         <label asp-for="FillColor"></label>
-        <input asp-for="FillColor" class="form-control attr color-picker" />
+        <input asp-for="FillColor" class="form-control attr obj-fill color-picker" />
         <span asp-validation-for="FillColor" class="val-msg"></span>
     </div>
 }
 
 <div class="@col pe-1">
     <label asp-for="Weight"></label>
-    <input asp-for="Weight" class="form-control attr" step="1" />
+    <input asp-for="Weight" class="form-control attr obj-weight" step="1" />
     <span asp-validation-for="Weight" class="val-msg"></span>
 </div>
 <div class="@col px-1">
     <label asp-for="Pattern"></label>
-    <select asp-for="Pattern" class="form-select attr">
+    <select asp-for="Pattern" class="form-select attr obj-pattern">
         <option value="dash">Dash</option>
         <option value="solid">Solid</option>
     </select>
@@ -37,6 +41,6 @@
 </div>
 <div class="@col ps-1">
     <label asp-for="DashArray"></label>
-    <input asp-for="DashArray" class="form-control attr" />
+    <input asp-for="DashArray" class="form-control attr obj-dash" />
     <span asp-validation-for="DashArray" class="val-msg"></span>
 </div>

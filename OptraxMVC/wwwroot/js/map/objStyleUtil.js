@@ -23,12 +23,12 @@ export function updateIcon(props) {
 
 export function selectIcon($icon) {
     $('.icon-div').removeClass('selected');
-    $('#IconId').val($icon.data('iconid')).trigger('change');
+    $('.obj-iconId').val($icon.data('iconid')).trigger('change');
 
     $icon.addClass('selected');
 
     let imgURL = $icon.find('img').attr('src');
-    let props = { iconURL: imgURL, marker: getActive(), title: $(formId + ' #Name').val(), desc: $(formId + ' #Notes').val() }
+    let props = { iconURL: imgURL, marker: getActive(), title: $('.obj-name').val(), desc: $('.obj-details').val() }
 
     updateIcon(props);
 }
@@ -60,7 +60,7 @@ export function setColorPicker(attr) {
 
 export function updateStyle(input, val) {
     let layer = getActive();
-    //console.log('updateStyle layer', layer, 'input', input, 'val', val);
+    console.log('updateStyle layer', layer, 'input', input, 'val', val);
     switch (input) {
         case 'name':
             layer._tooltip.setContent(val);
@@ -85,7 +85,7 @@ export function updateStyle(input, val) {
 export function saveStyle () {
     let layer = getActive();
     let tooltip = layer.getTooltip();
-
+    console.log('saveStyle');
     layer._origStyle = {
         icon: layer instanceof L.Marker ? layer.getIcon() : null,
         style: layer.setStyle ? { ...layer.options } : null,
@@ -112,6 +112,7 @@ export function restoreStyle(input, val) {
 }
 
 export function setStyleListeners(formId) {
+    console.log('setStyleListeners');
     // Points
     $('.icon-coll-name').on('click', function () {
         selectIconColl($(this)); // change icon collection display
@@ -125,27 +126,30 @@ export function setStyleListeners(formId) {
     });
 
     // Not Points
-    $(formId + ' #Pattern').on('change', function () {
+    $('.obj-pattern').on('change', function () {
         var pattern = $(this).val();
+        var $dash = $('.obj-dash');
+
         if (pattern == 'solid') {
-            $(formId + ' #DashArray').val(0).trigger('change');
-            $(formId + ' #DashArray').attr('readonly', 'readonly');
+            $dash.val(0).trigger('change');
+            $dash.attr('readonly', 'readonly');
         }
         else {
-            $(formId + ' #DashArray').val('5 5').trigger('change');
-            $(formId + ' #DashArray').removeAttr('readonly');
+            $dash.val('5 5').trigger('change');
+            $dash.removeAttr('readonly');
         }
         setTimeout(() => {
-            updateStyle('dashArray', $(formId + ' #DashArray').val());
+            updateStyle('dashArray', $dash.val());
         }, 50);
     })
-    $(formId + ' #Name').on('input', function () {
+
+    $('.obj-name').on('input', function () {
         updateStyle('name', $(this).val());
     });
-    $(formId + ' #DashArray').on('input', function () {
+    $('.obj-dash').on('input', function () {
         updateStyle('dashArray', $(this).val())
     });
-    $(formId + ' #Weight').on('change', function () {
+    $('.obj-weight').on('change', function () {
         updateStyle('weight', $(this).val())
     });
 }

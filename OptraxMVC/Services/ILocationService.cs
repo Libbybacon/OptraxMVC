@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
 using OptraxDAL.Models.Admin;
-using OptraxMVC.Areas.Grow.Models;
 using OptraxMVC.Models;
 
 namespace OptraxMVC.Services
@@ -11,10 +10,10 @@ namespace OptraxMVC.Services
     {
         Task<List<object>> GetTreeNodesAsync();
         Task<Site?> GetSiteLocationAsync();
-        Task<LocationVM?> GetLocationAsync(int id, string type);
-        Task<ResponseVM> CreateAsync(Location loc);
-        Task<ResponseVM> EditAsync(Location loc);
-        Task<ResponseVM> DeleteAsync(int id);
+        Task<Location?> GetLocationAsync(int id, string type);
+        Task<Location?> CreateAsync(Location loc);
+        Task<JsonVM> EditAsync(Location loc);
+        Task<JsonVM> DeleteAsync(int id);
     }
 
     public class LocationService(OptraxContext context, ICurrentUserService user, IMapper mapper) : ILocationService
@@ -33,7 +32,7 @@ namespace OptraxMVC.Services
             return [.. (await db.Locations.Where(l => l.Active && l.UserId == UserId).ToListAsync()).Select(l => l.ToTreeNode())];
         }
 
-        public async Task<LocationVM?> GetLocationAsync(int id, string type)
+        public async Task<Location?> GetLocationAsync(int id, string type)
         {
             Location? dbLoc = null;
 
@@ -46,41 +45,42 @@ namespace OptraxMVC.Services
                 dbLoc = await db.Locations.Where(l => l.Id == id && l.UserId == UserId).FirstOrDefaultAsync() ?? null;
             }
 
-            return dbLoc == null ? null : new(dbLoc);
+            return dbLoc;
         }
 
-        public async Task<ResponseVM> CreateAsync(Location newLoc)
+        public async Task<Location?> CreateAsync(Location newLoc)
         {
             try
             {
                 await db.Locations.AddAsync(newLoc);
                 await db.SaveChangesAsync();
 
-                return new ResponseVM() { Success = true, Data = newLoc.ToTreeNode() };
+                return newLoc;
             }
             catch (Exception ex)
             {
-                return new ResponseVM { Msg = "Error saving new location..." + ex.Message };
+                //return new JsonVM { Msg = "Error saving new location..." + ex.Message };
+                return null;
             }
         }
 
-        public async Task<ResponseVM> EditAsync(Location viewLoc)
+        public async Task<JsonVM> EditAsync(Location viewLoc)
         {
             try
             {
                 Location? dbLoc = await db.Locations.FindAsync(viewLoc.Id);
 
-                if (dbLoc == null) { return new ResponseVM("Location not found"); }
+                if (dbLoc == null) { return new JsonVM("Location not found"); }
 
                 UpdateFields(viewLoc, dbLoc);
 
                 await db.SaveChangesAsync();
 
-                return new ResponseVM(true);
+                return new JsonVM(true);
             }
             catch (Exception ex)
             {
-                return new ResponseVM("Error deleting location..." + ex.Message);
+                return new JsonVM("Error deleting location..." + ex.Message);
             }
         }
 
@@ -123,7 +123,7 @@ namespace OptraxMVC.Services
             dbLoc.Radius = viewLoc.Radius;
         }
 
-        public async Task<ResponseVM> DeleteAsync(int id)
+        public async Task<JsonVM> DeleteAsync(int id)
         {
             try
             {
@@ -131,25 +131,17 @@ namespace OptraxMVC.Services
 
                 if (dbLoc == null)
                 {
-                    return new ResponseVM("Error deleting location:  Could not find location");
+                    return new JsonVM("Error deleting location:  Could not find location");
                 }
                 dbLoc.Active = false;
 
                 await db.SaveChangesAsync();
-                return new ResponseVM(true);
+                return new JsonVM(true);
             }
             catch (Exception ex)
             {
-                return new ResponseVM("Error deleting location..." + ex.Message);
+                return new JsonVM("Error deleting location..." + ex.Message);
             }
         }
     }
 }
-
-
-//private string GetParentString(int parentId)
-//{
-//    StringResult? parentString = db.Database.SqlQuery<StringResult>($"EXEC GetLocParentsString {parentId}").AsEnumerable().FirstOrDefault();
-
-//    return parentString?.Value ?? string.Empty;
-//}

@@ -1,43 +1,42 @@
 ﻿@using OptraxDAL.Models.Maps;
 @using OptraxMVC.Models
 
-@model MapObject
+@model MapObjectVM
 
 @{
     FormVM formVM = ViewBag.FormVM;
+    MapObject mapObject = Model.GetObject();
 }
 
 <div class="popup-msg"></div>
+<form asp-action="@formVM.Action" asp-controller="Map" method="post" id="mapObjForm" data-id="@mapObject.Id" data-obj="@formVM.Type">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="ObjType" />
 
-<input type="hidden" asp-for="Id" />
-<input type="hidden" asp-for="MapId" />
-<input id="changes" type="hidden" name="Changes" />
+    <input id="changes" type="hidden" name="Changes" />
 
-<div id="edit-content" class="px-2 pt-3">
-    <div class="row col-12 w-100 px-0 m-0">
-        <div class="col-12">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control attr" />
-            <span asp-validation-for="Name" class="val-msg"></span>
-        </div>
-        @if (Model is MapShape)
-        {
-            <partial name="_MapShapeInputs.cshtml" model="Model" />
-        }
-        else
-        {
-            <partial name="_IconSelect.cshtml" model="Model" />
-        }
+    <div id="edit-content" class="px-2 pt-3">
+        <div class="row col-12 w-100 px-0 m-0">
 
-        <div class="col-12">
-            <label asp-for="Details"></label>
-            <textarea asp-for="Details" class="form-control attr" rows="3"></textarea>
-            <span asp-validation-for="Details" class="val-msg"></span>
+            @if (mapObject is MapPoint point)
+            {
+                ViewData.TemplateInfo.HtmlFieldPrefix = "MapPoint";
+                <partial name="_Point.cshtml" model="Model.MapPoint" />
+            }
+            else if (mapObject is MapCircle circle)
+            {
+                ViewData.TemplateInfo.HtmlFieldPrefix = "MapCircle";
+                <partial name="_Circle.cshtml" model="Model.MapCircle" />
+            }
+            else if (mapObject is MapShape shape)
+            {
+                ViewData.TemplateInfo.HtmlFieldPrefix = "MapShape";
+                <partial name="_MapShape.cshtml" model="Model.MapShape" />
+            }             
         </div>
     </div>
-</div>
-<div class="popup-btns d-flex w-100 justify-content-center pb-3">
-    @* <button type="submit" class="btn-grn btn-sm @(formVM.IsNew ? "" : "d-none")">Save @formVM.Type</button> *@
-    <button type="button" class="btn-red btn-sm me-3 @(formVM.IsNew ? "d-none" : "")" data-id="@Model.Id" data-type="Circle">Delete</button>
-    <button type="submit" class="btn-grn btn-sm ms-3">Save</button>
-</div>
+    <div class="popup-btns d-flex w-100 justify-content-center pb-3">
+        <button type="button" class="btn-red btn-sm me-3 @(formVM.IsNew ? "d-none" : "")" data-id="@mapObject.Id" data-type="@formVM.Type">Delete</button>
+        <button type="submit" class="btn-grn btn-sm ms-3">Save</button>
+    </div>
+</form>

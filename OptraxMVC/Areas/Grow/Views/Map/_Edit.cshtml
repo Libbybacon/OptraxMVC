@@ -1,0 +1,16 @@
+﻿@model MapObject
+
+<input type="hidden" asp-for="Id" class="obj-id" />
+<input type="hidden" asp-for="MapId" class="obj-mapId" />
+<input type="hidden" asp-for="UserId" />
+
+<div class="col-12">
+    <label asp-for="Name"></label>
+    <input asp-for="Name" class="form-control attr obj-name" />
+    <span asp-validation-for="Name" class="val-msg"></span>
+</div>
+<div class="col-12">
+    <label asp-for="Details"></label>
+    <textarea asp-for="Details" class="form-control attr obj-details" rows="3"></textarea>
+    <span asp-validation-for="Details" class="val-msg"></span>
+</div>

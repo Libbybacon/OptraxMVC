@@ -4,7 +4,6 @@ using OptraxDAL;
 using OptraxDAL.Models.Admin;
 using OptraxMVC.Areas.Grow.Models;
 using OptraxMVC.Controllers;
-using OptraxMVC.Models;
 using OptraxMVC.Services;
 using OptraxMVC.Services.Grow;
 
@@ -46,7 +45,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
             catch (Exception ex)
             {
-                return Json(ResponseVM(ex.Message));
+                return Json(JsonVM(ex.Message));
             }
         }
 
@@ -58,12 +57,11 @@ namespace OptraxMVC.Areas.Grow.Controllers
                 int? parId = int.TryParse(parentId, out int id) ? id : null;
                 LocationVM model = new(type, parId);
 
-                string action = type == "site" ? "CreateSite" : "CreateAreaLoc";
                 return GetLocationView(model, "Create");
             }
             catch (Exception ex)
             {
-                return Json(ResponseVM(ex.Message));
+                return Json(JsonVM(ex.Message));
             }
         }
 
@@ -73,45 +71,17 @@ namespace OptraxMVC.Areas.Grow.Controllers
         {
             try
             {
-                if (!ModelState.IsValid) { return Json(ResponseVM("Invalid model")); }
+                if (!ModelState.IsValid) { return Json(JsonVM("Invalid model")); }
 
-                return Json(await _Location.CreateAsync(model.Location));
+                Location? savedLoc = await _Location.CreateAsync(model.Location);
+
+                if (savedLoc == null) { return Json(JsonVM("Error creating location")); }
+
+                return Json(JsonVM(savedLoc.ToTreeNode()));
             }
             catch (Exception ex)
             {
-                return Json(new ResponseVM() { Msg = "Error creating location: " + ex.Message });
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateSiteAsync(Site model)
-        {
-            try
-            {
-                if (!ModelState.IsValid) { return Json(ResponseVM("Invalid model")); }
-
-                return Json(await _Location.CreateAsync(model));
-            }
-            catch (Exception ex)
-            {
-                return Json(new ResponseVM() { Msg = "Error creating location: " + ex.Message });
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAreaLocAsync(AreaLocation model)
-        {
-            try
-            {
-                if (!ModelState.IsValid) { return Json(ResponseVM("Invalid model")); }
-
-                return Json(await _Location.CreateAsync(model));
-            }
-            catch (Exception ex)
-            {
-                return Json(new ResponseVM() { Msg = "Error creating location: " + ex.Message });
+                return Json(JsonVM("Error creating location: " + ex.Message));
             }
         }
 
@@ -120,18 +90,17 @@ namespace OptraxMVC.Areas.Grow.Controllers
         {
             try
             {
-                if (id == null || type == null) { return Json(ResponseVM("Error loading location - null id or type")); }
+                if (id == null || type == null) { return Json(JsonVM("Error loading location - null id or type")); }
 
-                LocationVM? model = await _Location.GetLocationAsync((int)id, type);
+                Location? model = await _Location.GetLocationAsync((int)id, type);
 
-                if (model == null) { return Json(ResponseVM("Error loading location: not found")); }
+                if (model == null) { return Json(JsonVM("Error loading location: not found")); }
 
-                string action = type == "site" ? "CreateSite" : "CreateAreaLoc";
-                return GetLocationView(model, "Edit");
+                return GetLocationView(new LocationVM(model), "Edit");
             }
             catch (Exception ex)
             {
-                return Json(ResponseVM(ex.Message));
+                return Json(JsonVM(ex.Message));
             }
         }
 
@@ -139,7 +108,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditAsync(LocationVM locVM)
         {
-            if (!ModelState.IsValid) { return Json(ResponseVM("Invalid model")); }
+            if (!ModelState.IsValid) { return Json(JsonVM("Invalid model")); }
 
             try
             {
@@ -147,7 +116,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
             catch (Exception ex)
             {
-                return Json(ResponseVM("Error deleting location - " + ex.Message));
+                return Json(JsonVM("Error deleting location - " + ex.Message));
             }
         }
 
@@ -156,13 +125,13 @@ namespace OptraxMVC.Areas.Grow.Controllers
         {
             try
             {
-                if (id == null) { return Json(ResponseVM("Error deleting location - null Id")); }
+                if (id == null) { return Json(JsonVM("Error deleting location - null Id")); }
 
                 return Json(await _Location.DeleteAsync((int)id));
             }
             catch (Exception ex)
             {
-                return Json(ResponseVM("Error deleting location - " + ex.Message));
+                return Json(JsonVM("Error deleting location - " + ex.Message));
             }
         }
 
@@ -178,7 +147,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
             catch (Exception ex)
             {
-                return Json(ResponseVM(ex.Message));
+                return Json(JsonVM(ex.Message));
             }
         }
     }

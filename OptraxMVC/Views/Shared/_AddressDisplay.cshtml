@@ -23,7 +23,16 @@
                 <div class="addy-info text-center">@Model.Address2</div>
             }
 
-            <div class="addy-info"><center>@Model.City, @Model.State @Model.ZipCode</center> </div>
+
+            <div class="addy-info">
+                <center>
+                    @if (!string.IsNullOrEmpty(Model.City))
+                    {
+                        <span>@Model.City,</span>                        
+                    }
+                    @Model.State @Model.ZipCode
+                </center>
+            </div>
 
             <div class="addy-contact d-flex w-100">
                 @if (hasPhone && hasEmail)

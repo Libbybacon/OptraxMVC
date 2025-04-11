@@ -27,16 +27,16 @@ namespace OptraxMVC.Controllers
             db = context;
         }
 
-        public object ResponseVM(bool success)
+        public object JsonVM(bool success)
         {
             return new { success };
         }
-        public object ResponseVM(string msg, bool success = false)
+        public object JsonVM(string msg, bool success = false)
         {
             return new { success, msg };
         }
 
-        public object ResponseVM(object data)
+        public object JsonVM(object data)
         {
             return new { success = true, data };
         }

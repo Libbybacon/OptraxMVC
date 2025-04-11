@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using OptraxDAL;
@@ -12,9 +13,11 @@ using OptraxDAL;
 namespace OptraxDAL.Migrations
 {
     [DbContext(typeof(OptraxContext))]
-    partial class OptraxContextModelSnapshot : ModelSnapshot
+    [Migration("20250410191602_MapPointLocation")]
+    partial class MapPointLocation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,7 +53,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("StockItemsId");
 
-                    b.ToTable("LocationStockItem", (string)null);
+                    b.ToTable("LocationStockItem");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1831,7 +1834,7 @@ namespace OptraxDAL.Migrations
 
                     b.HasIndex("PurchaseOrdersId");
 
-                    b.ToTable("PurchaseOrderStockItem", (string)null);
+                    b.ToTable("PurchaseOrderStockItem");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Admin.AreaLocation", b =>

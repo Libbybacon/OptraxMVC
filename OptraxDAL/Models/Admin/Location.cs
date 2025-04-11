@@ -63,12 +63,28 @@ namespace OptraxDAL.Models.Admin
 
         public object ToTreeNode()
         {
+            object data = new { };
+            if (this is AddressLocation addyLoc)
+            {
+                Address? addy = addyLoc.Address;
+
+                if (addy?.Latitude != null && addy?.Longitude != null)
+                {
+                    data = new
+                    {
+                        lat = addyLoc.Address?.Latitude,
+                        lng = addyLoc.Address?.Longitude,
+                    };
+                }
+            }
+
             return new
             {
                 id = Id.ToString(),
                 parent = ParentId?.ToString() ?? "#",
                 text = Name,
                 type = LocationType.ToLower(),
+                data,
                 state = new
                 {
                     opened = true,

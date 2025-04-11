@@ -13,8 +13,8 @@ namespace OptraxMVC.Services.Grow
     {
         Task<List<object>> GetPlantNodesAsync(string? comName = null);
         Task<Plant> LoadCreate(string type, string parentId);
-        Task<ResponseVM> CreateAsync(Plant plant, string userId);
-        Task<ResponseVM> CreateGroupAsync(PlantTypeGroup group);
+        Task<JsonVM> CreateAsync(Plant plant, string userId);
+        Task<JsonVM> CreateGroupAsync(PlantTypeGroup group);
     }
 
     [Authorize]
@@ -23,14 +23,14 @@ namespace OptraxMVC.Services.Grow
         private readonly OptraxContext db = context;
         private readonly string UserId = user.UserId;
 
-        public async Task<ResponseVM> CreateGroupAsync(PlantTypeGroup group)
+        public async Task<JsonVM> CreateGroupAsync(PlantTypeGroup group)
         {
             try
             {
                 var dbGroup = await db.PlantTypeGroups.FirstOrDefaultAsync(g => g.Name == group.Name);
                 if (dbGroup != null)
                 {
-                    return new ResponseVM("Plant group already exists.");
+                    return new JsonVM("Plant group already exists.");
                 }
                 await db.PlantTypeGroups.AddAsync(group);
                 await db.SaveChangesAsync();
@@ -43,11 +43,11 @@ namespace OptraxMVC.Services.Grow
                     type = "cn",
                     state = new { opened = true, selected = false },
                 };
-                return new ResponseVM(grpNode);
+                return new JsonVM(grpNode);
             }
             catch (Exception ex)
             {
-                return new ResponseVM(ex.Message);
+                return new JsonVM(ex.Message);
             }
         }
 
@@ -197,7 +197,7 @@ namespace OptraxMVC.Services.Grow
         }
 
         //[Authorize]
-        public async Task<ResponseVM> CreateAsync(Plant plant, string userId)
+        public async Task<JsonVM> CreateAsync(Plant plant, string userId)
         {
             try
             {
@@ -221,11 +221,11 @@ namespace OptraxMVC.Services.Grow
                 await db.Plants.AddAsync(plant);
                 await db.SaveChangesAsync();
 
-                return new ResponseVM(plant);
+                return new JsonVM(plant);
             }
             catch (Exception)
             {
-                return new ResponseVM("Error adding plant...");
+                return new JsonVM("Error adding plant...");
             }
         }
 

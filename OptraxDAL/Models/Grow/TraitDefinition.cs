@@ -1,4 +1,5 @@
-﻿using OptraxDAL.Models.BaseClasses;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using OptraxDAL.Models.BaseClasses;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OptraxDAL.Models.Grow
@@ -29,5 +30,21 @@ namespace OptraxDAL.Models.Grow
 
         [NotMapped]
         public ICollection<TraitOption> OrderedOpts => [.. Options.OrderBy(o => o.Category).ThenBy(o => o.Value)];
+
+        public List<SelectListItem> GetOptionSelects()
+        {
+            if (Options.Count > 0)
+            {
+                return [.. Options.Select(o => new SelectListItem
+                {
+                    Value = o.Value,
+                    Text = o.Value
+                })];
+            }
+            else
+            {
+                return [];
+            }
+        }
     }
 }

@@ -1,9 +1,10 @@
 ﻿import apiService from '../utilities/api.js';
 import { formUtil } from '../utilities/form.js';
 import { addSitePoint } from '../map/map.js';
-const urlBase = '/Grow/Locations/';
-const formId = '#locForm';
+import { getMap } from '../map/mapState.js';
 
+const formId = '#locForm';
+const urlBase = '/Grow/Locations/';
 
 export function loadCreate(parentId, type) {
 
@@ -47,16 +48,7 @@ export function setFormListeners() {
         $(formId + ' #Address_Name').val($(this).val()).trigger('change');
     })
 
-    $(formId + ' locForm .toggle-edit').on('click', function () {
-        const model = $(this).parent('.model');
-        model.find('.m-toggle').toggleClass('d-none');
-    });
-
-    $(formId + ' .addy').on('change', function () {
-        setAddyLatLng();
-    });
-
-    $(formId + ' .btn-red').off('click').on('click', function () {
+    $(formId).find('.btn-red').off('click').on('click', function () {
         const id = $(formId).data('id');
         const type = $(formId).data('type')
         onDelete(id, type);
@@ -68,7 +60,11 @@ export function setFormListeners() {
     });
 
     formUtil.setListeners(formId);
-    formUtil.showHideBtns(formId);
+
+    $(formId).find('.addy').on('change', function () {
+        console.log('addy change');
+        setAddyLatLng();
+    });
 }
 
 export async function onDelete(id, type) {
@@ -86,7 +82,7 @@ export async function onDelete(id, type) {
 
 export async function onSubmitForm() {
     const action = $(formId).attr('action');
-    const locType = $(formId + ' #LocationType').val();
+    const locType = $(formId).find('#LocationType').val();
     const isCreate = action && action.includes('Create');
 
     //console.log('loc onSubmitForm objType: ', locType, ' action:', action);
@@ -125,23 +121,30 @@ export async function onSubmitForm() {
 }
 
 export function setAddyLatLng() {
-    const address =
-        $('.addy-street1').val() + ',' +
-        $('.addy-city').val() + ',' +
-        $('.addy-state').val() + ' ' +
-        $('.addy-zip').val();
+    console.log('setAddyLatLng')
+    // Check whether all components of address are filled
+    const addyArr = [$('.addy-street1').val(), $('.addy-city').val(), $('.addy-state').val(), $('.addy-zip').val()]
+    const hasEmpty = addyArr.some((a) => a.trim() === '' || a === null || a === undefined);
 
+    if (!hasEmpty) {
+        const address = addyArr.join(', ');
 
-    geocodeAddress(address, (err, result) => {
-        if (err) {
-            return;
-        }
+        // Get address lat, lng, zoom to loc on map, set form values
+        geocodeAddress(address, (err, result) => {
+            console.log('geocode result', result, 'address', address);
+            if (err) {
+                console.log('geocode error')
+                return;
+            }
+            const { lat, lon } = result;
 
-        const { lat, lng, name } = result;
+            let map = getMap();
+            map.setView([lat, lon], 21);
 
-        $('.addy-lat').val(lat);
-        $('.addy-lng').val(lng);
-    });
+            $('.addy-lat').val(lat).trigger('change');
+            $('.addy-lng').val(lon).trigger('change');
+        });
+    }
 }
 
 function geocodeAddress(address, callback) {
@@ -149,7 +152,7 @@ function geocodeAddress(address, callback) {
 
     fetch(url, {
         headers: {
-            'User-Agent': 'OptraxFarmingApp/1.0 (your@email.com)'
+            'User-Agent': 'OptraxApp/1.0 (optrax@optrax.dev)'
         }
     })
         .then(res => res.json())
@@ -157,7 +160,7 @@ function geocodeAddress(address, callback) {
             if (data.length > 0) {
                 const lat = parseFloat(data[0].lat);
                 const lon = parseFloat(data[0].lon);
-                callback(null, { lat, lon, display_name: data[0].display_name });
+                callback(null, { lat, lon });
             } else {
                 callback("No results found");
             }

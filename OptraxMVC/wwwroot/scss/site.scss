@@ -161,6 +161,10 @@ label {
 	padding-left: 3px;
 }
 
+fieldset{
+	border: $br;
+}
+
 .attr.form-control,
 .attr.form-select {
 	font-size: $f-xs !important;

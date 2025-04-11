@@ -2,6 +2,15 @@
 {
     public class FormVM
     {
+        public FormVM() { }
+
+        public FormVM(string action, string type)
+        {
+            IsNew = action.ToLower().Contains("create");
+            Action = action;
+            Type = type;
+        }
+
         public bool IsNew { get; set; } = true;
         public string? JsFunc { get; set; }
         public string? Action { get; set; }

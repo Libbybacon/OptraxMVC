@@ -14,18 +14,25 @@ namespace OptraxMVC.Services.Grow
     {
         Task<Map?> GetMapAsync();
         Task<Map?> CreateMapAsync(Map map);
-        Task<ResponseVM> EditMapAsync(Map map);
-        Task<ResponseVM> GetObjectsAsync(string objType);
-        Task<object?> GetObjectAsync(int id, string objType);
-        Task<ResponseVM> CreateObjectAsync(MapObject obj);
-        Task<ResponseVM> EditObjectAsync(MapObject obj);
-        Task<ResponseVM> DeleteObjectAsync(int id, string objType);
+        Task<string> EditMapAsync(Map map);
+        Task<JsonVM> GetObjectsAsync(string objType);
+        Task<MapObject?> GetObjectAsync(int id, string objType);
+        Task<string> CreateObjectAsync(MapObject obj);
+        Task<MapObject?> EditObjectAsync(MapObject obj);
+        Task<JsonVM> DeleteObjectAsync(int id, string objType);
     }
 
     public class MapService(OptraxContext context, ICurrentUserService user) : IMapService
     {
         private readonly OptraxContext db = context;
         private readonly string UserId = user.UserId;
+
+        public async Task<Map?> GetMapAsync()
+        {
+            Map? dbMap = await db.Maps.Where(m => m.Active && m.UserId == UserId).FirstOrDefaultAsync();
+
+            return dbMap ?? await CreateMapAsync(new Map("Default Map"));
+        }
 
         public async Task<Map?> CreateMapAsync(Map map)
         {
@@ -42,14 +49,7 @@ namespace OptraxMVC.Services.Grow
             }
         }
 
-        public async Task<Map?> GetMapAsync()
-        {
-            Map? dbMap = await db.Maps.Where(m => m.Active && m.UserId == UserId).FirstOrDefaultAsync();
-
-            return dbMap ?? await CreateMapAsync(new Map("Default Map"));
-        }
-
-        public async Task<ResponseVM> EditMapAsync(Map map)
+        public async Task<string> EditMapAsync(Map map)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace OptraxMVC.Services.Grow
 
                 if (dbMap == null)
                 {
-                    return new ResponseVM("Map not found");
+                    return "Map not found";
                 }
 
                 dbMap.Name = map.Name;
@@ -65,47 +65,21 @@ namespace OptraxMVC.Services.Grow
 
                 await db.SaveChangesAsync();
 
-                return new ResponseVM(true);
+                return "OK";
             }
             catch (Exception ex)
             {
-                return new ResponseVM("Error saving map: " + ex.Message);
+                return "Error saving map: " + ex.Message;
             }
         }
 
-        public async Task<ResponseVM> GetObjectsAsync(string objType)
-        {
-            try
-            {
-                var features = objType switch
-                {
-                    "Point" => (await db.MapPoints.Where(p => p.Active && p.UserId == UserId).Include(p => p.Icon).ToListAsync()).Select(p => p.ToGeoJSON()).ToList(),
-                    "Line" => [.. (await db.MapLines.Where(p => p.Active && p.UserId == UserId).ToListAsync()).Select(p => p.ToGeoJSON())],
-                    "Circle" => [.. (await db.MapCircles.Where(p => p.Active && p.UserId == UserId).ToListAsync()).Select(p => p.ToGeoJSON())],
-                    "Polygon" => [.. (await db.MapPolygons.Where(p => p.Active && p.UserId == UserId).ToListAsync()).Select(p => p.ToGeoJSON())],
-                    _ => throw new NotImplementedException()
-                };
-                var geoJson = new
-                {
-                    type = "FeatureCollection",
-                    features
-                };
-
-                return new ResponseVM(geoJson);
-            }
-            catch (Exception ex)
-            {
-                return new ResponseVM("Error getting map objects: " + ex.Message);
-            }
-        }
-
-        public async Task<object?> GetObjectAsync(int id, string objType)
+        public async Task<MapObject?> GetObjectAsync(int id, string objType)
         {
             MapObject? dbObj = await db.MapObjects.FindAsync(id);
 
             if (dbObj == null)
             {
-                return new ResponseVM() { Msg = "Could not find map object" };
+                return null;
             }
             if (dbObj is MapShape shape)
             {
@@ -126,34 +100,60 @@ namespace OptraxMVC.Services.Grow
             };
         }
 
-        public async Task<ResponseVM> CreateObjectAsync(MapObject obj)
+        public async Task<JsonVM> GetObjectsAsync(string objType)
         {
-            ResponseVM response = new() { Success = true };
+            try
+            {
+                var features = objType switch
+                {
+                    "Point" => (await db.MapPoints.Where(p => p.Active && p.UserId == UserId).Include(p => p.Icon).ToListAsync()).Select(p => p.ToGeoJSON()).ToList(),
+                    "Line" => [.. (await db.MapLines.Where(p => p.Active && p.UserId == UserId).ToListAsync()).Select(p => p.ToGeoJSON())],
+                    "Circle" => [.. (await db.MapCircles.Where(p => p.Active && p.UserId == UserId).ToListAsync()).Select(p => p.ToGeoJSON())],
+                    "Polygon" => [.. (await db.MapPolygons.Where(p => p.Active && p.UserId == UserId).ToListAsync()).Select(p => p.ToGeoJSON())],
+                    _ => throw new NotImplementedException()
+                };
+
+                object geoJson = new
+                {
+                    type = "FeatureCollection",
+                    features
+                };
+
+                return new JsonVM(geoJson);
+            }
+            catch (Exception ex)
+            {
+                return new JsonVM("Error getting map objects: " + ex.Message);
+            }
+        }
+
+        public async Task<string> CreateObjectAsync(MapObject obj)
+        {
+            JsonVM response = new(true);
 
             try
             {
                 if (obj is MapShape mapShape)
                 {
                     response.Success = false;
-                    SetGeometry(mapShape, ref response);
+                    SetColorGeometry(mapShape, ref response);
                 }
 
                 if (response.Success)
                 {
                     await db.MapObjects.AddAsync(obj);
                     await db.SaveChangesAsync();
-                    response.Data = obj.ToGeoJSON();
                 }
 
-                return response;
+                return response.Success ? "OK" : response.Msg;
             }
             catch (Exception ex)
             {
-                return new ResponseVM() { Msg = "Error saving object: " + ex.Message };
+                return "Error creating map object: " + ex.Message;
             }
         }
 
-        public async Task<ResponseVM> EditObjectAsync(MapObject obj)
+        public async Task<MapObject?> EditObjectAsync(MapObject obj)
         {
             try
             {
@@ -161,18 +161,18 @@ namespace OptraxMVC.Services.Grow
 
                 if (dbObj == null)
                 {
-                    return new ResponseVM() { Msg = "Could not find map object" };
+                    return null;
                 }
 
-                return await UpdateMapObjModel(obj, dbObj);
+                return await MergeObjects(obj, dbObj);
             }
             catch (Exception ex)
             {
-                return new ResponseVM() { Msg = "Error updating object: " + ex.Message };
+                return null;
             }
         }
 
-        public async Task<ResponseVM> DeleteObjectAsync(int id, string objType)
+        public async Task<JsonVM> DeleteObjectAsync(int id, string objType)
         {
             try
             {
@@ -180,21 +180,21 @@ namespace OptraxMVC.Services.Grow
 
                 if (dbObj == null)
                 {
-                    return new ResponseVM() { Msg = "Could not find map object" };
+                    return new JsonVM() { Msg = "Could not find map object" };
                 }
 
                 db.Remove(dbObj);
                 await db.SaveChangesAsync();
 
-                return new ResponseVM() { Success = true };
+                return new JsonVM() { Success = true };
             }
             catch (Exception ex)
             {
-                return new ResponseVM() { Msg = "Error saving delete changes: " + ex.Message };
+                return new JsonVM() { Msg = "Error saving delete changes: " + ex.Message };
             }
         }
 
-        private static void SetGeometry(MapShape obj, ref ResponseVM response)
+        private static void SetColorGeometry(MapShape obj, ref JsonVM response)
         {
             try
             {
@@ -255,7 +255,7 @@ namespace OptraxMVC.Services.Grow
             }
         }
 
-        private async Task<ResponseVM> UpdateMapObjModel(MapObject mapObj, MapObject dbMapObj)
+        private async Task<MapObject?> MergeObjects(MapObject mapObj, MapObject dbMapObj)
         {
             try
             {
@@ -264,10 +264,26 @@ namespace OptraxMVC.Services.Grow
 
                 if (mapObj is MapShape mapPoly && dbMapObj is MapShape dbMapPoly)
                 {
+                    JsonVM response = new(false);
+                    SetColorGeometry(mapPoly, ref response);
+
+                    if (!response.Success)
+                    {
+                        return null;
+                    }
                     dbMapPoly.Weight = mapPoly.Weight;
                     dbMapPoly.DashArray = mapPoly.DashArray;
-                    dbMapPoly.ColorBytes = new ColorRgba(mapPoly.Color);
-                    dbMapPoly.FillColorBytes = new ColorRgba(mapPoly.FillColor);
+                    dbMapPoly.ColorBytes = mapPoly.ColorBytes;
+                    dbMapPoly.FillColorBytes = mapPoly.FillColorBytes;
+
+                    if (dbMapPoly is MapPolygon dbPoly && mapPoly is MapPolygon poly)
+                    {
+                        dbPoly.PolyGeometry = poly.PolyGeometry;
+                    }
+                    if (dbMapPoly is MapLine dbLine && mapPoly is MapLine line)
+                    {
+                        dbLine.LineGeometry = line.LineGeometry;
+                    }
                 }
                 else if (mapObj is MapPoint point && dbMapObj is MapPoint dbPoint)
                 {
@@ -279,11 +295,11 @@ namespace OptraxMVC.Services.Grow
 
                 await db.SaveChangesAsync();
 
-                return new ResponseVM() { Success = true, Data = dbMapObj.ToGeoJSON() };
+                return dbMapObj;
             }
             catch (Exception)
             {
-                return new ResponseVM() { Msg = "Error saving changes." };
+                return null;
             }
         }
     }

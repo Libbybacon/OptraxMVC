@@ -56,7 +56,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                 if (!ModelState.IsValid)
                     return Json(new { success = false, errors = ModelState });
 
-                ResponseVM response = await _IResource.CreateAsync(rsrc);
+                JsonVM response = await _IResource.CreateAsync(rsrc);
 
                 return Json(response);
             }
@@ -99,7 +99,7 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                 if (!ModelState.IsValid)
                     return Json(new { success = false, msg = "Invalid model" });
 
-                ResponseVM response = await _IResource.UpdateAsync(rsrc);
+                JsonVM response = await _IResource.UpdateAsync(rsrc);
 
                 return Json(response);
 

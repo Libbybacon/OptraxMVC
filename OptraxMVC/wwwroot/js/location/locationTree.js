@@ -1,15 +1,5 @@
 ﻿import { loadCreate } from './locationUtil.js';
 
-const levelMap = {
-    site: 0,
-    greenhouse: 1,
-    field: 1,
-    row: 2,
-    bed: 3,
-    plot: 4,
-    building: 1,
-    room: 2,
-}
 const childTypes = {
     site: ["Field", "Greenhouse", "Building"],
     greenhouse: ["Row"],
@@ -21,7 +11,7 @@ const childTypes = {
     room: [],
 };
 
-export function initializeTree() {
+export function initializeTree(map) {
     $('#locationTree').jstree({
         'core': {
             'data': {
@@ -43,6 +33,14 @@ export function initializeTree() {
             'items': nodeMenu,
         }
 
+    });
+    $('#locationTree').on('select_node.jstree', function (e, data) {
+        console.log('initializeTree data', data);
+        var node = data.node;
+
+        if (node.data.lat && node.data.lng) {
+            map.setView[node.data.lng, node.data.lat, 19]
+        }
     });
 }
 

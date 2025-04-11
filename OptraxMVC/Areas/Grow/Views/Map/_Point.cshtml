@@ -4,17 +4,45 @@
 @model MapPoint
 
 @{
-    FormVM formVM = ViewBag.FormVM;
+    int collId = 1;
+    OptionsVM opts = (OptionsVM)(ViewData["Options"] ?? new());
 }
 
-<form asp-action="@formVM.Action" asp-controller="Map" method="post" id="mapObjForm" data-id="@Model.Id" data-obj="Point">
-    @Html.AntiForgeryToken()
+<input type="hidden" asp-for="IconId" class="obj-iconId"/>
+<input type="hidden" asp-for="Latitude" class="obj-lat" />
+<input type="hidden" asp-for="Longitude" class="obj-lng" />
 
-    <input type="hidden" asp-for="IconId" />
-    <input type="hidden" asp-for="Latitude" />
-    <input type="hidden" asp-for="Longitude" />
-    <partial name="_MapObject.cshtml" model="Model" />
-</form>
+<partial name="_Edit.cshtml" model="Model" />
+
+<label class="">Select Icon</label>
+<div class="col-12 mb-2">
+    <div class="w-100 d-flex">
+        <div class="icon-coll-list">
+            @foreach (var coll in opts.IconsList)
+            {
+                bool hasIcon = coll.Id == collId;
+                <div class="icon-coll-name  @($"coll-name-{coll.Id}")  @(hasIcon ? "selected" : "")" data-collid="@coll.Id">
+                    <div class="px-3">@coll.Name</div>
+                </div>
+            }
+        </div>
+        <div class="icon-preview flex-fill">
+            @foreach (var coll in opts.IconsList)
+            {
+                bool hasIcon = coll.Id == collId;
+                <div class="preview-div d-flex flex-wrap @($"preview-coll-{coll.Id}")  @(hasIcon ? "" : "d-none")">
+                    @foreach (var icon in coll.Icons)
+                    {
+                        <div class="icon-div @(icon.Id == Model.IconId ? "selected" : "") flex-item mx-1 p-2 mb-2" data-iconid="@icon.Id">
+                            <img src="@icon.ImagePath" class="map-icon" />
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@* <partial name="_IconSelect.cshtml" model="Model" /> *@
 
 
 

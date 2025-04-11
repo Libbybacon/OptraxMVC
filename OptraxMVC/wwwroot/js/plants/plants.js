@@ -1,6 +1,6 @@
 ﻿import apiService from '../utilities/api.js';
 import { formUtil } from '../utilities/form.js';
-import * as opts from '../utilities/dropdown.js';
+
 
 var childTypes = {
     pt: ['Species Group'],
@@ -8,7 +8,7 @@ var childTypes = {
     species: ['Variety', 'Cultivar'],
 }
 
-const formId = '#plantForm';
+const formId = '#plantForm ';
 const urlBase = '/Grow/Plants/';
 
 $(function () {
@@ -94,23 +94,17 @@ async function loadPartial(props) {
 
 function setFormListeners() {
 
-    $.each($(formId + ' .multi'), function (i, drop) {
-        let drops = new choices(drop, opts.multiOpts);
-    });
 
-    $.each($(formId + ' .drop'), function (i, drop) {
-        let drops = new choices(drop, opts.singleOpts);
-    });
 
-    $(formId + ' .name').on('input', function () {
-        let taxon = $(formId + ' #TaxonType').val();
-        let cultName = $(formId + ' #CultivarName').val();
+    $(formId + '.name').on('input', function () {
+        let taxon = $('#TaxonType').val();
+        let cultName = $('#CultivarName').val();
         let varName = (cultName && cultName != '') ? taxon === 'Variety' ? ` var. ${cultName}` : ` '${cultName}'` : '';       
-        let sciName = `${$(formId + ' #Genus').val()} ${$(formId + ' #Species').val()}${varName}`;
+        let sciName = `${$('#Genus').val()} ${$('#Species').val()}${varName}`;
         $(formId + ' #ScientificName').val(sciName);
     })
 
-    $(formId + ' .rng').on('change', function () {
+    $(formId + '.rng').on('change', function () {
         var par = $(this).parent('.range');
         var first = par.find('.first').val();
         var sec = par.find('.second').val();
@@ -118,7 +112,7 @@ function setFormListeners() {
         $(formId + ' #Value').val(`${first},${sec}`);
     })
 
-    $(formId + ' .btn-red').off('click').on('click', function () {
+    $(formId + '.btn-red').off('click').on('click', function () {
         const id = $(formId).data('id');
         const type = $(formId).data('type')
         onDelete(id, type);
@@ -130,7 +124,6 @@ function setFormListeners() {
     });
 
     formUtil.setListeners(formId);
-    formUtil.showHideBtns(formId);
 }
 
 async function onSubmitForm() {
@@ -169,7 +162,7 @@ async function onSubmitForm() {
             }
 
         }
-        $(formId + ' .m-toggle').toggleClass('d-none');
+        $(formId + '.m-toggle').toggleClass('d-none');
 
         let msgTxt = isCreate ? 'Created' : 'Updated';
         let type = isGroup ? 'Group' : 'Plant'

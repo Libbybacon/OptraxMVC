@@ -1,5 +1,5 @@
-﻿import { getMap, onMapReady } from '../map/mapState.js';
-
+﻿import { addSitePoint } from '../map/map.js';
+import { getMap, onMapReady } from '../map/mapState.js';
 import * as tree from './locationTree.js';
 import * as util from './locationUtil.js';
 
@@ -13,6 +13,7 @@ $(function () {
     onMapReady((loadedMap) => {
         map = loadedMap;
         console.log('map loaded');
+        tree.initializeTree(map);
     });
 });
 

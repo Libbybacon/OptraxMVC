@@ -4,7 +4,7 @@ import * as _layers from './layerManager.js';
 import { createIcon } from './objStyleUtil.js';
 
 let map = null;
-
+let layersets = [];
 $(function () {
 
     initializeMap();

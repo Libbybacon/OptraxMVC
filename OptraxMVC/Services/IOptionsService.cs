@@ -16,7 +16,6 @@ namespace OptraxMVC.Services
     public class OptionsService(OptraxContext context) : IOptionsService
     {
         private readonly OptraxContext db = context;
-        private readonly SelectListItem EmptyItem = new() { Text = "---- Select ----", Value = null };
         private readonly List<SelectListItem> EmptyList = [new SelectListItem()];
 
         public async Task<OptionsVM> LoadOptions(List<string> drops, int? level, List<string>? types)

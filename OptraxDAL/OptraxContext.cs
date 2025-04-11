@@ -125,6 +125,19 @@ namespace OptraxDAL
             builder.Entity<Input>().HasIndex(x => x.InputName).IsUnique();
             builder.Entity<UoM>().Property(x => x.PerQuantity).HasPrecision(6, 2);
 
+            builder.Entity<Address>(e =>
+            {
+                e.Property(x => x.Latitude).HasPrecision(12, 8);
+                e.Property(x => x.Longitude).HasPrecision(12, 8);
+
+                e.HasOne(x => x.MapPoint).WithOne(b => b.Address)
+                                         .HasForeignKey<Address>(x => x.MapPointId)
+                                         .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(x => x.Site).WithOne(b => b.Address)
+                                     .HasForeignKey<Address>(x => x.SiteId)
+                                     .OnDelete(DeleteBehavior.Restrict);
+            });
             builder.Entity<ContainerType>(e =>
             {
                 e.Property(x => x.Capacity).HasPrecision(8, 2);

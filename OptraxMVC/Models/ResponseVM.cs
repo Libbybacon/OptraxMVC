@@ -1,18 +1,18 @@
 ﻿namespace OptraxMVC.Models
 {
-    public class ResponseVM
+    public class JsonVM
     {
-        public ResponseVM() { }
+        public JsonVM() { }
 
-        public ResponseVM(bool success) { Success = success; }
+        public JsonVM(bool success) { Success = success; }
 
-        public ResponseVM(string msg, bool success = false)
+        public JsonVM(string msg, bool success = false)
         {
             Success = success;
             Msg = msg;
         }
 
-        public ResponseVM(object data)
+        public JsonVM(object data)
         {
             Success = true;
             Data = data;
