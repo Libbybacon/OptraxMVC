@@ -1,6 +1,6 @@
 ﻿import apiService from '../utilities/api.js';
-import { loadEdit, showEditPopup } from './objectManager.js';
-import { createIcon } from './objStyleUtil.js';
+import { loadEdit, urlBase } from './objectManager.js';
+import { createIcon, saveStyle } from './objStyleUtil.js';
 import { getMap, setMap, setIndex, deleteIndex, setActive } from './mapState.js';
 
 let pointsL, linesL, polysL, circlesL;
@@ -9,7 +9,7 @@ let map = null;
 export function initializeLayers() {
     map = getMap();
 
-     //console.log('initializeLayers map: ', map)
+    //console.log('initializeLayers map: ', map)
     const satellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
         maxZoom: 20,
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
@@ -27,8 +27,11 @@ export function initializeLayers() {
 
     L.control.layers(baseMaps).addTo(map);
 
+    //console.log('initializeLayers map: ', map)
+
     pointsL = L.geoJSON(null, {
         pointToLayer: function (feat, latlng) {
+            console.log('pointToLayer feat', feat);
             const icon = createIcon(feat.properties.iconPath);
             const l = L.marker(latlng, { icon: icon });
 
@@ -43,6 +46,7 @@ export function initializeLayers() {
             return setStyle(feat.properties);
         },
         onEachFeature: (feat, l) => {
+            //console.log('lineFeature feat', feat);
             setType(feat, 'Line');
             setActions(feat.properties, l);
         }
@@ -59,6 +63,7 @@ export function initializeLayers() {
             return L.marker(latlng);
         },
         onEachFeature: (feat, l) => {
+            //console.log('circleFeature feat', feat);
             setType(feat, 'Circle');
             setActions(feat.properties, l);
         }
@@ -70,6 +75,7 @@ export function initializeLayers() {
             return setStyle(feat.properties);
         },
         onEachFeature: (feat, l) => {
+            //console.log('polyFeature feat', feat);
             setType(feat, 'Polygon');
             setActions(feat.properties, l);
         }
@@ -97,36 +103,49 @@ export function setStyle(props) {
 }
 
 export function setActions(props, layer) {
-
+    const id = props.id;
     const type = props.objType;
+    const isCircle = type == 'Circle';
 
-    setIndex(props.id, layer);
+    setIndex(id, layer);
+
+    const editProps = {
+        type: type,
+        data: { id: id, objType: type },
+        url: `${urlBase}LoadEdit/`
+    }
 
     layer.bindTooltip(props.name, { permanent: true, direction: "top" });
+
+    //layer.on('drag', function () {
+    //    layer.closeTooltip();
+    //});
+
+    //layer.on('dragend', function () {
+    //    // Re-center and show tooltip
+    //    const center = getLayerCenter(layer); 
+    //    layer.setTooltipLatLng(center);  
+    //    layer.openTooltip();
+    //});
 
     setClickHandlers(layer,
         function (e) {
             setActive(layer);
-            const center = (type === 'Point' || type === 'Circle') ? e.latlng : layer.getBounds().getCenter(); // Center map on selected object
-            loadEdit(props.id, type, center);
+            editProps["center"] = getLayerCenter(layer);
+            editProps["radius"] = isCircle ? layer.getRadius() : null;
+            console.log('setClickHandlers single editProps', editProps);
+            loadEdit(editProps);
         },
         function (e) {
             if (layer.enableEdit) {
                 setActive(layer);
                 saveStyle();
-
                 layer.enableEdit();
-
                 layer.once('editable:disable', () => {
-                    updateHiddenFields(type, props);
-                    showEditPopup({
-                        type,
-                        center: getCenter(layer),
-                        data: { id: props.id, objType: type },
-                        url: `${urlBase}LoadEdit/`
-                    });
-
-                    map.on('popupclose', restoreStyle);
+                    editProps["center"] = getLayerCenter(layer);
+                    editProps["radius"] = isCircle ? layer.getRadius() : null;
+                    console.log('setClickHandlers dbl editProps', editProps);
+                    loadEdit(editProps)
                 });
             }
         }
@@ -147,7 +166,16 @@ export function setActions(props, layer) {
     });
 }
 
-function setClickHandlers(layer, onClick, onDblClick, delay = 250) {
+export function getLayerCenter(layer) {
+    if (layer.getBounds) {
+        return layer.getBounds().getCenter(); // line or poly
+    }
+    if (layer.getLatLng) {
+        return layer.getLatLng(); // point or circle
+    }
+    return null;
+}
+export function setClickHandlers(layer, onClick, onDblClick, delay = 250) {
     let clickTimer = null;
 
     layer.on('click', function (e) {
@@ -186,7 +214,7 @@ export async function loadObjects(mapLayer, layerType) {
         mapLayer.addData(response.data);
     }
     catch (error) {
-        console.error("Error loading points:", error);
+        console.error(`Error loading ${layerType}s:`, error);
     }
 }
 
@@ -204,12 +232,8 @@ export const getLayerset = objType => {
     }
 }
 
-export function getPointsLayer() { return pointsL; }
-export function getLinesLayer() { return linesL; }
-export function getCirclesLayer() { return circlesL; }
-export function getPolysLayer() { return polysL; }
 export function getAllLayers() {
-    return [pointsL, linesL, circlesL, polysL ];
+    return [pointsL, linesL, circlesL, polysL];
 }
 
 

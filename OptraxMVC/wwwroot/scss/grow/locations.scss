@@ -189,19 +189,6 @@
 	position: relative;
 }
 
-.draw-list-div {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: $tan;
-  border-radius: $br;
-  padding: 0;
-  box-shadow: shdw(base);
-  z-index: 1000;
-  width: fit-content;
-}
-
 .edit-div {
 	overflow-x: hidden;
 	white-space: nowrap;

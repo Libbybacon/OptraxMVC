@@ -60,7 +60,7 @@ export function setColorPicker(attr) {
 
 export function updateStyle(input, val) {
     let layer = getActive();
-    console.log('updateStyle layer', layer, 'input', input, 'val', val);
+    //console.log('updateStyle layer', layer, 'input', input, 'val', val);
     switch (input) {
         case 'name':
             layer._tooltip.setContent(val);
@@ -85,7 +85,7 @@ export function updateStyle(input, val) {
 export function saveStyle () {
     let layer = getActive();
     let tooltip = layer.getTooltip();
-    console.log('saveStyle');
+    //console.log('saveStyle');
     layer._origStyle = {
         icon: layer instanceof L.Marker ? layer.getIcon() : null,
         style: layer.setStyle ? { ...layer.options } : null,
@@ -97,21 +97,21 @@ export function saveStyle () {
 export function restoreStyle(input, val) {
 
     const l = getActive();
-    const origStyle = l._origStyle
+    const orig = l._origStyle
     const tooltip = l.getTooltip();
 
-    if (l instanceof L.Marker && origStyle.icon) {
-        l.setIcon(origStyle.icon);
+    if (l instanceof L.Marker && orig.icon) {
+        l.setIcon(orig.icon);
         l._tooltip.setContent()
     }
-    else if (l.setStyle && origStyle.style) {
-        l.setStyle(origStyle.style);
+    else if (l.setStyle && orig.style) {
+        l.setStyle(orig.style);
     }
     if (tooltip) {
-        tooltip.setContent(origStyle.content);
+        tooltip.setContent(orig.content);
     }
 
-    restoreGeometry(layer, orig.geometry);
+    restoreGeometry(l, orig.geometry);
 
     delete l._originalStyle;
 }
@@ -152,7 +152,7 @@ function restoreGeometry(layer, geom) {
 }
 
 export function setStyleListeners(formId) {
-    console.log('setStyleListeners');
+    //console.log('setStyleListeners');
     // Points
     $('.icon-coll-name').on('click', function () {
         selectIconColl($(this)); // change icon collection display

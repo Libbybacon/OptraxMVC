@@ -7,6 +7,8 @@ import 'bootstrap';
 
 // Leaflet
 import L from 'leaflet';
+import 'leaflet-editable'; 
+import 'leaflet.path.drag';
 /*import 'leaflet-draw'; // also attaches to Leaflet*/
 
 // Choices.js

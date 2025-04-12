@@ -276,14 +276,22 @@ namespace OptraxMVC.Services.Grow
                     dbMapPoly.ColorBytes = mapPoly.ColorBytes;
                     dbMapPoly.FillColorBytes = mapPoly.FillColorBytes;
 
-                    if (dbMapPoly is MapPolygon dbPoly && mapPoly is MapPolygon poly)
+                    if (dbMapPoly is MapCircle dbCirc && mapPoly is MapCircle circ)
                     {
-                        dbPoly.PolyGeometry = poly.PolyGeometry;
+                        dbCirc.Area = circ.Area;
+                        dbCirc.Radius = circ.Radius;
+                        dbCirc.Latitude = circ.Latitude;
+                        dbCirc.Longitude = circ.Longitude;
                     }
                     if (dbMapPoly is MapLine dbLine && mapPoly is MapLine line)
                     {
                         dbLine.LineGeometry = line.LineGeometry;
                     }
+                    if (dbMapPoly is MapPolygon dbPoly && mapPoly is MapPolygon poly)
+                    {
+                        dbPoly.PolyGeometry = poly.PolyGeometry;
+                    }
+
                 }
                 else if (mapObj is MapPoint point && dbMapObj is MapPoint dbPoint)
                 {

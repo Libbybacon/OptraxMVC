@@ -15,7 +15,7 @@ export const formUtil = {
             $.validator.unobtrusive.parse($form);
         }
         
-        console.log('setListeners form', $form, 'action', $form.attr('action'));
+        //console.log('setListeners form', $form, 'action', $form.attr('action'));
         if ($form.attr('action').includes('Edit')) {
             formUtil.setModelChanges();
         }

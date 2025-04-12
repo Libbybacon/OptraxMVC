@@ -1,12 +1,18 @@
 ﻿import apiService from '../utilities/api.js';
 import { formUtil } from '../utilities/form.js';
-import { getMap, getActive, setActive, deleteActive, setIndex, deleteIndex } from './mapState.js';
+import { onMapReady, getMap, getActive, setActive, deleteActive, setIndex, deleteIndex } from './mapState.js';
 import * as _style from './objStyleUtil.js';
 import { getLayerset } from './layerManager.js';
 
 let map = getMap();
 
-const urlBase = '/Grow/Map/';
+$(function () {
+    onMapReady((loadedMap) => {
+        map = loadedMap;
+    });
+});
+
+export const urlBase = '/Grow/Map/';
 
 const typeMap = {
     marker: 'Point',
@@ -22,45 +28,75 @@ export const layerProps = {
     fillColor: '#1d52d782',
     iconPath: 'https://img.icons8.com/?size=100&id=43731&format=png&color=263EDE'
 };
+//layer.feature = {
+//    type: 'Feature',
+//    properties: { ...layerProps },
+//    geometry: {} // Leaflet will populate this
+//};
+// Called when user clicks 'Add to Map' or map toolbar button
+// Starts drawing new object.
 
-// Create
-export async function addObject(l, type) {
-    const objType = typeMap[e.type] ?? 'Polygon';
+export function startAddObject(type) {
+    let layer;
+
+    switch (type) {
+        case 'marker':
+            layer = map.editTools.startMarker();
+            break;
+        case 'polyline':
+            layer = map.editTools.startPolyline();
+            break;
+        case 'polygon':
+            layer = map.editTools.startPolygon();
+            break;
+        case 'circle':
+            const center = map.getCenter();
+            layer = L.circle(center, { radius: 10 }).addTo(map);
+            layer.enableEdit();
+            layer.dragging.enable();
+            //finalizeObject(layer, type);
+            return;
+    }
+
+    if (layer) {
+        layer.on('editable:drawing:end', () => {
+            finalizeObject(layer, type);
+        });
+    }
+}
+
+export async function finalizeObject(layer, type) {
+    console.log('finalizeObject layer', layer, 'type', type);
     const layerSet = getLayerset(type);
-
-    console.log('layerset', layerSet, 'layer', l, 'type', type);
-
+    const objType = typeMap[type] ?? 'Polygon';
     layerProps["name"] = 'New ' + objType;
 
     if (type === 'circle') {
-        addCircle(l, layerSet);
+        addCircle(layer, layerSet);
     }
     else {
-        const geojson = l.toGeoJSON();
+        const geojson = layer.toGeoJSON();
         geojson.properties = layerProps;
         layerSet.addData(geojson);
     }
 
-    setActive(getLastLayer(layerSet));
+    const newLayer = getLastLayer(layerSet);
+    setActive(newLayer);
+    setIndex(-1, newLayer);
 
-    setIndex(-1, getActive());
-
+    //if (layer.enableEdit) {
+    //    layer.enableEdit();
+    //}
     const props = {
         id: -1,
-        type: type,
-        data: { objType: type },
-        url: `${urlBase}AddNewObject/`,
-        center: (type == 'Point' || type == 'Circle') ? l.getLatLng() : l.getBounds().getCenter(),
-    }
-
-    _style.saveStyle();
-
-    await showEditPopup(props).then(() => {
-        mapFormUtil.setFormListeners('#mapObjForm');
-
-        updateHiddenFields(type, layerProps);
-        map.on('popupclose', deleteActive);
-    });
+        type: objType,
+        center: getCenter(newLayer),
+        radius: type === 'circle' ? layer.getRadius() : null,
+        data: { objType },
+        url: `${urlBase}LoadCreateObject/`
+    };
+    console.log('finalizeObject props', props);
+    loadEdit(props);
 }
 
 export function addCircle(l, layerSet) {
@@ -79,10 +115,22 @@ export function addCircle(l, layerSet) {
     layerSet.addData(feature);
 }
 
-
+// Get currently selected map object
 export const getLastLayer = layerSet => {
     let layers = layerSet.getLayers();
     return layers[layers.length - 1];
+}
+
+// Called when user clicks map object once
+export async function loadEdit(props) {
+    console.log('loadEdit', props);
+    _style.saveStyle(); // Store current style in case user cancels update
+
+    await showEditPopup(props).then(() => {
+        mapFormUtil.setFormListeners('#mapObjForm');
+        updateHiddenFields(props);
+        map.on('popupclose', _style.restoreStyle);
+    });
 }
 
 export async function showEditPopup(props) {
@@ -110,12 +158,14 @@ export async function showEditPopup(props) {
     $($editDiv).find('.obj-fill.color-picker').spectrum(_style.setColorPicker('fillColor'));
 }
 
-export function updateHiddenFields(type, props) {
+// Fill in geometry, MapId values in form
+export function updateHiddenFields(props) {
     let layer = getActive();
+    const type = props.type;
     const mapId = $("#mapForm").find("#Id").val();
 
     $('.obj-mapId').val(mapId)
-    //console.log('updateHiddenFields props', props, 'layer', layer);
+    console.log('updateHiddenFields props', props, 'layer', layer);
 
     if (type.toLowerCase() == 'point') {
         const latlng = layer.getLatLng();
@@ -126,7 +176,7 @@ export function updateHiddenFields(type, props) {
     else if (type.toLowerCase() == 'circle') {
         $('.obj-lat').val(props.center.lat);
         $('.obj-lng').val(props.center.lng);
-        $('.obj-radius').val(layer.feature.properties.radius);
+        $('.obj-radius').val(props.radius);
     }
 
     else if (type.toLowerCase() === 'line') {
@@ -154,25 +204,6 @@ export function updateHiddenFields(type, props) {
     }
 }
 
-// Edit
-export async function loadEdit(id, type, center) {
-
-    let props = {
-        type: type,
-        center: center,
-        data: { id: id, objType: type },
-        url: `${urlBase}LoadEdit/`
-    }
-
-    _style.saveStyle(); // Store current style in case user cancels update
-
-    await showEditPopup(props).then(() => {
-        mapFormUtil.setFormListeners('#mapObjForm');
-        updateHiddenFields(type, props);
-        map.on('popupclose', _style.restoreStyle);
-    });
-}
-
 // Delete
 export async function onDelete(id, type) {
     const response = await apiService.postForm(`${urlBase}DeleteObject/`, { id: id, objType: type })
@@ -191,6 +222,10 @@ export const mapFormUtil = {
             event.preventDefault();
             mapFormUtil.onSubmitForm(formId) // submit form
         });
+
+        $(formId).find('.draw-list li').off('click').on('click', function () {
+            const type = $(this).data('type');
+        })
 
         $(document).off('click', formId + ' .btn-red').on('click', formId + ' .btn-red', function () {
             let id = $(formId).data('id');
@@ -231,7 +266,6 @@ export const mapFormUtil = {
                 if (isCreate && response.data) {
                     mapFormUtil.updateId(response.data, $form.data('obj'));
                 }
-
                 window.showMessage({ msg: `${objType} ${action}!`, css: 'success', msgdiv: $('.map-msg') });
             }
         }
@@ -239,7 +273,6 @@ export const mapFormUtil = {
             alert('Error! ' + response.error);
         }
     },
-
     updateId(data, type) {
         let layer = getActive();
         let id = data.properties.id;
@@ -252,3 +285,43 @@ export const mapFormUtil = {
     }
 }
 
+
+
+//export async function addObject(l, type) {
+//    const objType = typeMap[e.type] ?? 'Polygon';
+//    const layerSet = getLayerset(type);
+
+//    console.log('layerset', layerSet, 'layer', l, 'type', type);
+
+//    layerProps["name"] = 'New ' + objType;
+
+//    if (type === 'circle') {
+//        addCircle(l, layerSet);
+//    }
+//    else {
+//        const geojson = l.toGeoJSON();
+//        geojson.properties = layerProps;
+//        layerSet.addData(geojson);
+//    }
+
+//    setActive(getLastLayer(layerSet));
+
+//    setIndex(-1, getActive());
+
+//    const props = {
+//        id: -1,
+//        type: type,
+//        data: { objType: type },
+//        url: `${urlBase}LoadCreateObject/`,
+//        center: (type == 'Point' || type == 'Circle') ? l.getLatLng() : l.getBounds().getCenter(),
+//    }
+
+//    _style.saveStyle();
+
+//    await showEditPopup(props).then(() => {
+//        mapFormUtil.setFormListeners('#mapObjForm');
+
+//        updateHiddenFields(type, layerProps);
+//        map.on('popupclose', deleteActive);
+//    });
+//}

@@ -180,12 +180,12 @@ export function zoomToSite(map) {
     const lat = parseFloat($('#locForm').find('.addy-lat').val());
     const lng = parseFloat($('#locForm').find('.addy-lng').val());
 
-    console.log('delayed zoomToSite lat', lat, 'lng', lng);
+    //console.log('delayed zoomToSite lat', lat, 'lng', lng);
 
     if (!isNaN(lat) && !isNaN(lng)) {
         map.invalidateSize();
         map.setView([lat, lng], 21);
-        console.log('zoomed after delay:', map.getCenter());
+        //console.log('zoomed after delay:', map.getCenter());
     }
 
 }

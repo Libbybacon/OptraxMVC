@@ -17,7 +17,8 @@ $(function () {
 async function initializeMap() {
     map = L.map('map', {
         center: [39.8283, -98.5795],
-        zoom: 4
+        zoom: 4,
+        editable: true,
     });
     setMap(map);
 

@@ -14,11 +14,9 @@ $(function () {
     onMapReady((loadedMap) => {
         map = loadedMap;
         setResizer();
-        console.log('map loaded');
     });
 
     onLayersReady((ready) => {
-        console.log('layers loaded', ready);
         setTimeout(() => {
             util.zoomToSite(map);
         }, 500);
@@ -27,7 +25,7 @@ $(function () {
 
 function setResizer() {
    
-    console.log('setResizer map', map)
+    //console.log('setResizer map', map)
     const $resizer = $('#resizer');
     const col2 = document.getElementById('loc-details');
     const col3 = document.getElementById('loc-map');

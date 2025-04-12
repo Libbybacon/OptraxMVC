@@ -103,7 +103,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddNewObject(string objType)
+        public async Task<IActionResult> LoadCreateObject(string objType)
         {
             try
             {

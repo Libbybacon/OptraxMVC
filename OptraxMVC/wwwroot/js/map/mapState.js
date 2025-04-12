@@ -25,7 +25,7 @@ function notifySubscribers() {
 }
 
 export function setLayersReady(ready) {
-    console.log('setLayersReady', ready);
+    //console.log('setLayersReady', ready);
     layersReady = ready;
     notifyLayerSubscribers();
  }

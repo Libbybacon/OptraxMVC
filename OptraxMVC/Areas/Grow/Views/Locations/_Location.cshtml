@@ -28,12 +28,21 @@
                             <input type="hidden" asp-for="LocationType" />
                             <input type="hidden" asp-for="@Model.Location.MapObjectId" />
 
-                            <div class="add-loc-obj d-flex w-100 ps-2">
-                                @if (Model.Location.MapObjectId == null)
-                                {
-                                    <button class="btn-grn btn-sm">Add to Map</button>
-                                }
-                            </div>
+                            @if (Model.Location.MapObjectId == null)
+                            {
+                                <div class="add-loc-obj d-flex w-100 ps-2">
+                                    <div class="dropdown">
+                                        <button class="btn-grn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Add to Map </button>
+                                        <ul class="dropdown-menu draw-list">
+                                            <li><a href="#" class="dropdown-item" data-type="marker">Point</a></li>
+                                            <li><a href="#" class="dropdown-item" data-type="polyline">Line</a></li>
+                                            <li><a href="#" class="dropdown-item" data-type="polygon">Polygon</a></li>
+                                            <li><a href="#" class="dropdown-item" data-type="circle">Circle</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            }
                             @if (Model.Location is Site site)
                             {
                                 ViewData.TemplateInfo.HtmlFieldPrefix = "Site";
