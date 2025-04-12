@@ -112,7 +112,16 @@ namespace OptraxMVC.Areas.Grow.Controllers
 
             try
             {
-                return Json(await _Location.EditAsync(locVM.Location));
+                Location? loc = locVM.GetLocation();
+
+                if (loc == null) { return Json(JsonVM("No Location")); }
+
+                string response = await _Location.EditAsync(loc);
+                if (response == "OK")
+                {
+                    return Json(JsonVM(true));
+                }
+                return Json(JsonVM(response));
             }
             catch (Exception ex)
             {

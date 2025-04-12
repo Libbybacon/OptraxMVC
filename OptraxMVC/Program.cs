@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
@@ -13,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<OptraxContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING"), x => x.UseNetTopologySuite());
+    options.UseSqlServer(builder.Configuration.GetConnectionString("OptraxConnection"), x => x.UseNetTopologySuite());
 });
 
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<OptraxContext>()
@@ -48,8 +49,28 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IPhoneFormatter, PhoneFormatter>();
+
+builder.Services.AddScoped(provider =>
+{
+    var phoneFormatter = provider.GetRequiredService<IPhoneFormatter>();
+
+    var config = new MapperConfiguration(cfg =>
+    {
+        cfg.AddProfile(new MappingProfile(phoneFormatter));
+    });
+
+    config.AssertConfigurationIsValid(); // optional but helpful
+
+    return config;
+});
+
+// Then register IMapper (per request)
+builder.Services.AddScoped<IMapper>(provider =>
+{
+    var config = provider.GetRequiredService<MapperConfiguration>();
+    return config.CreateMapper();
+});
 
 
 

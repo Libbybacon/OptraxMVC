@@ -3,6 +3,7 @@ using OptraxDAL;
 using OptraxDAL.Models.Inventory;
 using OptraxMVC.Controllers;
 using OptraxMVC.Models;
+using OptraxMVC.Models.ViewModels;
 using OptraxMVC.Services;
 using OptraxMVC.Services.Inventory;
 

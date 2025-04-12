@@ -1,15 +1,13 @@
 ﻿let map = null;
 let activeL = null;
+let layersReady = false;
 const subscribers = [];
+const layerSubs = [];
 const layerIndex = new Map();
 
 export function setMap(newMap) {
     map = newMap;
     notifySubscribers();
-}
-
-export function getMap() {
-    return map;
 }
 
 export function onMapReady(callback) {
@@ -19,14 +17,37 @@ export function onMapReady(callback) {
         subscribers.push(callback);
     }
 }
-
 function notifySubscribers() {
     for (const cb of subscribers) {
         cb(map);
     }
-    subscribers.length = 0; 
+    subscribers.length = 0;
 }
 
+export function setLayersReady(ready) {
+    console.log('setLayersReady', ready);
+    layersReady = ready;
+    notifyLayerSubscribers();
+ }
+export function onLayersReady(callback) {
+    if (layersReady) {
+        callBack(layersReady);
+    }
+    else {
+        layerSubs.push(callback);
+    }
+}
+
+export function notifyLayerSubscribers() {
+    for (const cb of layerSubs) {
+        cb(layersReady);
+    }
+    layerSubs.length = 0;
+}
+
+export function getMap() {
+    return map;
+}
 
 export function setActive(layer) {
     activeL = layer;

@@ -8,6 +8,9 @@
     string phoneNum = hasPhone ? PhoneFormatter.Format(Model.ContactPhone!) : "";
 }
 
+<input type="hidden" class="addy-lat" value="@Model.Latitude" />
+<input type="hidden" class="addy-lng" value="@Model.Longitude" />
+
 <div class="m-toggle loc-disp display">
     <div class="w-100">
         @{

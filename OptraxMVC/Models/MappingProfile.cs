@@ -10,9 +10,10 @@ namespace OptraxMVC.Models
 
         public MappingProfile(IPhoneFormatter phoneFormatter)
         {
-            CreateMap<Address, Address>().ForMember(dest => dest.ContactPhone, opt => opt.MapFrom(src => string.IsNullOrWhiteSpace(src.ContactPhone)
-                                                                                                       ? null
-                                                                                                       : phoneFormatter.Normalize(src.ContactPhone)));
+            CreateMap<Address, Address>()
+                .ForMember(dest => dest.ContactPhone, opt => opt.MapFrom(src => string.IsNullOrWhiteSpace(src.ContactPhone)
+                                                                                   ? null
+                                                                                   : phoneFormatter.Normalize(src.ContactPhone)));
         }
     }
 }

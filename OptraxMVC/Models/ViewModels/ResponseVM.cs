@@ -1,4 +1,4 @@
-﻿namespace OptraxMVC.Models
+﻿namespace OptraxMVC.Models.ViewModels
 {
     public class JsonVM
     {

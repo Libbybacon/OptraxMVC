@@ -4,7 +4,7 @@ using OptraxDAL;
 using OptraxDAL.Models;
 using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
-using OptraxMVC.Models;
+using OptraxMVC.Models.ViewModels;
 
 namespace OptraxMVC.Services
 {

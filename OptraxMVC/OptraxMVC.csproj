@@ -46,7 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Areas\Grow\Views\Locations\_AddressLocation.cshtml" />
+    <Content Remove="Areas\Grow\Views\Locations\_Building.cshtml" />
     <Content Remove="Areas\Grow\Views\Locations\_Create.cshtml" />
     <Content Remove="Areas\Grow\Views\Locations\_SiteLocation.cshtml" />
     <Content Remove="Areas\Grow\Views\Map\_Map.cshtml" />

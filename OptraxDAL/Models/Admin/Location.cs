@@ -1,4 +1,5 @@
-﻿using OptraxDAL.Models.BaseClasses;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using OptraxDAL.Models.BaseClasses;
 using OptraxDAL.Models.Grow;
 using OptraxDAL.Models.Inventory;
 using OptraxDAL.Models.Maps;
@@ -12,7 +13,10 @@ namespace OptraxDAL.Models.Admin
         public int? AddressId { get; set; }
         public int? BusinessId { get; set; }
 
+        [ForeignKey("AddressId")]
         public Address? Address { get; set; } = new();
+
+        [ForeignKey("BusinessId")]
         public Business? Business { get; set; }
     }
 
@@ -30,7 +34,10 @@ namespace OptraxDAL.Models.Admin
     [Table("Locations", Schema = "Admin")]
     public abstract class Location : TrackingBaseDetails
     {
-        public Location() { }
+        public Location()
+        {
+            Name = "New Location";
+        }
 
         public string LocationType { get; set; } = string.Empty;
         public int? MapObjectId { get; set; }
@@ -38,7 +45,6 @@ namespace OptraxDAL.Models.Admin
         [Display(Name = "Parent Location")]
         public int? ParentId { get; set; }
         public int? IconId { get; set; }
-
 
         public Icon? Icon { get; set; }
         public MapObject? MapObject { get; set; }

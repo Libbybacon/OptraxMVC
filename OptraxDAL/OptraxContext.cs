@@ -133,10 +133,6 @@ namespace OptraxDAL
                 e.HasOne(x => x.MapPoint).WithOne(b => b.Address)
                                          .HasForeignKey<Address>(x => x.MapPointId)
                                          .OnDelete(DeleteBehavior.Restrict);
-
-                e.HasOne(x => x.Site).WithOne(b => b.Address)
-                                     .HasForeignKey<Address>(x => x.SiteId)
-                                     .OnDelete(DeleteBehavior.Restrict);
             });
             builder.Entity<ContainerType>(e =>
             {
@@ -163,6 +159,13 @@ namespace OptraxDAL
                                                           .HasValue<Vehicle>("Vehicle");
             });
 
+            builder.Entity<AddressLocation>(e =>
+            {
+                e.HasOne(sl => sl.Address).WithMany(a => a.Locations)
+                                          .HasForeignKey(sl => sl.AddressId)
+                                          .OnDelete(DeleteBehavior.Restrict);
+            });
+
             builder.Entity<Site>(e =>
             {
                 e.HasOne(sl => sl.Business).WithMany(b => b.Sites)
@@ -186,10 +189,6 @@ namespace OptraxDAL
 
             builder.Entity<Building>(e =>
             {
-                e.HasOne(bl => bl.Address).WithOne(a => a.Building)
-                                          .HasForeignKey<Building>(bl => bl.AddressId)
-                                          .OnDelete(DeleteBehavior.Restrict);
-
                 e.HasOne(bl => bl.Business).WithMany(b => b.Buildings)
                                            .HasForeignKey(bl => bl.BusinessId)
                                            .OnDelete(DeleteBehavior.Restrict);

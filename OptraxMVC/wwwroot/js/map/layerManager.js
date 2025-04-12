@@ -1,5 +1,5 @@
 ﻿import apiService from '../utilities/api.js';
-import { loadEdit, layerProps } from './objectManager.js';
+import { loadEdit, showEditPopup } from './objectManager.js';
 import { createIcon } from './objStyleUtil.js';
 import { getMap, setMap, setIndex, deleteIndex, setActive } from './mapState.js';
 
@@ -104,18 +104,67 @@ export function setActions(props, layer) {
 
     layer.bindTooltip(props.name, { permanent: true, direction: "top" });
 
-    // Center map on selected object
-    layer.on('click', async function (e) {
-        setActive(layer);
-        const center = (type === 'Point' || type === 'Circle') ? e.latlng : layer.getBounds().getCenter();
+    setClickHandlers(layer,
+        function (e) {
+            setActive(layer);
+            const center = (type === 'Point' || type === 'Circle') ? e.latlng : layer.getBounds().getCenter(); // Center map on selected object
+            loadEdit(props.id, type, center);
+        },
+        function (e) {
+            if (layer.enableEdit) {
+                setActive(layer);
+                saveStyle();
 
-        loadEdit(props.id, type, center);
-    });
+                layer.enableEdit();
+
+                layer.once('editable:disable', () => {
+                    updateHiddenFields(type, props);
+                    showEditPopup({
+                        type,
+                        center: getCenter(layer),
+                        data: { id: props.id, objType: type },
+                        url: `${urlBase}LoadEdit/`
+                    });
+
+                    map.on('popupclose', restoreStyle);
+                });
+            }
+        }
+    );
+
+    //// Center map on selected object
+    //layer.on('click', async function (e) {
+    //    setActive(layer);
+    //    const center = (type === 'Point' || type === 'Circle') ? e.latlng : layer.getBounds().getCenter();
+
+    //    loadEdit(props.id, type, center);
+    //});
 
     layer.on('remove', function () {
         deleteIndex(props.id);
         const map = getMap();
         map.closePopup();
+    });
+}
+
+function setClickHandlers(layer, onClick, onDblClick, delay = 250) {
+    let clickTimer = null;
+
+    layer.on('click', function (e) {
+        if (clickTimer) return;
+
+        clickTimer = setTimeout(() => {
+            clickTimer = null;
+            onClick(e);
+        }, delay);
+    });
+
+    layer.on('dblclick', function (e) {
+        if (clickTimer) {
+            clearTimeout(clickTimer);
+            clickTimer = null;
+        }
+        onDblClick(e);
     });
 }
 

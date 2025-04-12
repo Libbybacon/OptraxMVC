@@ -7,7 +7,7 @@ import 'bootstrap';
 
 // Leaflet
 import L from 'leaflet';
-import 'leaflet-draw'; // also attaches to Leaflet
+/*import 'leaflet-draw'; // also attaches to Leaflet*/
 
 // Choices.js
 import Choices from 'choices.js';

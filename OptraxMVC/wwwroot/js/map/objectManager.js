@@ -2,6 +2,7 @@
 import { formUtil } from '../utilities/form.js';
 import { getMap, getActive, setActive, deleteActive, setIndex, deleteIndex } from './mapState.js';
 import * as _style from './objStyleUtil.js';
+import { getLayerset } from './layerManager.js';
 
 let map = getMap();
 
@@ -23,19 +24,19 @@ export const layerProps = {
 };
 
 // Create
-export async function addObject(e, layerSet) {
-    var l = e.layer;
-    let type = typeMap[e.layerType] ?? 'Polygon';
+export async function addObject(l, type) {
+    const objType = typeMap[e.type] ?? 'Polygon';
+    const layerSet = getLayerset(type);
 
     console.log('layerset', layerSet, 'layer', l, 'type', type);
 
-    layerProps["name"] = 'New ' + type;
+    layerProps["name"] = 'New ' + objType;
 
-    if (type === 'Circle') {
+    if (type === 'circle') {
         addCircle(l, layerSet);
     }
     else {
-        let geojson = l.toGeoJSON();
+        const geojson = l.toGeoJSON();
         geojson.properties = layerProps;
         layerSet.addData(geojson);
     }
@@ -44,7 +45,7 @@ export async function addObject(e, layerSet) {
 
     setIndex(-1, getActive());
 
-    let props = {
+    const props = {
         id: -1,
         type: type,
         data: { objType: type },

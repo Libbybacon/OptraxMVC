@@ -11,7 +11,7 @@ const childTypes = {
     room: [],
 };
 
-export function initializeTree(map) {
+export function initializeTree() {
     $('#locationTree').jstree({
         'core': {
             'data': {
@@ -33,14 +33,6 @@ export function initializeTree(map) {
             'items': nodeMenu,
         }
 
-    });
-    $('#locationTree').on('select_node.jstree', function (e, data) {
-        console.log('initializeTree data', data);
-        var node = data.node;
-
-        if (node.data.lat && node.data.lng) {
-            map.setView[node.data.lng, node.data.lat, 19]
-        }
     });
 }
 

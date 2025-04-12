@@ -89,14 +89,16 @@ export function saveStyle () {
     layer._origStyle = {
         icon: layer instanceof L.Marker ? layer.getIcon() : null,
         style: layer.setStyle ? { ...layer.options } : null,
-        content: tooltip.getContent()
+        content: tooltip?.getContent(),
+        geometry: getGeometrySnapshot(layer)
     };
 }
+
 export function restoreStyle(input, val) {
-    //console.log('restoreStyle')
-    let l = getActive();
-    let origStyle = l._origStyle
-    let tooltip = l.getTooltip();
+
+    const l = getActive();
+    const origStyle = l._origStyle
+    const tooltip = l.getTooltip();
 
     if (l instanceof L.Marker && origStyle.icon) {
         l.setIcon(origStyle.icon);
@@ -108,7 +110,45 @@ export function restoreStyle(input, val) {
     if (tooltip) {
         tooltip.setContent(origStyle.content);
     }
+
+    restoreGeometry(layer, orig.geometry);
+
     delete l._originalStyle;
+}
+
+function getGeometrySnapshot(layer) {
+    if (layer instanceof L.Marker) {
+        return { latlng: layer.getLatLng() };
+    }
+
+    if (layer instanceof L.Circle) {
+        return {
+            latlng: layer.getLatLng(),
+            radius: layer.getRadius()
+        };
+    }
+
+    if (layer.getLatLngs) {
+        return { latlngs: layer.getLatLngs() };
+    }
+    return null;
+}
+
+function restoreGeometry(layer, geom) {
+    if (!geom) return;
+
+    if (layer instanceof L.Marker && geom.latlng) {
+        layer.setLatLng(geom.latlng);
+    }
+
+    if (layer instanceof L.Circle && geom.latlng && geom.radius != null) {
+        layer.setLatLng(geom.latlng);
+        layer.setRadius(geom.radius);
+    }
+
+    if (layer.setLatLngs && geom.latlngs) {
+        layer.setLatLngs(geom.latlngs);
+    }
 }
 
 export function setStyleListeners(formId) {

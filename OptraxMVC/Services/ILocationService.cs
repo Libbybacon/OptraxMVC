@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
 using OptraxDAL.Models.Admin;
-using OptraxMVC.Models;
+using OptraxMVC.Models.ViewModels;
 
 namespace OptraxMVC.Services
 {
@@ -12,7 +12,7 @@ namespace OptraxMVC.Services
         Task<Site?> GetSiteLocationAsync();
         Task<Location?> GetLocationAsync(int id, string type);
         Task<Location?> CreateAsync(Location loc);
-        Task<JsonVM> EditAsync(Location loc);
+        Task<string> EditAsync(Location loc);
         Task<JsonVM> DeleteAsync(int id);
     }
 
@@ -64,23 +64,23 @@ namespace OptraxMVC.Services
             }
         }
 
-        public async Task<JsonVM> EditAsync(Location viewLoc)
+        public async Task<string> EditAsync(Location viewLoc)
         {
             try
             {
                 Location? dbLoc = await db.Locations.FindAsync(viewLoc.Id);
 
-                if (dbLoc == null) { return new JsonVM("Location not found"); }
+                if (dbLoc == null) { return "Location not found"; }
 
                 UpdateFields(viewLoc, dbLoc);
 
                 await db.SaveChangesAsync();
 
-                return new JsonVM(true);
+                return "OK";
             }
             catch (Exception ex)
             {
-                return new JsonVM("Error deleting location..." + ex.Message);
+                return "Error deleting location..." + ex.Message;
             }
         }
 
@@ -112,6 +112,16 @@ namespace OptraxMVC.Services
             if (dbAdd != null)
             {
                 _Mapper.Map(viewLoc.Address, dbAdd);
+                Console.WriteLine($"Mapped Address.Lat: {dbAdd.Latitude}, Lng: {dbAdd.Longitude}");
+                if (dbLoc.AddressId == null)
+                {
+                    db.Addresses.Add(dbAdd);
+                }
+                else
+                {
+                    db.Entry(dbAdd).State = EntityState.Modified;
+                }
+
             }
             dbLoc.Address = dbAdd;
         }

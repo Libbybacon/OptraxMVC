@@ -4,7 +4,7 @@ using OptraxDAL;
 using OptraxDAL.Models.Maps;
 using OptraxMVC.Areas.Grow.Models;
 using OptraxMVC.Controllers;
-using OptraxMVC.Models;
+using OptraxMVC.Models.ViewModels;
 using OptraxMVC.Services;
 using OptraxMVC.Services.Grow;
 

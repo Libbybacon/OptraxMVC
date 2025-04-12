@@ -1,4 +1,4 @@
-﻿namespace OptraxMVC.Models
+﻿namespace OptraxMVC.Models.ViewModels
 {
     public class FormVM
     {
@@ -6,7 +6,7 @@
 
         public FormVM(string action, string type)
         {
-            IsNew = action.ToLower().Contains("create");
+            IsNew = action.Contains("create", StringComparison.CurrentCultureIgnoreCase);
             Action = action;
             Type = type;
         }

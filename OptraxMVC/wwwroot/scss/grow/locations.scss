@@ -21,7 +21,11 @@
 
 .inner-layout {
 	overflow-y: auto;
+	scrollbar-width: thin;
+	padding-top: .1rem;
 }
+
+
 
 .view-tabs {
 	overflow: hidden;
@@ -82,18 +86,26 @@
 .tree {
 	width: auto;
 	z-index: 103;
-	padding: 1rem;
+	
+	padding-right: 0;
+	/*margin-left: 2px;*/
 	max-width: 300px;
 	overflow-y: auto;
 	position: relative;
 	background: $tan;
-	border-right: border($grn-md, 2px, ridge);
+	border-right: 2px ridge $grn-md;
+	border-left: none;
 	white-space: nowrap;
 
 	.tree-div {
 		width: 100%;
 		height: 100%;
 		z-index: 1001;
+		padding: .5rem;
+		border-left: 2px outset $gray-lt;
+		border-top: 2px outset $gray-lt;
+		border-right: 3px inset $gray-lt;
+		border-bottom: 3px inset $gray-lt;
 		position: relative;
 	}
 
@@ -102,6 +114,10 @@
 		font-size: $f-lg;
 		color: $grn-xdk;
 	}
+}
+
+.tree.inner-layout {
+	
 }
 
 #plants {
@@ -122,14 +138,15 @@
 		scrollbar-width: thin;
 	}
 
-	.jstree-default .jstree-themeicon-custom{
+	.jstree-default .jstree-themeicon-custom {
 		width: 18px;
 		height: 18px;
 		font-weight: 375;
 		margin-right: 0;
 		line-height: 18px;
 	}
-	.bi::before, [class*=" bi-"]::before{
+
+	.bi::before, [class*=" bi-"]::before {
 		font-size: $f-xxs;
 	}
 }
@@ -146,10 +163,10 @@
 	.choices__inner {
 		font-size: $f-xs;
 	}
-	.choices__inner{
+
+	.choices__inner {
 		height: fit-content;
 		white-space: normal;
-		
 	}
 }
 
@@ -172,6 +189,19 @@
 	position: relative;
 }
 
+.draw-list-div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: $tan;
+  border-radius: $br;
+  padding: 0;
+  box-shadow: shdw(base);
+  z-index: 1000;
+  width: fit-content;
+}
+
 .edit-div {
 	overflow-x: hidden;
 	white-space: nowrap;
@@ -187,14 +217,14 @@
 	font-size: $f-md;
 }
 
-.loc-name {
+.loc-title {
 	text-align: center;
 	font-weight: 500;
 	letter-spacing: 0.8px;
 	font-size: $f-xl;
 }
 
-.loc-details {
+.loc-deets {
 	text-align: center;
 	font-size: $f-sm;
 	white-space: normal;

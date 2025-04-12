@@ -2,7 +2,7 @@
 using OptraxDAL;
 using OptraxDAL.Models.Inventory;
 using OptraxDAL.ViewModels;
-using OptraxMVC.Models;
+using OptraxMVC.Models.ViewModels;
 
 namespace OptraxMVC.Services.Inventory
 {

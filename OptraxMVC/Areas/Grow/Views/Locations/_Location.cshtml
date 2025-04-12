@@ -25,12 +25,30 @@
                         <form asp-action="@ViewBag.Action" asp-controller="Locations" method="post" class="px-1 model" id="locForm" data-id="@Model.Location.Id" data-type="@Model.Location.LocationType">
                             @Html.AntiForgeryToken()
 
+                            <input type="hidden" asp-for="LocationType" />
+                            <input type="hidden" asp-for="@Model.Location.MapObjectId" />
+
+                            <div class="add-loc-obj d-flex w-100 ps-2">
+                                @if (Model.Location.MapObjectId == null)
+                                {
+                                    <button class="btn-grn btn-sm">Add to Map</button>
+                                }
+                            </div>
                             @if (Model.Location is Site site)
                             {
+                                ViewData.TemplateInfo.HtmlFieldPrefix = "Site";
+                                ViewBag.Prefix = "Site.Address";
                                 <partial name="_Site" model="site" />
+                            }
+                            else if (Model.Location is AddressLocation building)
+                            {
+                                ViewData.TemplateInfo.HtmlFieldPrefix = "AddressLocation";
+                                ViewBag.Prefix = "AddressLocation.Address";
+                                <partial name="_AddressLocation" model="building" />
                             }
                             else if (Model.Location is AreaLocation areaLoc)
                             {
+                                ViewData.TemplateInfo.HtmlFieldPrefix = "AreaLocation";
                                 <partial name="_AreaLocation" model="areaLoc" />
                             }
                             <partial name="_FormButtons" model="showEdit" />

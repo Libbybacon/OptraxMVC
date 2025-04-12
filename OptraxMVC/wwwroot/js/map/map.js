@@ -1,5 +1,5 @@
 ﻿import * as _obj from './objectManager.js';
-import { setMap } from './mapState.js';
+import { setMap, setLayersReady } from './mapState.js';
 import * as _layers from './layerManager.js';
 import { createIcon } from './objStyleUtil.js';
 
@@ -31,8 +31,10 @@ async function initializeMap() {
     createControls();
 
     await _layers.loadFeatures().then(() => {
+
         layersets = _layers.getAllLayers()
         zoomToAllLayers();
+
     });
 
     map.on('popupclose', function () {
@@ -72,28 +74,28 @@ function zoomToAllLayers() {
         }
     }
     ctr ? map.fitBounds(ctr, { padding: [40, 40] }) : map.setView([39.8283, -98.5795], 4);
+    setLayersReady(true);
 }
 
 function createControls() {
     L.Marker.prototype.options.icon = createIcon('https://img.icons8.com/?size=100&id=43731&format=png&color=263EDE')
 
-    const drawControl = new L.Control.Draw({
-        draw: {
-            polyline: true,
-            polygon: true,
-            rectangle: true,
-            circle: true,
-            marker: true,
-            circlemarker: false
-        }
-    });
-    map.addControl(drawControl);
+    //const drawControl = new L.Control.Draw({
+    //    draw: {
+    //        polyline: true,
+    //        polygon: true,
+    //        rectangle: true,
+    //        circle: true,
+    //        marker: true,
+    //        circlemarker: false
+    //    }
+    //});
+    //map.addControl(drawControl);
 
-    map.on('draw:created', function (e) {
-        let layerset = _layers.getLayerset(e.layerType);
-        _obj.addObject(e, layerset);
+    //map.on('draw:created', function (e) {
+    //    _obj.addObject(e.layer, e.layerType);
 
-    });
+    //});
 
     addTopCenterPosition();
 

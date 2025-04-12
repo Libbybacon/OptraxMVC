@@ -5,7 +5,7 @@ using OptraxDAL;
 using OptraxDAL.Models;
 using OptraxDAL.Models.Grow;
 using OptraxMVC.Areas.Grow.Models;
-using OptraxMVC.Models;
+using OptraxMVC.Models.ViewModels;
 
 namespace OptraxMVC.Services.Grow
 {

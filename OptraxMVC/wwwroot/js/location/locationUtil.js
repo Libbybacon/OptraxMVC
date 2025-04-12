@@ -28,6 +28,8 @@ export async function loadPartial(props) {
     if (view) {
         $("#loc-details").html(view);
         setFormListeners();
+        let map = getMap();
+        zoomToSite(map);
     }
 }
 
@@ -52,6 +54,12 @@ export function setFormListeners() {
         const id = $(formId).data('id');
         const type = $(formId).data('type')
         onDelete(id, type);
+    })
+
+    $(formId).find('.edit-btn').off('click').on('click', function () {
+        setTimeout(() => {
+            setAddyLatLng();
+        }, 100)
     })
 
     $(formId).off('submit').on('submit', function (e) {
@@ -82,17 +90,17 @@ export async function onDelete(id, type) {
 
 export async function onSubmitForm() {
     const action = $(formId).attr('action');
-    const locType = $(formId).find('#LocationType').val();
+    const locType = $(formId).find('.loc-type').val();
     const isCreate = action && action.includes('Create');
 
     //console.log('loc onSubmitForm objType: ', locType, ' action:', action);
 
     const response = await formUtil.submitForm(formId);
-    console.log('loc onSubmitForm response', response, 'address', address);
+    console.log('loc onSubmitForm response', response);
 
     if (response && response.success) {
         if (isCreate) {
-            addSitePoint($('.addy-lat').val(), $('.addy-lng').val(), $(formId + ' #Name').val());
+            addSitePoint($('.addy-lat').val(), $('.addy-lng').val(), $(formId).find('.loc-name').val());
 
             if (response.data) {
                 console.log('response.data', response.data)
@@ -101,7 +109,6 @@ export async function onSubmitForm() {
                 const tree = $('#locationTree').jstree(true);
                 tree.create_node(response.data.parent, response.data, "last", function (newNode) {
                     //console.log('newnode:', newNode);
-
                     newNode.parents.forEach(id => {
                         tree.open_node(id);
                     });
@@ -124,7 +131,7 @@ export function setAddyLatLng() {
     console.log('setAddyLatLng')
     // Check whether all components of address are filled
     const addyArr = [$('.addy-street1').val(), $('.addy-city').val(), $('.addy-state').val(), $('.addy-zip').val()]
-    const hasEmpty = addyArr.some((a) => a.trim() === '' || a === null || a === undefined);
+    const hasEmpty = addyArr.some((a) => a === null || a === undefined || a.trim() === '');
 
     if (!hasEmpty) {
         const address = addyArr.join(', ');
@@ -166,4 +173,19 @@ function geocodeAddress(address, callback) {
             }
         })
         .catch(err => callback(err));
+}
+
+export function zoomToSite(map) {
+
+    const lat = parseFloat($('#locForm').find('.addy-lat').val());
+    const lng = parseFloat($('#locForm').find('.addy-lng').val());
+
+    console.log('delayed zoomToSite lat', lat, 'lng', lng);
+
+    if (!isNaN(lat) && !isNaN(lng)) {
+        map.invalidateSize();
+        map.setView([lat, lng], 21);
+        console.log('zoomed after delay:', map.getCenter());
+    }
+
 }

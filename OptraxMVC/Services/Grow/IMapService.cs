@@ -6,7 +6,7 @@ using NetTopologySuite.Operation.Valid;
 using OptraxDAL;
 using OptraxDAL.Models;
 using OptraxDAL.Models.Maps;
-using OptraxMVC.Models;
+using OptraxMVC.Models.ViewModels;
 
 namespace OptraxMVC.Services.Grow
 {

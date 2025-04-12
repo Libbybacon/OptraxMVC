@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
 using OptraxDAL.Models.Grow;
 using OptraxMVC.Controllers;
-using OptraxMVC.Models;
+using OptraxMVC.Models.ViewModels;
 using OptraxMVC.Services;
 using OptraxMVC.Services.Grow;
 

@@ -34,6 +34,16 @@
         <div id="map-title" class="d-none">
             <partial name="_Map" model="Model.Map" />
         </div>
+        <div id="drawListDiv" class="card draw-list-div d-none">
+            <div id="drawListTitle" class="card-title"></div>
+            <ul class="draw-list">
+                <li class="draw-list-item" data-type="marker">Point</li>
+                <li class="draw-list-item" data-type="polyline">Line</li>
+                <li class="draw-list-item" data-type="polygon">Polygon</li>
+                <li class="draw-list-item" data-type="circle">Circle</li>
+            </ul>
+            <button class="btn-gray btn-sm mx-auto">Cancel</button>
+        </div>
     </div>
 </div>
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
 using OptraxDAL.Models.Inventory;
-using OptraxMVC.Models;
+using OptraxMVC.Models.ViewModels;
 
 namespace OptraxMVC.Services.Inventory
 {

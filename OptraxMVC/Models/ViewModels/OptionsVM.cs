@@ -2,7 +2,7 @@
 using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
 
-namespace OptraxMVC.Models
+namespace OptraxMVC.Models.ViewModels
 {
     public class OptionsVM
     {
