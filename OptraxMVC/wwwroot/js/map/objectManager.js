@@ -111,15 +111,16 @@ export function startDraw(type) {
 
 export async function finalizeDraw(layer, type) {
 
-    const layerSet = getLayerset(type);
+    const layerset = getLayerset(type);
     const objType = typeMap[type] ?? 'Polygon';
     layerProps["name"] = 'New ' + objType;
+    layerProps["isNew"] = true;
 
     const geojson = layer.toGeoJSON();
     geojson.properties = layerProps;
-    layerSet.addData(geojson);
-
-    setNewLayer(layerset);
+    layerset.addData(geojson);
+    map.removeLayer(layer);
+    const newLayer = setNewLayer(layerset);
 
     const props = {
         id: -1,
@@ -130,7 +131,6 @@ export async function finalizeDraw(layer, type) {
         data: { objType },
         url: `${urlBase}LoadCreateObject/`
     };
-
     loadEdit(props);
 }
 
@@ -138,6 +138,7 @@ export function setNewLayer(layerset) {
     const newLayer = getLastLayer(layerset);
     setActive(newLayer);
     setIndex(-1, newLayer);
+    return newLayer;
 }
 export function addCircle(layer, layerSet) {
     let latlng = layer.getLatLng();

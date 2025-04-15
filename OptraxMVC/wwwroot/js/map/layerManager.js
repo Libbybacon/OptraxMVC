@@ -31,7 +31,6 @@ export function initializeLayers() {
 
     pointsL = L.geoJSON(null, {
         pointToLayer: function (feat, latlng) {
-            console.log('pointToLayer feat', feat);
             const icon = createIcon(feat.properties.iconPath);
             const l = L.marker(latlng, { icon: icon });
 
@@ -46,7 +45,6 @@ export function initializeLayers() {
             return setStyle(feat.properties);
         },
         onEachFeature: (feat, l) => {
-            //console.log('lineFeature feat', feat);
             setType(feat, 'Line');
             setActions(feat.properties, l);
         }
@@ -63,7 +61,6 @@ export function initializeLayers() {
             return L.marker(latlng);
         },
         onEachFeature: (feat, l) => {
-            //console.log('circleFeature feat', feat);
             setType(feat, 'Circle');
             setActions(feat.properties, l);
         }
@@ -75,7 +72,6 @@ export function initializeLayers() {
             return setStyle(feat.properties);
         },
         onEachFeature: (feat, l) => {
-            //console.log('polyFeature feat', feat);
             setType(feat, 'Polygon');
             setActions(feat.properties, l);
         }
@@ -111,6 +107,7 @@ export function setActions(props, layer) {
 
     const editProps = {
         type: type,
+        isNew: props.isNew,
         data: { id: id, objType: type },
         url: `${urlBase}LoadEdit/`
     }
@@ -139,7 +136,6 @@ export function setActions(props, layer) {
             }
         }
     );
-
 
     layer.on('remove', function () {
         deleteIndex(props.id);

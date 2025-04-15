@@ -438,7 +438,6 @@ function initializeLayers() {
 
   pointsL = L.geoJSON(null, {
     pointToLayer: function pointToLayer(feat, latlng) {
-      console.log('pointToLayer feat', feat);
       var icon = (0,_objStyleUtil_js__WEBPACK_IMPORTED_MODULE_1__.createIcon)(feat.properties.iconPath);
       var l = L.marker(latlng, {
         icon: icon
@@ -453,7 +452,6 @@ function initializeLayers() {
       return setStyle(feat.properties);
     },
     onEachFeature: function onEachFeature(feat, l) {
-      //console.log('lineFeature feat', feat);
       setType(feat, 'Line');
       setActions(feat.properties, l);
     }
@@ -468,7 +466,6 @@ function initializeLayers() {
       return L.marker(latlng);
     },
     onEachFeature: function onEachFeature(feat, l) {
-      //console.log('circleFeature feat', feat);
       setType(feat, 'Circle');
       setActions(feat.properties, l);
     }
@@ -479,7 +476,6 @@ function initializeLayers() {
       return setStyle(feat.properties);
     },
     onEachFeature: function onEachFeature(feat, l) {
-      //console.log('polyFeature feat', feat);
       setType(feat, 'Polygon');
       setActions(feat.properties, l);
     }
@@ -509,6 +505,7 @@ function setActions(props, layer) {
   (0,_mapState_js__WEBPACK_IMPORTED_MODULE_0__.setIndex)(id, layer);
   var editProps = {
     type: type,
+    isNew: props.isNew,
     data: {
       id: id,
       objType: type
@@ -1109,14 +1106,14 @@ function startDraw(type) {
       break;
     case 'circle':
       var center = map.getCenter();
-      var _layerset = (0,_layerManager_js__WEBPACK_IMPORTED_MODULE_1__.getLayerset)(type);
+      var layerset = (0,_layerManager_js__WEBPACK_IMPORTED_MODULE_1__.getLayerset)(type);
       layer = L.circle(center, {
         radius: 10
       }).addTo(map);
       layer.enableEdit();
       layer.dragging.enable();
-      addCircle(layer, _layerset);
-      setNewLayer(_layerset);
+      addCircle(layer, layerset);
+      setNewLayer(layerset);
       map.removeLayer(layer);
 
       //finalizeDraw(layer, type);
@@ -1140,17 +1137,19 @@ function finalizeDraw(_x, _x2) {
 function _finalizeDraw() {
   _finalizeDraw = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(layer, type) {
     var _typeMap$type;
-    var layerSet, objType, geojson, props;
+    var layerset, objType, geojson, newLayer, props;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
-          layerSet = (0,_layerManager_js__WEBPACK_IMPORTED_MODULE_1__.getLayerset)(type);
+          layerset = (0,_layerManager_js__WEBPACK_IMPORTED_MODULE_1__.getLayerset)(type);
           objType = (_typeMap$type = typeMap[type]) !== null && _typeMap$type !== void 0 ? _typeMap$type : 'Polygon';
           layerProps["name"] = 'New ' + objType;
+          layerProps["isNew"] = true;
           geojson = layer.toGeoJSON();
           geojson.properties = layerProps;
-          layerSet.addData(geojson);
-          setNewLayer(layerset);
+          layerset.addData(geojson);
+          map.removeLayer(layer);
+          newLayer = setNewLayer(layerset);
           props = {
             id: -1,
             isNew: true,
@@ -1163,7 +1162,7 @@ function _finalizeDraw() {
             url: "".concat(urlBase, "LoadCreateObject/")
           };
           loadEdit(props);
-        case 9:
+        case 11:
         case "end":
           return _context2.stop();
       }
@@ -1175,6 +1174,7 @@ function setNewLayer(layerset) {
   var newLayer = getLastLayer(layerset);
   (0,_mapState_js__WEBPACK_IMPORTED_MODULE_0__.setActive)(newLayer);
   (0,_mapState_js__WEBPACK_IMPORTED_MODULE_0__.setIndex)(-1, newLayer);
+  return newLayer;
 }
 function addCircle(layer, layerSet) {
   var latlng = layer.getLatLng();
