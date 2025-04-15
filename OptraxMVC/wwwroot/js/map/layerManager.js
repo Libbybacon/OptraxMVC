@@ -1,5 +1,5 @@
 ﻿import apiService from '../utilities/api.js';
-import { loadEdit, urlBase } from './objectManager.js';
+import { loadEdit, urlBase, getLayerCenter } from './objectManager.js';
 import { createIcon, saveStyle } from './objStyleUtil.js';
 import { getMap, setMap, setIndex, deleteIndex, setActive } from './mapState.js';
 
@@ -117,17 +117,6 @@ export function setActions(props, layer) {
 
     layer.bindTooltip(props.name, { permanent: true, direction: "top" });
 
-    //layer.on('drag', function () {
-    //    layer.closeTooltip();
-    //});
-
-    //layer.on('dragend', function () {
-    //    // Re-center and show tooltip
-    //    const center = getLayerCenter(layer); 
-    //    layer.setTooltipLatLng(center);  
-    //    layer.openTooltip();
-    //});
-
     setClickHandlers(layer,
         function (e) {
             setActive(layer);
@@ -151,30 +140,25 @@ export function setActions(props, layer) {
         }
     );
 
-    //// Center map on selected object
-    //layer.on('click', async function (e) {
-    //    setActive(layer);
-    //    const center = (type === 'Point' || type === 'Circle') ? e.latlng : layer.getBounds().getCenter();
-
-    //    loadEdit(props.id, type, center);
-    //});
 
     layer.on('remove', function () {
         deleteIndex(props.id);
-        const map = getMap();
+        if (layer.editEnabled && layer.editEnabled()) {
+            layer.disableEdit(); // this removes any editable artifacts (vertices, drag handles, etc.)
+        }
+/*        map.removeLayer(layer);*/
         map.closePopup();
     });
 }
 
-export function getLayerCenter(layer) {
-    if (layer.getBounds) {
-        return layer.getBounds().getCenter(); // line or poly
-    }
-    if (layer.getLatLng) {
-        return layer.getLatLng(); // point or circle
-    }
-    return null;
-}
+//// Center map on selected object
+//layer.on('click', async function (e) {
+//    setActive(layer);
+//    const center = (type === 'Point' || type === 'Circle') ? e.latlng : layer.getBounds().getCenter();
+
+//    loadEdit(props.id, type, center);
+//});
+
 export function setClickHandlers(layer, onClick, onDblClick, delay = 250) {
     let clickTimer = null;
 

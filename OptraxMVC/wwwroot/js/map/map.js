@@ -1,5 +1,5 @@
 ﻿import * as _obj from './objectManager.js';
-import { setMap, setLayersReady } from './mapState.js';
+import { setMap, getMap, setLayersReady } from './mapState.js';
 import * as _layers from './layerManager.js';
 import { createIcon } from './objStyleUtil.js';
 
@@ -20,8 +20,12 @@ async function initializeMap() {
         zoom: 4,
         editable: true,
     });
-    setMap(map);
 
+    setMap(map);
+    map = getMap();
+    map.editTools = new L.Editable(map, {
+        featuresLayer: new L.FeatureGroup().addTo(map)
+    });
     map.on('click', function (e) {
         e.originalEvent.preventDefault();
         e.originalEvent.stopPropagation();

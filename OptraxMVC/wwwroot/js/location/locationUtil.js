@@ -1,6 +1,6 @@
 ﻿import apiService from '../utilities/api.js';
 import { formUtil } from '../utilities/form.js';
-import { addSitePoint } from '../map/map.js';
+import { startDraw } from '../map/objectManager.js';
 import { getMap } from '../map/mapState.js';
 
 const formId = '#locForm';
@@ -46,8 +46,13 @@ export function setLocListeners() {
 }
 
 export function setFormListeners() {
-    $(formId + ' #Name').on('input', function () {
-        $(formId + ' #Address_Name').val($(this).val()).trigger('change');
+    $(formId).find('loc-name').on('input', function () {
+        $(formId).find('addy-name').val($(this).val()).trigger('change');
+    })
+
+    $('.draw-list li a').off('click').on('click', function () {
+        const type = $(this).data('type');
+        startDraw(type);
     })
 
     $(formId).find('.btn-red').off('click').on('click', function () {
@@ -84,7 +89,6 @@ export async function onDelete(id, type) {
     else {
         var msg = response.msg ?? "Error deleting " + type;
         window.showMessage({ msg: msg, css: 'error msg', msgdiv: $('.loc-msg') });
-
     }
 }
 
@@ -100,15 +104,12 @@ export async function onSubmitForm() {
 
     if (response && response.success) {
         if (isCreate) {
-            addSitePoint($('.addy-lat').val(), $('.addy-lng').val(), $(formId).find('.loc-name').val());
-
             if (response.data) {
                 console.log('response.data', response.data)
                 $(formId + ' #Id').val(response.data.id);
 
                 const tree = $('#locationTree').jstree(true);
                 tree.create_node(response.data.parent, response.data, "last", function (newNode) {
-                    //console.log('newnode:', newNode);
                     newNode.parents.forEach(id => {
                         tree.open_node(id);
                     });

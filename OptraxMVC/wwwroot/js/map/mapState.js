@@ -58,6 +58,7 @@ export function getActive() {
 }
 
 export function deleteActive() {
+    console.log('deleteActive', activeL);
     activeL.remove();
 }
 
