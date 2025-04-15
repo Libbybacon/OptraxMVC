@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OptraxDAL;
 using OptraxDAL.Models.Inventory;
-using OptraxMVC.Models;
+using OptraxMVC.Models.ViewModels;
 
 namespace OptraxMVC.Services.Inventory
 {
@@ -9,8 +9,8 @@ namespace OptraxMVC.Services.Inventory
     {
         Task<bool> CheckNameAsync(string name);
         Task<Category?> GetCategoryByIdAsync(int id);
-        Task<ResponseVM> CreateAsync(Category cat);
-        Task<ResponseVM> UpdateAsync(Category cat);
+        Task<JsonVM> CreateAsync(Category cat);
+        Task<JsonVM> UpdateAsync(Category cat);
     }
     public class CategoryService(OptraxContext context) : ICategoryService
     {
@@ -27,29 +27,29 @@ namespace OptraxMVC.Services.Inventory
             return await db.Categories.FindAsync(id);
         }
 
-        public async Task<ResponseVM> CreateAsync(Category cat)
+        public async Task<JsonVM> CreateAsync(Category cat)
         {
             try
             {
                 db.Categories.Add(cat);
                 await db.SaveChangesAsync();
 
-                return new ResponseVM { Success = true, Msg = $"New {(!cat.ParentId.HasValue ? "top level " : "")}category '{cat.Name}' added!" };
+                return new JsonVM { Success = true, Msg = $"New {(!cat.ParentId.HasValue ? "top level " : "")}category '{cat.Name}' added!" };
             }
             catch (Exception)
             {
-                return new ResponseVM { Msg = "Error saving new category" };
+                return new JsonVM { Msg = "Error saving new category" };
             }
         }
 
-        public async Task<ResponseVM> UpdateAsync(Category cat)
+        public async Task<JsonVM> UpdateAsync(Category cat)
         {
             try
             {
                 var dbCat = await GetCategoryByIdAsync(cat.Id);
 
                 if (dbCat == null)
-                    return new ResponseVM { Msg = "Category not found." };
+                    return new JsonVM { Msg = "Category not found." };
 
                 List<string> changes = cat.Changes?.Split(",")?.ToList() ?? [];
 
@@ -61,11 +61,11 @@ namespace OptraxMVC.Services.Inventory
                 }
                 await db.SaveChangesAsync();
 
-                return new ResponseVM { Success = true, Msg = "Category changes saved!" };
+                return new JsonVM { Success = true, Msg = "Category changes saved!" };
             }
             catch (Exception)
             {
-                return new ResponseVM { Msg = "Error saving category :(" };
+                return new JsonVM { Msg = "Error saving category :(" };
             }
         }
     }

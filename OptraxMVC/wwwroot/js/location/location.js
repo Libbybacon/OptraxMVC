@@ -1,23 +1,31 @@
-﻿import { getMap, onMapReady } from '../map/mapState.js';
+﻿import { addSitePoint } from '../map/map.js';
+import { getMap, onMapReady, onLayersReady } from '../map/mapState.js';
 import * as tree from './locationTree.js';
 import * as util from './locationUtil.js';
 
 let map = null;
 
-$(document).ready(function () {
-    setResizer();
+$(function () {
+
+
+    tree.initializeTree(map);
     util.setLocListeners();
-    tree.initializeTree();
 
     onMapReady((loadedMap) => {
         map = loadedMap;
-        console.log('map loaded');
+        setResizer();
+    });
+
+    onLayersReady((ready) => {
+        setTimeout(() => {
+            util.zoomToSite(map);
+        }, 500);
     });
 });
 
 function setResizer() {
    
-    console.log('setResizer map', map)
+    //console.log('setResizer map', map)
     const $resizer = $('#resizer');
     const col2 = document.getElementById('loc-details');
     const col3 = document.getElementById('loc-map');
@@ -47,3 +55,4 @@ function setResizer() {
         document.addEventListener('mouseup', stopResize);
     });
 }
+

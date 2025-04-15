@@ -13,11 +13,11 @@ namespace OptraxDAL.Models.Maps
         public string? Category { get; set; }
 
         public int? MapId { get; set; }
+        public int? LocationId { get; set; }
 
         public abstract object ToGeoJSON();
 
         public virtual Map? Map { get; set; }
-
         public virtual Location? Location { get; set; }
         public virtual PlantingSection? Section { get; set; }
     }

@@ -1,7 +1,7 @@
 ﻿@model bool 
 
 <div class="popup-btns d-flex py-2 justify-content-center w-100">
-    <button type="button" class="toggle-edit m-toggle btn-gray @(Model ? "d-none" : "")">Edit</button>
+    <button type="button" class="toggle-edit m-toggle edit-btn btn-gray @(Model ? "d-none" : "")">Edit</button>
     @* <button type="button" class="btn-red m-toggle me-3 @hideOnFirst">Delete</button> *@
     <button type="submit" class="btn-grn  m-toggle mx-3 @(Model ? "" : "d-none")">Save</button>
     <button type="button" class="toggle-edit m-toggle btn-gray ms-3 d-none">Cancel</button>

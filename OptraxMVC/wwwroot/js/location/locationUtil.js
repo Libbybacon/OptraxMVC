@@ -1,9 +1,10 @@
 ﻿import apiService from '../utilities/api.js';
 import { formUtil } from '../utilities/form.js';
+import { startDraw } from '../map/objectManager.js';
+import { getMap } from '../map/mapState.js';
 
-const urlBase = '/Grow/Locations/';
 const formId = '#locForm';
-
+const urlBase = '/Grow/Locations/';
 
 export function loadCreate(parentId, type) {
 
@@ -27,6 +28,8 @@ export async function loadPartial(props) {
     if (view) {
         $("#loc-details").html(view);
         setFormListeners();
+        let map = getMap();
+        zoomToSite(map);
     }
 }
 
@@ -43,19 +46,25 @@ export function setLocListeners() {
 }
 
 export function setFormListeners() {
-    $(formId + ' #Name').on('input', function () {
-        $(formId + ' #Address_Name').val($(this).val()).change();
+    $(formId).find('loc-name').on('input', function () {
+        $(formId).find('addy-name').val($(this).val()).trigger('change');
     })
 
-    $(formId + ' locForm .toggle-edit').on('click', function () {
-        const model = $(this).parent('.model');
-        model.find('.m-toggle').toggleClass('d-none');
-    });
+    $('.draw-list li a').off('click').on('click', function () {
+        const type = $(this).data('type');
+        startDraw(type);
+    })
 
-    $(formId + ' .btn-red').off('click').on('click', function () {
+    $(formId).find('.btn-red').off('click').on('click', function () {
         const id = $(formId).data('id');
         const type = $(formId).data('type')
         onDelete(id, type);
+    })
+
+    $(formId).find('.edit-btn').off('click').on('click', function () {
+        setTimeout(() => {
+            setAddyLatLng();
+        }, 100)
     })
 
     $(formId).off('submit').on('submit', function (e) {
@@ -64,7 +73,11 @@ export function setFormListeners() {
     });
 
     formUtil.setListeners(formId);
-    formUtil.showHideBtns(formId);
+
+    $(formId).find('.addy').on('change', function () {
+        console.log('addy change');
+        setAddyLatLng();
+    });
 }
 
 export async function onDelete(id, type) {
@@ -76,13 +89,12 @@ export async function onDelete(id, type) {
     else {
         var msg = response.msg ?? "Error deleting " + type;
         window.showMessage({ msg: msg, css: 'error msg', msgdiv: $('.loc-msg') });
-
     }
 }
 
 export async function onSubmitForm() {
     const action = $(formId).attr('action');
-    const locType = $(formId + ' #LocationType').val();
+    const locType = $(formId).find('.loc-type').val();
     const isCreate = action && action.includes('Create');
 
     //console.log('loc onSubmitForm objType: ', locType, ' action:', action);
@@ -91,7 +103,6 @@ export async function onSubmitForm() {
     console.log('loc onSubmitForm response', response);
 
     if (response && response.success) {
-
         if (isCreate) {
             if (response.data) {
                 console.log('response.data', response.data)
@@ -99,8 +110,6 @@ export async function onSubmitForm() {
 
                 const tree = $('#locationTree').jstree(true);
                 tree.create_node(response.data.parent, response.data, "last", function (newNode) {
-                    //console.log('newnode:', newNode);
-
                     newNode.parents.forEach(id => {
                         tree.open_node(id);
                     });
@@ -108,7 +117,6 @@ export async function onSubmitForm() {
                     tree.select_node(newNode.id);
                 });
             }
-
         }
         $(formId + ' .m-toggle').toggleClass('d-none');
 
@@ -118,4 +126,67 @@ export async function onSubmitForm() {
     else {
         alert('Error! ' + response.error);
     }
+}
+
+export function setAddyLatLng() {
+    console.log('setAddyLatLng')
+    // Check whether all components of address are filled
+    const addyArr = [$('.addy-street1').val(), $('.addy-city').val(), $('.addy-state').val(), $('.addy-zip').val()]
+    const hasEmpty = addyArr.some((a) => a === null || a === undefined || a.trim() === '');
+
+    if (!hasEmpty) {
+        const address = addyArr.join(', ');
+
+        // Get address lat, lng, zoom to loc on map, set form values
+        geocodeAddress(address, (err, result) => {
+            console.log('geocode result', result, 'address', address);
+            if (err) {
+                console.log('geocode error')
+                return;
+            }
+            const { lat, lon } = result;
+
+            let map = getMap();
+            map.setView([lat, lon], 21);
+
+            $('.addy-lat').val(lat).trigger('change');
+            $('.addy-lng').val(lon).trigger('change');
+        });
+    }
+}
+
+function geocodeAddress(address, callback) {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+
+    fetch(url, {
+        headers: {
+            'User-Agent': 'OptraxApp/1.0 (optrax@optrax.dev)'
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.length > 0) {
+                const lat = parseFloat(data[0].lat);
+                const lon = parseFloat(data[0].lon);
+                callback(null, { lat, lon });
+            } else {
+                callback("No results found");
+            }
+        })
+        .catch(err => callback(err));
+}
+
+export function zoomToSite(map) {
+
+    const lat = parseFloat($('#locForm').find('.addy-lat').val());
+    const lng = parseFloat($('#locForm').find('.addy-lng').val());
+
+    //console.log('delayed zoomToSite lat', lat, 'lng', lng);
+
+    if (!isNaN(lat) && !isNaN(lng)) {
+        map.invalidateSize();
+        map.setView([lat, lng], 21);
+        //console.log('zoomed after delay:', map.getCenter());
+    }
+
 }

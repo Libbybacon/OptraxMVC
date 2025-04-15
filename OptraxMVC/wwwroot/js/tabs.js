@@ -1,7 +1,7 @@
 ﻿
 var curPage;
 
-$(document).ready(function () {
+$(function () {
 
     $(".top-tabs .nav-link").on("click", function () {
         loadTab($(this));

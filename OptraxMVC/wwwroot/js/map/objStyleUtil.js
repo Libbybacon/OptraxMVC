@@ -23,12 +23,12 @@ export function updateIcon(props) {
 
 export function selectIcon($icon) {
     $('.icon-div').removeClass('selected');
-    $('#IconId').val($icon.data('iconid')).change();
+    $('.obj-iconId').val($icon.data('iconid')).trigger('change');
 
     $icon.addClass('selected');
 
     let imgURL = $icon.find('img').attr('src');
-    let props = { iconURL: imgURL, marker: getActive(), title: $(formId + ' #Name').val(), desc: $(formId + ' #Notes').val() }
+    let props = { iconURL: imgURL, marker: getActive(), title: $('.obj-name').val(), desc: $('.obj-details').val() }
 
     updateIcon(props);
 }
@@ -85,33 +85,74 @@ export function updateStyle(input, val) {
 export function saveStyle () {
     let layer = getActive();
     let tooltip = layer.getTooltip();
-
+    //console.log('saveStyle');
     layer._origStyle = {
         icon: layer instanceof L.Marker ? layer.getIcon() : null,
         style: layer.setStyle ? { ...layer.options } : null,
-        content: tooltip.getContent()
+        content: tooltip?.getContent(),
+        geometry: getGeometrySnapshot(layer)
     };
 }
-export function restoreStyle(input, val) {
-    //console.log('restoreStyle')
-    let l = getActive();
-    let origStyle = l._origStyle
-    let tooltip = l.getTooltip();
 
-    if (l instanceof L.Marker && origStyle.icon) {
-        l.setIcon(origStyle.icon);
+export function restoreStyle(input, val) {
+
+    const l = getActive();
+    const orig = l._origStyle
+    const tooltip = l.getTooltip();
+
+    if (l instanceof L.Marker && orig.icon) {
+        l.setIcon(orig.icon);
         l._tooltip.setContent()
     }
-    else if (l.setStyle && origStyle.style) {
-        l.setStyle(origStyle.style);
+    else if (l.setStyle && orig.style) {
+        l.setStyle(orig.style);
     }
     if (tooltip) {
-        tooltip.setContent(origStyle.content);
+        tooltip.setContent(orig.content);
     }
+
+    restoreGeometry(l, orig.geometry);
+
     delete l._originalStyle;
 }
 
+function getGeometrySnapshot(layer) {
+    if (layer instanceof L.Marker) {
+        return { latlng: layer.getLatLng() };
+    }
+
+    if (layer instanceof L.Circle) {
+        return {
+            latlng: layer.getLatLng(),
+            radius: layer.getRadius()
+        };
+    }
+
+    if (layer.getLatLngs) {
+        return { latlngs: layer.getLatLngs() };
+    }
+    return null;
+}
+
+function restoreGeometry(layer, geom) {
+    if (!geom) return;
+
+    if (layer instanceof L.Marker && geom.latlng) {
+        layer.setLatLng(geom.latlng);
+    }
+
+    if (layer instanceof L.Circle && geom.latlng && geom.radius != null) {
+        layer.setLatLng(geom.latlng);
+        layer.setRadius(geom.radius);
+    }
+
+    if (layer.setLatLngs && geom.latlngs) {
+        layer.setLatLngs(geom.latlngs);
+    }
+}
+
 export function setStyleListeners(formId) {
+    //console.log('setStyleListeners');
     // Points
     $('.icon-coll-name').on('click', function () {
         selectIconColl($(this)); // change icon collection display
@@ -125,27 +166,30 @@ export function setStyleListeners(formId) {
     });
 
     // Not Points
-    $(formId + ' #Pattern').on('change', function () {
+    $('.obj-pattern').on('change', function () {
         var pattern = $(this).val();
+        var $dash = $('.obj-dash');
+
         if (pattern == 'solid') {
-            $(formId + ' #DashArray').val(0).change();
-            $(formId + ' #DashArray').attr('readonly', 'readonly');
+            $dash.val(0).trigger('change');
+            $dash.attr('readonly', 'readonly');
         }
         else {
-            $(formId + ' #DashArray').val('5 5').change();
-            $(formId + ' #DashArray').removeAttr('readonly');
+            $dash.val('5 5').trigger('change');
+            $dash.removeAttr('readonly');
         }
         setTimeout(() => {
-            updateStyle('dashArray', $(formId + ' #DashArray').val());
+            updateStyle('dashArray', $dash.val());
         }, 50);
     })
-    $(formId + ' #Name').on('input', function () {
+
+    $('.obj-name').on('input', function () {
         updateStyle('name', $(this).val());
     });
-    $(formId + ' #DashArray').on('input', function () {
+    $('.obj-dash').on('input', function () {
         updateStyle('dashArray', $(this).val())
     });
-    $(formId + ' #Weight').on('change', function () {
+    $('.obj-weight').on('change', function () {
         updateStyle('weight', $(this).val())
     });
 }

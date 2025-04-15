@@ -10,20 +10,20 @@ namespace OptraxDAL.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Plants_Plants_PlantId",
-                schema: "Grow",
-                table: "Plants");
+            //migrationBuilder.DropForeignKey(
+            //    name: "FK_Plants_Plants_PlantId",
+            //    schema: "Grow",
+            //    table: "Plants");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Plants_PlantId",
-                schema: "Grow",
-                table: "Plants");
+            //migrationBuilder.DropIndex(
+            //    name: "IX_Plants_PlantId",
+            //    schema: "Grow",
+            //    table: "Plants");
 
-            migrationBuilder.DropColumn(
-                name: "PlantId",
-                schema: "Grow",
-                table: "Plants");
+            //migrationBuilder.DropColumn(
+            //    name: "PlantId",
+            //    schema: "Grow",
+            //    table: "Plants");
         }
 
         /// <inheritdoc />

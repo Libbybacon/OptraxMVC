@@ -7,7 +7,9 @@ import 'bootstrap';
 
 // Leaflet
 import L from 'leaflet';
-import 'leaflet-draw'; // also attaches to Leaflet
+import 'leaflet-editable'; 
+import 'leaflet.path.drag';
+/*import 'leaflet-draw'; // also attaches to Leaflet*/
 
 // Choices.js
 import Choices from 'choices.js';
@@ -24,7 +26,7 @@ import popupHandler from "./utilities/popup.js";
 
 var hideNav;
 
-$(document).ready(function () {
+$(function () {
     hideNav = sessionStorage.getItem('hideNav');
 
     if (hideNav == "true") {

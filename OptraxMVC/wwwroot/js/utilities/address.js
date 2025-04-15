@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+﻿$(function () {
     var phone = document.querySelector('.phone');
     var maskOpts = {
         mask: '(000) 000-0000'

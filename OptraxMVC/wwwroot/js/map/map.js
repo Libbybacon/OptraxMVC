@@ -1,11 +1,11 @@
 ﻿import * as _obj from './objectManager.js';
-import { setMap } from './mapState.js';
-import { initializeLayers, loadFeatures, getLayerset, getAllLayers } from './layerManager.js';
+import { setMap, getMap, setLayersReady } from './mapState.js';
+import * as _layers from './layerManager.js';
 import { createIcon } from './objStyleUtil.js';
 
 let map = null;
 let layersets = [];
-$(document).ready(function () {
+$(function () {
 
     initializeMap();
 
@@ -17,21 +17,27 @@ $(document).ready(function () {
 async function initializeMap() {
     map = L.map('map', {
         center: [39.8283, -98.5795],
-        zoom: 4
+        zoom: 4,
+        editable: true,
     });
-    setMap(map);
 
+    setMap(map);
+    map = getMap();
+    map.editTools = new L.Editable(map, {
+        featuresLayer: new L.FeatureGroup().addTo(map)
+    });
     map.on('click', function (e) {
         e.originalEvent.preventDefault();
         e.originalEvent.stopPropagation();
     });
 
     setMapHeight();
-    initializeLayers();
+    _layers.initializeLayers();
     createControls();
 
-    await loadFeatures().then(() => {
-        layersets = getAllLayers()
+    await _layers.loadFeatures().then(() => {
+
+        layersets = _layers.getAllLayers()
         zoomToAllLayers();
 
     });
@@ -40,8 +46,6 @@ async function initializeMap() {
         $(document).find(".color-picker").spectrum("hide");
         $('.title-control').show();
     });
-
-
 }
 
 function setMapHeight() {
@@ -54,11 +58,12 @@ function setMapHeight() {
     map.invalidateSize();
 }
 
+// Center map on center of all layers
 function zoomToAllLayers() {
     let ctr = null;
     const bounds = [];
 
-    getAllLayers().forEach(l => {
+    _layers.getAllLayers().forEach(l => {
         if (l.getLayers().length > 0) {
             const b = l.getBounds();
             if (b.isValid()) {
@@ -74,32 +79,32 @@ function zoomToAllLayers() {
         }
     }
     ctr ? map.fitBounds(ctr, { padding: [40, 40] }) : map.setView([39.8283, -98.5795], 4);
+    setLayersReady(true);
 }
 
 function createControls() {
     L.Marker.prototype.options.icon = createIcon('https://img.icons8.com/?size=100&id=43731&format=png&color=263EDE')
 
-    const drawControl = new L.Control.Draw({
-        draw: {
-            polyline: true,
-            polygon: true,
-            rectangle: true,
-            circle: true,
-            marker: true,
-            circlemarker: false
-        }
-    });
-    map.addControl(drawControl);
+    //const drawControl = new L.Control.Draw({
+    //    draw: {
+    //        polyline: true,
+    //        polygon: true,
+    //        rectangle: true,
+    //        circle: true,
+    //        marker: true,
+    //        circlemarker: false
+    //    }
+    //});
+    //map.addControl(drawControl);
 
-    map.on('draw:created', function (e) {
-        let layerset = getLayerset(e.layerType);
-        _obj.addObject(e, layerset);
+    //map.on('draw:created', function (e) {
+    //    _obj.addObject(e.layer, e.layerType);
 
-    });
+    //});
 
     addTopCenterPosition();
 
-    const TitleControl = L.Control.extend({
+    const titleControl = L.Control.extend({
         onAdd: function () {
             const titleDiv = L.DomUtil.create('div', 'leaflet-control title-control');
             const $title = document.getElementById('map-title');
@@ -121,7 +126,7 @@ function createControls() {
             return titleDiv;
         }
     });
-    map.addControl(new TitleControl({ position: 'topcenter' }));
+    map.addControl(new titleControl({ position: 'topcenter' }));
 }
 
 function addTopCenterPosition() {
@@ -145,4 +150,21 @@ function addTopCenterPosition() {
         }
     });
     map._controlCorners.topcenter = L.DomUtil.create('div', 'leaflet-top leaflet-center', map._controlContainer);
+}
+
+export function addSitePoint(lng, lat, name) {
+    let props = _obj.layerProps;
+    props["name"] = name;
+
+    const sitePoint = {
+        type: "Feature",
+        properties: props,
+        geometry: {
+            type: "Point",
+            coordinates: [lng, lat]
+        },
+    };
+    const pointsL = _layers.getLayerset('marker');
+    console.log('addSitePoint sitePoint', sitePoint);
+    pointsL.addData(sitePoint);
 }

@@ -23,23 +23,4 @@ namespace OptraxDAL.Models.Admin
         Vendor,
         Customer,
     }
-
-
-    //[Table("Businesses")]
-    //public class Distributor : Business
-    //{
-    //    public Distributor() { }
-    //}
-
-    //[Table("Businesses")]
-    //public class Retailer : Business
-    //{
-    //    public Retailer() { }
-    //}
-
-    //[Table("Businesses")]
-    //public class Source : Business
-    //{
-    //    public Source() { }
-    //}
 }

@@ -8,6 +8,8 @@ namespace OptraxDAL.Models.Admin
         public Site()
         {
             LocationType = "Site";
+
+            Address = new() { Name = Name };
         }
 
         public Site(int addressId, int? businessId)

@@ -1,6 +1,6 @@
 ﻿@import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'leaflet/dist/leaflet.css';
-@import 'leaflet-draw/dist/leaflet.draw.css';
+/*@import 'leaflet-draw/dist/leaflet.draw.css';*/
 @import "choices.js/src/styles/choices";
 //
 @import 'utilities.scss';
@@ -159,6 +159,10 @@ label {
 	font-weight: 465;
 	letter-spacing: .5px;
 	padding-left: 3px;
+}
+
+fieldset{
+	border: $br;
 }
 
 .attr.form-control,

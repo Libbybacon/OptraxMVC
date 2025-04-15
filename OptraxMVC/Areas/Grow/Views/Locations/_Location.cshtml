@@ -22,15 +22,42 @@
             {
                 <div id="loc-partial">
                     <div class="edit-div ps-2 pt-3 model">
-                        <form asp-action="@ViewBag.Action" asp-controller="Locations" method="post" class="px-1" id="locForm" data-id="@Model.Location.Id" data-type="@Model.Location.LocationType">
+                        <form asp-action="@ViewBag.Action" asp-controller="Locations" method="post" class="px-1 model" id="locForm" data-id="@Model.Location.Id" data-type="@Model.Location.LocationType">
                             @Html.AntiForgeryToken()
 
+                            <input type="hidden" asp-for="LocationType" />
+                            <input type="hidden" asp-for="@Model.Location.MapObjectId" />
+
+                            @if (Model.Location.MapObjectId == null)
+                            {
+                                <div class="add-loc-obj d-flex w-100 ps-2">
+                                    <div class="dropdown">
+                                        <button class="btn-grn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Add to Map </button>
+                                        <ul class="dropdown-menu draw-list">
+                                            <li><a href="#" class="dropdown-item" data-type="marker">Point</a></li>
+                                            <li><a href="#" class="dropdown-item" data-type="polyline">Line</a></li>
+                                            <li><a href="#" class="dropdown-item" data-type="polygon">Polygon</a></li>
+                                            <li><a href="#" class="dropdown-item" data-type="circle">Circle</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            }
                             @if (Model.Location is Site site)
                             {
+                                ViewData.TemplateInfo.HtmlFieldPrefix = "Site";
+                                ViewBag.Prefix = "Site.Address";
                                 <partial name="_Site" model="site" />
+                            }
+                            else if (Model.Location is AddressLocation building)
+                            {
+                                ViewData.TemplateInfo.HtmlFieldPrefix = "AddressLocation";
+                                ViewBag.Prefix = "AddressLocation.Address";
+                                <partial name="_AddressLocation" model="building" />
                             }
                             else if (Model.Location is AreaLocation areaLoc)
                             {
+                                ViewData.TemplateInfo.HtmlFieldPrefix = "AreaLocation";
                                 <partial name="_AreaLocation" model="areaLoc" />
                             }
                             <partial name="_FormButtons" model="showEdit" />

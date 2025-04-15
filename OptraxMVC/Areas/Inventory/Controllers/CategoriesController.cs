@@ -3,6 +3,7 @@ using OptraxDAL;
 using OptraxDAL.Models.Inventory;
 using OptraxMVC.Controllers;
 using OptraxMVC.Models;
+using OptraxMVC.Models.ViewModels;
 using OptraxMVC.Services;
 using OptraxMVC.Services.Inventory;
 
@@ -47,9 +48,9 @@ namespace OptraxMVC.Areas.Inventory.Controllers
                     return Json(new { success = false, errors = ModelState });
 
                 if (await _ICategory.CheckNameAsync(cat.Name))
-                    return Json(new { success = false, msg = "Duplicate Category Name." });
+                    return Json(JsonVM("Duplicate Category Name."));
 
-                ResponseVM data = await _ICategory.CreateAsync(cat);
+                JsonVM data = await _ICategory.CreateAsync(cat);
                 return Json(data);
 
 

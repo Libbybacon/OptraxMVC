@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
-using OptraxMVC.Models;
+using OptraxMVC.Models.ViewModels;
 using System.Diagnostics;
 
 namespace OptraxMVC.Controllers;

@@ -15,7 +15,7 @@
 
 let bwSwatches = ["#000000", "#FFFFFF"];
 
-$(document).ready(function () {
+$(function () {
 
     //$(document).on('click', '.color-picker', function () {
     //    Coloris({

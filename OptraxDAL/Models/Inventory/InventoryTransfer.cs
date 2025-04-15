@@ -58,31 +58,5 @@ namespace OptraxDAL.Models.Inventory
 
         [InverseProperty(nameof(Location.TransfersIn))]
         public virtual Location? Destination { get; set; }
-
-
-        //public InventoryTransfer NewTransfer()
-        //{
-        //    return new InventoryTransfer()
-        //    {
-        //        Date = Date,
-        //        UserId = UserId,
-        //        OriginId = OriginId,
-        //        DestinationId = DestinationId,
-        //        UnitCount = UnitCount,
-        //        UnitUoM = UnitUoM,
-        //        IsPartial = IsPartial,
-        //        Status = Status,
-        //        Notes = Notes,
-        //        NeedsApproval = NeedsApproval,
-        //        StockItemId = StockItemId,
-        //    };
-        //}
-
-        //public InventoryTransfer NewTransfer(Plant plant)
-        //{
-        //    var newTransfer = NewTransfer();
-        //    newTransfer.StockItem = plant;
-        //    return newTransfer;
-        //}
     }
 }

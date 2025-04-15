@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
 using OptraxDAL.Models.Grow;
 using OptraxMVC.Controllers;
-using OptraxMVC.Models;
+using OptraxMVC.Models.ViewModels;
 using OptraxMVC.Services;
 using OptraxMVC.Services.Grow;
 
@@ -60,11 +60,11 @@ namespace OptraxMVC.Areas.Grow.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateGroupAsync(PlantTypeGroup group)
         {
-            if (!ModelState.IsValid) { return Json(ResponseVM("Invalid model")); }
+            if (!ModelState.IsValid) { return Json(JsonVM("Invalid model")); }
 
             try
             {
-                ResponseVM response = await _IPlants.CreateGroupAsync(group);
+                JsonVM response = await _IPlants.CreateGroupAsync(group);
 
                 return Json(response);
             }
@@ -78,11 +78,11 @@ namespace OptraxMVC.Areas.Grow.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAsync(Plant plant)
         {
-            if (!ModelState.IsValid) { return Json(ResponseVM("Invalid model")); }
+            if (!ModelState.IsValid) { return Json(JsonVM("Invalid model")); }
 
             try
             {
-                ResponseVM response = await _IPlants.CreateAsync(plant, UserId);
+                JsonVM response = await _IPlants.CreateAsync(plant, UserId);
 
                 return Json(response);
             }
@@ -105,7 +105,7 @@ namespace OptraxMVC.Areas.Grow.Controllers
             }
             catch (Exception ex)
             {
-                return Json(ResponseVM(ex.Message));
+                return Json(JsonVM(ex.Message));
             }
         }
     }

@@ -20,12 +20,14 @@ namespace OptraxDAL.Models.Maps
 
         public int IconId { get; set; } = 1;
         public int IconCollectionId { get; set; } = 1;
-        public int? LocationId { get; set; }
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public decimal Elevation { get; set; } = 0;
+        public int? AddressId { get; set; }
 
         public virtual Icon? Icon { get; set; }
+        public virtual Address? Address { get; set; }
+
 
         [NotMapped]
         public string IconPath { get; set; } = string.Empty;

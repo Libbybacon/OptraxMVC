@@ -4,7 +4,7 @@ using OptraxDAL;
 using OptraxDAL.Models;
 using OptraxDAL.Models.Admin;
 using OptraxDAL.Models.Grow;
-using OptraxMVC.Models;
+using OptraxMVC.Models.ViewModels;
 
 namespace OptraxMVC.Services
 {
@@ -16,7 +16,6 @@ namespace OptraxMVC.Services
     public class OptionsService(OptraxContext context) : IOptionsService
     {
         private readonly OptraxContext db = context;
-        private readonly SelectListItem EmptyItem = new() { Text = "---- Select ----", Value = null };
         private readonly List<SelectListItem> EmptyList = [new SelectListItem()];
 
         public async Task<OptionsVM> LoadOptions(List<string> drops, int? level, List<string>? types)

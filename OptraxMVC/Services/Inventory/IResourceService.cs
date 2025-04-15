@@ -2,7 +2,7 @@
 using OptraxDAL;
 using OptraxDAL.Models.Inventory;
 using OptraxDAL.ViewModels;
-using OptraxMVC.Models;
+using OptraxMVC.Models.ViewModels;
 
 namespace OptraxMVC.Services.Inventory
 {
@@ -10,8 +10,8 @@ namespace OptraxMVC.Services.Inventory
     {
         Task<List<ResourceVM>> GetResourcesAsync();
         Task<Resource?> GetResourceByIdAsync(int rsrcId);
-        Task<ResponseVM> CreateAsync(Resource rsrc);
-        Task<ResponseVM> UpdateAsync(Resource rsrc);
+        Task<JsonVM> CreateAsync(Resource rsrc);
+        Task<JsonVM> UpdateAsync(Resource rsrc);
         Task<Category[]?> GetResourceCategoriesAsync(int categoryId);
     }
 
@@ -29,12 +29,12 @@ namespace OptraxMVC.Services.Inventory
             return await db.Resources.FindAsync(rsrcId);
         }
 
-        public async Task<ResponseVM> CreateAsync(Resource rsrc)
+        public async Task<JsonVM> CreateAsync(Resource rsrc)
         {
             var rsrcCats = await GetResourceCategoriesAsync(rsrc.CategoryId);
 
             if (rsrcCats == null)
-                return new ResponseVM { Success = true, Msg = "Invalid category" };
+                return new JsonVM { Success = true, Msg = "Invalid category" };
 
             try
             {
@@ -43,28 +43,28 @@ namespace OptraxMVC.Services.Inventory
             }
             catch (Exception)
             {
-                return new ResponseVM { Success = false, Msg = "Error saving Resource" };
+                return new JsonVM { Success = false, Msg = "Error saving Resource" };
             }
 
             ResourceVM? rsrcVM = rsrc.ToResourceVM(rsrcCats[0], rsrcCats[1]);
 
             if (rsrcVM == null)
-                return new ResponseVM { Success = false, Msg = "Error converting Resource" };
+                return new JsonVM { Success = false, Msg = "Error converting Resource" };
 
-            return new ResponseVM { Success = false, Msg = "Resource Saved!", Data = rsrcVM };
+            return new JsonVM { Success = false, Msg = "Resource Saved!", Data = rsrcVM };
         }
 
-        public async Task<ResponseVM> UpdateAsync(Resource rsrc)
+        public async Task<JsonVM> UpdateAsync(Resource rsrc)
         {
             Resource? dbRsrc = await GetResourceByIdAsync(rsrc.Id);
 
             if (dbRsrc == null)
-                return new ResponseVM { Msg = "Resource not found." };
+                return new JsonVM { Msg = "Resource not found." };
 
             var rsrcCats = await GetResourceCategoriesAsync(dbRsrc.CategoryId);
 
             if (rsrcCats == null)
-                return new ResponseVM { Msg = "Invalid category" };
+                return new JsonVM { Msg = "Invalid category" };
 
             try
             {
@@ -80,12 +80,12 @@ namespace OptraxMVC.Services.Inventory
             }
             catch (Exception)
             {
-                return new ResponseVM { Msg = "Error saving changes." };
+                return new JsonVM { Msg = "Error saving changes." };
             }
 
             ResourceVM rsrcVM = rsrc.ToResourceVM(rsrcCats[0], rsrcCats[1]);
 
-            return new ResponseVM { Success = false, Msg = "Resource Updated!", Data = rsrcVM };
+            return new JsonVM { Success = false, Msg = "Resource Updated!", Data = rsrcVM };
         }
 
         public async Task<Category[]?> GetResourceCategoriesAsync(int categoryId)

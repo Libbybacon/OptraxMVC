@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OptraxDAL;
 using OptraxMVC.Controllers;
-using OptraxMVC.Models;
+using OptraxMVC.Models.ViewModels;
 
 namespace OptraxMVC.Areas.Grow.Controllers
 {

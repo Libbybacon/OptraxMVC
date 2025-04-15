@@ -239,10 +239,24 @@ namespace OptraxDAL.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
+                    b.Property<decimal?>("Latitude")
+                        .HasPrecision(12, 8)
+                        .HasColumnType("decimal(12,8)");
+
+                    b.Property<decimal?>("Longitude")
+                        .HasPrecision(12, 8)
+                        .HasColumnType("decimal(12,8)");
+
+                    b.Property<int?>("MapPointId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("SiteId")
+                        .HasColumnType("int");
 
                     b.Property<string>("State")
                         .IsRequired()
@@ -260,6 +274,10 @@ namespace OptraxDAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BusinessId");
+
+                    b.HasIndex("MapPointId")
+                        .IsUnique()
+                        .HasFilter("[MapPointId] IS NOT NULL");
 
                     b.HasIndex("UserId");
 
@@ -535,8 +553,8 @@ namespace OptraxDAL.Migrations
 
                     b.Property<string>("LocationType")
                         .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
 
                     b.Property<int?>("MapObjectId")
                         .HasColumnType("int");
@@ -1568,6 +1586,9 @@ namespace OptraxDAL.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
+                    b.Property<int?>("LocationId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("MapId")
                         .HasColumnType("int");
 
@@ -1809,6 +1830,23 @@ namespace OptraxDAL.Migrations
                     b.ToTable("PurchaseOrderStockItem");
                 });
 
+            modelBuilder.Entity("OptraxDAL.Models.Admin.AddressLocation", b =>
+                {
+                    b.HasBaseType("OptraxDAL.Models.Admin.Location");
+
+                    b.Property<int?>("AddressId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BusinessId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("AddressId");
+
+                    b.ToTable("Locations", "Admin");
+
+                    b.HasDiscriminator().HasValue("AddressLocation");
+                });
+
             modelBuilder.Entity("OptraxDAL.Models.Admin.AreaLocation", b =>
                 {
                     b.HasBaseType("OptraxDAL.Models.Admin.Location");
@@ -1834,51 +1872,6 @@ namespace OptraxDAL.Migrations
                     b.HasDiscriminator().HasValue("AreaLocation");
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Admin.Building", b =>
-                {
-                    b.HasBaseType("OptraxDAL.Models.Admin.Location");
-
-                    b.Property<int?>("AddressId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BusinessId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("int");
-
-                    b.HasIndex("AddressId")
-                        .IsUnique()
-                        .HasFilter("[AddressId] IS NOT NULL");
-
-                    b.HasIndex("BusinessId");
-
-                    b.ToTable("Locations", "Admin");
-
-                    b.HasDiscriminator().HasValue("Building");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Admin.OffsiteLocation", b =>
-                {
-                    b.HasBaseType("OptraxDAL.Models.Admin.Location");
-
-                    b.Property<int?>("AddressId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BusinessId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("int");
-
-                    b.HasIndex("AddressId")
-                        .HasDatabaseName("IX_Locations_AddressId1");
-
-                    b.HasIndex("BusinessId");
-
-                    b.ToTable("Locations", "Admin");
-
-                    b.HasDiscriminator().HasValue("Offsite");
-                });
-
             modelBuilder.Entity("OptraxDAL.Models.Admin.Room", b =>
                 {
                     b.HasBaseType("OptraxDAL.Models.Admin.Location");
@@ -1886,31 +1879,6 @@ namespace OptraxDAL.Migrations
                     b.ToTable("Locations", "Admin");
 
                     b.HasDiscriminator().HasValue("Room");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Admin.Site", b =>
-                {
-                    b.HasBaseType("OptraxDAL.Models.Admin.Location");
-
-                    b.Property<int?>("AddressId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BusinessId")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsPrimary")
-                        .HasColumnType("bit");
-
-                    b.HasIndex("AddressId")
-                        .HasDatabaseName("IX_Locations_AddressId2");
-
-                    b.HasIndex("BusinessId");
-
-                    b.ToTable("Locations", "Admin");
-
-                    b.HasDiscriminator().HasValue("Site");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Admin.Vehicle", b =>
@@ -2041,6 +2009,9 @@ namespace OptraxDAL.Migrations
                 {
                     b.HasBaseType("OptraxDAL.Models.Maps.MapObject");
 
+                    b.Property<int?>("AddressId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Elevation")
                         .HasPrecision(12, 8)
                         .HasColumnType("decimal(12,8)");
@@ -2054,9 +2025,6 @@ namespace OptraxDAL.Migrations
                     b.Property<decimal>("Latitude")
                         .HasPrecision(12, 8)
                         .HasColumnType("decimal(12,8)");
-
-                    b.Property<int?>("LocationId")
-                        .HasColumnType("int");
 
                     b.Property<decimal>("Longitude")
                         .HasPrecision(12, 8)
@@ -2084,9 +2052,6 @@ namespace OptraxDAL.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(4)");
 
-                    b.Property<int?>("LocationId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Pattern")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -2099,6 +2064,42 @@ namespace OptraxDAL.Migrations
                         .HasColumnType("int");
 
                     b.ToTable("Polygons", "Map");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.Building", b =>
+                {
+                    b.HasBaseType("OptraxDAL.Models.Admin.AddressLocation");
+
+                    b.HasIndex("BusinessId");
+
+                    b.ToTable("Locations", "Admin");
+
+                    b.HasDiscriminator().HasValue("Building");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.OffsiteLocation", b =>
+                {
+                    b.HasBaseType("OptraxDAL.Models.Admin.AddressLocation");
+
+                    b.HasIndex("BusinessId");
+
+                    b.ToTable("Locations", "Admin");
+
+                    b.HasDiscriminator().HasValue("Offsite");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.Site", b =>
+                {
+                    b.HasBaseType("OptraxDAL.Models.Admin.AddressLocation");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("bit");
+
+                    b.HasIndex("BusinessId");
+
+                    b.ToTable("Locations", "Admin");
+
+                    b.HasDiscriminator().HasValue("Site");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Admin.Field", b =>
@@ -2206,11 +2207,18 @@ namespace OptraxDAL.Migrations
                         .WithMany("Addresses")
                         .HasForeignKey("BusinessId");
 
+                    b.HasOne("OptraxDAL.Models.Maps.MapPoint", "MapPoint")
+                        .WithOne("Address")
+                        .HasForeignKey("OptraxDAL.Models.Admin.Address", "MapPointId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("OptraxDAL.Models.Admin.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("Business");
+
+                    b.Navigation("MapPoint");
 
                     b.Navigation("User");
                 });
@@ -2696,55 +2704,14 @@ namespace OptraxDAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OptraxDAL.Models.Admin.Building", b =>
+            modelBuilder.Entity("OptraxDAL.Models.Admin.AddressLocation", b =>
                 {
                     b.HasOne("OptraxDAL.Models.Admin.Address", "Address")
-                        .WithOne("Building")
-                        .HasForeignKey("OptraxDAL.Models.Admin.Building", "AddressId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("OptraxDAL.Models.Admin.Business", "Business")
-                        .WithMany("Buildings")
-                        .HasForeignKey("BusinessId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Address");
-
-                    b.Navigation("Business");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Admin.OffsiteLocation", b =>
-                {
-                    b.HasOne("OptraxDAL.Models.Admin.Address", "Address")
-                        .WithMany()
+                        .WithMany("Locations")
                         .HasForeignKey("AddressId")
-                        .HasConstraintName("FK_Locations_Address_AddressId1");
-
-                    b.HasOne("OptraxDAL.Models.Admin.Business", "Business")
-                        .WithMany()
-                        .HasForeignKey("BusinessId")
-                        .HasConstraintName("FK_Locations_Businesses_BusinessId1");
-
-                    b.Navigation("Address");
-
-                    b.Navigation("Business");
-                });
-
-            modelBuilder.Entity("OptraxDAL.Models.Admin.Site", b =>
-                {
-                    b.HasOne("OptraxDAL.Models.Admin.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .HasConstraintName("FK_Locations_Address_AddressId2");
-
-                    b.HasOne("OptraxDAL.Models.Admin.Business", "Business")
-                        .WithMany("Sites")
-                        .HasForeignKey("BusinessId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Address");
-
-                    b.Navigation("Business");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Inventory.Consumable", b =>
@@ -2817,9 +2784,39 @@ namespace OptraxDAL.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("OptraxDAL.Models.Admin.Building", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Admin.Business", "Business")
+                        .WithMany("Buildings")
+                        .HasForeignKey("BusinessId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Business");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.OffsiteLocation", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Admin.Business", "Business")
+                        .WithMany()
+                        .HasForeignKey("BusinessId")
+                        .HasConstraintName("FK_Locations_Businesses_BusinessId1");
+
+                    b.Navigation("Business");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Admin.Site", b =>
+                {
+                    b.HasOne("OptraxDAL.Models.Admin.Business", "Business")
+                        .WithMany("Sites")
+                        .HasForeignKey("BusinessId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Business");
+                });
+
             modelBuilder.Entity("OptraxDAL.Models.Admin.Address", b =>
                 {
-                    b.Navigation("Building");
+                    b.Navigation("Locations");
                 });
 
             modelBuilder.Entity("OptraxDAL.Models.Admin.AppUser", b =>
@@ -2963,6 +2960,11 @@ namespace OptraxDAL.Migrations
             modelBuilder.Entity("OptraxDAL.Models.Admin.AreaLocation", b =>
                 {
                     b.Navigation("Plantings");
+                });
+
+            modelBuilder.Entity("OptraxDAL.Models.Maps.MapPoint", b =>
+                {
+                    b.Navigation("Address");
                 });
 #pragma warning restore 612, 618
         }

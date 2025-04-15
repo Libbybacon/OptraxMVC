@@ -1,11 +1,18 @@
 ﻿import apiService from '../utilities/api.js';
 import { formUtil } from '../utilities/form.js';
-import { getMap, getActive, setActive, deleteActive, setIndex, deleteIndex } from './mapState.js';
-import * as _style from './objStyleUtil.js'; 
+import { onMapReady, getMap, getActive, setActive, deleteActive, setIndex, deleteIndex } from './mapState.js';
+import * as _style from './objStyleUtil.js';
+import { getLayerset } from './layerManager.js';
 
 let map = getMap();
 
-const urlBase = '/Grow/Map/';
+$(function () {
+    onMapReady((loadedMap) => {
+        map = loadedMap;
+    });
+});
+
+export const urlBase = '/Grow/Map/';
 
 const typeMap = {
     marker: 'Point',
@@ -13,7 +20,7 @@ const typeMap = {
     circle: 'Circle'
 };
 
-const layerProps = {
+export const layerProps = {
     id: -1,
     weight: 3,
     dashArray: '5 5',
@@ -22,79 +29,186 @@ const layerProps = {
     iconPath: 'https://img.icons8.com/?size=100&id=43731&format=png&color=263EDE'
 };
 
-// Create
-export async function addObject(e, layerSet) {
-    var l = e.layer;
-    let type = typeMap[e.layerType] ?? 'Polygon';
+//export async function addObject(l, type) {
+//    const objType = typeMap[e.type] ?? 'Polygon';
+//    const layerSet = getLayerset(type);
 
-    console.log('layerset', layerSet, 'layer', l, 'type', type);
+//    console.log('layerset', layerSet, 'layer', l, 'type', type);
 
-    layerProps["name"] = 'New ' + type;
+//    layerProps["name"] = 'New ' + objType;
 
-    if (type === 'Circle') {
-        let latlng = l.getLatLng();
-        layerProps["radius"] = l.getRadius();
-        layerProps['latlng'] = latlng;
-        console.log('addObject circle props', layerProps);
-        const feature = {
-            type: "Feature",
-            properties: layerProps,
-            geometry: {
-                type: "Point",
-                coordinates: [latlng.lng, latlng.lat]
-            },
-        };
-        console.log('addObject feature', feature);
-        layerSet.addData(feature);
+//    if (type === 'circle') {
+//        addCircle(l, layerSet);
+//    }
+//    else {
+//        const geojson = l.toGeoJSON();
+//        geojson.properties = layerProps;
+//        layerSet.addData(geojson);
+//    }
+
+//    setActive(getLastLayer(layerSet));
+
+//    setIndex(-1, getActive());
+
+//    const props = {
+//        id: -1,
+//        type: type,
+//        data: { objType: type },
+//        url: `${urlBase}LoadCreateObject/`,
+//        center: (type == 'Point' || type == 'Circle') ? l.getLatLng() : l.getBounds().getCenter(),
+//    }
+
+//    _style.saveStyle();
+
+//    await showEditPopup(props).then(() => {
+//        mapFormUtil.setFormListeners('#mapObjForm');
+
+//        updateHiddenFields(type, layerProps);
+//        map.on('popupclose', deleteActive);
+//    });
+//}
+
+export function startDraw(type) {
+    let layer;
+    console.log('startDraw type', type);
+    switch (type) {
+        case 'marker':
+            layer = map.editTools.startMarker();
+            break;
+        case 'polyline':
+            layer = map.editTools.startPolyline();
+            break;
+        case 'polygon':
+            layer = map.editTools.startPolygon();
+            break;
+        case 'circle':
+            const center = map.getCenter();
+            const layerset = getLayerset(type);
+            layer = L.circle(center, { radius: 10 }).addTo(map);
+            layer.enableEdit();
+            layer.dragging.enable();
+            addCircle(layer, layerset);
+            setNewLayer(layerset);
+            map.removeLayer(layer);
+
+            //finalizeDraw(layer, type);
+            return;
     }
-    else {
-        let geojson = l.toGeoJSON();
-        geojson.properties = layerProps;
-        layerSet.addData(geojson);
+    console.log('map', map
+    )
+
+    if (layer) {
+        layer.on('editable:drawing:end', (e) => {
+            //if (layer.commitDrawing) {
+            //    layer.commitDrawing();
+            //}
+            layer.enableEdit();
+            layer.dragging.enable();
+            finalizeDraw(layer, type);
+        });
     }
-    console.log('layer', l)
-
-    setActive(getLastLayer(layerSet));
-
-    setIndex(-1, getActive());
-
-    let props = {
-        id: -1,
-        type: type,
-        data: { objType: type },
-        url: `${urlBase}AddNewObject/`,
-        center: (type == 'Point' || type == 'Circle') ? l.getLatLng() : l.getBounds().getCenter(),
-    }
-
-    _style.saveStyle();
-
-    await showEditPopup(props).then(() => {
-        mapFormUtil.setFormListeners('#mapObjForm');
-
-        updateHiddenFields(type, layerProps);
-        map.on('popupclose', deleteActive);
-    });
 }
 
+export async function finalizeDraw(layer, type) {
+
+    const layerset = getLayerset(type);
+    const objType = typeMap[type] ?? 'Polygon';
+    layerProps["name"] = 'New ' + objType;
+    layerProps["isNew"] = true;
+
+    const geojson = layer.toGeoJSON();
+    geojson.properties = layerProps;
+    layerset.addData(geojson);
+    map.removeLayer(layer);
+    const newLayer = setNewLayer(layerset);
+
+    const props = {
+        id: -1,
+        isNew: true,
+        type: objType,
+        center: getLayerCenter(newLayer),
+        radius: type === 'circle' ? layer.getRadius() : null,
+        data: { objType },
+        url: `${urlBase}LoadCreateObject/`
+    };
+    loadEdit(props);
+}
+
+export function setNewLayer(layerset) {
+    const newLayer = getLastLayer(layerset);
+    setActive(newLayer);
+    setIndex(-1, newLayer);
+    return newLayer;
+}
+export function addCircle(layer, layerSet) {
+    let latlng = layer.getLatLng();
+    layerProps["radius"] = layer.getRadius();
+    layerProps['latlng'] = latlng;
+
+    const feature = {
+        type: "Feature",
+        properties: layerProps,
+        geometry: {
+            type: "Point",
+            coordinates: [latlng.lng, latlng.lat]
+        },
+    };
+    layerSet.addData(feature);
+}
+
+export function destroyEditableLayer(layer) {
+    console.log('destroyEditableLayer', layer);
+    if (map.editTools.featuresLayer.hasLayer(layer)) {
+        map.editTools.featuresLayer.removeLayer(layer);
+    }
+    map.removeLayer(layer);
+}
+
+export function getLayerCenter(layer) {
+    if (layer.getBounds) {
+        return layer.getBounds().getCenter(); // line or poly
+    }
+    if (layer.getLatLng) {
+        return layer.getLatLng(); // point or circle
+    }
+    return null;
+}
+
+// Get currently selected map object
 export const getLastLayer = layerSet => {
     let layers = layerSet.getLayers();
     return layers[layers.length - 1];
 }
 
-export async function showEditPopup(props) {
+// Called when user clicks map object once
+export async function loadEdit(props) {
+    console.log('loadEdit', props);
+    _style.saveStyle(); // Store current style in case user cancels update
 
+    await showEditPopup(props).then(() => {
+        mapFormUtil.setFormListeners('#mapObjForm');
+        updateHiddenFields(props);
+
+        if (props.isNew) {
+            map.on('popupclose', deleteActive);
+        }
+        else {
+            map.on('popupclose', _style.restoreStyle);
+        }
+    });
+}
+
+export async function showEditPopup(props) {
     map = getMap();
-    //console.log('showEditPopup props', props, 'map', map);
 
     const response = await apiService.get(props.url, props.data);
-    //console.log('showEditPopup response', response);
 
     if (!response.success == true) {
         window.showMesage({ msg: 'Error loading' + props.type, msgdiv: $('.map-msg'), css: 'error' });
         throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
     }
 
-    $('.title-control').hide();
+    $('.title-control').hide(); // Hide map title so it doesn't overlap editor window
 
     const view = await response.data;
 
@@ -105,26 +219,29 @@ export async function showEditPopup(props) {
 
     L.popup({ offset: L.point(0, -30) }).setLatLng(props.center).setContent($editDiv[0]).openOn(map);
 
-    $($editDiv).find('#Color.color-picker').spectrum(_style.setColorPicker('color'));
-    $($editDiv).find('#FillColor.color-picker').spectrum(_style.setColorPicker('fillColor'));
+    $($editDiv).find('.obj-color.color-picker').spectrum(_style.setColorPicker('color'));
+    $($editDiv).find('.obj-fill.color-picker').spectrum(_style.setColorPicker('fillColor'));
 }
 
-export function updateHiddenFields(type, props) {
+// Fill in geometry, MapId values in form
+export function updateHiddenFields(props) {
     let layer = getActive();
+    const type = props.type;
     const mapId = $("#mapForm").find("#Id").val();
 
-    $('#MapId').val(mapId)
+    $('.obj-mapId').val(mapId)
+    console.log('updateHiddenFields props', props, 'layer', layer);
 
     if (type.toLowerCase() == 'point') {
         const latlng = layer.getLatLng();
-        $('#Latitude').val(latlng.lat);
-        $('#Longitude').val(latlng.lng);
+        $('.obj-lat').val(latlng.lat);
+        $('.obj-lng').val(latlng.lng);
     }
 
     else if (type.toLowerCase() == 'circle') {
-        $('#Latitude').val(props.latlng.lat);
-        $('#Longitude').val(props.latlng.lng);
-        $('#Radius').val(props.radius);
+        $('.obj-lat').val(props.center.lat);
+        $('.obj-lng').val(props.center.lng);
+        $('.obj-radius').val(props.radius);
     }
 
     else if (type.toLowerCase() === 'line') {
@@ -132,7 +249,7 @@ export function updateHiddenFields(type, props) {
         const coordString = latlngs.map(p => `${p.lng} ${p.lat}`).join(', ');
         const wkt = `LINESTRING(${coordString})`;
 
-        $('#GeometryWKT').val(wkt);
+        $('.obj-geomWKT').val(wkt);
     }
 
     else if (type.toLowerCase() == 'polygon') {
@@ -140,36 +257,17 @@ export function updateHiddenFields(type, props) {
         const or = latlngs[0] ?? latlngs; // outer ring
         const closed = [...or];
 
+        // close the ring
         if (or.length > 0 && (or[0].lat !== or[or.length - 1].lat || or[0].lng !== or[or.length - 1].lng)) {
-            closed.push(or[0]); // close the ring
+            closed.push(or[0]);
         }
 
         const coordString = closed.map(p => `${p.lng} ${p.lat}`).join(', ');
         const wkt = `POLYGON((${coordString}))`;
-        $('#GeometryWKT').val(wkt);
+
+        $('.obj-geomWKT').val(wkt);
     }
 }
-
-
-// Edit
-export async function loadEdit(id, type, center) {
-
-    let props = {
-        type: type,
-        center: center,
-        data: { id: id, objType: type },
-        url: `${urlBase}LoadEdit/`
-    }
-
-    _style.saveStyle();
-
-    await showEditPopup(props).then(() => {
-        mapFormUtil.setFormListeners('#mapObjForm');
-
-        map.on('popupclose', _style.restoreStyle);
-    });
-}
-
 
 // Delete
 export async function onDelete(id, type) {
@@ -182,12 +280,9 @@ export async function onDelete(id, type) {
     }
 }
 
-
-
 export const mapFormUtil = {
-    setFormListeners: function (formId) {
-        console.log('mapFormUtil setFormListeners formId', formId);
 
+    setFormListeners: function (formId) {
         $(formId).on('submit', function (event) {
             event.preventDefault();
             mapFormUtil.onSubmitForm(formId) // submit form
@@ -204,11 +299,9 @@ export const mapFormUtil = {
             _style.setStyleListeners('#mapObjForm');
         }
     },
+
     onSubmitForm: async function (formId) {
         let $form = $(formId);
-
-        console.log('mapUtil onSubmitForm $form', $form);
-
         const isCreate = $form.attr('action').includes('Create')
 
         let response = await formUtil.submitForm(formId);
@@ -216,6 +309,7 @@ export const mapFormUtil = {
 
         if (response && response.success) {
 
+            // Update map title if user edited name
             if (formId == '#mapForm') {
                 const newName = $('#mapForm #Name').val();
 
@@ -223,7 +317,7 @@ export const mapFormUtil = {
                 $('.map-title').text(newName);
             }
             else {
-                map.off('popupclose', _style.restoreStyle);
+                map.off('popupclose', _style.restoreStyle); // Cancel event listeners to reset/delete
                 map.off('popupclose', deleteActive);
                 map.closePopup();
 
@@ -233,7 +327,6 @@ export const mapFormUtil = {
                 if (isCreate && response.data) {
                     mapFormUtil.updateId(response.data, $form.data('obj'));
                 }
-
                 window.showMessage({ msg: `${objType} ${action}!`, css: 'success', msgdiv: $('.map-msg') });
             }
         }
@@ -252,4 +345,6 @@ export const mapFormUtil = {
 
     }
 }
+
+
 

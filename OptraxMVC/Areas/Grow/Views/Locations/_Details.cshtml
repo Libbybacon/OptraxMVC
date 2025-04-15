@@ -7,7 +7,7 @@
 }
 
 <div class="m-toggle @(showEdit ? "d-none" : "")">
-    <div class="loc-name">@Model.Name</div>
+    <div class="loc-title">@Model.Name</div>
 
     @if (!string.IsNullOrEmpty(Model.Parent?.Name))
     {
@@ -15,6 +15,6 @@
     }
     @if (!string.IsNullOrEmpty(Model.Details))
     {
-        <p class="loc-details">@Model.Details</p>
+        <p class="loc-deets">@Model.Details</p>
     }
 </div>

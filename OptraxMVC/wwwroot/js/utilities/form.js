@@ -15,15 +15,12 @@ export const formUtil = {
             $.validator.unobtrusive.parse($form);
         }
         
-        console.log('setListeners form', $form, 'action', $form.attr('action'));
+        //console.log('setListeners form', $form, 'action', $form.attr('action'));
         if ($form.attr('action').includes('Edit')) {
             formUtil.setModelChanges();
         }
 
-        $(formId + ' .toggle-edit').on('click', function () {
-            const model = $(this).parent('.model');
-            model.find('.m-toggle').toggleClass('d-none');
-        });
+        formUtil.showHideBtns(formId);
     },
     setModelChanges: function () {
         Changes = [];
@@ -68,11 +65,9 @@ export const formUtil = {
     },
     showHideBtns: function (formId) {
         $form = $(formId);
-
-        $(formId + ' button.toggle-edit').on('click', function () {
-            console.log('formjs showHideBtns click')
-            $(formId + ' button.form-btn').toggleClass('d-none');
-            $('.m-toggle').toggleClass('d-none');
+        $(formId).find('button.toggle-edit').on('click', function () {
+            const model = $(this).parents('.model');
+            model.find('.m-toggle').toggleClass('d-none');
         });
     },
     arrayToModel: function (arr) {

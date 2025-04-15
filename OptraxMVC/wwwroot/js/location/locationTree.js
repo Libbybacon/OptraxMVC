@@ -1,15 +1,5 @@
 ﻿import { loadCreate } from './locationUtil.js';
 
-const levelMap = {
-    site: 0,
-    greenhouse: 1,
-    field: 1,
-    row: 2,
-    bed: 3,
-    plot: 4,
-    building: 1,
-    room: 2,
-}
 const childTypes = {
     site: ["Field", "Greenhouse", "Building"],
     greenhouse: ["Row"],
@@ -33,9 +23,6 @@ export function initializeTree() {
         'types': {
             'site': { 'icon': 'fa-regular fa-font-awesome' },
             'field': { 'icon': 'fas fa-tractor' },
-            'row': { 'icon': 'bi bi-layout-split' },
-            'bed': { 'icon': 'bi bi-grid-3x2-gap' },
-            'plot': { 'icon': 'bi bi-grip-horizontal' },
             'greenhouse': { 'icon': 'bi bi-house' },
             'building': { 'icon': 'fas fa-building' },
             'room': { 'icon': 'bi bi-door-open' },
@@ -47,15 +34,6 @@ export function initializeTree() {
         }
 
     });
-
-    //for (const [chType, chLevel] of Object.entries(levelMap)) {
-    //    for (const [parType, parLevel] of Object.entries(levelMap)) {
-    //        if (chLevel === parLevel + 1) {
-    //            if (!childTypes[parType]) childTypes[parType] = [];
-    //            childTypes[parType].push(chType);
-    //        }
-    //    }
-    //}
 }
 
 export function nodeMenu(node) {

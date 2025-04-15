@@ -6,6 +6,7 @@ const fs = require('fs');
 const isDev = process.env.NODE_ENV !== 'production';
 
 module.exports = {
+    mode: isDev ? 'development' : 'production',
     entry: {
         main: './wwwroot/js/site.js',
         location: ['./wwwroot/js/location/location.js', './wwwroot/js/map/map.js'],
@@ -17,7 +18,7 @@ module.exports = {
         filename: '[name].bundle.js', // creates main.bundle.js and styles.bundle.js
         path: path.resolve(__dirname, 'wwwroot/dist'),
     },
-    //devtool: isDev ? 'source-map' : false,
+    devtool: isDev ? 'source-map' : false,
     module: {
         rules: [
             {
@@ -49,6 +50,11 @@ module.exports = {
             }
         ]
     },
+    //resolve: {
+    //    alias: {
+    //        'leaflet-path-drag': path.resolve(__dirname, 'node_modules/leaflet-path-drag/src/Path.Drag.js')
+    //    }
+    //},
     plugins: [
         //new BundleAnalyzerPlugin(),
         new CleanWebpackPlugin(),
@@ -68,6 +74,7 @@ module.exports = {
         }
     ],
     optimization: {
+        minimize: !isDev,
         splitChunks: {
             chunks: 'all',
             minSize: 0,
